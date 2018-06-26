@@ -14,10 +14,12 @@ This runtime has the following concepts
 - Condition: Evaluates 
 
 The runtime needs the following interface implementation to allow an interface to construct values
-- getProperties\<S>( source: S, onProperties?: (props: Property[]) ): Promise?
+- buildType( source: S ): Promise<Type>
+- getProperty( source: S, prop: string ): E
+- getElement( source: S, index: number ): E
 
 ### Design
-- Type { operators, comparisons, formatters }
+- Type { operators, comparisons, formatters, fromString, toString, isMatch( type: Type ) }
 - Function\<I, O> { compute( input: I, args: {} ): O, parameters: {} }
 - Reference\<S, T> { get( source: S ): T, set( source: S, value: T ), type( source: S ) }
 - Condition { evaluate( source ): boolean }
@@ -67,3 +69,44 @@ A function has a name, has an input Type, an output Type, and optionally argumen
 - clamp( input: number, min: number, max: number ): number
 - substring( input: string, offset: number, length: number ): string
 - length( input: string ): number
+
+
+```typescript
+// A rounding function
+Functions.define('round', {
+  input: Types.Number,
+  output: Types.Number,
+  params: {
+    places: {
+      type: Types.Number,
+      default: (input) => 2
+    }
+  }
+});
+
+// This implementation returns the rounded value immediately.
+Functions.implement('round', function(value, args) {
+  return Math.round( value, args.places );
+});
+
+// Substring Function
+Functions.define('substring', {
+  input: Types.Text,
+  output: Types.Text,
+  params: {
+    start: {
+      type: Types.Number,
+      default: (input) => 0
+    },
+    end: {
+      type: Types.Number,
+      default: (input) => input.length
+    }
+  }
+});
+
+// This implementation produces a part of a SQL query
+Functions.implement('substring', function(value, args) {
+  return 'SUBSTRING(' + value + ',' + args.start + ',' + args.end + ')';
+});
+```
