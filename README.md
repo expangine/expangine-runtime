@@ -9,12 +9,12 @@ This runtime has the following concepts
 - Condition: Evaluates 
 
 The runtime needs the following interface implementation to allow an interface to construct values
-- getProperties<S>( source: S, onProperties?: (props: Property[]) ): Promise?
+- getProperties\<S>( source: S, onProperties?: (props: Property[]) ): Promise?
 
 ### Design
 - Type { operators, comparisons, formatters }
-- Function<I, O> { compute( input: I, args: {} ): O, parameters: {} }
-- Reference<S, T> { get( source: S ): T, set( source: S, value: T ), type( source: S ) }
+- Function\<I, O> { compute( input: I, args: {} ): O, parameters: {} }
+- Reference\<S, T> { get( source: S ): T, set( source: S, value: T ), type( source: S ) }
 - Condition { evaluate( source ): boolean }
 
 ### References
