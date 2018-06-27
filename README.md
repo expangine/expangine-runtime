@@ -1,6 +1,13 @@
 # expangine-runtime-ts
 A TypeScript/JS library for processing data based on variables and conditions
 
+This library provides functionality for the following flow:
+1. You (as the user) describe the types in your system.
+2. This library allows an interface to build complex expressions for getting or setting data in your system.
+3. This library allows an interface to build complex conditions to be build based on the data.
+4. This library takes the expressions and conditions and outputs to JSON.
+5. Another application can take the output JSON and an implementation (JS, SQL, etc) manipulate and query the data.
+
 The goals of this library is to provide the following functionality:
 - Assist UI into building a condition to test an entity source.
 - Assist UI into finding a value of a given Type with a starting entity source.
