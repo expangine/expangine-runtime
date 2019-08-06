@@ -1,5 +1,6 @@
 
 import { BooleanType } from '../types/Boolean';
+import { NumberType } from '../types/Number';
 
 
 const ops = BooleanType.operations;
@@ -17,6 +18,8 @@ export const BooleanOps =
   xor: ops.set('^', BooleanType, { a: BooleanType, b: BooleanType }),
 
   not: ops.set('!', BooleanType, { a: BooleanType }),
+
+  cmp: ops.set('cmp', NumberType, { value: BooleanType, test: BooleanType }),
 
   // Comparisons
 

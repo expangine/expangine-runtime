@@ -26,6 +26,10 @@ export default (run: Runtime) =>
     !bool(params.a, context)
   );
 
+  run.setOperation(BooleanOps.cmp, (params) => (context) => 
+    (bool(params.value, context) ? 1 : 0) - (bool(params.test, context) ? 1 : 0)
+  );
+
   // Comparisons
 
   run.setOperation(BooleanOps.isValid, (params) => (context) => 
