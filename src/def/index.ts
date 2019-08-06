@@ -16,6 +16,7 @@ import { VariableExpression } from '../exprs/Variable';
 import { OperationExpression } from '../exprs/Operation';
 import { ChainExpression } from '../exprs/Chain';
 import { IfExpression } from '../exprs/If';
+import { SwitchExpression } from '../exprs/Switch';
 import { AndExpression } from '../exprs/And';
 import { OrExpression } from '../exprs/Or';
 import { NotExpression } from '../exprs/Not';
@@ -42,6 +43,7 @@ export const defs = new Definitions({
     OperationExpression,
     ChainExpression,
     IfExpression,
+    SwitchExpression,
     NotExpression,
     AndExpression,
     OrExpression,

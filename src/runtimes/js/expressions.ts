@@ -14,6 +14,7 @@ import { OrExpression } from '../../exprs/Or';
 import { ForExpression } from '../../exprs/For';
 import { WhileExpression } from '../../exprs/While';
 import { DefineExpression } from '../../exprs/Define';
+import { SwitchExpression } from '../../exprs/Switch';
 
 
 
@@ -76,6 +77,46 @@ export default (run: Runtime) =>
       }
 
       return otherwise(context);
+    };
+  });
+
+  run.setExpression(SwitchExpression, (expr, run) => 
+  {
+    const valueCommand = run.getCommand(expr.value);
+    const cases: [Command[], Command][] = expr.cases.map(([tests, result]) => [
+      tests.map(t => run.getCommand(t)),
+      run.getCommand(result)
+    ]);
+    const defaultCase = run.getCommand(expr.defaultCase);
+    const isEqual = run.getOperation(expr.op);
+    const noScope = {};
+    
+    return (context) => 
+    {
+      const value = valueCommand(context);
+
+      for (const [tests, result] of cases)
+      {
+        let matches = false;
+
+        for (const testCommand of tests) 
+        { 
+          const test = testCommand(context);
+
+          if (isEqual({ value, test }, noScope)(context)) 
+          {
+            matches = true;
+            break;
+          }
+        }
+
+        if (matches) 
+        {
+          return result(context);
+        }
+      }
+
+      return defaultCase(context);
     };
   });
 
