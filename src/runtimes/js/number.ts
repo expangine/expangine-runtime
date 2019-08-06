@@ -83,6 +83,10 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     number(params.a, context) ^ number(params.b, context)
   );
 
+  run.setOperation(NumberOps.cmp, (params) => (context) => {
+    number(params.value, context) - number(params.test, context)
+  });
+
   // Unary Operations
 
   run.setOperation(NumberOps.sqrt, (params) => (context) => 

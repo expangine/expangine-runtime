@@ -42,8 +42,10 @@ export const NumberOps =
 
   bitXor: ops.set('^', NumberType, { a: NumberType, b: NumberType }),
 
+  cmp: ops.set('cmp', NumberType, { value: NumberType, test: NumberType }),
+
   // Unary Operations
-  
+
   sqrt: ops.set('sqrt', NumberType, { value: NumberType }),
 
   sq: ops.set('^2', NumberType, { value: NumberType }),
