@@ -41,4 +41,24 @@ describe('index', () => {
     */
   });
 
+  it('do', () => {
+    // do { a = a + 1 } while (a < 10)
+    const test = runtime.eval(['do',
+      ['op', 'num:<', {
+        value: ['get', ['a']],
+        test: 10
+      }],
+      ['set', ['a'], ['op', 'num:+', {
+        value: ['get', ['a']],
+        addend: 1
+      }]]
+    ]);
+
+    const ctx = { a: 2 };
+
+    test(ctx);
+
+    expect(ctx.a).toEqual(10);
+  });
+
 })

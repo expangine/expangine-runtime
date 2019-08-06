@@ -16,6 +16,7 @@ import { WhileExpression } from '../../exprs/While';
 import { DefineExpression } from '../../exprs/Define';
 import { SwitchExpression } from '../../exprs/Switch';
 import { SetExpression } from '../../exprs/Set';
+import { DoExpression } from '../../exprs/Do';
 
 
 
@@ -255,6 +256,38 @@ export default (run: Runtime) =>
         last = body(context);
         iterations++;
       }
+
+      return last;
+    };
+  });
+
+  run.setExpression(DoExpression, (expr, run) => 
+  {
+    const condition = run.getCommand(expr.condition);
+    const body = run.getCommand(expr.body);
+    const breakVariable = expr.breakCondition;
+    const max = expr.maxIterations;
+
+    return (context) => 
+    {
+      let iterations = 0;
+      let last = undefined;
+
+      const popBreak = context[breakVariable];
+
+      context[breakVariable] = false;
+
+      do
+      {
+        last = body(context);
+
+        if (context[breakVariable]) {
+          break;
+        }
+
+      } while(condition(context) && iterations++ < max);
+
+      context[breakVariable] = popBreak;
 
       return last;
     };

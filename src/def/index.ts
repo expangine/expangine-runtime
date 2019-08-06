@@ -22,6 +22,7 @@ import { OrExpression } from '../exprs/Or';
 import { NotExpression } from '../exprs/Not';
 import { ForExpression } from '../exprs/For';
 import { WhileExpression } from '../exprs/While';
+import { DoExpression } from '../exprs/Do';
 import { DefineExpression } from '../exprs/Define';
 import { SetExpression } from '../exprs/Set';
 
@@ -51,6 +52,7 @@ export const defs = new Definitions({
     OrExpression,
     ForExpression,
     WhileExpression,
+    DoExpression,
     DefineExpression,
   ]
 });
