@@ -15,6 +15,7 @@ import { ForExpression } from '../../exprs/For';
 import { WhileExpression } from '../../exprs/While';
 import { DefineExpression } from '../../exprs/Define';
 import { SwitchExpression } from '../../exprs/Switch';
+import { SetExpression } from '../../exprs/Set';
 
 
 
@@ -33,14 +34,54 @@ export default (run: Runtime) =>
     return (context) => 
     {
       let value: any = context;
-      for (let i = 0; i < parts.length && !isUndefined(value); i++) {
+
+      for (let i = 0; i < parts.length && !isUndefined(value); i++) 
+      {
         const next = parts[i](context);
-        if (isUndefined(value[next])) {
+
+        if (isUndefined(value[next])) 
+        {
           return undefined;
         }
+
         value = value[next];
       }
+      
       return value;
+    };
+  });
+
+  run.setExpression(SetExpression, (expr, run) => 
+  {
+    const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
+    const last = parts.length - 1;
+    const getValue = run.getCommand(expr.value);
+
+    return (context) => 
+    {
+      let value: any = context;
+
+      for (let i = 0; i < last && !isUndefined(value); i++) 
+      {
+        const next = parts[i](context);
+
+        if (isUndefined(value[next])) 
+        {
+          return false;
+        }
+
+        value = value[next];
+      }
+
+      if (!isUndefined(value)) 
+      {
+        const dest = parts[last](context);
+        value[dest] = getValue(context);
+
+        return true;
+      }
+
+      return false;
     };
   });
 

@@ -23,6 +23,7 @@ import { NotExpression } from '../exprs/Not';
 import { ForExpression } from '../exprs/For';
 import { WhileExpression } from '../exprs/While';
 import { DefineExpression } from '../exprs/Define';
+import { SetExpression } from '../exprs/Set';
 
 
 export const defs = new Definitions({
@@ -40,6 +41,7 @@ export const defs = new Definitions({
   expressions: [
     ConstantExpression,
     VariableExpression,
+    SetExpression,
     OperationExpression,
     ChainExpression,
     IfExpression,
