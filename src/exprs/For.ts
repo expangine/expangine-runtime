@@ -2,20 +2,27 @@
 import { Expression, ExpressionProvider } from '../Expression';
 
 
+const DEFAULT_MAX_ITERATIONS = 100000;
+const INDEX_VARIABLE = 1;
+const INDEX_START = 2;
+const INDEX_END = 3;
+const INDEX_BODY = 4;
+const INDEX_MAX = 5;
+
 export class ForExpression extends Expression 
 {
 
-  public static MAX_ITERATIONS = 1024 * 1024;
+  public static MAX_ITERATIONS = DEFAULT_MAX_ITERATIONS;
 
   public static id = 'for';
 
   public static decode(data: any[], exprs: ExpressionProvider): ForExpression 
   {
-    const variable = data[1];
-    const start = exprs.getExpression(data[2]);
-    const end = exprs.getExpression(data[3]);
-    const body = exprs.getExpression(data[4]);
-    const max = parseInt(data[5]) || this.MAX_ITERATIONS;
+    const variable = data[INDEX_VARIABLE];
+    const start = exprs.getExpression(data[INDEX_START]);
+    const end = exprs.getExpression(data[INDEX_END]);
+    const body = exprs.getExpression(data[INDEX_BODY]);
+    const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
     return new ForExpression(variable, start, end, body, max);
   }

@@ -6,6 +6,9 @@ import { NumberType } from './Number';
 import { AnyType } from './Any';
 
 
+const INDEX_ITEM = 1;
+const INDEX_OPTIONS = 2;
+
 export interface ListOptions 
 {
   item: Type;
@@ -26,15 +29,15 @@ export class ListType extends Type<ListOptions>
 
   public static decode(data: any[], types: TypeProvider): ListType 
   {
-    const item = types.getType(data[1]);
-    const options = data[2] || {};
+    const item = types.getType(data[INDEX_ITEM]);
+    const options = data[INDEX_OPTIONS] || {};
 
     return new ListType({ item, ...options });
   }
 
   public static encode(type: ListType): any 
   {
-    let options: any = { ...type.options };
+    const options: any = { ...type.options };
     const item = options.item;
     delete options.item;
 
@@ -85,9 +88,9 @@ export class ListType extends Type<ListOptions>
       return false;
     }
 
-    for (let i = 0; i < value.length; i++) 
+    for (const val of value)
     {
-      if (!item.isValid(value[i])) 
+      if (!item.isValid(val)) 
       {
         return false;
       }

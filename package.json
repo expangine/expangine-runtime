@@ -17,8 +17,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/ --mode development",
-    "build": "webpack --config webpack.config.js --mode production && cp src/types.ts typings/types.d.ts",
-    "build.prod": "webpack --config webpack.config.js -p && cp src/types.ts typings/types.d.ts",
+    "build": "webpack --config webpack.config.js --mode production",
+    "build.prod": "webpack --config webpack.config.js -p",
     "test": "jest",
     "test.debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "cleanup": "shx rm -rf umd lib lib-esm lib-fesm typings coverage ../expangine-runtime-ts-pages/docs",

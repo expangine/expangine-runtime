@@ -19,7 +19,7 @@ export function isBoolean(value: any): value is boolean
   return typeof value === 'boolean';
 }
 
-export function isFunction(value: any): value is Function 
+export function isFunction(value: any): value is ((...args: any[]) => any) 
 {
   return typeof value === 'function';
 }
@@ -38,11 +38,11 @@ export function isEmpty(value: any): boolean
 {
   if (isArray(value)) 
   {
-    return value.length == 0;
+    return value.length === 0;
   }
   else if (isObject(value)) 
   {
-    for (let _prop in value) 
+    for (const _prop in value) 
     {
       return false;
     }

@@ -48,7 +48,10 @@
       "check-function-in-method"
     ],
     "ordered-imports": [
-      true
+      false
+    ],
+    "object-literal-sort-keys": [ 
+      false 
     ],
     "interface-name": [
       false

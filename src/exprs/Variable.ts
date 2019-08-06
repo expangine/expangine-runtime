@@ -18,7 +18,7 @@ export class VariableExpression extends Expression
 
   public static encode(expr: VariableExpression): any 
   {
-    const path = expr.path.map(expr => expr.encode());
+    const path = expr.path.map(e => e.encode());
 
     return [this.id, path];
   }

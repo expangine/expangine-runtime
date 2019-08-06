@@ -19,10 +19,7 @@ export const ListOps = {
   ),
 
   filter: ops.build('filter',
-    (list) => [list, { 
-      list,
-      filter: new BooleanType({})
-    }, {}, iterationScope(list)]
+    (list) => [list, { list, filter: BooleanType.baseType }, {}, iterationScope(list)]
   )
 };
 

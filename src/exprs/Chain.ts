@@ -18,7 +18,7 @@ export class ChainExpression extends Expression
 
   public static encode(expr: ChainExpression): any 
   {
-    const chain = expr.chain.map(expr => expr.encode());
+    const chain = expr.chain.map(e => e.encode());
 
     return [this.id, chain];
   }

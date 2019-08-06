@@ -27,7 +27,7 @@ export class ObjectType extends Type<ObjectOptions>
 
   public static encode(type: ObjectType): any 
   {
-    const props = mapObject(type.options.props, type => type.encode());
+    const props = mapObject(type.options.props, p => p.encode());
 
     return [this.id, props];
   }
@@ -51,7 +51,7 @@ export class ObjectType extends Type<ObjectOptions>
 
     const props = this.options.props;
 
-    for (let prop in props) 
+    for (const prop in props) 
     {
       if (!other.options.props[prop]) 
       {
@@ -71,7 +71,7 @@ export class ObjectType extends Type<ObjectOptions>
 
     const props = this.options.props;
 
-    for (let prop in props) 
+    for (const prop in props) 
     {
       if (!props[prop].isValid(value[prop])) 
       {

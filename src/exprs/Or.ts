@@ -18,7 +18,7 @@ export class OrExpression extends Expression
 
   public static encode(expr: OrExpression): any 
   {
-    const expressions = expr.expressions.map(expr => expr.encode());
+    const expressions = expr.expressions.map(e => e.encode());
 
     return [this.id, expressions];
   }

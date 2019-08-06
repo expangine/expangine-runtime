@@ -18,7 +18,7 @@ export class AndExpression extends Expression
 
   public static encode(expr: AndExpression): any 
   {
-    const expressions = expr.expressions.map(expr => expr.encode());
+    const expressions = expr.expressions.map(e => e.encode());
 
     return [this.id, expressions];
   }

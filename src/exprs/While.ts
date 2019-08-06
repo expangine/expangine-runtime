@@ -2,18 +2,23 @@
 import { Expression, ExpressionProvider } from '../Expression';
 
 
+const DEFAULT_MAX_ITERATIONS = 100000;
+const INDEX_CONDITION = 1;
+const INDEX_BODY = 2;
+const INDEX_MAX = 3;
+
 export class WhileExpression extends Expression 
 {
 
-  public static MAX_ITERATIONS = 1024 * 1024;
+  public static MAX_ITERATIONS = DEFAULT_MAX_ITERATIONS;
 
   public static id = 'while';
 
   public static decode(data: any[], exprs: ExpressionProvider): WhileExpression 
   {
-    const condition = exprs.getExpression(data[1]);
-    const body = exprs.getExpression(data[2]);
-    const max = parseInt(data[3]) || this.MAX_ITERATIONS;
+    const condition = exprs.getExpression(data[INDEX_CONDITION]);
+    const body = exprs.getExpression(data[INDEX_BODY]);
+    const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
     return new WhileExpression(condition, body, max);
   }

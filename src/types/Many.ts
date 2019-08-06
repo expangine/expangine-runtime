@@ -37,14 +37,14 @@ export class ManyType extends Type<Type[]>
   {
     const many = this.options;
 
-    for (let i = 0; i < many.length; i++) 
+    for (const type of many)
     {
-      const result = handler(many[i]);
+      const result = handler(type);
 
       if (result !== undefined)
       {
         return result;
-      }
+      } 
     }
 
     return otherwise;

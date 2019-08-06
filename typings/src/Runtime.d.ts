@@ -1,8 +1,8 @@
-import { TypeMap } from './Type';
-import { Definitions } from './Definitions';
-import { OperationBuilder } from './Operation';
-import { Expression, ExpressionClass } from './Expression';
 import { Command, CommandBuilder, OperationToCommand } from './Command';
+import { Definitions } from './Definitions';
+import { Expression, ExpressionClass } from './Expression';
+import { OperationBuilder } from './Operation';
+import { TypeMap } from './Type';
 export declare class Runtime {
     defs: Definitions;
     ops: Record<string, OperationToCommand>;
