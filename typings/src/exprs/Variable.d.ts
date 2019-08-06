@@ -5,5 +5,6 @@ export declare class VariableExpression extends Expression {
     static encode(expr: VariableExpression): any;
     path: Expression[];
     constructor(path: Expression[]);
+    getScope(): null;
     encode(): any;
 }

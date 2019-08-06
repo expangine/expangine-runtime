@@ -42,6 +42,11 @@ export class WhileExpression extends Expression
     this.maxIterations = maxIterations;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return WhileExpression.encode(this);

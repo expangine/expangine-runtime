@@ -1,3 +1,4 @@
+import { Type } from './Type';
 export interface ExpressionProvider {
     getExpression(value: any): Expression;
 }
@@ -10,5 +11,6 @@ export interface ExpressionClass<T extends Expression = any> {
 export declare abstract class Expression {
     id: string;
     constructor(id: string);
+    abstract getScope(): Record<string, Type> | null;
     abstract encode(): any;
 }

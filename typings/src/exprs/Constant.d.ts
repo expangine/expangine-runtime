@@ -5,5 +5,6 @@ export declare class ConstantExpression extends Expression {
     static encode(expr: ConstantExpression): any;
     value: any;
     constructor(value: any);
+    getScope(): null;
     encode(): any;
 }

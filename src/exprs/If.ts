@@ -38,6 +38,11 @@ export class IfExpression extends Expression
     this.otherwise = otherwise;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return IfExpression.encode(this);

@@ -1,5 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
+import { NumberType } from '../types/Number';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -48,6 +49,13 @@ export class ForExpression extends Expression
     this.end = end;
     this.body = body;
     this.maxIterations = maxIterations;
+  }
+
+  public getScope()
+  {
+    return {
+      [this.variable]: NumberType.baseType
+    };
   }
 
   public encode(): any 

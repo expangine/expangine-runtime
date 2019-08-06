@@ -28,6 +28,11 @@ export class ConstantExpression extends Expression
     this.value = value;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return ConstantExpression.encode(this);

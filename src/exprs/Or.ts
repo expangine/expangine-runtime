@@ -31,6 +31,11 @@ export class OrExpression extends Expression
     this.expressions = expressions;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return OrExpression.encode(this);

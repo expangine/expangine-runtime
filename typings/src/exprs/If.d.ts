@@ -6,5 +6,6 @@ export declare class IfExpression extends Expression {
     cases: [Expression, Expression][];
     otherwise: Expression;
     constructor(cases: [Expression, Expression][], otherwise: Expression);
+    getScope(): null;
     encode(): any;
 }

@@ -8,5 +8,6 @@ export declare class SwitchExpression extends Expression {
     cases: [Expression[], Expression][];
     defaultCase: Expression;
     constructor(value: Expression, op: string, cases: [Expression[], Expression][], defaultCase: Expression);
+    getScope(): null;
     encode(): any;
 }

@@ -1,3 +1,4 @@
+import { Type } from './Type';
 
 export interface ExpressionProvider 
 { 
@@ -21,6 +22,8 @@ export abstract class Expression
   {
     this.id = id;
   }
+
+  abstract getScope(): Record<string, Type> | null;
 
   abstract encode(): any;
 

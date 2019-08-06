@@ -31,6 +31,11 @@ export class ChainExpression extends Expression
     this.chain = chain;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return ChainExpression.encode(this);

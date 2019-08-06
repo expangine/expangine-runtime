@@ -5,5 +5,6 @@ export declare class AndExpression extends Expression {
     static encode(expr: AndExpression): any;
     expressions: Expression[];
     constructor(expressions: Expression[]);
+    getScope(): null;
     encode(): any;
 }

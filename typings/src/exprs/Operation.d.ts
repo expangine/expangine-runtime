@@ -7,5 +7,6 @@ export declare class OperationExpression extends Expression {
     params: Record<string, Expression>;
     scopeAlias: Record<string, string>;
     constructor(name: string, params: Record<string, Expression>, scopeAlias: Record<string, string>);
+    getScope(): null;
     encode(): any;
 }

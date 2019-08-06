@@ -42,6 +42,11 @@ export class OperationExpression extends Expression
     this.scopeAlias = scopeAlias;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return OperationExpression.encode(this);

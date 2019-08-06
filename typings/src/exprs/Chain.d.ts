@@ -5,5 +5,6 @@ export declare class ChainExpression extends Expression {
     static encode(expr: ChainExpression): any;
     chain: Expression[];
     constructor(chain: Expression[]);
+    getScope(): null;
     encode(): any;
 }

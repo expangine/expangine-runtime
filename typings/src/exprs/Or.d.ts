@@ -5,5 +5,6 @@ export declare class OrExpression extends Expression {
     static encode(expr: OrExpression): any;
     expressions: Expression[];
     constructor(expressions: Expression[]);
+    getScope(): null;
     encode(): any;
 }

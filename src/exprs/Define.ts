@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { mapObject } from '../fns';
+import { AnyType } from '../types/Any';
 
 
 const INDEX_DEFINE = 1;
@@ -34,6 +35,11 @@ export class DefineExpression extends Expression
     super(DefineExpression.id);
     this.define = define;
     this.body = body;
+  }
+
+  public getScope()
+  {
+    return mapObject(this.define, () => AnyType.baseType);
   }
 
   public encode(): any 

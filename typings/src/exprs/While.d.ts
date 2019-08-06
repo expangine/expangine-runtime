@@ -8,5 +8,6 @@ export declare class WhileExpression extends Expression {
     body: Expression;
     maxIterations: number;
     constructor(condition: Expression, body: Expression, maxIterations: number);
+    getScope(): null;
     encode(): any;
 }

@@ -31,6 +31,11 @@ export class AndExpression extends Expression
     this.expressions = expressions;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return AndExpression.encode(this);

@@ -29,6 +29,11 @@ export class NotExpression extends Expression
     this.expression = expression;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return NotExpression.encode(this);

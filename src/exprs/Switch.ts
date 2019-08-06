@@ -50,6 +50,11 @@ export class SwitchExpression extends Expression
     this.defaultCase = defaultCase;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return SwitchExpression.encode(this);

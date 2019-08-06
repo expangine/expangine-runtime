@@ -31,6 +31,11 @@ export class VariableExpression extends Expression
     this.path = path;
   }
 
+  public getScope(): null
+  {
+    return null;
+  }
+
   public encode(): any 
   {
     return VariableExpression.encode(this);
