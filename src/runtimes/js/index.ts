@@ -6,6 +6,7 @@ import addExpressions from './expressions';
 import addNumberOperations from './number';
 import addTextOperations from './text';
 import addBooleanOperations from './boolean';
+import addAnyOperations from './any';
 
 
 
@@ -15,3 +16,4 @@ addExpressions(runtime);
 addNumberOperations(runtime);
 addTextOperations(runtime);
 addBooleanOperations(runtime);
+addAnyOperations(runtime);
