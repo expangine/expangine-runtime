@@ -6,8 +6,9 @@ export declare class ManyType extends Type<Type[]> {
     static baseType: ManyType;
     static decode(data: any[], types: TypeProvider): ManyType;
     static encode(type: ManyType): any;
+    subs?: Record<string, Type>;
     getOperations(type: TypeClass<any, any>): Record<string, Operation>;
-    getSubTypes(): null;
+    getSubTypes(): Record<string, Type<any>>;
     private forMany;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

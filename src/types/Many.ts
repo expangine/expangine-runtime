@@ -28,6 +28,8 @@ export class ManyType extends Type<Type[]>
     return [this.id, many];
   }
 
+  public subs?: Record<string, Type>;
+
   public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
   {
     if (!this.operations)
@@ -36,8 +38,8 @@ export class ManyType extends Type<Type[]>
 
       this.options.forEach(many => 
       {
-        const ops = many.getOperations(type);
-
+        const ops = many.getOperations((many as any).constructor as TypeClass<any, any>);
+        
         for (const prop in ops) 
         {
           this.operations[prop] = ops[prop];
@@ -48,9 +50,27 @@ export class ManyType extends Type<Type[]>
     return this.operations;
   }
 
-  public getSubTypes(): null
+  public getSubTypes()
   {
-    return null;
+    if (!this.subs)
+    {
+      this.subs = {};
+
+      this.options.forEach(many => 
+      {
+        const subs = many.getSubTypes();
+
+        if (subs)
+        {
+          for (const prop in subs)
+          {
+            this.subs[prop] = subs[prop];
+          }
+        }
+      });
+    }
+
+    return this.subs;
   }
 
   private forMany<T> (otherwise: T, handler: (type: Type) => T | undefined): T
