@@ -10,7 +10,7 @@ describe('index', () => {
   {
     const processor = runtime.eval(['op', 'num:+', {
       value: ['var', ['a']],
-      addend: ['case', [  
+      addend: ['if', [  
         [['var', ['b']], 2 ] // if b <> 0, 2
       ], 10]
     }])

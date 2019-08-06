@@ -7,7 +7,7 @@ import { ConstantExpression } from '../../exprs/Constant';
 import { VariableExpression } from '../../exprs/Variable';
 import { OperationExpression } from '../../exprs/Operation';
 import { ChainExpression } from '../../exprs/Chain';
-import { CaseExpression } from '../../exprs/Case';
+import { IfExpression } from '../../exprs/If';
 import { NotExpression } from '../../exprs/Not';
 import { AndExpression } from '../../exprs/And';
 import { OrExpression } from '../../exprs/Or';
@@ -58,7 +58,7 @@ export default (run: Runtime) =>
     return (context) => chain.map(cmd => cmd(context));
   });
 
-  run.setExpression(CaseExpression, (expr, run) => 
+  run.setExpression(IfExpression, (expr, run) => 
   {
     const cases = expr.cases.map(([test, result]) => [run.getCommand(test), run.getCommand(result)]);
     const otherwise = run.getCommand(expr.otherwise);

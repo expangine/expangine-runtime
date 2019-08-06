@@ -6,20 +6,20 @@ import { Expression, ExpressionProvider } from '../Expression';
 const INDEX_CASES = 1;
 const INDEX_OTHERWISE = 2;
 
-export class CaseExpression extends Expression 
+export class IfExpression extends Expression 
 {
 
-  public static id = 'case';
+  public static id = 'if';
 
-  public static decode(data: any[], exprs: ExpressionProvider): CaseExpression 
+  public static decode(data: any[], exprs: ExpressionProvider): IfExpression 
   {
     const cases = data[INDEX_CASES].map(([test, result]: [any, any]) => [exprs.getExpression(test), exprs.getExpression(result)]);
     const otherwise = exprs.getExpression(data[INDEX_OTHERWISE]);
 
-    return new CaseExpression(cases, otherwise);
+    return new IfExpression(cases, otherwise);
   }
 
-  public static encode(expr: CaseExpression): any 
+  public static encode(expr: IfExpression): any 
   {
     const cases = expr.cases.map(([test, result]) => [test.encode(), result.encode()]);
 
@@ -33,14 +33,14 @@ export class CaseExpression extends Expression
 
   public constructor(cases: [Expression, Expression][], otherwise: Expression) 
   {
-    super(CaseExpression.id);
+    super(IfExpression.id);
     this.cases = cases;
     this.otherwise = otherwise;
   }
 
   public encode(): any 
   {
-    return CaseExpression.encode(this);
+    return IfExpression.encode(this);
   }
 
 }

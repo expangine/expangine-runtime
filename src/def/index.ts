@@ -15,7 +15,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { VariableExpression } from '../exprs/Variable';
 import { OperationExpression } from '../exprs/Operation';
 import { ChainExpression } from '../exprs/Chain';
-import { CaseExpression } from '../exprs/Case';
+import { IfExpression } from '../exprs/If';
 import { AndExpression } from '../exprs/And';
 import { OrExpression } from '../exprs/Or';
 import { NotExpression } from '../exprs/Not';
@@ -41,7 +41,7 @@ export const defs = new Definitions({
     VariableExpression,
     OperationExpression,
     ChainExpression,
-    CaseExpression,
+    IfExpression,
     NotExpression,
     AndExpression,
     OrExpression,

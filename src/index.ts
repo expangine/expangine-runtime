@@ -20,7 +20,7 @@ export * from './types/Optional';
 export * from './types/Text';
 
 export * from './exprs/And';
-export * from './exprs/Case';
+export * from './exprs/If';
 export * from './exprs/Chain';
 export * from './exprs/Constant';
 export * from './exprs/Define';
