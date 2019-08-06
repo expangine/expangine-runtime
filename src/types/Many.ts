@@ -1,6 +1,6 @@
 
-import { Type, TypeProvider } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeClass } from '../Type';
+import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
 
@@ -26,6 +26,26 @@ export class ManyType extends Type<Type[]>
     const many = type.options.map(t => t.encode());
 
     return [this.id, many];
+  }
+
+  public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
+  {
+    if (!this.operations)
+    {
+      this.operations = {};
+
+      this.options.forEach(many => 
+      {
+        const ops = many.getOperations(type);
+
+        for (const prop in ops) 
+        {
+          this.operations[prop] = ops[prop];
+        }
+      });
+    }
+
+    return this.operations;
   }
 
   public getSubTypes(): null

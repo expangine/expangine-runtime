@@ -1,6 +1,6 @@
 
-import { Type, TypeProvider } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeClass } from '../Type';
+import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
 
@@ -23,6 +23,16 @@ export class OptionalType extends Type<Type>
   public static encode(type: OptionalType): any 
   {
     return [this.id, type.options.encode()];
+  }
+
+  public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
+  {
+    if (!this.operations)
+    {
+      this.operations = this.options.getOperations(type);
+    }
+
+    return this.operations;
   }
 
   public getSubTypes() 
