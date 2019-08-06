@@ -133,4 +133,16 @@ describe('index', () => {
     expect(ctx.a).toEqual(4);
   });
 
+  it('template', () => {
+
+    const injector = runtime.eval(['tmpl', '/user/{user_id}/post/{post_id}', {
+      user_id: ['get', ['user_id']],
+      post_id: 12
+    }]);
+
+    expect(injector({
+      user_id: 24
+    })).toEqual('/user/24/post/12');
+  });
+
 })

@@ -17,6 +17,7 @@ import { DefineExpression } from '../../exprs/Define';
 import { SwitchExpression } from '../../exprs/Switch';
 import { SetExpression } from '../../exprs/Set';
 import { DoExpression } from '../../exprs/Do';
+import { TemplateExpression } from '../../exprs/Template';
 
 
 
@@ -336,6 +337,25 @@ export default (run: Runtime) =>
       }
 
       return result;
+    };
+  });
+
+  run.setExpression(TemplateExpression, (expr, run) => 
+  {
+    const params = mapObject(expr.params, e => run.getCommand(e));
+    const template = expr.template;
+
+    const sections = template.split(/[\{\}]/).map((section, index) => {
+      return index % 2 === 0
+        ? (_source: any) => section
+        : (source: any) => source && section in source ? source[section] : '';
+    });
+
+    return (context) =>
+    {
+      const source = mapObject(params, p => p(context));
+
+      return sections.reduce((out, section) => out + section(source), '');
     };
   });
 

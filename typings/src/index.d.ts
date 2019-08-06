@@ -26,5 +26,6 @@ export * from './exprs/Operation';
 export * from './exprs/Or';
 export * from './exprs/Set';
 export * from './exprs/Switch';
+export * from './exprs/Template';
 export * from './exprs/While';
 export * from './def';

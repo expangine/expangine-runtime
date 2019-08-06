@@ -25,6 +25,7 @@ import { WhileExpression } from '../exprs/While';
 import { DoExpression } from '../exprs/Do';
 import { DefineExpression } from '../exprs/Define';
 import { SetExpression } from '../exprs/Set';
+import { TemplateExpression } from '../exprs/Template';
 
 
 export const defs = new Definitions({
@@ -54,5 +55,6 @@ export const defs = new Definitions({
     WhileExpression,
     DoExpression,
     DefineExpression,
+    TemplateExpression,
   ]
 });
