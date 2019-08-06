@@ -9,9 +9,9 @@ describe('index', () => {
   it('has test', () =>
   {
     const processor = runtime.eval(['op', 'num:+', {
-      value: ['var', ['a']],
+      value: ['get', ['a']],
       addend: ['if', [  
-        [['var', ['b']], 2 ] // if b <> 0, 2
+        [['get', ['b']], 2 ] // if b <> 0, 2
       ], 10]
     }])
 

@@ -4,7 +4,7 @@ import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
 
 import { ConstantExpression } from '../../exprs/Constant';
-import { VariableExpression } from '../../exprs/Variable';
+import { GetExpression } from '../../exprs/Get';
 import { OperationExpression } from '../../exprs/Operation';
 import { ChainExpression } from '../../exprs/Chain';
 import { IfExpression } from '../../exprs/If';
@@ -27,7 +27,7 @@ export default (run: Runtime) =>
     return () => expr.value
   });
 
-  run.setExpression(VariableExpression, (expr, run) => 
+  run.setExpression(GetExpression, (expr, run) => 
   {
     const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
 

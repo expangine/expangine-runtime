@@ -4,19 +4,19 @@ import { Expression, ExpressionProvider } from '../Expression';
 
 const INDEX_PATH = 1;
 
-export class VariableExpression extends Expression 
+export class GetExpression extends Expression 
 {
 
-  public static id = 'var';
+  public static id = 'get';
 
-  public static decode(data: any[], exprs: ExpressionProvider): VariableExpression 
+  public static decode(data: any[], exprs: ExpressionProvider): GetExpression 
   {
     const path: Expression[] = data[INDEX_PATH].map((part: any) => exprs.getExpression(part));
 
-    return new VariableExpression(path);
+    return new GetExpression(path);
   }
 
-  public static encode(expr: VariableExpression): any 
+  public static encode(expr: GetExpression): any 
   {
     const path = expr.path.map(e => e.encode());
 
@@ -27,7 +27,7 @@ export class VariableExpression extends Expression
 
   public constructor(path: Expression[]) 
   {
-    super(VariableExpression.id);
+    super(GetExpression.id);
     this.path = path;
   }
 
@@ -38,7 +38,7 @@ export class VariableExpression extends Expression
 
   public encode(): any 
   {
-    return VariableExpression.encode(this);
+    return GetExpression.encode(this);
   }
 
 }

@@ -12,7 +12,7 @@ import { ManyType } from '../types/Many';
 import { OptionalType } from '../types/Optional';
 
 import { ConstantExpression } from '../exprs/Constant';
-import { VariableExpression } from '../exprs/Variable';
+import { GetExpression } from '../exprs/Get';
 import { OperationExpression } from '../exprs/Operation';
 import { ChainExpression } from '../exprs/Chain';
 import { IfExpression } from '../exprs/If';
@@ -40,7 +40,7 @@ export const defs = new Definitions({
   ],
   expressions: [
     ConstantExpression,
-    VariableExpression,
+    GetExpression,
     SetExpression,
     OperationExpression,
     ChainExpression,

@@ -20,15 +20,17 @@ export * from './types/Optional';
 export * from './types/Text';
 
 export * from './exprs/And';
-export * from './exprs/If';
 export * from './exprs/Chain';
 export * from './exprs/Constant';
 export * from './exprs/Define';
 export * from './exprs/For';
+export * from './exprs/Get';
+export * from './exprs/If';
 export * from './exprs/Not';
 export * from './exprs/Operation';
 export * from './exprs/Or';
-export * from './exprs/Variable';
+export * from './exprs/Set';
+export * from './exprs/Switch';
 export * from './exprs/While';
 
 export * from './def';
