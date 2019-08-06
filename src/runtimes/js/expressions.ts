@@ -213,11 +213,15 @@ export default (run: Runtime) =>
     const start = run.getCommand(expr.start);
     const end = run.getCommand(expr.end);
     const body = run.getCommand(expr.body);
+    const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
     return (context) => 
     {
       const popVariable = context[variable];
+      const popBreak = context[breakVariable];
+
+      context[breakVariable] = false;
 
       let i = start(context);
       let iterations = 0;
@@ -225,16 +229,21 @@ export default (run: Runtime) =>
       let last = undefined;
       const dir = i < stop ? 1 : -1;
 
-      while ((dir === 1 ? i <= stop : i >= stop) && iterations < max) 
+      while ((dir === 1 ? i <= stop : i >= stop) && iterations++ < max) 
       {
         context[variable] = i;
         last = body(context);
+
+        if (context[breakVariable]) {
+          break;
+        }
+
         i += dir;
         stop = end(context);
-        iterations++;
       }
 
       context[variable] = popVariable;
+      context[breakVariable] = popBreak;
 
       return last;
     };
@@ -244,6 +253,7 @@ export default (run: Runtime) =>
   {
     const condition = run.getCommand(expr.condition);
     const body = run.getCommand(expr.body);
+    const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
     return (context) => 
@@ -251,11 +261,20 @@ export default (run: Runtime) =>
       let iterations = 0;
       let last = undefined;
 
-      while (condition(context) && iterations < max)
+      const popBreak = context[breakVariable];
+
+      context[breakVariable] = false;
+
+      while (condition(context) && iterations++ < max)
       {
         last = body(context);
-        iterations++;
+
+        if (context[breakVariable]) {
+          break;
+        }
       }
+
+      context[breakVariable] = popBreak;
 
       return last;
     };
@@ -265,7 +284,7 @@ export default (run: Runtime) =>
   {
     const condition = run.getCommand(expr.condition);
     const body = run.getCommand(expr.body);
-    const breakVariable = expr.breakCondition;
+    const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
     return (context) => 

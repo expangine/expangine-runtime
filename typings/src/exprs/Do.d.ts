@@ -7,9 +7,9 @@ export declare class DoExpression extends Expression {
     static encode(expr: DoExpression): any;
     condition: Expression;
     body: Expression;
-    breakCondition: string;
+    breakVariable: string;
     maxIterations: number;
-    constructor(condition: Expression, body: Expression, breakCondition: string, maxIterations: number);
+    constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number);
     getScope(): {
         [x: string]: BooleanType;
     };

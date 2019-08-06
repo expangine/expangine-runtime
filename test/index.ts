@@ -61,4 +61,76 @@ describe('index', () => {
     expect(ctx.a).toEqual(10);
   });
 
+  it('do break', () => {
+    // do { a = a + 1; if (a == 4) break; } while (a < 10)
+    const test = runtime.eval(['do',
+      ['op', 'num:<', {
+        value: ['get', ['a']],
+        test: 10
+      }],
+      ['chain', [
+        ['set', ['a'], ['op', 'num:+', {
+          value: ['get', ['a']],
+          addend: 1
+        }]],
+        ['set', ['break'], ['op', 'num:=', {
+          a: ['get', ['a']],
+          b: 4
+        }]]
+      ]]
+    ]);
+
+    const ctx = { a: 2 };
+
+    test(ctx);
+
+    expect(ctx.a).toEqual(4);
+  });
+
+  it('while', () => {
+    // while (a < 10) { a = a + 1; }
+    const test = runtime.eval(['while',
+      ['op', 'num:<', {
+        value: ['get', ['a']],
+        test: 10
+      }],
+      ['set', ['a'], ['op', 'num:+', {
+        value: ['get', ['a']],
+        addend: 1
+      }]]
+    ]);
+
+    const ctx = { a: 2 };
+
+    test(ctx);
+
+    expect(ctx.a).toEqual(10);
+  });
+
+  it('while break', () => {
+    // while (a < 10) { a = a + 1; if (a == 4) break; }
+    const test = runtime.eval(['while',
+      ['op', 'num:<', {
+        value: ['get', ['a']],
+        test: 10
+      }],
+      ['chain', [
+        ['set', ['a'], ['op', 'num:+', {
+          value: ['get', ['a']],
+          addend: 1
+        }]],
+        ['set', ['break'], ['op', 'num:=', {
+          a: ['get', ['a']],
+          b: 4
+        }]]
+      ]]
+    ]);
+
+    const ctx = { a: 2 };
+
+    test(ctx);
+
+    expect(ctx.a).toEqual(4);
+  });
+
 })

@@ -21,20 +21,21 @@ export class DoExpression extends Expression
   {
     const condition = exprs.getExpression(data[INDEX_CONDITION]);
     const body = exprs.getExpression(data[INDEX_BODY]);
-    const breakCondition = data[INDEX_BREAK] || DEFAULT_BREAK;
+    const breakVariable = data[INDEX_BREAK] || DEFAULT_BREAK;
     const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
-    return new DoExpression(condition, body, breakCondition, max);
+    return new DoExpression(condition, body, breakVariable, max);
   }
 
   public static encode(expr: DoExpression): any 
   {
     const out = [this.id, expr.condition.encode(), expr.body.encode()];
+    const hasMax = expr.maxIterations !== this.MAX_ITERATIONS;
 
-    if (expr.breakCondition !== DEFAULT_BREAK) {
-      out.push(expr.breakCondition);
+    if (expr.breakVariable !== DEFAULT_BREAK || hasMax) {
+      out.push(expr.breakVariable);
     }
-    if (expr.maxIterations !== this.MAX_ITERATIONS) {
+    if (hasMax) {
       out.push(expr.maxIterations);
     }
 
@@ -43,22 +44,22 @@ export class DoExpression extends Expression
   
   public condition: Expression;
   public body: Expression;
-  public breakCondition: string;
+  public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(condition: Expression, body: Expression, breakCondition: string, maxIterations: number) 
+  public constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number) 
   {
     super(DoExpression.id);
     this.condition = condition;
     this.body = body;
-    this.breakCondition = breakCondition;
+    this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
   }
 
   public getScope()
   {
     return {
-      [this.breakCondition]: BooleanType.baseType
+      [this.breakVariable]: BooleanType.baseType
     };
   }
 
