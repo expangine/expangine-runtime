@@ -1,7 +1,7 @@
 
 import { Runtime } from '../../Runtime';
 import { AnyOps } from '../../def/AnyOps';
-import { isArray } from '../../fns';
+import { isArray, isDate } from '../../fns';
 
 
 export default (run: Runtime) =>
@@ -11,6 +11,10 @@ export default (run: Runtime) =>
 
   run.setOperation(AnyOps.cmp, (params) => (context) => 
     cmp(params.value(context), params.test(context))
+  );
+
+  run.setOperation(AnyOps.copy, (params) => (context) =>
+    copy(params.value(context))
   );
 
   // Comparisons
@@ -52,7 +56,7 @@ const CMP_TYPES = {
   'function':   7
 };
 
-function cmp (a: any, b: any): number
+export function cmp (a: any, b: any): number
 {
   if (a === b) return 0;
 
@@ -116,4 +120,53 @@ function cmp (a: any, b: any): number
   }
 
   return 0;
+}
+
+export function copy(x: any, originals: any[] = [], clones: any[] = []): any
+{
+  if (!x) return x; // null, undefined, 0, '', NaN, false
+
+  if (isDate(x))
+  {
+    return new Date(x.getTime());
+  }
+
+  if (typeof x === 'object')
+  {
+    const i = originals.indexOf(x);
+
+    if (i !== -1)
+    {
+      return clones[i];
+    }
+
+    if (isArray(x))
+    {
+      const arr: any[] = [];
+
+      originals.push(x);
+      clones.push(arr);
+
+      for (const item of x)
+      {
+        arr.push(copy(item, originals, clones));
+      }
+
+      return arr;
+    }
+
+    const obj: any = {};
+
+    originals.push(x);
+    clones.push(obj);
+
+    for (const prop in x) 
+    {
+      obj[prop] = copy(x[prop], originals, clones);
+    }
+
+    return obj;
+  }
+
+  return x;
 }

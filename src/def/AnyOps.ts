@@ -14,6 +14,8 @@ export const AnyOps =
 
   cmp: ops.set('cmp', NumberType, { value: AnyType, test: AnyType }),
 
+  copy: ops.set('copy', AnyType, { value: AnyType }),
+
   // Comparisons
 
   isEqual: ops.set('=', BooleanType, { value: AnyType, test: AnyType }),

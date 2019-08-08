@@ -14,6 +14,11 @@ export function isArray<T = any>(value: any): value is T[]
   return Array.isArray(value);
 }
 
+export function isDate(value: any): value is Date
+{
+  return value instanceof Date;
+}
+
 export function isBoolean(value: any): value is boolean 
 {
   return typeof value === 'boolean';

@@ -222,12 +222,7 @@ describe('index', () => {
     // otherwise replace with null
     const process = runtime.eval(['op', 'list:copy', {
       list: ['get', ['source']],
-      deepCopy: ['if', 
-        [
-          [ ['op', 'num:?', { value: ['get', ['copy']]}], ['get', ['copy']] ],
-        ],
-        null
-      ]
+      deepCopy: ['op', 'any:copy', { value: ['get', ['copy']] }]
     }]);
 
     const context = {
@@ -236,8 +231,9 @@ describe('index', () => {
 
     const result = process(context);
 
-    expect(result).toEqual([1, 2, null, 4, 5]);
+    expect(result).toEqual([1, 2, {a: 3}, 4, 5]);
     expect(result === context.source).toBeFalsy();
+    expect(result[2] === context.source[2]).toBeFalsy();
   });
 
   it('reverse', () =>
@@ -735,8 +731,5 @@ describe('index', () => {
 
     expect(result).toEqual(21);
   });
-
-
-
 
 });
