@@ -23,10 +23,10 @@ export const BooleanOps =
 
   // Comparisons
 
-  isValid: ops.set('?', BooleanType, { a: BooleanType }),
+  isValid: ops.set('?', BooleanType, { value: BooleanType }),
 
-  isTrue: ops.set('t?', BooleanType, { a: BooleanType }),
+  isTrue: ops.set('t?', BooleanType, { value: BooleanType }),
 
-  isFalse: ops.set('f?', BooleanType, { a: BooleanType }),
+  isFalse: ops.set('f?', BooleanType, { value: BooleanType }),
 
 };

@@ -83,9 +83,9 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     number(params.a, context) ^ number(params.b, context)
   );
 
-  run.setOperation(NumberOps.cmp, (params) => (context) => {
+  run.setOperation(NumberOps.cmp, (params) => (context) => 
     number(params.value, context) - number(params.test, context)
-  });
+  );
 
   // Unary Operations
 
@@ -223,7 +223,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   // Formatters
 
-  run.setOperation(NumberOps.toBaseString, (params) => (context) => {
+  run.setOperation(NumberOps.toBaseText, (params) => (context) => {
     const value = number(params.value, context);
     if (!isFinite(value)) {
       return value;
@@ -238,7 +238,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     return x;
   });
 
-  run.setOperation(NumberOps.toString, (params) => (context) => {
+  run.setOperation(NumberOps.toText, (params) => (context) => {
     const value = number(params.value, context);
     if (!isFinite(value)) {
       return value;
@@ -279,19 +279,19 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
   // Comparisons
 
   run.setOperation(NumberOps.isValid, (params) => (context) => 
-    isNumber(params.a(context))
+    isNumber(params.value(context))
   );
 
   run.setOperation(NumberOps.isZero, (params) => (context) => 
-    Math.abs(number(params.a, context)) <= number(params.epsilon, context, epsilon)
+    Math.abs(number(params.value, context)) <= number(params.epsilon, context, epsilon)
   );
 
   run.setOperation(NumberOps.isEqual, (params) => (context) => 
-    Math.abs(number(params.a, context) - number(params.b, context)) <= number(params.epsilon, context, epsilon)
+    Math.abs(number(params.value, context) - number(params.test, context)) <= number(params.epsilon, context, epsilon)
   );
 
   run.setOperation(NumberOps.isNotEqual, (params) => (context) => 
-    Math.abs(number(params.a, context) - number(params.b, context)) > number(params.epsilon, context, epsilon)
+    Math.abs(number(params.value, context) - number(params.test, context)) > number(params.epsilon, context, epsilon)
   );
 
   run.setOperation(NumberOps.isLess, (params) => (context) => 

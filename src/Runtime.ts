@@ -38,6 +38,13 @@ export class Runtime
   {
     return this.ops[id];
   }
+  
+  public getOperationScopeDefaults (id: string): Record<string, string>
+  {
+    const builder = this.defs.getOperationBuilder(id);
+
+    return builder ? builder.scopeDefaults : {};
+  }
 
   public getExpression (id: string): CommandBuilder
   {

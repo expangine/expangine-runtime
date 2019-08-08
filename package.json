@@ -18,9 +18,9 @@
   "scripts": {
     "start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/ --mode development",
     "build": "webpack --config webpack.config.js --mode production",
-    "build.prod": "webpack --config webpack.config.js -p",
+    "build:prod": "webpack --config webpack.config.js -p",
     "test": "jest",
-    "test.debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "cleanup": "shx rm -rf umd lib lib-esm lib-fesm typings coverage ../expangine-runtime-ts-pages/docs",
     "prebuild": "npm run cleanup && npm run verify",
     "docs": "typedoc -p . --readme README.md --theme minimal --mode file --target 'es5' --excludeNotExported --excludePrivate --ignoreCompilerErrors --exclude \"**/test/**/*.*\" --out ../expangine-runtime-ts-pages/docs src/ && cp -R examples ../expangine-runtime-ts-pages/ && cp -R umd ../expangine-runtime-ts-pages/",

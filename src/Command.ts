@@ -36,4 +36,5 @@ export interface CommandProvider
 {
   getCommand(expr: Expression): Command;
   getOperation(id: string): OperationToCommand;
+  getOperationScopeDefaults(id: string): Record<string, string>;
 }

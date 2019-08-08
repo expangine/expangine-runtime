@@ -1,6 +1,10 @@
 
 import { ListType } from '../types/List';
 import { BooleanType } from '../types/Boolean';
+import { NumberType } from '../types/Number';
+import { AnyType } from '../types/Any';
+import { ObjectType } from '../types/Object';
+import { TextType } from '../types/Text';
 
 
 const ops = ListType.operations;
@@ -11,64 +15,220 @@ const iterationScope = (list: ListType) => ({
   index: ListType.lengthType 
 });
 
+const iterationScopeDefaults = {
+  list: 'list',
+  item: 'item',
+  index: 'index'
+};
 
-export const ListOps = {
+const compareScope = (list: ListType) => ({
+  list,
+  value: list.options.item,
+  test: list.options.item
+});
+
+const compareScopeDefaults = {
+  list: 'list',
+  value: 'value',
+  test: 'test'
+};
+
+
+export const ListOps = 
+{
+
+  // Operations
 
   add: ops.build('+', 
     (list) => [list, { list, item: list.options.item }]
   ),
 
+  addFirst: ops.build('+f', 
+    (list) => [list, { list, item: list.options.item }]
+  ),
+
+  addLast: ops.build('+l', 
+    (list) => [list, { list, item: list.options.item }]
+  ),
+
+  insert: ops.build('+@', 
+    (list) => [list, { list, item: list.options.item, index: NumberType }]
+  ),
+
+  remove: ops.build('-', 
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  removeFirst: ops.build('-f', 
+    (list) => [list.options.item, { list }]
+  ),
+
+  removeLast: ops.build('-l', 
+    (list) => [list.options.item, { list }]
+  ),
+
+  removeAt: ops.build('-@', 
+    (list) => [list.options.item, { list, index: NumberType }]
+  ),
+
+  contains: ops.build('contains',
+    (list) => [BooleanType, { list, item: list.options.item, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  copy: ops.build('copy', 
+    (list) => [list, { list }, { deepCopy: list.options.item }, { copy: list.options.item }],
+    { copy: 'copy' }
+  ),
+
+  reverse: ops.build('reverse', 
+    (list) => [list, { list }]
+  ),
+
+  exclude: ops.build('exclude', 
+    (list) => [list, { list, exclude: list, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  overlap: ops.build('overlap', 
+    (list) => [list, { list, overlap: list, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  sort: ops.build('sort', 
+    (list) => [list, { list, compare: NumberType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  shuffle: ops.build('shuffle', 
+    (list) => [list, { list }, { times: NumberType }]
+  ),
+
+  unique: ops.build('unique', 
+    (list) => [list, { list, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  duplicates: ops.build('dupes', 
+    (list) => [list, { list, isEqual: BooleanType }, { once: BooleanType }, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  take: ops.build('take', 
+    (list) => [list, { list, count: NumberType }]
+  ),
+
+  skip: ops.build('skip', 
+    (list) => [list, { list, count: NumberType }]
+  ),
+
+  drop: ops.build('drop', 
+    (list) => [list, { list, count: NumberType }]
+  ),
+
+  append: ops.build('append', 
+    (list) => [list, { list, append: list }]
+  ),
+
+  prepend: ops.build('prepend', 
+    (list) => [list, { list, prepend: list }]
+  ),
+
+  indexOf: ops.build('indexOf', 
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  lastIndexOf: ops.build('lastIndexOf', 
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  last: ops.build('last', 
+    (list) => [list.options.item, { list }]
+  ),
+
+  first: ops.build('first', 
+    (list) => [list.options.item, { list }]
+  ),
+
+  count: ops.build('count', 
+    (list) => [NumberType, { list }]
+  ),
+
+  randomList: ops.build('randomList', 
+    (list) => [list, { list, count: NumberType }]
+  ),
+
+  random: ops.build('random', 
+    (list) => [list.options.item, { list }]
+  ),
+
+  // Iteration
+
+  join: ops.build('join',
+    (list) => [TextType, { list }, { delimiter: TextType, toText: TextType, prefix: TextType, suffix: TextType }, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
+  each: ops.build('each',
+    (list) => [list, { list, each: AnyType }, { reverse: BooleanType }, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
   filter: ops.build('filter',
-    (list) => [list, { list, filter: BooleanType.baseType }, {}, iterationScope(list)]
-  )
+    (list) => [list, { list, filter: BooleanType }, {}, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
+  not: ops.build('not',
+    (list) => [list, { list, not: BooleanType }, {}, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
+  map: ops.build('map',
+    (list) => [ListType.forItem(AnyType), { list, transform: AnyType }, {}, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
+  split: ops.build('split', 
+    (list) => [new ObjectType({ props: { pass: list, fail: list } }), { list, pass: BooleanType }, {}, iterationScope(list)],
+    iterationScopeDefaults
+  ),
+
+  reduce: ops.build('reduce', 
+    (list) => [AnyType, { list, reduce: AnyType, initial: AnyType }, {}, { list, item: list.options.item, reduced: AnyType, index: NumberType }],
+    { ...iterationScopeDefaults, reduced: 'reduced' }
+  ),
+
+  cmp: ops.build('cmp', 
+    (list) => [BooleanType, { list, test: list, compare: NumberType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  // Comparisons
+
+  isEqual: ops.build('=', 
+    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  isNotEqual: ops.build('!=', 
+    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, compareScope(list)],
+    compareScopeDefaults
+  ),
+
+  isEmpty: ops.build('0?', 
+    (list) => [BooleanType, { list }]
+  ),
+
+  isNotEmpty: ops.build('!0',
+    (list) => [BooleanType, { list }]
+  ),
+
+  /**
+  ONCE MAP: objectify, group
+  */
+
 };
-
-/**
-
-+ add (a, b: T) => List
-- subtract (a, b: T) => List
-addFirst (a, b: T) => List
-addLast (a, b: T) => List
-addAt
-removeFirst
-removeLast
-removeAt
-
-where filter (a, b: (T) => Boolean) => List
-not filter not (a, b: (T) => Boolean) => List
-transform transform (a, b: (T) => R) => List
-reverse reverse item order (a) => List
-exclude the items from this list and not in the given list (a, b: List, c: (T, T) => Boolean) => List
-intersect the items they have in common (a, b: List, c: (T, T) => Boolean) => List
-sort sort values by comparator (a, sorter: (T, T) => Number) => List
-shuffle move values around (a, times: Number) => List
-unique return only unique values (a, b: (T, T) => Boolean) => List
-duplicates return only the duplicates (a, b: (T, T) => Boolean, onlyOnce: Boolean> => List
-take take first # items (a, count: Number) => List
-skip skip first # items (a, count: Number) => List
-drop ignore last # items (a, count: Number) => List
-append add list to end (a, b: List) => List
-prepend add list to beginning (a, b: List) => List
-split split list into two based on condition (a, splitter: (T) => Boolean) => { pass: List, fail: List }
-delete removes all values in list (a) => List
-extract removes all values from underlying list and returns new (a) => List
-indexOf index of (a, b: (T) => Boolean) => Number
-lastIndexOf last index of (a, b: (T) => Boolean) => Number
-first return first item (a) => T
-last return last item (a) => T
-count (a) => Number
-objectify convert to object<K, R> (a, b: (T) => K, c: (T) => R) => { [K]: R }
-group convert to object<K: Text> (a, b: (T) => K): { [K]: { list: List, key: K } }
-reduceSimple reduce using simple operation (a, b: (T, T) => T) => T
-reduce reduce more complex (a, b: (T, R) => R, initial: R) => R
-randomList choose # number items (a, b: Number) => List
-random choose random item (a) => T
-
-join
-
-=
-!=
-empty is list empty (a) => Boolean
-has is list not empty (a) => Boolean
-contains list has item (a, b: T) => Boolean
- */

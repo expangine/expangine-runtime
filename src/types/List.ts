@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty } from '../fns';
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeClass } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
@@ -46,8 +46,10 @@ export class ListType extends Type<ListOptions>
       : [this.id, item.encode(), options];
   }
 
-  public static forItem(item: Type)
+  public static forItem(itemOrClass: Type | TypeClass<any, any>)
   {
+    const item = itemOrClass instanceof Type ? itemOrClass : itemOrClass.baseType;
+    
     return new ListType({ item });
   }
 

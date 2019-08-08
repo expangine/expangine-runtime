@@ -7,6 +7,7 @@ import addNumberOperations from './number';
 import addTextOperations from './text';
 import addBooleanOperations from './boolean';
 import addAnyOperations from './any';
+import addListOperations from './list';
 
 
 
@@ -17,3 +18,4 @@ addNumberOperations(runtime);
 addTextOperations(runtime);
 addBooleanOperations(runtime);
 addAnyOperations(runtime);
+addListOperations(runtime);

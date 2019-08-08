@@ -104,19 +104,19 @@ export const NumberOps =
 
   // Formatters
 
-  toBaseString: ops.set('toBaseString', TextType, { value: NumberType }, { base: NumberType, minDigits: NumberType }),
+  toBaseText: ops.set('toBaseText', TextType, { value: NumberType }, { base: NumberType, minDigits: NumberType }),
 
-  toString: ops.set('toString', TextType, { value: NumberType }, { prefix: TextType, suffix: TextType, minPlaces: NumberType, maxPlaces: NumberType, useExponent: BooleanType, thousandSeparator: TextType }),
+  toText: ops.set('toText', TextType, { value: NumberType }, { prefix: TextType, suffix: TextType, minPlaces: NumberType, maxPlaces: NumberType, useExponent: BooleanType, thousandSeparator: TextType }),
 
   // Comparisons
 
-  isValid: ops.set('?', BooleanType, { a: NumberType }),
+  isValid: ops.set('?', BooleanType, { value: NumberType }),
 
-  isZero: ops.set('0?', BooleanType, { a: NumberType }, { epsilon: NumberType }),
+  isZero: ops.set('0?', BooleanType, { value: NumberType }, { epsilon: NumberType }),
 
-  isEqual: ops.set('=', BooleanType, { a: NumberType, b: NumberType }, { epsilon: NumberType }),
+  isEqual: ops.set('=', BooleanType, { value: NumberType, test: NumberType }, { epsilon: NumberType }),
 
-  isNotEqual: ops.set('!=', BooleanType, { a: NumberType, b: NumberType }, { epsilon: NumberType }),
+  isNotEqual: ops.set('!=', BooleanType, { value: NumberType, test: NumberType }, { epsilon: NumberType }),
 
   isLess: ops.set('<', BooleanType, { value: NumberType, test: NumberType }),
 

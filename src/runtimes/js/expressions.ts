@@ -91,15 +91,28 @@ export default (run: Runtime) =>
   {
     const params = mapObject(expr.params, expr => run.getCommand(expr));
     const op = run.getOperation(expr.name);
+    const defaults = run.getOperationScopeDefaults(expr.name);
+    let scopeAlias = expr.scopeAlias;
 
-    return op(params, expr.scopeAlias);
+    if (defaults) {
+      for (let prop in defaults) {
+        if (!(prop in scopeAlias)) {
+          if (scopeAlias === expr.scopeAlias) {
+            scopeAlias = { ...scopeAlias };
+          }
+          scopeAlias[prop] = defaults[prop];
+        }
+      }
+    }
+
+    return op(params, scopeAlias);
   });
 
   run.setExpression(ChainExpression, (expr, run) => 
   { 
     const chain = expr.chain.map(data => run.getCommand(data));
 
-    return (context) => chain.map(cmd => cmd(context));
+    return (context) => chain.reduce<any>((_, cmd) => cmd(context), undefined)
   });
 
   run.setExpression(IfExpression, (expr, run) => 

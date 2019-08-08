@@ -33,15 +33,15 @@ export default (run: Runtime) =>
   // Comparisons
 
   run.setOperation(BooleanOps.isValid, (params) => (context) => 
-    isBoolean(params.a(context))
+    isBoolean(params.value(context))
   );
 
   run.setOperation(BooleanOps.isTrue, (params) => (context) => 
-    bool(params.a, context) === true
+    bool(params.value, context, false) === true
   );
 
   run.setOperation(BooleanOps.isFalse, (params) => (context) => 
-    bool(params.a, context) === false
+    bool(params.value, context, false) === false
   );
 
 };

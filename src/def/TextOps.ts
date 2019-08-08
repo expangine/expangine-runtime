@@ -6,7 +6,7 @@ import { ListType } from '../types/List';
 
 
 const ops = TextType.operations;
-const TextListType = ListType.forItem(TextType.baseType);
+const TextListType = ListType.forItem(TextType);
 
 
 export const TextOps = 

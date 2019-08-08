@@ -1,6 +1,6 @@
 import { Type, TypeClass, TypeParser } from './Type';
 import { Expression, ExpressionClass } from './Expression';
-import { Operations } from './Operation';
+import { Operations, OperationBuilder } from './Operation';
 interface DefinitionsOptions {
     types?: TypeClass[];
     expressions?: ExpressionClass[];
@@ -15,6 +15,7 @@ export declare class Definitions {
     addType<T extends Type>(type: TypeClass<T>): void;
     addAlias<T extends Type>(alias: string, instance: T | any): void;
     getType(value: any): Type;
+    getOperationBuilder(id: string): OperationBuilder<any> | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
     getExpression(value: any): Expression;
 }

@@ -28,17 +28,6 @@ describe('index', () => {
     }); // 12
 
     expect(b).toEqual(12);
-
-    /*
-    const getEven = runtime.eval(['op', 'list:filter', {
-      list: ['var', ['target']],
-      filter: ['op', 'num:0?', {a: ['op', 'num:%', {a: ['var', ['item']], b: 2}]}]
-    }]);
-
-    expect(getEven({
-      target: [1, 2, 3, 4, 5, 6, 7]
-    }).toEqual([2, 4, 6]);
-    */
   });
 
   it('do', () => {
@@ -74,8 +63,8 @@ describe('index', () => {
           addend: 1
         }]],
         ['set', ['break'], ['op', 'num:=', {
-          a: ['get', ['a']],
-          b: 4
+          value: ['get', ['a']],
+          test: 4
         }]]
       ]]
     ]);
@@ -120,8 +109,8 @@ describe('index', () => {
           addend: 1
         }]],
         ['set', ['break'], ['op', 'num:=', {
-          a: ['get', ['a']],
-          b: 4
+          value: ['get', ['a']],
+          test: 4
         }]]
       ]]
     ]);

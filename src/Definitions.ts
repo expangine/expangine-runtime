@@ -2,7 +2,7 @@
 import { isArray, mapObject } from './fns';
 import { Type, TypeClass, TypeParser } from './Type';
 import { Expression, ExpressionClass } from './Expression';
-import { Operations } from './Operation';
+import { Operations, OperationBuilder } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 
 
@@ -68,6 +68,21 @@ export class Definitions
     const data = isArray(value) ? value : [];
 
     return this.parsers[id](data, this);
+  }
+
+  public getOperationBuilder(id: string): OperationBuilder<any> | null
+  {
+    const op = this.operations.getBuilder(id);
+
+    if (op)
+    {
+      return op;
+    }
+
+    const [typeName] = id.split(':');
+    const type = this.types[typeName];
+
+    return type ? type.operations.getBuilder(id) : null;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 

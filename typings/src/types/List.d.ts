@@ -1,4 +1,4 @@
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeClass } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 export interface ListOptions {
@@ -13,7 +13,7 @@ export declare class ListType extends Type<ListOptions> {
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
-    static forItem(item: Type): ListType;
+    static forItem(itemOrClass: Type | TypeClass<any, any>): ListType;
     getSubTypes(): {
         length: NumberType;
         item: Type<any>;
