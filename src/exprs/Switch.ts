@@ -1,6 +1,7 @@
 
 import { isUndefined } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_VALUE = 1;
@@ -48,6 +49,24 @@ export class SwitchExpression extends Expression
     this.op = op;
     this.cases = cases;
     this.defaultCase = defaultCase;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.cases.reduce(
+      (max, [tests, result]) => Math.max(
+        max, 
+        result.getComplexity(def), 
+        tests.reduce((tmax, t) => Math.max(
+          tmax, 
+          t.getComplexity(def)
+        ), 0)
+      ), 
+      Math.max(
+        this.value.getComplexity(def), 
+        this.defaultCase.getComplexity(def)
+      )
+    );
   }
 
   public getScope(): null

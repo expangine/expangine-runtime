@@ -1,6 +1,7 @@
 
 import { mapObject, isEmpty } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_NAME = 1;
@@ -40,6 +41,19 @@ export class OperationExpression extends Expression
     this.name = name;
     this.params = params;
     this.scopeAlias = scopeAlias;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    const builder = def.getOperationBuilder(this.name);
+    let complexity = builder ? builder.complexity : 0;
+
+    for (const prop in this.params)
+    {
+      complexity = Math.max(complexity, this.params[prop].getComplexity(def));
+    }
+
+    return complexity;
   }
 
   public getScope(): null

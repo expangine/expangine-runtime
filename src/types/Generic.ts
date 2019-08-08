@@ -16,7 +16,9 @@ export class GenericType extends Type<string>
 
   public static decode(data: any[], types: TypeProvider): GenericType 
   {
-    return new GenericType(data[INDEX_NAME] || 'T');
+    const name = data[INDEX_NAME] || 'T';
+
+    return new GenericType(name);
   }
 
   public static encode(type: GenericType): any 

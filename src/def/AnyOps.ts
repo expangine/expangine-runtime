@@ -7,27 +7,31 @@ import { BooleanType } from '../types/Boolean';
 const ops = AnyType.operations;
 
 
+const ANY_COMPLEXITY = {
+  complexity: 2
+};
+
 export const AnyOps = 
 {
 
   // Operations
 
-  cmp: ops.set('cmp', NumberType, { value: AnyType, test: AnyType }),
+  cmp: ops.set('cmp', ANY_COMPLEXITY, NumberType, { value: AnyType, test: AnyType }),
 
-  copy: ops.set('copy', AnyType, { value: AnyType }),
+  copy: ops.set('copy', ANY_COMPLEXITY, AnyType, { value: AnyType }),
 
   // Comparisons
 
-  isEqual: ops.set('=', BooleanType, { value: AnyType, test: AnyType }),
+  isEqual: ops.set('=', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
-  isNotEqual: ops.set('!=', BooleanType, { value: AnyType, test: AnyType }),
+  isNotEqual: ops.set('!=', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
-  isLess: ops.set('<', BooleanType, { value: AnyType, test: AnyType }),
+  isLess: ops.set('<', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
-  isLessOrEqual: ops.set('<=', BooleanType, { value: AnyType, test: AnyType }),
+  isLessOrEqual: ops.set('<=', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
-  isGreater: ops.set('>', BooleanType, { value: AnyType, test: AnyType }),
+  isGreater: ops.set('>', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
-  isGreaterOrEqual: ops.set('>=', BooleanType, { value: AnyType, test: AnyType }),
+  isGreaterOrEqual: ops.set('>=', ANY_COMPLEXITY, BooleanType, { value: AnyType, test: AnyType }),
 
 };

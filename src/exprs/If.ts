@@ -1,6 +1,7 @@
 
 import { isUndefined } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_CASES = 1;
@@ -36,6 +37,18 @@ export class IfExpression extends Expression
     super(IfExpression.id);
     this.cases = cases;
     this.otherwise = otherwise;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.cases.reduce(
+      (max, [test, result]) => Math.max(
+        max, 
+        test.getComplexity(def),
+        result.getComplexity(def)
+      ), 
+      this.otherwise.getComplexity(def)
+    );
   }
 
   public getScope(): null

@@ -1,5 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_EXPR = 1;
@@ -29,6 +30,11 @@ export class NotExpression extends Expression
   {
     super(NotExpression.id);
     this.expression = expression;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.expression.getComplexity(def);
   }
 
   public getScope(): null

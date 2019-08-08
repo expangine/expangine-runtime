@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
+import { Definitions } from '../Definitions';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -54,6 +55,11 @@ export class DoExpression extends Expression
     this.body = body;
     this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return Math.max(this.condition.getComplexity(def), this.body.getComplexity(def)) + 1;
   }
 
   public getScope()

@@ -1,4 +1,5 @@
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 export declare class TemplateExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): TemplateExpression;
@@ -6,6 +7,7 @@ export declare class TemplateExpression extends Expression {
     template: string;
     params: Record<string, Expression>;
     constructor(template: string, params: Record<string, Expression>);
+    getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
 }

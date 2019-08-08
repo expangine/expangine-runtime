@@ -1,4 +1,6 @@
 import { Type } from './Type';
+import { Definitions } from './Definitions';
+
 
 export interface ExpressionProvider 
 { 
@@ -24,6 +26,8 @@ export abstract class Expression
   }
 
   abstract getScope(): Record<string, Type> | null;
+
+  abstract getComplexity(def: Definitions): number;
 
   abstract encode(): any;
 

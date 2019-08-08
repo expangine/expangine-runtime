@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { mapObject } from '../fns';
 import { AnyType } from '../types/Any';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_DEFINE = 1;
@@ -35,6 +36,18 @@ export class DefineExpression extends Expression
     super(DefineExpression.id);
     this.define = define;
     this.body = body;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    let complexity = this.body.getComplexity(def);
+
+    for (const prop in this.define)
+    {
+      complexity = Math.max(complexity, this.define[prop].getComplexity(def));
+    }
+
+    return complexity;
   }
 
   public getScope()

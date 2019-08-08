@@ -1,5 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_CHAIN = 1;
@@ -29,6 +30,11 @@ export class ChainExpression extends Expression
   {
     super(ChainExpression.id);
     this.chain = chain;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.chain.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
 
   public getScope(): null

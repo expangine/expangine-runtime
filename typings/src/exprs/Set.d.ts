@@ -1,4 +1,5 @@
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 export declare class SetExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): SetExpression;
@@ -6,6 +7,7 @@ export declare class SetExpression extends Expression {
     path: Expression[];
     value: Expression;
     constructor(path: Expression[], value: Expression);
+    getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
 }

@@ -30,6 +30,11 @@ export class ConstantExpression extends Expression
     this.value = value;
   }
 
+  public getComplexity(): number
+  {
+    return 0;
+  }
+
   public getScope(): null
   {
     return null;

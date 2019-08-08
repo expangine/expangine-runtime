@@ -1,5 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_PATH = 1;
@@ -33,6 +34,11 @@ export class SetExpression extends Expression
     super(SetExpression.id);
     this.path = path;
     this.value = value;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), this.value.getComplexity(def));
   }
 
   public getScope(): null

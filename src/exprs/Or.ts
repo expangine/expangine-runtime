@@ -1,5 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
+import { Definitions } from '../Definitions';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -29,6 +30,11 @@ export class OrExpression extends Expression
   {
     super(OrExpression.id);
     this.expressions = expressions;
+  }
+
+  public getComplexity(def: Definitions): number
+  {
+    return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
 
   public getScope(): null

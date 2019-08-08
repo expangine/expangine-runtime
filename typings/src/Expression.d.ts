@@ -1,4 +1,5 @@
 import { Type } from './Type';
+import { Definitions } from './Definitions';
 export interface ExpressionProvider {
     getExpression(value: any): Expression;
 }
@@ -12,5 +13,6 @@ export declare abstract class Expression {
     id: string;
     constructor(id: string);
     abstract getScope(): Record<string, Type> | null;
+    abstract getComplexity(def: Definitions): number;
     abstract encode(): any;
 }
