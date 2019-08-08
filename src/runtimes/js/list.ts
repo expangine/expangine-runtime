@@ -13,6 +13,67 @@ export default (run: Runtime) =>
 
   // Operations
 
+  run.setOperation(ListOps.create, (params, scope) => (context) => {
+    const n = number(params.count, context);
+    const list: any[] = [];
+
+    if (n <= 0) 
+    {
+      return list;
+    }
+
+    const saved = saveScope(context, scope);
+
+    if (bool(params.sameItem, context, false)) 
+    {
+      context[scope.index] = 0;
+      context[scope.last] = undefined;
+      context[scope.list] = list;
+      context[scope.count] = n;
+
+      const item = params.item(context);
+
+      for (let i = 0; i < n; i++) 
+      {
+        list[i] = item;
+      }
+    } 
+    else 
+    {
+      let last;
+
+      for (let i = 0; i < n; i++) 
+      {
+        context[scope.index] = i;
+        context[scope.last] = last;
+        context[scope.list] = list;
+        context[scope.count] = n;
+
+        const item = params.item(context);
+
+        last = item;
+        list.push(item);
+      }
+    }
+
+    restoreScope(context, saved);
+
+    return list;
+  });
+
+  run.setOperation(ListOps.get, (params) => (context) =>
+    array(params.list, context)[number(params.index, context)]
+  );
+
+  run.setOperation(ListOps.set, (params) => (context) => {
+    const list = array(params.list, context);
+    const index = number(params.index, context);
+    const prev = list[index];
+    list[index] = params.value(context);
+
+    return prev;
+  });
+
   run.setOperation(ListOps.add, (params) => (context) => {
     const list = array(params.list, context);
     const item = optional(params.item, context);

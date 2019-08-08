@@ -40,6 +40,20 @@ export const ListOps =
 
   // Operations
 
+  create: ops.build('new', {}, 
+    (_, generics) => [ListType.forItem(generics.T), { count: NumberType, item: generics.T }, { sameItem: BooleanType }, { list: ListType.forItem(generics.T), index: NumberType, last: generics.T, count: NumberType }],
+    { list: 'list', index: 'index', last: 'last', count: 'count' },
+    { T: new GenericType('T') }
+  ),
+
+  get: ops.build('get', {}, 
+    (list) => [list.options.item, { list, index: NumberType }]
+  ),
+
+  set: ops.build('set', {}, 
+    (list) => [list.options.item, { list, index: NumberType, value: list.options.item }]
+  ),
+
   add: ops.build('+', { mutates: ['list'] }, 
     (list) => [list, { list, item: list.options.item }]
   ),

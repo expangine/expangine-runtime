@@ -5,6 +5,117 @@ import { runtime } from '../src/runtimes/js';
 
 describe('index', () => {
 
+  it('create', () =>
+  {
+    const process = runtime.eval(['op', 'list:new', {
+      count: ['get', ['n']],
+      item: ['get', ['count']]
+    }, {
+      index: 'lastIndex'
+    }]);
+
+    const context = {
+      n: 2
+    };
+
+    const result = process(context);
+
+    expect(result).toEqual([2, 2]);
+  });
+
+  it('create generated', () =>
+  {
+    const process = runtime.eval(['op', 'list:new', {
+      count: ['get', ['n']],
+      item: ['op', 'list:new', {
+        count: 1,
+        item: ['get', ['lastIndex']]
+      }]
+    }, {
+      index: 'lastIndex'
+    }]);
+
+    const context = {
+      n: 2
+    };
+
+    const result = process(context);
+
+    expect(result).toEqual([
+      [0], [1]
+    ]);
+  });
+
+  it('create same', () =>
+  {
+    const process = runtime.eval(['op', 'list:new', {
+      count: ['get', ['n']],
+      item: ['op', 'list:new', {
+        count: 1,
+        item: ['get', ['lastIndex']]
+      }],
+      sameItem: true
+    }, {
+      index: 'lastIndex'
+    }]);
+
+    const context = {
+      n: 2
+    };
+
+    const result = process(context);
+
+    expect(result).toEqual([
+      [0], [0]
+    ]);
+    expect(result[0] === result[1]).toBeTruthy();
+  });
+
+  it('get', () =>
+  {
+    const process = runtime.eval(['op', 'list:get', {
+      list: ['get', ['list']],
+      index: ['get', ['i']]
+    }]);
+
+    const list = [1, 2, 3];
+
+    expect(process({ list, i: -1 })).toEqual(undefined);
+
+    expect(process({ list, i: 0 })).toEqual(1);
+
+    expect(process({ list, i: 1 })).toEqual(2);
+
+    expect(process({ list, i: 2 })).toEqual(3);
+
+    expect(process({ list, i: 3 })).toEqual(undefined);
+  });
+
+  it('set', () =>
+  {
+    const process = runtime.eval(['op', 'list:set', {
+      list: ['get', ['list']],
+      index: ['get', ['i']],
+      value: ['get', ['value']]
+    }]);
+
+    const list = [1, 2, 3];
+
+    expect(process({ list, i: 0, value: 3 })).toEqual(1);
+
+    expect(process({ list, i: 1, value: 2 })).toEqual(2);
+
+    expect(process({ list, i: 2, value: 1 })).toEqual(3);
+
+    expect(list.length).toEqual(3);
+
+    expect(process({ list, i: 3, value: 0 })).toEqual(undefined);
+
+    expect(list.length).toEqual(4);
+
+    expect(list).toEqual([3, 2, 1, 0]);
+  });
+
   it('add', () =>
   {
     const process = runtime.eval(['op', 'list:+', {
