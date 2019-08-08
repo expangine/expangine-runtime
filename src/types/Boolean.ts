@@ -5,6 +5,8 @@ import { Operations } from '../Operation';
 import { NumberType } from './Number';
 
 
+const INDEX_OPTIONS = 1;
+
 export interface BooleanOptions 
 {
   true?: Record<string, true>;
@@ -22,7 +24,7 @@ export class BooleanType extends Type<BooleanOptions>
 
   public static decode(data: any[], types: TypeProvider): BooleanType 
   {
-    return new BooleanType(data[1] || {});
+    return new BooleanType(data[INDEX_OPTIONS] || {});
   }
 
   public static encode(type: BooleanType): any 

@@ -4,6 +4,8 @@ import { Type } from '../Type';
 import { Operations } from '../Operation';
 
 
+const INDEX_OPTIONS = 1;
+
 export interface TextOptions 
 {
   min?: number;
@@ -26,7 +28,7 @@ export class TextType extends Type<TextOptions>
 
   public static decode(data: any[]): TextType 
   {
-    return new TextType(data[1] || {});
+    return new TextType(data[INDEX_OPTIONS] || {});
   }
 
   public static encode(type: TextType): any 

@@ -5,6 +5,7 @@ import { NumberType } from '../types/Number';
 import { AnyType } from '../types/Any';
 import { ObjectType } from '../types/Object';
 import { TextType } from '../types/Text';
+import { GenericType } from '../types/Generic';
 
 
 const ops = ListType.operations;
@@ -188,8 +189,9 @@ export const ListOps =
   ),
 
   map: ops.build('map',
-    (list) => [ListType.forItem(AnyType), { list, transform: AnyType }, {}, iterationScope(list)],
-    iterationScopeDefaults
+    (list, generics) => [ListType.forItem(generics.M), { list, transform: generics.M }, {}, iterationScope(list)],
+    iterationScopeDefaults,
+    { M: new GenericType('M') }
   ),
 
   split: ops.build('split', 
@@ -198,8 +200,9 @@ export const ListOps =
   ),
 
   reduce: ops.build('reduce', 
-    (list) => [AnyType, { list, reduce: AnyType, initial: AnyType }, {}, { list, item: list.options.item, reduced: AnyType, index: NumberType }],
-    { ...iterationScopeDefaults, reduced: 'reduced' }
+    (list, generics) => [generics.R, { list, reduce: generics.R, initial: generics.R }, {}, { list, item: list.options.item, reduced: generics.R, index: NumberType }],
+    { ...iterationScopeDefaults, reduced: 'reduced' },
+    { R: new GenericType('R') }
   ),
 
   cmp: ops.build('cmp', 

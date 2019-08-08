@@ -2,6 +2,8 @@
 import { Expression, ExpressionProvider } from '../Expression';
 
 
+const INDEX_EXPR = 1;
+
 export class NotExpression extends Expression 
 {
 
@@ -9,7 +11,7 @@ export class NotExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): NotExpression 
   {
-    const expression = exprs.getExpression(data[1]);
+    const expression = exprs.getExpression(data[INDEX_EXPR]);
     
     return new NotExpression(expression);
   }

@@ -4,6 +4,8 @@ import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
 
+const INDEX_TYPE = 1;
+
 export class OptionalType extends Type<Type>
 {
 
@@ -15,7 +17,7 @@ export class OptionalType extends Type<Type>
 
   public static decode(data: any[], types: TypeProvider): OptionalType 
   {
-    const type = types.getType(data[1]);
+    const type = types.getType(data[INDEX_TYPE]);
 
     return new OptionalType( type );
   }

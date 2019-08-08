@@ -4,6 +4,8 @@ import { Type, TypeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
+const INDEX_PROPS = 1;
+
 export interface ObjectOptions 
 {
   props: Record<string, Type>;
@@ -20,7 +22,7 @@ export class ObjectType extends Type<ObjectOptions>
 
   public static decode(data: any[], types: TypeProvider): ObjectType 
   {
-    const props = mapObject(data[1], value => types.getType(value));
+    const props = mapObject(data[INDEX_PROPS], value => types.getType(value));
     
     return new ObjectType({ props });
   }

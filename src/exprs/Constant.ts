@@ -3,6 +3,8 @@ import { isArray } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 
 
+const INDEX_CONSTANT = 1;
+
 export class ConstantExpression extends Expression 
 {
 
@@ -10,7 +12,7 @@ export class ConstantExpression extends Expression
 
   public static decode(data: any[], expr: ExpressionProvider): ConstantExpression 
   {
-    return new ConstantExpression(data[1]);
+    return new ConstantExpression(data[INDEX_CONSTANT]);
   }
 
   public static encode(expr: ConstantExpression): any 

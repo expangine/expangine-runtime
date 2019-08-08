@@ -4,6 +4,8 @@ import { Type } from '../Type';
 import { Operations } from '../Operation';
 
 
+const INDEX_OPTIONS = 1;
+
 export interface NumberOptions 
 {
   min?: number;
@@ -22,7 +24,7 @@ export class NumberType extends Type<NumberOptions>
 
   public static decode(data: any[]): NumberType 
   {
-    return new NumberType(data[1] || {});
+    return new NumberType(data[INDEX_OPTIONS] || {});
   }
 
   public static encode(type: NumberType): any 

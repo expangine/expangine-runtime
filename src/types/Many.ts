@@ -4,6 +4,7 @@ import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
 
+const INDEX_MANY = 1;
 
 export class ManyType extends Type<Type[]>
 {
@@ -16,7 +17,7 @@ export class ManyType extends Type<Type[]>
 
   public static decode(data: any[], types: TypeProvider): ManyType 
   {
-    const many = data[1].map((d: any) => types.getType(d));
+    const many = data[INDEX_MANY].map((d: any) => types.getType(d));
 
     return new ManyType(many);
   }
@@ -50,29 +51,6 @@ export class ManyType extends Type<Type[]>
     return this.operations;
   }
 
-  public getSubTypes()
-  {
-    if (!this.subs)
-    {
-      this.subs = {};
-
-      this.options.forEach(many => 
-      {
-        const subs = many.getSubTypes();
-
-        if (subs)
-        {
-          for (const prop in subs)
-          {
-            this.subs[prop] = subs[prop];
-          }
-        }
-      });
-    }
-
-    return this.subs;
-  }
-
   private forMany<T> (otherwise: T, handler: (type: Type) => T | undefined): T
   {
     const many = this.options;
@@ -88,6 +66,26 @@ export class ManyType extends Type<Type[]>
     }
 
     return otherwise;
+  }
+
+  public getSubTypes()
+  {
+    if (!this.subs)
+    {
+      this.subs = {};
+
+      this.options.forEach(many => 
+      {
+        const subs = many.getSubTypes();
+
+        if (subs)
+        {
+          Object.assign(this.subs, subs);
+        }
+      });
+    }
+
+    return this.subs;
   }
 
   public getExactType(value: any): Type 
