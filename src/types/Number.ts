@@ -16,6 +16,8 @@ export interface NumberOptions
 export class NumberType extends Type<NumberOptions> 
 {
 
+  public static WHOLE_EPSILON = 0.000001;
+
   public static id = 'num';
 
   public static operations = new Operations<NumberType>('num:');
@@ -46,7 +48,7 @@ export class NumberType extends Type<NumberOptions>
     return new NumberType({
       min: data,
       max: data,
-      whole: Math.abs(Math.floor(data) - data) < 0.000001
+      whole: Math.abs(Math.floor(data) - data) <= NumberType.WHOLE_EPSILON
     });
   }
 

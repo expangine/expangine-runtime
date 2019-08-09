@@ -1,4 +1,4 @@
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 export interface FunctionOptions {
@@ -11,6 +11,9 @@ export declare class FunctionType extends Type<FunctionOptions> {
     static baseType: FunctionType;
     static decode(data: any[], types: TypeProvider): FunctionType;
     static encode(type: FunctionType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    merge(type: FunctionType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         returnType: Type<any>;
         params: ObjectType;

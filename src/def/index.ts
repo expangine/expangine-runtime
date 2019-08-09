@@ -28,6 +28,7 @@ import { DefineExpression } from '../exprs/Define';
 import { SetExpression } from '../exprs/Set';
 import { TemplateExpression } from '../exprs/Template';
 import { UpdateExpression } from '../exprs/Update';
+import { EnumType } from '../types/Enum';
 
 
 export const defs = new Definitions({
@@ -42,6 +43,7 @@ export const defs = new Definitions({
     ManyType,
     OptionalType,
     MapType,
+    EnumType,
   ],
   expressions: [
     ConstantExpression,

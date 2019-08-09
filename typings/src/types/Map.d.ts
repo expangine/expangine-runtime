@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ListType } from './List';
 import { ObjectType } from './Object';
@@ -12,7 +12,10 @@ export declare class MapType extends Type<MapOptions> {
     static baseType: MapType;
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
+    merge(type: MapType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         key: Type<any>;
         value: Type<any>;

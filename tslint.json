@@ -5,7 +5,6 @@
     "tslint-config-prettier"
   ],
   "rules": {
-    // tslint-react rules
     "jsx-no-lambda": true,
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
@@ -13,7 +12,6 @@
       true,
       "never"
     ],
-    // core ts-lint rules
     "await-promise": true,
     "no-unused-variable": true,
     "forin": false,
@@ -67,6 +65,7 @@
     "match-default-export-name": true,
     "prefer-const": true,
     "prefer-method-signature": true,
+    "no-empty": false,
     "ban-types": [
       true,
       [

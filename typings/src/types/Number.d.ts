@@ -1,4 +1,4 @@
-import { Type } from '../Type';
+import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 export interface NumberOptions {
     min?: number;
@@ -6,11 +6,15 @@ export interface NumberOptions {
     whole?: boolean;
 }
 export declare class NumberType extends Type<NumberOptions> {
+    static WHOLE_EPSILON: number;
     static id: string;
     static operations: Operations<NumberType>;
     static baseType: NumberType;
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    merge(type: NumberType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

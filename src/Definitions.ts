@@ -99,10 +99,9 @@ export class Definitions
       const btypes = this.getTypes(br);
       const an = atypes.length;
 
-      for (let k = 0; k < btypes.length; k++)
+      for (const ktype of btypes)
       {
         let matched = false;
-        const ktype = btypes[k];
         const koptional = ktype instanceof OptionalType;
         const krequired = koptional ? ktype.options : ktype;
 

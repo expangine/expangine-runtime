@@ -1,4 +1,4 @@
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 export declare class AnyType extends Type {
     static id: string;
@@ -6,6 +6,9 @@ export declare class AnyType extends Type {
     static baseType: AnyType;
     static decode(data: any[], types: TypeProvider): AnyType;
     static encode(type: AnyType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    merge(type: AnyType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

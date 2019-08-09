@@ -1,4 +1,4 @@
-import { Type } from '../Type';
+import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 export interface TextOptions {
     min?: number;
@@ -15,6 +15,9 @@ export declare class TextType extends Type<TextOptions> {
     static baseType: TextType;
     static decode(data: any[]): TextType;
     static encode(type: TextType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    merge(type: TextType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

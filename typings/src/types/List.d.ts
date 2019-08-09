@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { ObjectType } from './Object';
@@ -14,7 +14,10 @@ export declare class ListType extends Type<ListOptions> {
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(itemOrClass: TypeInput): ListType;
+    merge(type: ListType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         length: NumberType;
         item: Type<any>;

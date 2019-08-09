@@ -1,4 +1,4 @@
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 export interface BooleanOptions {
     true?: Record<string, true>;
@@ -10,6 +10,9 @@ export declare class BooleanType extends Type<BooleanOptions> {
     static baseType: BooleanType;
     static decode(data: any[], types: TypeProvider): BooleanType;
     static encode(type: BooleanType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    merge(type: BooleanType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
