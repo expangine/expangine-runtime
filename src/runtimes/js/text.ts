@@ -1,7 +1,7 @@
 
 import { Runtime } from '../../Runtime';
 import { TextOps } from '../../def/TextOps';
-import { number, bool, text, numberMaybe } from './helper';
+import { _number, _bool, _text, _numberMaybe } from './helper';
 import { isString } from '../../fns';
 
 
@@ -12,35 +12,35 @@ export default (run: Runtime) =>
   // Operations
 
   run.setOperation(TextOps.append, (params) => (context) => 
-    text(params.value, context) + text(params.append, context)
+    _text(params.value, context) + _text(params.append, context)
   );
 
   run.setOperation(TextOps.prepend, (params) => (context) => 
-    text(params.prepend, context) + text(params.value, context)
+    _text(params.prepend, context) + _text(params.value, context)
   );
 
   run.setOperation(TextOps.lower, (params) => (context) => 
-    text(params.value, context).toLowerCase()
+    _text(params.value, context).toLowerCase()
   );
 
   run.setOperation(TextOps.upper, (params) => (context) => 
-    text(params.value, context).toUpperCase()
+    _text(params.value, context).toUpperCase()
   );
 
   run.setOperation(TextOps.char, (params) => (context) => {
-    const value = text(params.value, context);
-    const index = number(params.index, context);
+    const value = _text(params.value, context);
+    const index = _number(params.index, context);
 
-    return index <= value.length ? value.charAt(index) : text(params.outside, context);
+    return index <= value.length ? value.charAt(index) : _text(params.outside, context);
   });
 
   run.setOperation(TextOps.replace, (params) => (context) => 
-    text(params.value, context).replace(text(params.find, context), text(params.replace, context))
+    _text(params.value, context).replace(_text(params.find, context), _text(params.replace, context))
   );
 
   run.setOperation(TextOps.repeat, (params) => (context) => {
-    const value = number(params.value, context);
-    let times = number(params.times, context);
+    const value = _number(params.value, context);
+    let times = _number(params.times, context);
     let repeated = '';
     while (--times >= 0){ 
       repeated += value;
@@ -49,46 +49,46 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(TextOps.split, (params) => (context) => 
-    text(params.value, context).split(text(params.by, context), numberMaybe(params.limit, context))
+    _text(params.value, context).split(_text(params.by, context), _numberMaybe(params.limit, context))
   );
 
   run.setOperation(TextOps.chars, (params) => (context) => 
-    text(params.value, context)
+    _text(params.value, context)
   );
 
   run.setOperation(TextOps.sub, (params) => (context) => 
-    text(params.value, context).substring(number(params.start, context), numberMaybe(params.end, context))
+    _text(params.value, context).substring(_number(params.start, context), _numberMaybe(params.end, context))
   );
 
   run.setOperation(TextOps.indexOf, (params) => (context) => 
-    text(params.value, context).indexOf(text(params.search, context), numberMaybe(params.start, context))
+    _text(params.value, context).indexOf(_text(params.search, context), _numberMaybe(params.start, context))
   );
 
   run.setOperation(TextOps.lastIndexOf, (params) => (context) => 
-    text(params.value, context).lastIndexOf(text(params.search, context), numberMaybe(params.start, context))
+    _text(params.value, context).lastIndexOf(_text(params.search, context), _numberMaybe(params.start, context))
   );
 
   run.setOperation(TextOps.trim, (params) => (context) => {
-    let value = text(params.value, context);
-    if (bool(params.start, context, true)) {
+    let value = _text(params.value, context);
+    if (_bool(params.start, context, true)) {
       value = value.replace(/^\w+/, '');
     }
-    if (bool(params.end, context, true)) {
+    if (_bool(params.end, context, true)) {
       value = value.replace(/\w+$/, '');
     }
     return value;
   });
 
   run.setOperation(TextOps.startsWith, (params) => (context) => {
-    const value = text(params.value, context);
-    const test = text(params.test, context);
+    const value = _text(params.value, context);
+    const test = _text(params.test, context);
 
     return value.substring(0, test.length) === test;
   });
 
   run.setOperation(TextOps.endsWith, (params) => (context) => {
-    const value = text(params.value, context);
-    const test = text(params.test, context);
+    const value = _text(params.value, context);
+    const test = _text(params.test, context);
 
     return value.substring(value.length - test.length) === test;
   });
@@ -106,9 +106,9 @@ export default (run: Runtime) =>
     };
 
     return (context) => {
-      let value = text(params.value, context);
-      const max = numberMaybe(params.max, context);
-      const min = number(params.min, context, 4);
+      let value = _text(params.value, context);
+      const max = _numberMaybe(params.max, context);
+      const min = _number(params.min, context, 4);
 
       value = value.toLowerCase();
       value = value.replace(LETTERS_ONLY, '');
@@ -155,19 +155,19 @@ export default (run: Runtime) =>
     };
     
     return (context) => {
-      const value = text(params.value, context);
-      const test = text(params.test, context);
+      const value = _text(params.value, context);
+      const test = _text(params.test, context);
 
       return distance(value, test);
     };
   });
 
   run.setOperation(TextOps.length, (params) => (context) =>
-    text(params.value, context).length
+    _text(params.value, context).length
   );
 
   run.setOperation(TextOps.compare, (params) => (context) =>
-    cmp(text(params.value, context), text(params.test, context), bool(params.ignoreCase, context, false))
+    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false))
   );
 
 
@@ -180,11 +180,11 @@ export default (run: Runtime) =>
   // Formatters
 
   run.setOperation(TextOps.toNumber, (params) => (context) => {
-    const value = parseInt(text(params.value, context));
+    const value = parseInt(_text(params.value, context));
 
     return isFinite(value) 
       ? value 
-      : number(params.invalidValue, context, 0);
+      : _number(params.invalidValue, context, 0);
   });
 
   // Comparisons
@@ -194,45 +194,45 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.isEmpty, (params) => (context) => 
-    text(params.a, context).length === 0
+    _text(params.a, context).length === 0
   );
 
   run.setOperation(TextOps.isNotEmpty, (params) => (context) => 
-    text(params.a, context).length !== 0
+    _text(params.a, context).length !== 0
   );
 
   run.setOperation(TextOps.isEqual, (params) => (context) => 
-    cmp(text(params.a, context), text(params.b, context), bool(params.ignoreCase, context, false)) === 0
+    cmp(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) === 0
   );
 
   run.setOperation(TextOps.isNotEqual, (params) => (context) => 
-    cmp(text(params.a, context), text(params.b, context), bool(params.ignoreCase, context, false)) !== 0
+    cmp(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) !== 0
   );
 
   run.setOperation(TextOps.isLess, (params) => (context) => 
-    cmp(text(params.value, context), text(params.test, context), bool(params.ignoreCase, context, false)) < 0
+    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) < 0
   );
 
   run.setOperation(TextOps.isLessOrEqual, (params) => (context) => 
-    cmp(text(params.value, context), text(params.test, context), bool(params.ignoreCase, context, false)) <= 0
+    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) <= 0
   );
 
   run.setOperation(TextOps.isGreater, (params) => (context) => 
-    cmp(text(params.value, context), text(params.test, context), bool(params.ignoreCase, context, false)) > 0
+    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) > 0
   );
 
   run.setOperation(TextOps.isGreaterOrEqual, (params) => (context) => 
-    cmp(text(params.value, context), text(params.test, context), bool(params.ignoreCase, context, false)) >= 0
+    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) >= 0
   );
 
   run.setOperation(TextOps.isLower, (params) => (context) => {
-    const value = text(params.value, context);
+    const value = _text(params.value, context);
 
     return value.localeCompare(value.toLowerCase()) === 0;
   });
 
   run.setOperation(TextOps.isUpper, (params) => (context) => {
-    const value = text(params.value, context);
+    const value = _text(params.value, context);
 
     return value.localeCompare(value.toUpperCase()) === 0;
   });

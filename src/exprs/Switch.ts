@@ -1,5 +1,4 @@
 
-import { isUndefined } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 
@@ -32,7 +31,7 @@ export class SwitchExpression extends Expression
     const value = expr.value.encode();
     const cases = expr.cases.map(([tests, result]) => [tests.map(t => t.encode()), result.encode()]);
 
-    return isUndefined(expr.defaultCase)
+    return Expression.hasConstant(expr.defaultCase, undefined)
       ? [this.id, value, expr.op, cases]
       : [this.id, value, expr.op, cases, expr.defaultCase.encode()];
   }

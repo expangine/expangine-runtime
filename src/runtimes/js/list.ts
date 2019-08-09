@@ -1,7 +1,7 @@
 
 import { Runtime } from '../../Runtime';
 import { ListOps } from '../../def/ListOps';
-import { array, optional, number, saveScope, restoreScope, text, bool } from './helper';
+import { _list, _optional, _number, saveScope, restoreScope, _text, _bool } from './helper';
 import { Command } from '../../Command';
 
 
@@ -14,7 +14,7 @@ export default (run: Runtime) =>
   // Operations
 
   run.setOperation(ListOps.create, (params, scope) => (context) => {
-    const n = number(params.count, context);
+    const n = _number(params.count, context);
     const list: any[] = [];
 
     if (n <= 0) 
@@ -24,7 +24,7 @@ export default (run: Runtime) =>
 
     const saved = saveScope(context, scope);
 
-    if (bool(params.sameItem, context, false)) 
+    if (_bool(params.sameItem, context, false)) 
     {
       context[scope.index] = 0;
       context[scope.last] = undefined;
@@ -62,12 +62,12 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.get, (params) => (context) =>
-    array(params.list, context)[number(params.index, context)]
+    _list(params.list, context)[_number(params.index, context)]
   );
 
   run.setOperation(ListOps.set, (params) => (context) => {
-    const list = array(params.list, context);
-    const index = number(params.index, context);
+    const list = _list(params.list, context);
+    const index = _number(params.index, context);
     const prev = list[index];
     list[index] = params.value(context);
 
@@ -75,8 +75,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.add, (params) => (context) => {
-    const list = array(params.list, context);
-    const item = optional(params.item, context);
+    const list = _list(params.list, context);
+    const item = _optional(params.item, context);
     if (item !== undefined) {
       list.push(item);
     }
@@ -85,8 +85,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.addFirst, (params) => (context) => {
-    const list = array(params.list, context);
-    const item = optional(params.item, context);
+    const list = _list(params.list, context);
+    const item = _optional(params.item, context);
     if (item !== undefined) {
       list.unshift(item);
     }
@@ -95,8 +95,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.addLast, (params) => (context) => {
-    const list = array(params.list, context);
-    const item = optional(params.item, context);
+    const list = _list(params.list, context);
+    const item = _optional(params.item, context);
     if (item !== undefined) {
       list.push(item);
     }
@@ -105,9 +105,9 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.insert, (params) => (context) => {
-    const list = array(params.list, context);
-    const item = optional(params.item, context);
-    const index = number(params.index, context, 0);
+    const list = _list(params.list, context);
+    const item = _optional(params.item, context);
+    const index = _number(params.index, context, 0);
     if (item !== undefined) {
       list.splice(index, 0, item);
     }
@@ -117,7 +117,7 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.remove, (params, scope) => (context) => 
     handleListIsEqual(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       params, 
       scope, 
@@ -130,16 +130,16 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ListOps.removeFirst, (params, scope) => (context) => 
-    array(params.list, context).shift()
+    _list(params.list, context).shift()
   );
 
   run.setOperation(ListOps.removeLast, (params, scope) => (context) => 
-    array(params.list, context).pop()
+    _list(params.list, context).pop()
   );
 
   run.setOperation(ListOps.removeAt, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const index = number(params.index, context, -1);
+    const list = _list(params.list, context);
+    const index = _number(params.index, context, -1);
     let item;
     if (index >= 0 && index < list.length) {
       item = list[index];
@@ -151,7 +151,7 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.contains, (params, scope) => (context) =>
     handleListIsEqual(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       params, 
       scope, 
@@ -166,7 +166,7 @@ export default (run: Runtime) =>
   run.setOperation(ListOps.copy, (params, scope) => (context) => 
     params.deepCopy
       ? handleList(
-          array(params.list, context), 
+          _list(params.list, context), 
           context, 
           scope, 
           list => list.map(item => {
@@ -175,11 +175,11 @@ export default (run: Runtime) =>
             return params.deepCopy(context);
           })
         )
-      : array(params.list, context).slice()
+      : _list(params.list, context).slice()
   );
 
   run.setOperation(ListOps.reverse, (params) => (context) => {
-    const list = array(params.list, context);
+    const list = _list(params.list, context);
     const half = Math.floor(list.length / 2); 
     
     for (let i = 0, j = list.length - 1; i < half; i++, j--) { 
@@ -190,8 +190,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.exclude, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const exclude = array(params.exclude, context);
+    const list = _list(params.list, context);
+    const exclude = _list(params.exclude, context);
 
     for (const item of exclude) 
     {
@@ -202,8 +202,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.overlap, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const overlap = array(params.overlap, context);
+    const list = _list(params.list, context);
+    const overlap = _list(params.overlap, context);
     const overlapping: any[] = [];
 
     for (const item of overlap) 
@@ -219,7 +219,7 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.sort, (params, scope) => (context) =>
     handleList(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       scope, 
       list => {
@@ -228,7 +228,7 @@ export default (run: Runtime) =>
           context[scope.value] = value;
           context[scope.test] = test;
 
-          return number(params.compare, context, 0);
+          return _number(params.compare, context, 0);
         });
 
         return list;
@@ -237,8 +237,8 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ListOps.shuffle, (params) => (context) => {
-    const list = array(params.list, context);
-    let times = number(params.times, context, 1);
+    const list = _list(params.list, context);
+    let times = _number(params.times, context, 1);
     const n = list.length;
 
     while (--times >= 0) {
@@ -251,7 +251,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.unique, (params, scope) => (context) => {
-    const list = array(params.list, context);
+    const list = _list(params.list, context);
     const skip = {};
     const unique = [];
 
@@ -272,8 +272,8 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.duplicates, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const once = bool(params.once, context, false);
+    const list = _list(params.list, context);
+    const once = _bool(params.once, context, false);
     const skip = {};
     const duplicates = [];
 
@@ -300,42 +300,42 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.take, (params) => (context) => 
-    array(params.list, context).slice(0, number(params.count, context))
+    _list(params.list, context).slice(0, _number(params.count, context))
   );
 
   run.setOperation(ListOps.skip, (params) => (context) => 
-    array(params.list, context).slice(number(params.count, context))
+    _list(params.list, context).slice(_number(params.count, context))
   );
 
   run.setOperation(ListOps.drop, (params) => (context) => {
-    const list = array(params.list, context);
-    const count = number(params.count, context);
+    const list = _list(params.list, context);
+    const count = _number(params.count, context);
 
     return list.slice(0, list.length - count);
   });
 
   run.setOperation(ListOps.append, (params) => (context) => {
-    const list = array(params.list, context);
-    const append = array(params.append, context);
+    const list = _list(params.list, context);
+    const append = _list(params.append, context);
 
     return list.concat(append);
   });
 
   run.setOperation(ListOps.prepend, (params) => (context) => {
-    const list = array(params.list, context);
-    const prepend = array(params.prepend, context);
+    const list = _list(params.list, context);
+    const prepend = _list(params.prepend, context);
 
     return prepend.concat(list);
   });
 
   run.setOperation(ListOps.indexOf, (params, scope) => (context) =>
     handleListIsEqual(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       params, 
       scope, 
       params.item(context), 
-      n => Math.max(0, Math.min(n, number(params.start, context, 0))), 
+      n => Math.max(0, Math.min(n, _number(params.start, context, 0))), 
       n => n, 
       (_, i) => i, 
       () => -1
@@ -344,12 +344,12 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.lastIndexOf, (params, scope) => (context) =>
     handleListIsEqual(
-      array(params.list, context),
+      _list(params.list, context),
       context, 
       params, 
       scope, 
       params.item(context), 
-      n => Math.max(0, Math.min(n - 1, number(params.start, context, n - 1))), 
+      n => Math.max(0, Math.min(n - 1, _number(params.start, context, n - 1))), 
       n => -1, 
       (_, i) => i, 
       () => -1
@@ -357,23 +357,23 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ListOps.last, (params) => (context) => {
-    const list = array(params.list, context);
+    const list = _list(params.list, context);
 
     return list[list.length - 1];
   });
 
   run.setOperation(ListOps.first, (params) => (context) => 
-    array(params.list, context)[0]
+    _list(params.list, context)[0]
   );
 
   run.setOperation(ListOps.count, (params) => (context) =>
-    array(params.list, context).length
+    _list(params.list, context).length
   );
 
   run.setOperation(ListOps.randomList, (params) => (context) => {
-    const list = array(params.list, context);
+    const list = _list(params.list, context);
     const n = list.length;
-    const count = Math.min(number(params.count, context, 0), n);
+    const count = Math.min(_number(params.count, context, 0), n);
 
     if (count === n)
     {
@@ -398,7 +398,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.random, (params) => (context) => {
-    const list = array(params.list, context);
+    const list = _list(params.list, context);
 
     return list[Math.floor(Math.random() * list.length)];
   });
@@ -406,35 +406,35 @@ export default (run: Runtime) =>
   // Iteration
 
   run.setOperation(ListOps.join, (params, scope) => (context) =>
-    text(params.prefix, context) + 
+    _text(params.prefix, context) + 
     handleListIteration(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       scope, 
       n => 0, 
       n => n,
       '',
-      (item, _index, _list, sum) => (
+      (item, index, list, sum) => (
         sum
           ? sum 
-            + text(params.delimiter, context, ', ') 
-            + text(params.toText, context, item)
+            + _text(params.delimiter, context, ', ') 
+            + _text(params.toText, context, item)
           : sum
-            + text(params.toText, context, item)
+            + _text(params.toText, context, item)
       )
     ) +
-    text(params.suffix, context)
+    _text(params.suffix, context)
   );
 
   run.setOperation(ListOps.each, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const reverse = bool(params.reverse, context, false);
+    const list = _list(params.list, context);
+    const reverse = _bool(params.reverse, context, false);
 
     handleListIteration(list, context, scope, 
       n => reverse ? n - 1 : 0, 
       n => reverse ? 0 - 1 : n, 
       undefined,
-      (_item, _index, _list) => params.each(context)
+      () => params.each(context)
     );
 
     return list;
@@ -442,13 +442,13 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.filter, (params, scope) => (context) =>
     handleListIteration(
-      array(params.list, context),
+      _list(params.list, context),
       context, 
       scope, 
       n => 0, 
       n => n, 
       [],
-      (item, _index, _list, matches) => {
+      (item, index, list, matches) => {
         if (params.filter(context)) {
           matches.push(item);
         }
@@ -460,13 +460,13 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.not, (params, scope) => (context) =>
     handleListIteration(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       scope, 
       n => 0, 
       n => n, 
       [],
-      (item, _index, _list, matches) => {
+      (item, index, list, matches) => {
         if (!params.not(context)) {
           matches.push(item);
         }
@@ -478,13 +478,13 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.map, (params, scope) => (context) => 
     handleListIteration(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       scope, 
       n => 0, 
       n => n, 
       [],
-      (_item, _index, _list, mapped) => {
+      (item, index, list, mapped) => {
         mapped.push(params.transform(context));
         
         return mapped;
@@ -494,13 +494,13 @@ export default (run: Runtime) =>
 
   run.setOperation(ListOps.split, (params, scope) => (context) =>
     handleListIteration(
-      array(params.list, context), 
+      _list(params.list, context), 
       context, 
       scope, 
       n => 0, 
       n => n, 
       { pass: [], fail: [] },
-      (item, _index, _list, result) => {
+      (item, index, list, result) => {
         if (params.pass(context)) {
           result.pass.push(item);
         } else {
@@ -513,11 +513,11 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ListOps.reduce, (params, scope) => (context) =>
-    handleListIteration(array(params.list, context), context, scope, 
+    handleListIteration(_list(params.list, context), context, scope, 
       n => 0, 
       n => n, 
       params.initial(context),
-      (_item, _index, _list, reduced) => {
+      (item, index, list, reduced) => {
         context[scope.reduced] = reduced;
 
         return params.reduce(context);
@@ -526,8 +526,8 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ListOps.cmp, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const test = array(params.test, context);
+    const list = _list(params.value, context);
+    const test = _list(params.test, context);
     
     if (list.length !== test.length) 
     {
@@ -542,7 +542,7 @@ export default (run: Runtime) =>
         context[scope.value] = list[i];
         context[scope.test] = test[i];
 
-        const d = number(params.compare, context, 0);
+        const d = _number(params.compare, context, 0);
 
         if (d < 0) less++;
         else if (d > 0) more++;
@@ -554,11 +554,72 @@ export default (run: Runtime) =>
       : less < more ? 1 : -1;
   });
 
+  run.setOperation(ListOps.group, (params, scope) => (context) => {
+    const list = _list(params.list, context);
+
+    return handleList(list, context, scope, () => {
+      const map = new Map<any, any[]>();
+
+      for (let i = 0; i < list.length; i++) {
+        const value = list[i];
+
+        context[scope.index] = i;
+        context[scope.item] = value;
+        context[scope.list] = list;
+
+        const key = params.getKey(context);
+        const keyList = map.get(key);
+        const keyValue = _optional(params.getValue, context, value);
+
+        if (keyList) {
+          keyList.push(keyValue);
+        } else {
+          map.set(key, [
+            keyValue
+          ]);
+        }
+      }
+
+      return map;
+    });
+  });
+
+  run.setOperation(ListOps.toMap, (params, scope) => (context) => {
+    const list = _list(params.list, context);
+
+    return handleList(list, context, scope, () => {
+      const map = new Map();
+
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i];
+
+        context[scope.index] = i;
+        context[scope.item] = item;
+        context[scope.list] = list;
+
+        const key = params.getKey(context);
+        const value = _optional(params.getValue, context, item);
+
+        map.set(key, value);
+      }
+
+      return map;
+    });
+  });
+
   // Comparisons
 
+  run.setOperation(ListOps.isEmpty, (params, scope) => (context) =>
+    _list(params.list, context).length === 0
+  );
+
+  run.setOperation(ListOps.isNotEmpty, (params, scope) => (context) =>
+    _list(params.list, context).length > 0
+  );
+
   run.setOperation(ListOps.isEqual, (params, scope) => (context) => {
-    const list = array(params.list, context);
-    const test = array(params.test, context);
+    const list = _list(params.list, context);
+    const test = _list(params.test, context);
     
     if (list.length !== test.length) 
     {
@@ -587,12 +648,20 @@ export default (run: Runtime) =>
     !run.getOperation(ListOps.isEqual.id)(params, scope)(context)
   );
 
-  run.setOperation(ListOps.isEmpty, (params, scope) => (context) =>
-    array(params.list, context).length === 0
+  run.setOperation(ListOps.isLess, (params, scope) => (context) =>
+    run.getOperation(ListOps.cmp.id)(params, scope)(context) < 0
   );
 
-  run.setOperation(ListOps.isNotEmpty, (params, scope) => (context) =>
-    array(params.list, context).length > 0
+  run.setOperation(ListOps.isLessOrEqual, (params, scope) => (context) =>
+    run.getOperation(ListOps.cmp.id)(params, scope)(context) <= 0
+  );
+
+  run.setOperation(ListOps.isGreater, (params, scope) => (context) =>
+    run.getOperation(ListOps.cmp.id)(params, scope)(context) > 0
+  );
+
+  run.setOperation(ListOps.isGreaterOrEqual, (params, scope) => (context) =>
+    run.getOperation(ListOps.cmp.id)(params, scope)(context) >= 0
   );
   
 

@@ -1,6 +1,7 @@
-import { Type, TypeProvider, TypeClass } from '../Type';
+import { Type, TypeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
+import { ObjectType } from './Object';
 export interface ListOptions {
     item: Type;
     min?: number;
@@ -13,7 +14,7 @@ export declare class ListType extends Type<ListOptions> {
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
-    static forItem(itemOrClass: Type | TypeClass<any, any>): ListType;
+    static forItem(itemOrClass: TypeInput): ListType;
     getSubTypes(): {
         length: NumberType;
         item: Type<any>;
@@ -23,4 +24,25 @@ export declare class ListType extends Type<ListOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    getSplitResultType(): ObjectType;
+    getIterationScope(): {
+        list: ListType;
+        item: Type<any>;
+        index: NumberType;
+    };
+    static readonly IterationScopeDefaults: {
+        list: string;
+        item: string;
+        index: string;
+    };
+    getCompareScope(): {
+        list: ListType;
+        value: Type<any>;
+        test: Type<any>;
+    };
+    static readonly CompareScopeDefaults: {
+        list: string;
+        value: string;
+        test: string;
+    };
 }

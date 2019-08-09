@@ -1,9 +1,10 @@
 
-import { isNumber, isEmpty } from '../fns';
-import { Type, TypeProvider, TypeClass } from '../Type';
+import { isNumber, isEmpty, isArray } from '../fns';
+import { Type, TypeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
+import { ObjectType } from './Object';
 
 
 const INDEX_ITEM = 1;
@@ -46,9 +47,9 @@ export class ListType extends Type<ListOptions>
       : [this.id, item.encode(), options];
   }
 
-  public static forItem(itemOrClass: Type | TypeClass<any, any>)
+  public static forItem(itemOrClass: TypeInput)
   {
-    const item = itemOrClass instanceof Type ? itemOrClass : itemOrClass.baseType;
+    const item = Type.fromInput(itemOrClass);
     
     return new ListType({ item });
   }
@@ -103,6 +104,16 @@ export class ListType extends Type<ListOptions>
 
   public normalize(value: any): any
   {
+    if (isArray(value))
+    {
+      const item = this.options.item; 
+
+      for (let i = 0; i < value.length; i++)
+      {
+        value[i] = item.normalize(value[i]);
+      }
+    }
+    
     return value;
   }
 
@@ -110,5 +121,45 @@ export class ListType extends Type<ListOptions>
   {
     return ListType.encode(this);
   }
+
+  public getSplitResultType()
+  {
+    return new ObjectType({ 
+      props: { 
+        pass: this, 
+        fail: this 
+      } 
+    });
+  }
+
+  public getIterationScope()
+  {
+    return { 
+      list: this as ListType,
+      item: this.options.item,
+      index: ListType.lengthType
+    };
+  }
+
+  public static readonly IterationScopeDefaults = {
+    list: 'list',
+    item: 'item',
+    index: 'index'
+  };
+
+  public getCompareScope()
+  {
+    return {
+      list: this as ListType,
+      value: this.options.item,
+      test: this.options.item
+    };
+  }
+
+  public static readonly CompareScopeDefaults = {
+    list: 'list',
+    value: 'value',
+    test: 'test'
+  };
 
 }

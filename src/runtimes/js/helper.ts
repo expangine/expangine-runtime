@@ -1,6 +1,6 @@
 
 import { Command } from '../../Command';
-import { isNumber, isString, isArray } from '../../fns';
+import { isNumber, isString, isArray, isMap } from '../../fns';
 
 
 
@@ -25,17 +25,17 @@ export function restoreScope<K extends string>(context: any, saved: Record<K, an
   }
 }
 
-export function optional (cmd: Command | undefined, context: object, defaultValue?: any): any 
+export function _optional (cmd: Command | undefined, context: object, defaultValue?: any): any 
 {
   return cmd ? cmd(context) : defaultValue;
 }
 
-export function bool (cmd: Command | undefined, context: object, defaultValue: boolean = false): boolean
+export function _bool (cmd: Command | undefined, context: object, defaultValue: boolean = false): boolean
 {
   return cmd ? !!cmd(context) : defaultValue;
 }
 
-export function typed<T> (isValid: (value: any) => value is T, invalidValueDefault: T) 
+export function _typed<T> (isValid: (value: any) => value is T, invalidValueDefault: T) 
 {
   return (cmd: Command | undefined, context: object, invalidValue: T = invalidValueDefault) => 
   {
@@ -50,7 +50,7 @@ export function typed<T> (isValid: (value: any) => value is T, invalidValueDefau
   };
 }
 
-export function typedDynamic<T> (isValid: (value: any) => value is T, invalidValueDefault: () => T) 
+export function _typedDynamic<T> (isValid: (value: any) => value is T, invalidValueDefault: () => T) 
 {
   return (cmd: Command | undefined, context: object, invalidValue: () => T = invalidValueDefault) => 
   {
@@ -65,12 +65,14 @@ export function typedDynamic<T> (isValid: (value: any) => value is T, invalidVal
   };
 }
 
-export const number = typed(isNumber, Number.NaN);
+export const _number = _typed (isNumber, Number.NaN);
 
-export const numberMaybe = typed<number | undefined>(isNumber, undefined);
+export const _numberMaybe = _typed<number | undefined> (isNumber, undefined);
 
-export const text = typed(isString, '');
+export const _text = _typed (isString, '');
 
-export const textMaybe = typed<string | undefined>(isString, undefined);
+export const _textMaybe = _typed<string | undefined> (isString, undefined);
 
-export const array  = typedDynamic<any[]>(isArray, () => []);
+export const _list  = _typedDynamic<any[]> (isArray, () => []);
+
+export const _map = _typedDynamic<Map<any, any>> (isMap, () => new Map());

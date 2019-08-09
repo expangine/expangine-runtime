@@ -16,6 +16,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
     new (options: O): T;
 }
 export declare abstract class Type<O = any> {
+    static fromInput(input: TypeInput): Type;
     options: O;
     operations?: Record<string, Operation>;
     constructor(options: O);

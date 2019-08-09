@@ -3,37 +3,12 @@ import { ListType } from '../types/List';
 import { BooleanType } from '../types/Boolean';
 import { NumberType } from '../types/Number';
 import { AnyType } from '../types/Any';
-import { ObjectType } from '../types/Object';
 import { TextType } from '../types/Text';
 import { GenericType } from '../types/Generic';
+import { MapType } from '../types/Map';
 
 
 const ops = ListType.operations;
-
-const iterationScope = (list: ListType) => ({ 
-  list,
-  item: list.options.item, 
-  index: ListType.lengthType 
-});
-
-const iterationScopeDefaults = {
-  list: 'list',
-  item: 'item',
-  index: 'index'
-};
-
-const compareScope = (list: ListType) => ({
-  list,
-  value: list.options.item,
-  test: list.options.item
-});
-
-const compareScopeDefaults = {
-  list: 'list',
-  value: 'value',
-  test: 'test'
-};
-
 
 export const ListOps = 
 {
@@ -71,8 +46,8 @@ export const ListOps =
   ),
 
   remove: ops.build('-', { mutates: ['list'], complexity: 1 },  
-    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   removeFirst: ops.build('-f', { mutates: ['list'] },  
@@ -88,8 +63,8 @@ export const ListOps =
   ),
 
   contains: ops.build('contains', { complexity: 1 },
-    (list) => [BooleanType, { list, item: list.options.item, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [BooleanType, { list, item: list.options.item, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   copy: ops.build('copy', { complexity: 1 },
@@ -102,18 +77,18 @@ export const ListOps =
   ),
 
   exclude: ops.build('exclude', { mutates: ['list'], complexity: 2 },  
-    (list) => [list, { list, exclude: list, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [list, { list, exclude: list, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   overlap: ops.build('overlap', { complexity: 2 },  
-    (list) => [list, { list, overlap: list, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [list, { list, overlap: list, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   sort: ops.build('sort', { mutates: ['list'], complexity: 1 },   
-    (list) => [list, { list, compare: NumberType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [list, { list, compare: NumberType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   shuffle: ops.build('shuffle', { mutates: ['list'], complexity: 1 },   
@@ -121,13 +96,13 @@ export const ListOps =
   ),
 
   unique: ops.build('unique', { complexity: 2 },   
-    (list) => [list, { list, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [list, { list, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   duplicates: ops.build('dupes', { complexity: 2 },  
-    (list) => [list, { list, isEqual: BooleanType }, { once: BooleanType }, compareScope(list)],
-    compareScopeDefaults
+    (list) => [list, { list, isEqual: BooleanType }, { once: BooleanType }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   take: ops.build('take', { mutates: ['list'] },
@@ -151,13 +126,13 @@ export const ListOps =
   ),
 
   indexOf: ops.build('indexOf', { complexity: 1 },
-    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, compareScope(list)],
-    compareScopeDefaults
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   lastIndexOf: ops.build('lastIndexOf', { complexity: 1 },
-    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, compareScope(list)],
-    compareScopeDefaults
+    (list) => [NumberType, { list, item: list.options.item, isEqual: BooleanType }, { start: NumberType }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
   ),
 
   last: ops.build('last', {},
@@ -183,58 +158,60 @@ export const ListOps =
   // Iteration
 
   join: ops.build('join', { complexity: 1 },
-    (list) => [TextType, { list }, { delimiter: TextType, toText: TextType, prefix: TextType, suffix: TextType }, iterationScope(list)],
-    iterationScopeDefaults
+    (list) => [TextType, { list }, { delimiter: TextType, toText: TextType, prefix: TextType, suffix: TextType }, list.getIterationScope()],
+    ListType.IterationScopeDefaults
   ),
 
   each: ops.build('each', { complexity: 1 },
-    (list) => [list, { list, each: AnyType }, { reverse: BooleanType }, iterationScope(list)],
-    iterationScopeDefaults
+    (list) => [list, { list, each: AnyType }, { reverse: BooleanType }, list.getIterationScope()],
+    ListType.IterationScopeDefaults
   ),
 
   filter: ops.build('filter', { complexity: 1 },
-    (list) => [list, { list, filter: BooleanType }, {}, iterationScope(list)],
-    iterationScopeDefaults
+    (list) => [list, { list, filter: BooleanType }, {}, list.getIterationScope()],
+    ListType.IterationScopeDefaults
   ),
 
   not: ops.build('not', { complexity: 1 },
-    (list) => [list, { list, not: BooleanType }, {}, iterationScope(list)],
-    iterationScopeDefaults
+    (list) => [list, { list, not: BooleanType }, {}, list.getIterationScope()],
+    ListType.IterationScopeDefaults
   ),
 
   map: ops.build('map', { complexity: 1},
-    (list, generics) => [ListType.forItem(generics.M), { list, transform: generics.M }, {}, iterationScope(list)],
-    iterationScopeDefaults,
+    (list, generics) => [ListType.forItem(generics.M), { list, transform: generics.M }, {}, list.getIterationScope()],
+    ListType.IterationScopeDefaults,
     { M: new GenericType('M') }
   ),
 
   split: ops.build('split', { complexity: 1},
-    (list) => [new ObjectType({ props: { pass: list, fail: list } }), { list, pass: BooleanType }, {}, iterationScope(list)],
-    iterationScopeDefaults
+    (list) => [list.getSplitResultType(), { list, pass: BooleanType }, {}, list.getIterationScope()],
+    ListType.IterationScopeDefaults
   ),
 
   reduce: ops.build('reduce', { complexity: 1},
     (list, generics) => [generics.R, { list, reduce: generics.R, initial: generics.R }, {}, { list, item: list.options.item, reduced: generics.R, index: NumberType }],
-    { ...iterationScopeDefaults, reduced: 'reduced' },
+    { ...ListType.IterationScopeDefaults, reduced: 'reduced' },
     { R: new GenericType('R') }
   ),
 
   cmp: ops.build('cmp', { complexity: 1 },
-    (list) => [BooleanType, { list, test: list, compare: NumberType }, {}, compareScope(list)],
-    compareScopeDefaults
+    (list) => [BooleanType, { value: list, test: list, compare: NumberType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  group: ops.build('group', { complexity: 1 }, 
+    (list, generics) => [new MapType({ key: generics.K, value: ListType.forItem(generics.V) }), { list, getKey: generics.K }, { getValue: generics.V }, list.getIterationScope()],
+    ListType.IterationScopeDefaults,
+    { K: new GenericType('K'), V: new GenericType('V') }
+  ),
+
+  toMap: ops.build('toMap', { complexity: 1 },
+    (list, generics) => [new MapType({ key: generics.K, value: generics.V }), { list, getKey: generics.K }, { getValue: generics.V }, list.getIterationScope()],
+    ListType.IterationScopeDefaults,
+    { K: new GenericType('K'), V: new GenericType('V') }
   ),
 
   // Comparisons
-
-  isEqual: ops.build('=', { complexity: 1},
-    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
-  ),
-
-  isNotEqual: ops.build('!=', { complexity: 1},
-    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, compareScope(list)],
-    compareScopeDefaults
-  ),
 
   isEmpty: ops.build('0?', {},
     (list) => [BooleanType, { list }]
@@ -244,8 +221,34 @@ export const ListOps =
     (list) => [BooleanType, { list }]
   ),
 
-  /**
-  ONCE MAP: objectify, group
-  */
+  isEqual: ops.build('=', { complexity: 1},
+    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  isNotEqual: ops.build('!=', { complexity: 1},
+    (list) => [BooleanType, { list, test: list, isEqual: BooleanType }, {}, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  isLess: ops.build('<', { complexity: 1 }, 
+    (list) => [BooleanType, { value: list, test: list, compare: NumberType }, { }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  isLessOrEqual: ops.build('<=', { complexity: 1 }, 
+    (list) => [BooleanType, { value: list, test: list, compare: NumberType }, { }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  isGreater: ops.build('>', { complexity: 1 }, 
+    (list) => [BooleanType, { value: list, test: list, compare: NumberType }, { }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
+
+  isGreaterOrEqual: ops.build('>=', { complexity: 1 }, 
+    (list) => [BooleanType, { value: list, test: list, compare: NumberType }, { }, list.getCompareScope()],
+    ListType.CompareScopeDefaults
+  ),
 
 };

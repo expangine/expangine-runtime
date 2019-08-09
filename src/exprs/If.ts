@@ -1,5 +1,4 @@
 
-import { isUndefined } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 
@@ -24,7 +23,7 @@ export class IfExpression extends Expression
   {
     const cases = expr.cases.map(([test, result]) => [test.encode(), result.encode()]);
 
-    return isUndefined(expr.otherwise)
+    return Expression.hasConstant(expr.otherwise, undefined)
       ? [this.id, cases]
       : [this.id, cases, expr.otherwise.encode()];
   }

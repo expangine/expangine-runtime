@@ -741,6 +741,26 @@ describe('index', () => {
     expect(result).toEqual('0, 1, 2, 3');
   });
 
+  it('each', () =>
+  {
+    const process = runtime.eval(['op', 'list:each', {
+      list: ['get', ['source']],
+      each: ['op', 'list:+', {
+        list: ['get', ['target']],
+        item: ['get', ['item']]
+      }]
+    }]);
+
+    const context = {
+      source: [1, 4, 5, 6],
+      target: [] as number[]
+    };
+
+    process(context);
+
+    expect(context.target).toEqual(context.source);
+  });
+
   it('filter', () =>
   {
     const process = runtime.eval(['op', 'list:filter', {
@@ -841,6 +861,31 @@ describe('index', () => {
     const result = process(context);
 
     expect(result).toEqual(21);
+  });
+
+  it('group', () => 
+  {
+    const process = runtime.eval(['op', 'map:plain', {
+      map: ['op', 'list:group', {
+        list: ['get', ['source']],
+        getKey: ['op', 'num:%', {
+          value: ['get', ['item']],
+          divisor: 3
+        }]
+      }]
+    }]);
+
+    const context = {
+      source: [0, 1, 2, 3, 4, 5, 6, 7]
+    };
+
+    const result = process(context);
+
+    expect(result).toEqual({
+      0: [0, 3, 6],
+      1: [1, 4, 7],
+      2: [2, 5]
+    });
   });
 
 });

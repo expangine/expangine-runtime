@@ -19,6 +19,11 @@ export function isDate(value: any): value is Date
   return value instanceof Date;
 }
 
+export function isMap<K, V>(value: any): value is Map<K, V>
+{
+  return value instanceof Map;
+}
+
 export function isBoolean(value: any): value is boolean 
 {
   return typeof value === 'boolean';
@@ -69,4 +74,16 @@ export function mapObject<R, V>(map: Record<string, V>, getValue: (value: V, key
   }
 
   return mapped;
+}
+
+export function toArray<T>(iter: IterableIterator<T>): T[]
+{
+  const out: T[] = [];
+
+  for (const item of iter) 
+  { 
+    out.push(item);
+  }
+
+  return out;
 }

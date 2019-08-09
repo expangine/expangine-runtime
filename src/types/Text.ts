@@ -60,7 +60,7 @@ export class TextType extends Type<TextOptions>
       return false;
     }
 
-    const { min, max, requireLower, requireUpper, matches } = this.options;
+    const { min, max, requireLower, requireUpper, matches, forceLower, forceUpper } = this.options;
 
     if (isNumber(min) && value.length < min)
     {
@@ -72,12 +72,12 @@ export class TextType extends Type<TextOptions>
       return false;
     }
 
-    if (requireLower && value !== value.toLowerCase())
+    if (requireLower && value !== value.toLowerCase() && !forceLower)
     {
       return false;
     }
 
-    if (requireUpper && value !== value.toUpperCase())
+    if (requireUpper && value !== value.toUpperCase() && !forceUpper)
     {
       return false;
     }

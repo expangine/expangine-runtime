@@ -1,5 +1,6 @@
 import { Type } from './Type';
 import { Definitions } from './Definitions';
+import { ConstantExpression } from './exprs/Constant';
 
 
 export interface ExpressionProvider 
@@ -17,6 +18,16 @@ export interface ExpressionClass<T extends Expression = any>
 
 export abstract class Expression 
 {
+
+  public static hasConstant(e: Expression, constant: any): boolean
+  {
+    return e instanceof ConstantExpression && e.value === constant;
+  }
+
+  public static isConstant(e: Expression): e is ConstantExpression
+  {
+    return e instanceof ConstantExpression;
+  }
 
   public id: string;
 

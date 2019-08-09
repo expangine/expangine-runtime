@@ -1,5 +1,5 @@
 import { Runtime } from '../../Runtime';
-import { bool } from './helper';
+import { _bool } from './helper';
 import { isBoolean } from '../../fns';
 import { BooleanOps } from '../../def/BooleanOps';
 
@@ -11,23 +11,23 @@ export default (run: Runtime) =>
   // Operations
 
   run.setOperation(BooleanOps.and, (params) => (context) => 
-    bool(params.a, context) && bool(params.b, context)
+    _bool(params.a, context) && _bool(params.b, context)
   );
 
   run.setOperation(BooleanOps.or, (params) => (context) => 
-    bool(params.a, context) || bool(params.b, context)
+    _bool(params.a, context) || _bool(params.b, context)
   );
 
   run.setOperation(BooleanOps.xor, (params) => (context) => 
-    bool(params.a, context) !== bool(params.b, context)
+    _bool(params.a, context) !== _bool(params.b, context)
   );
 
   run.setOperation(BooleanOps.not, (params) => (context) => 
-    !bool(params.a, context)
+    !_bool(params.a, context)
   );
 
   run.setOperation(BooleanOps.cmp, (params) => (context) => 
-    (bool(params.value, context) ? 1 : 0) - (bool(params.test, context) ? 1 : 0)
+    (_bool(params.value, context) ? 1 : 0) - (_bool(params.test, context) ? 1 : 0)
   );
 
   // Comparisons
@@ -37,11 +37,11 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(BooleanOps.isTrue, (params) => (context) => 
-    bool(params.value, context, false) === true
+    _bool(params.value, context, false) === true
   );
 
   run.setOperation(BooleanOps.isFalse, (params) => (context) => 
-    bool(params.value, context, false) === false
+    _bool(params.value, context, false) === false
   );
 
 };

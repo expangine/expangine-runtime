@@ -91,6 +91,11 @@ export default (run: Runtime) =>
   {
     const params = mapObject(expr.params, expr => run.getCommand(expr));
     const op = run.getOperation(expr.name);
+
+    if (!op) {
+      throw new Error(`Operation with ${expr.name} is not defined in the given runtime.`);
+    }
+    
     const defaults = run.getOperationScopeDefaults(expr.name);
     let scopeAlias = expr.scopeAlias;
 

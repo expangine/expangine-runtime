@@ -30,6 +30,13 @@ export interface TypeClass<T extends Type<O> = any, O = any>
 export abstract class Type<O = any> 
 {
 
+  public static fromInput(input: TypeInput): Type
+  {
+    return input instanceof Type
+      ? input
+      : input.baseType;
+  }
+
   public options: O;
   public operations?: Record<string, Operation>;
 

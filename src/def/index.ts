@@ -10,6 +10,7 @@ import { FunctionType } from '../types/Function';
 import { AnyType } from '../types/Any';
 import { ManyType } from '../types/Many';
 import { OptionalType } from '../types/Optional';
+import { MapType } from '../types/Map';
 
 import { ConstantExpression } from '../exprs/Constant';
 import { GetExpression } from '../exprs/Get';
@@ -39,6 +40,7 @@ export const defs = new Definitions({
     AnyType,
     ManyType,
     OptionalType,
+    MapType,
   ],
   expressions: [
     ConstantExpression,

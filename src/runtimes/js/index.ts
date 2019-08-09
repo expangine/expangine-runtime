@@ -8,7 +8,7 @@ import addTextOperations from './text';
 import addBooleanOperations from './boolean';
 import addAnyOperations from './any';
 import addListOperations from './list';
-
+import addMapOptions from './map';
 
 
 export const runtime = new Runtime(defs);
@@ -19,3 +19,4 @@ addTextOperations(runtime);
 addBooleanOperations(runtime);
 addAnyOperations(runtime);
 addListOperations(runtime);
+addMapOptions(runtime);
