@@ -1,6 +1,6 @@
 
 import { mapObject, isObject } from '../fns';
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
@@ -32,6 +32,51 @@ export class ObjectType extends Type<ObjectOptions>
     const props = mapObject(type.options.props, p => p.encode());
 
     return [this.id, props];
+  }
+
+  public static describePriority: number = 5;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    if (!isObject(data) || data === null)
+    {
+      return null;
+    }
+
+    const props: Record<string, Type> = Object.create(null);
+
+    for (const prop in data)
+    {
+      props[prop] = describer.describe(data[prop]);
+    }
+
+    return new ObjectType({ props });
+  }
+
+  public merge(type: ObjectType, describer: TypeDescribeProvider): void
+  {
+    const p1 = this.options.props;
+    const p2 = type.options.props;
+
+    for (const prop in p1)
+    {
+      if (prop in p2)
+      {
+        p1[prop] = describer.mergeType(p1[prop], p2[prop]);
+      }
+      else
+      {
+        p1[prop] = describer.optionalType(p1[prop]);
+      }
+    }
+
+    for (const prop in p2)
+    {
+      if (!(prop in p1))
+      {
+        p1[prop] = describer.optionalType(p2[prop]);
+      }
+    }
   }
 
   public getSubTypes() 

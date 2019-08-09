@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeClass } from '../Type';
+import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
 import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
@@ -27,6 +27,13 @@ export class ManyType extends Type<Type[]>
     const many = type.options.map(t => t.encode());
 
     return [this.id, many];
+  }
+
+  public static describePriority: number = -1;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return null;
   }
 
   public subs?: Record<string, Type>;
@@ -66,6 +73,11 @@ export class ManyType extends Type<Type[]>
     }
 
     return otherwise;
+  }
+
+  public merge(type: ManyType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes()

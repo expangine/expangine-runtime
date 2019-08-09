@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
@@ -20,6 +20,18 @@ export class AnyType extends Type
   public static encode(type: AnyType): any 
   {
     return this.id
+  }
+
+  public static describePriority: number = 0;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return this.baseType;
+  }
+
+  public merge(type: AnyType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes(): null

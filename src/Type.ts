@@ -12,6 +12,14 @@ export interface TypeProvider
   getType(data: any): Type;
 }
 
+export interface TypeDescribeProvider
+{
+  describe(data: any): Type;
+  merge(type: Type, data: any): Type;
+  mergeType(type: Type, other: Type): Type;
+  optionalType(type: Type): Type;
+}
+
 export interface TypeParser 
 {
   (data: any, types: TypeProvider): Type;
@@ -24,6 +32,8 @@ export interface TypeClass<T extends Type<O> = any, O = any>
   baseType: T;
   decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
   encode(this: TypeClass<T>, type: T): any;
+  describePriority: number;
+  describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
   new(options: O): T;
 }
 
@@ -54,6 +64,8 @@ export abstract class Type<O = any>
 
     return this.operations;
   }
+
+  public abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
 
   public abstract getSubTypes(): Record<string, Type> | null;
 

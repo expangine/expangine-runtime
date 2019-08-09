@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeClass } from '../Type';
+import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
 import { Operations, Operation } from '../Operation';
 
 
@@ -26,6 +26,13 @@ export class GenericType extends Type<string>
     return [this.id, type.options];
   }
 
+  public static describePriority: number = -1;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return null;
+  }
+
   public inferredType?: Type;
 
   public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
@@ -36,6 +43,11 @@ export class GenericType extends Type<string>
     }
 
     return this.operations;
+  }
+
+  public merge(type: GenericType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes() 

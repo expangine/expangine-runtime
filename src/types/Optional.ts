@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeClass } from '../Type';
+import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
 import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 
@@ -27,6 +27,13 @@ export class OptionalType extends Type<Type>
     return [this.id, type.options.encode()];
   }
 
+  public static describePriority: number = -1;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return null;
+  }
+
   public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
   {
     if (!this.operations)
@@ -35,6 +42,11 @@ export class OptionalType extends Type<Type>
     }
 
     return this.operations;
+  }
+
+  public merge(type: OptionalType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes() 

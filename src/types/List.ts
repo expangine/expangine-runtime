@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isArray } from '../fns';
-import { Type, TypeProvider, TypeInput } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
@@ -47,11 +47,44 @@ export class ListType extends Type<ListOptions>
       : [this.id, item.encode(), options];
   }
 
+  public static describePriority: number = 6;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    if (!isArray(data))
+    {
+      return null;
+    }
+
+    let item = describer.describe(data[0]);
+
+    for (let i = 1; i < data.length; i++)
+    {
+      item = describer.merge(item, data[i]);
+    }
+
+    return new ListType({ 
+      item,
+      min: data.length,
+      max: data.length
+    });
+  }
+
   public static forItem(itemOrClass: TypeInput)
   {
     const item = Type.fromInput(itemOrClass);
     
     return new ListType({ item });
+  }
+
+  public merge(type: ListType, describer: TypeDescribeProvider): void
+  {
+    const o1 = this.options;
+    const o2 = type.options;
+
+    o1.item = describer.mergeType(o1.item, o2.item);
+    o1.min = Math.min(o1.min, o2.min);
+    o1.max = Math.max(o1.max, o2.max);
   }
 
   public getSubTypes() 

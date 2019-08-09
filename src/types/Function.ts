@@ -1,6 +1,6 @@
 
 import { isFunction } from '../fns';
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { AnyType } from './Any';
@@ -40,6 +40,18 @@ export class FunctionType extends Type<FunctionOptions>
     }
 
     return options ? [this.id, options] : this.id;
+  }
+
+  public static describePriority: number = -1;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return null;
+  }
+
+  public merge(type: FunctionType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes() 

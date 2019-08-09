@@ -1,6 +1,6 @@
 
 import { isBoolean, isEmpty } from '../fns';
-import { Type, TypeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 
@@ -32,6 +32,18 @@ export class BooleanType extends Type<BooleanOptions>
     return isEmpty(type.options)
       ? this.id
       : [this.id, type.options];
+  }
+
+  public static describePriority: number = 4;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    return isBoolean(data) ? this.baseType : null;
+  }
+
+  public merge(type: BooleanType, describer: TypeDescribeProvider): void
+  {
+    
   }
 
   public getSubTypes(): null

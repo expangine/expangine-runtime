@@ -44,6 +44,11 @@ export function isUndefined(value: any): value is undefined
   return typeof value === 'undefined';
 }
 
+export function isSameClass(a: any, b: any): boolean
+{
+  return a.constructor === b.constructor;
+}
+
 export function isEmpty(value: any): boolean 
 {
   if (isArray(value)) 

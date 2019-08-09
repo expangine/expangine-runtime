@@ -1,6 +1,6 @@
 
-import { isObject } from '../fns';
-import { Type, TypeProvider, TypeInput } from '../Type';
+import { isObject, isMap } from '../fns';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { TextType } from './Text';
@@ -43,12 +43,42 @@ export class MapType extends Type<MapOptions>
       : [this.id, value.encode(), key.encode()];
   }
 
+  public static describePriority: number = 7;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    if (!isMap(data))
+    {
+      return null;
+    }
+
+    let key: Type = new AnyType({});
+    let value: Type = new AnyType({});
+
+    for (const [entryKey, entryValue] of data.entries())
+    {
+      key = describer.merge(key, entryKey);
+      value = describer.merge(value, entryValue);
+    }
+
+    return new MapType({ key, value });
+  }
+
   public static forItem(valueOrClass: TypeInput, keyOrClass: TypeInput = TextType)
   {
     const value = Type.fromInput(valueOrClass);
     const key = Type.fromInput(keyOrClass);
     
     return new MapType({ key, value });
+  }
+
+  public merge(type: MapType, describer: TypeDescribeProvider): void
+  {
+    const o1 = this.options;
+    const o2 = type.options;
+
+    o1.key = describer.mergeType(o1.key, o2.key);
+    o1.value = describer.mergeType(o1.value, o2.value);
   }
 
   public getSubTypes() 

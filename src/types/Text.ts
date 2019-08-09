@@ -1,6 +1,6 @@
 
 import { isString, isNumber, isEmpty } from '../fns';
-import { Type } from '../Type';
+import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
@@ -36,6 +36,34 @@ export class TextType extends Type<TextOptions>
     return isEmpty(type.options)
       ? this.id
       : [this.id, type.options];
+  }
+
+  public static describePriority: number = 3;
+  
+  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  {
+    if (!isString(data))
+    {
+      return null;
+    }
+
+    return new TextType({
+      min: data.length,
+      max: data.length,
+      requireLower: data.toLowerCase() === data,
+      requireUpper: data.toUpperCase() === data
+    });
+  }
+
+  public merge(type: TextType, describer: TypeDescribeProvider): void
+  {
+    const o1 = this.options;
+    const o2 = type.options;
+
+    o1.max = Math.max(o1.max, o2.max);
+    o1.min = Math.min(o1.min, o2.min);
+    o1.requireLower = o1.requireLower && o2.requireLower;
+    o1.requireUpper = o1.requireUpper && o2.requireUpper;
   }
 
   public getSubTypes(): null
