@@ -18,6 +18,7 @@ import { SwitchExpression } from '../../exprs/Switch';
 import { SetExpression } from '../../exprs/Set';
 import { DoExpression } from '../../exprs/Do';
 import { TemplateExpression } from '../../exprs/Template';
+import { UpdateExpression } from '../../exprs/Update';
 
 
 
@@ -79,6 +80,46 @@ export default (run: Runtime) =>
       {
         const dest = parts[last](context);
         value[dest] = getValue(context);
+
+        return true;
+      }
+
+      return false;
+    };
+  });
+
+  run.setExpression(UpdateExpression, (expr, run) => 
+  {
+    const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
+    const last = parts.length - 1;
+    const getValue = run.getCommand(expr.value);
+
+    return (context) => 
+    {
+      let value: any = context;
+
+      for (let i = 0; i < last && !isUndefined(value); i++) 
+      {
+        const next = parts[i](context);
+
+        if (isUndefined(value[next])) 
+        {
+          return false;
+        }
+
+        value = value[next];
+      }
+
+      if (!isUndefined(value)) 
+      {
+        const dest = parts[last](context);
+        const popCurrent = context[expr.currentVariable];
+
+        context[expr.currentVariable] = value[dest];
+        
+        value[dest] = getValue(context);
+
+        context[expr.currentVariable] = popCurrent;
 
         return true;
       }

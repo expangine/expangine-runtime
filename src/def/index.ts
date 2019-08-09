@@ -27,6 +27,7 @@ import { DoExpression } from '../exprs/Do';
 import { DefineExpression } from '../exprs/Define';
 import { SetExpression } from '../exprs/Set';
 import { TemplateExpression } from '../exprs/Template';
+import { UpdateExpression } from '../exprs/Update';
 
 
 export const defs = new Definitions({
@@ -58,5 +59,6 @@ export const defs = new Definitions({
     DoExpression,
     DefineExpression,
     TemplateExpression,
+    UpdateExpression,
   ]
 });

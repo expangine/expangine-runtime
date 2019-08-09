@@ -134,4 +134,21 @@ describe('index', () => {
     })).toEqual('/user/24/post/12');
   });
 
+  it('update', () => {
+
+    const process = runtime.eval(['up', ['x'], ['op', 'num:*', {
+      value: ['get', ['current']],
+      multiplier: 2
+    }]]);
+
+    const context = {
+      x: 4
+    };
+
+    process(context);
+
+    expect(context.x).toEqual(8);
+
+  });
+
 })
