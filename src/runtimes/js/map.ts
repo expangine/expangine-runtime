@@ -2,7 +2,7 @@
 import { Runtime } from '../../Runtime';
 import { MapOps } from '../../def/MapOps';
 import { saveScope, restoreScope, _map, _optional, _number } from './helper';
-import { toArray } from '../../fns';
+import { toArray, getCompare } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -89,9 +89,7 @@ export default (run: Runtime) =>
         }
       }
 
-      return less === 0 && more === 0
-        ? 0
-        : less < more ? 1 : -1;
+      return getCompare(less, more);
     });
   }));
 

@@ -10,3 +10,16 @@ export declare function isUndefined(value: any): value is undefined;
 export declare function isEmpty(value: any): boolean;
 export declare function mapObject<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey?: (key: string, value: V) => string): Record<string, R>;
 export declare function toArray<T>(iter: IterableIterator<T>): T[];
+export declare function getCompare(less: number, more: number): number;
+export declare const COMPARE_TYPE_ORDER: {
+    'boolean': number;
+    'number': number;
+    'bigint': number;
+    'string': number;
+    'symbol': number;
+    'object': number;
+    'undefined': number;
+    'function': number;
+};
+export declare function compare(a: any, b: any): number;
+export declare function copy(x: any, originals?: any[], clones?: any[]): any;

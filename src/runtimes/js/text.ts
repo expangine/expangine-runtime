@@ -167,7 +167,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.compare, (params) => (context) =>
-    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false))
+    compare(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false))
   );
 
 
@@ -202,27 +202,27 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.isEqual, (params) => (context) => 
-    cmp(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) === 0
+    compare(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) === 0
   );
 
   run.setOperation(TextOps.isNotEqual, (params) => (context) => 
-    cmp(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) !== 0
+    compare(_text(params.a, context), _text(params.b, context), _bool(params.ignoreCase, context, false)) !== 0
   );
 
   run.setOperation(TextOps.isLess, (params) => (context) => 
-    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) < 0
+    compare(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) < 0
   );
 
   run.setOperation(TextOps.isLessOrEqual, (params) => (context) => 
-    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) <= 0
+    compare(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) <= 0
   );
 
   run.setOperation(TextOps.isGreater, (params) => (context) => 
-    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) > 0
+    compare(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) > 0
   );
 
   run.setOperation(TextOps.isGreaterOrEqual, (params) => (context) => 
-    cmp(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) >= 0
+    compare(_text(params.value, context), _text(params.test, context), _bool(params.ignoreCase, context, false)) >= 0
   );
 
   run.setOperation(TextOps.isLower, (params) => (context) => {
@@ -240,7 +240,8 @@ export default (run: Runtime) =>
 };
 
 
-function cmp(a: string, b: string, ignoreCase: boolean): number {
+function compare(a: string, b: string, ignoreCase: boolean): number 
+{
   return ignoreCase
     ? a.toLowerCase().localeCompare(b.toLowerCase())
     : a.localeCompare(b);

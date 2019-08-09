@@ -9,14 +9,16 @@ import addBooleanOperations from './boolean';
 import addAnyOperations from './any';
 import addListOperations from './list';
 import addMapOptions from './map';
+import addObjectOptions from './object';
 
 
 export const runtime = new Runtime(defs);
 
-addExpressions(runtime);
-addNumberOperations(runtime);
-addTextOperations(runtime);
-addBooleanOperations(runtime);
 addAnyOperations(runtime);
+addBooleanOperations(runtime);
+addExpressions(runtime);
 addListOperations(runtime);
 addMapOptions(runtime);
+addNumberOperations(runtime);
+addObjectOptions(runtime);
+addTextOperations(runtime);

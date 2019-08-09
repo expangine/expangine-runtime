@@ -3,6 +3,7 @@ import { Runtime } from '../../Runtime';
 import { ListOps } from '../../def/ListOps';
 import { _list, _optional, _number, saveScope, restoreScope, _text, _bool } from './helper';
 import { Command } from '../../Command';
+import { getCompare } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -549,9 +550,7 @@ export default (run: Runtime) =>
       }
     });
 
-    return less === 0 && more === 0
-      ? 0
-      : less < more ? 1 : -1;
+    return getCompare(less, more);
   });
 
   run.setOperation(ListOps.group, (params, scope) => (context) => {

@@ -1,6 +1,6 @@
 
 import { Command } from '../../Command';
-import { isNumber, isString, isArray, isMap } from '../../fns';
+import { isNumber, isString, isArray, isMap, isObject } from '../../fns';
 
 
 
@@ -76,3 +76,5 @@ export const _textMaybe = _typed<string | undefined> (isString, undefined);
 export const _list  = _typedDynamic<any[]> (isArray, () => []);
 
 export const _map = _typedDynamic<Map<any, any>> (isMap, () => new Map());
+
+export const _object = _typedDynamic<any>(isObject, () => ({}));
