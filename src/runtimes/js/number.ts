@@ -12,6 +12,49 @@ const DEFAULT_BASE = 10;
 export default (run: Runtime, epsilon: number = 0.000001) =>
 {
 
+  // Statics
+
+  run.setOperation(NumberOps.pi, (params) => (context) =>
+    Math.PI
+  );
+
+  run.setOperation(NumberOps.pi2, (params) => (context) =>
+    Math.PI + Math.PI
+  );
+
+  run.setOperation(NumberOps.piHalf, (params) => (context) =>
+    // tslint:disable-next-line: no-magic-numbers
+    Math.PI * 0.5
+  );
+
+  run.setOperation(NumberOps.e, (params) => (context) =>
+    Math.E
+  );
+
+  run.setOperation(NumberOps.sqrt2, (params) => (context) =>
+    Math.SQRT2
+  );
+
+  run.setOperation(NumberOps.sqrt12, (params) => (context) =>
+    Math.SQRT1_2
+  );
+
+  run.setOperation(NumberOps.ln2, (params) => (context) =>
+    Math.LN2
+  );
+
+  run.setOperation(NumberOps.ln10, (params) => (context) =>
+    Math.LN10
+  );
+
+  run.setOperation(NumberOps.log2e, (params) => (context) =>
+    Math.LOG2E
+  );
+
+  run.setOperation(NumberOps.log10e, (params) => (context) =>
+    Math.LOG10E
+  );
+
   // Binary Operations
 
   run.setOperation(NumberOps.add, (params) => (context) => 

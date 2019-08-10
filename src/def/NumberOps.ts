@@ -10,6 +10,28 @@ const ops = NumberType.operations;
 export const NumberOps = 
 {
 
+  // Statics
+
+  pi: ops.set('pi', {}, NumberType ),
+
+  pi2: ops.set('2pi', {}, NumberType ),
+
+  piHalf: ops.set('hpi', {}, NumberType ),
+
+  e: ops.set('e', {}, NumberType ),
+
+  sqrt2: ops.set('sqrt2', {}, NumberType ),
+
+  sqrt12: ops.set('sqrt1/2', {}, NumberType ),
+
+  ln2: ops.set('ln2', {}, NumberType ),
+
+  ln10: ops.set('ln10', {}, NumberType ),
+
+  log2e: ops.set('log2e', {}, NumberType ),
+
+  log10e: ops.set('log10e', {}, NumberType ),
+
   // Binary Operations
 
   add: ops.set('+', {}, NumberType, { value: NumberType, addend: NumberType }),
