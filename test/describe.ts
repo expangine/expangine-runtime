@@ -2,6 +2,7 @@
 
 import { runtime } from '../src/runtimes/js';
 import { NumberType, TextType, AnyType, ListType, ManyType, ObjectType, OptionalType, BooleanType } from '../src';
+import { NullType } from '../src/types/Null';
 
 // tslint:disable: no-magic-numbers
 
@@ -40,7 +41,7 @@ describe('describe', () => {
   {
     const t = defs.describe(null);
 
-    expect(t).toBeInstanceOf(AnyType);
+    expect(t).toBeInstanceOf(NullType);
   });
 
   it('undefined', () => 
