@@ -148,13 +148,7 @@ export const NumberOps =
 
   isGreaterOrEqual: ops.set('>=', {}, BooleanType, { value: NumberType, test: NumberType }),
 
-  isBetweenInIn: ops.set('[]', {}, BooleanType, { value: NumberType, min: NumberType, max: NumberType }),
-
-  isBetweenInEx: ops.set('[}', {}, BooleanType, { value: NumberType, min: NumberType, max: NumberType }),
-
-  isBetweenExEx: ops.set('{}', {}, BooleanType, { value: NumberType, min: NumberType, max: NumberType }),
-
-  isBetweenExIn: ops.set('{]', {}, BooleanType, { value: NumberType, min: NumberType, max: NumberType }),
+  isBetween: ops.set('><', {}, BooleanType, { value: NumberType, min: NumberType, max: NumberType }, { minInclusive: BooleanType, maxInclusive: BooleanType }),
 
   isWhole: ops.set('w?', {}, BooleanType, { value: NumberType }, { epsilon: NumberType }),
 

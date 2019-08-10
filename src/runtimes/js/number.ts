@@ -373,28 +373,20 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     _number(params.value, context) >= _number(params.test, context)
   );
 
-  run.setOperation(NumberOps.isBetweenInIn, (params) => (context) => {
+  run.setOperation(NumberOps.isBetween, (params) => (context) => {
     const value = _number(params.value, context);
+    const min = _number(params.min, context);
+    const max = _number(params.max, context);
+    const minInclusive = _bool(params.minInclusive, context, true);
+    const maxInclusive = _bool(params.maxInclusive, context, true);
 
-    return value >= _number(params.min, context) && value <= _number(params.max, context);
-  });
+    const minCompare = value - min;
+    const maxCompare = value - max;
 
-  run.setOperation(NumberOps.isBetweenInEx, (params) => (context) => {
-    const value = _number(params.value, context);
+    const minOffset = minInclusive ? 0 : 1;
+    const maxOffset = maxInclusive ? 0 : -1;
 
-    return value >= _number(params.min, context) && value < _number(params.max, context);
-  });
-
-  run.setOperation(NumberOps.isBetweenExEx, (params) => (context) => {
-    const value = _number(params.value, context);
-
-    return value > _number(params.min, context) && value < _number(params.max, context);
-  });
-
-  run.setOperation(NumberOps.isBetweenExIn, (params) => (context) => {
-    const value = _number(params.value, context);
-
-    return value > _number(params.min, context) && value <= _number(params.max, context);
+    return minCompare >= minOffset && maxCompare <= maxOffset;
   });
 
   run.setOperation(NumberOps.isWhole, (params) => (context) => {
