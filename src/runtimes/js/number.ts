@@ -6,6 +6,9 @@ import { isNumber, isUndefined, isString } from '../../fns';
 
 
 
+const DEFAULT_BASE = 10;
+
+
 export default (run: Runtime, epsilon: number = 0.000001) =>
 {
 
@@ -50,15 +53,17 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
   run.setOperation(NumberOps.hypot, (params) => (context) => {
     const a = _number(params.a, context);
     const b = _number(params.b, context);
+
     return Math.sqrt(a * a + b * b);
   });
 
   run.setOperation(NumberOps.choose, (params) => (context) => {
-    let n = _number(params.n, context);
-    let k = _number(params.k, context);
+    const n = _number(params.n, context);
+    const k = _number(params.k, context);
     if (!isFinite(n) || !isFinite(k)) {
       return Number.NaN;
     }
+
     return choose(n, k);
   });
 
@@ -68,18 +73,22 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     if (!isFinite(a) || !isFinite(b)) {
       return Number.NaN;
     }
+
     return gcd(a, b);
   });
 
   run.setOperation(NumberOps.bitAnd, (params) => (context) => 
+    // tslint:disable-next-line: no-bitwise
     _number(params.a, context) & _number(params.b, context)
   );
 
   run.setOperation(NumberOps.bitOr, (params) => (context) => 
+    // tslint:disable-next-line: no-bitwise
     _number(params.a, context) | _number(params.b, context)
   );
 
   run.setOperation(NumberOps.bitXor, (params) => (context) => 
+    // tslint:disable-next-line: no-bitwise
     _number(params.a, context) ^ _number(params.b, context)
   );
 
@@ -95,6 +104,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.sq, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value * value;
   });
 
@@ -112,11 +122,13 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.up, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value < 0 ? Math.ceil(value) : Math.floor(value);
   });
 
   run.setOperation(NumberOps.down, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value > 0 ? Math.ceil(value) : Math.floor(value);
   });
 
@@ -134,6 +146,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.sign, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value === 0 ? 0 : value < 0 ? -1 : 1;
   });
 
@@ -175,10 +188,12 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.factorial, (params) => (context) => {
     const value = _number(params.value, context);
+
     return isFinite(value) ? factorial(value) : value;
   });
 
   run.setOperation(NumberOps.bitFlip, (params) => (context) => 
+    // tslint:disable-next-line: no-bitwise
     ~_number(params.value, context)
   );
 
@@ -195,6 +210,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     if (!isFinite(base) || !isFinite(side1) || !isFinite(side2)) {
       return Number.NaN;
     }
+
     return triangleHeight(base, side1, side2);
   });
 
@@ -202,6 +218,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     const start = _number(params.start, context);
     const end = _number(params.end, context);
     const delta = _number(params.delta, context);
+
     return (end - start) * delta + start;
   });
 
@@ -228,7 +245,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
     if (!isFinite(value)) {
       return value;
     }
-    const base = _number(params.base, context, 10);
+    const base = _number(params.base, context, DEFAULT_BASE);
     const min = _number(params.minDigits, context, 0);
     
     let x = value.toString(base);
@@ -260,16 +277,19 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
       to = value.toPrecision(maxPlaces);
     }
 
+    const SEPARATOR_NUMBER = 1.1;
+    const SEPARATOR_OFFSET = 3;
+
     if (isString(separator)) {
-      const systemSeparator = (1.1).toLocaleString().substring(1, 2);
+      const systemSeparator = SEPARATOR_NUMBER.toLocaleString().substring(1, SEPARATOR_OFFSET - 1);
       let index = to.indexOf(systemSeparator);
       if (index === -1) {
         index = to.length;
       }
-      index -= 3;
+      index -= SEPARATOR_OFFSET;
       while (index > 0) {
         to = to.substring(0, index) + separator + to.substring(index);
-        index -= 3;
+        index -= SEPARATOR_OFFSET;
       }
     }
     
@@ -312,31 +332,37 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.isBetweenInIn, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value >= _number(params.min, context) && value <= _number(params.max, context);
   });
 
   run.setOperation(NumberOps.isBetweenInEx, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value >= _number(params.min, context) && value < _number(params.max, context);
   });
 
   run.setOperation(NumberOps.isBetweenExEx, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value > _number(params.min, context) && value < _number(params.max, context);
   });
 
   run.setOperation(NumberOps.isBetweenExIn, (params) => (context) => {
     const value = _number(params.value, context);
+
     return value > _number(params.min, context) && value <= _number(params.max, context);
   });
 
   run.setOperation(NumberOps.isWhole, (params) => (context) => {
     const value = _number(params.value, context);
+
     return Math.abs(value - Math.floor(value)) <= _number(params.epsilon, context, epsilon);
   });
 
   run.setOperation(NumberOps.isDecimal, (params) => (context) => {
     const value = _number(params.value, context);
+
     return Math.abs(value - Math.floor(value)) > _number(params.epsilon, context, epsilon);
   });
 
@@ -361,6 +387,7 @@ function factorial (x: number): number {
   while (--x > 1) {
     f *= x;
   }
+
   return f;
 }
 
@@ -371,16 +398,20 @@ function gcd (a: number, b: number): number {
   let y = Math.min(as, bs);
 
   for (;;) {
-    if (y == 0) return x;
+    if (y === 0) return x;
     x %= y;
-    if (x == 0) return y;
+    if (x === 0) return y;
     y %= x;
   }
 }
 
-function choose(n: number, k: number): number {
-  let num = 1, den = 1, denom = 0;
+function choose(n: number, k: number): number 
+{
+  let num = 1; 
+  let den = 1;
+  let denom = 0;
 
+  // tslint:disable-next-line: no-bitwise
   if (k > (n >> 1))
   {
     k = n - k;
@@ -398,10 +429,14 @@ function choose(n: number, k: number): number {
   return num;
 }
 
-function triangleHeight(base: number, side1: number, side2: number): number {
-  const p = (base + side1 + side2) * 0.5;
+const HALF = 0.5;
+const TWO = 2;
+
+function triangleHeight(base: number, side1: number, side2: number): number 
+{
+  const p = (base + side1 + side2) * HALF;
   const area = Math.sqrt( p * (p - base) * (p - side1) * (p - side2) );
-  const height = area * 2 / base;
+  const height = area * TWO / base;
 
   return height;
 }

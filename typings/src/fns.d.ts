@@ -24,3 +24,5 @@ export declare const COMPARE_TYPE_ORDER: {
 };
 export declare function compare(a: any, b: any): number;
 export declare function copy(x: any, originals?: any[], clones?: any[]): any;
+export declare function padNumber(x: number, length: number, first?: number): string;
+export declare function pad(x: string, length: number, padding: string, before: boolean): string;

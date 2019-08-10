@@ -29,6 +29,7 @@ import { SetExpression } from '../exprs/Set';
 import { TemplateExpression } from '../exprs/Template';
 import { UpdateExpression } from '../exprs/Update';
 import { EnumType } from '../types/Enum';
+import { DateType } from '../types/Date';
 
 
 export const defs = new Definitions({
@@ -44,6 +45,7 @@ export const defs = new Definitions({
     OptionalType,
     MapType,
     EnumType,
+    DateType,
   ],
   expressions: [
     ConstantExpression,

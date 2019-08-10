@@ -229,3 +229,18 @@ export function copy(x: any, originals: any[] = [], clones: any[] = []): any
 
   return x;
 }
+
+export function padNumber(x: number, length: number, first: number = length)
+{
+  return pad(x + '', length, '0', true).substring( 0, first );
+}
+
+export function pad(x: string, length: number, padding: string, before: boolean): string
+{
+  while (x.length < length)
+  {
+    before ? x = padding + x : x = x + padding;
+  }
+
+  return x;
+}

@@ -1,6 +1,6 @@
 
 import { Command } from '../../Command';
-import { isNumber, isString, isArray, isMap, isObject } from '../../fns';
+import { isNumber, isString, isArray, isMap, isObject, isDate } from '../../fns';
 
 
 
@@ -78,3 +78,5 @@ export const _list  = _typedDynamic<any[]> (isArray, () => []);
 export const _map = _typedDynamic<Map<any, any>> (isMap, () => new Map());
 
 export const _object = _typedDynamic<any>(isObject, () => ({}));
+
+export const _date = _typedDynamic<Date>(isDate, () => new Date());

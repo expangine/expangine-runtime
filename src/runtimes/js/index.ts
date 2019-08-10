@@ -8,17 +8,19 @@ import addTextOperations from './text';
 import addBooleanOperations from './boolean';
 import addAnyOperations from './any';
 import addListOperations from './list';
-import addMapOptions from './map';
-import addObjectOptions from './object';
+import addMapOperations from './map';
+import addObjectOperations from './object';
+import addDateOperations from './date';
 
 
 export const runtime = new Runtime(defs);
 
 addAnyOperations(runtime);
 addBooleanOperations(runtime);
+addDateOperations(runtime);
 addExpressions(runtime);
 addListOperations(runtime);
-addMapOptions(runtime);
+addMapOperations(runtime);
 addNumberOperations(runtime);
-addObjectOptions(runtime);
+addObjectOperations(runtime);
 addTextOperations(runtime);

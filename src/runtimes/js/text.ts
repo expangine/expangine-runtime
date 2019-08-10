@@ -45,6 +45,7 @@ export default (run: Runtime) =>
     while (--times >= 0){ 
       repeated += value;
     }
+
     return repeated;
   });
 
@@ -76,6 +77,7 @@ export default (run: Runtime) =>
     if (_bool(params.end, context, true)) {
       value = value.replace(/\w+$/, '');
     }
+
     return value;
   });
 
@@ -96,6 +98,7 @@ export default (run: Runtime) =>
   run.setOperation(TextOps.soundex, (params) => {
     const LETTERS_ONLY = /[a-z]/g;
     const ALLOWED_ONLY = /[^bfpvcgjkqsxzdtlmnr]/g;
+    const SOUNDEX_MIN_DEFAULT = 4;
     const MAP = {
       b: 1, f: 1, p: 1, v: 1,
       c: 2, g: 2, j: 2, k: 2, q: 2, s: 2, x: 2, z: 2,
@@ -108,7 +111,7 @@ export default (run: Runtime) =>
     return (context) => {
       let value = _text(params.value, context);
       const max = _numberMaybe(params.max, context);
-      const min = _number(params.min, context, 4);
+      const min = _number(params.min, context, SOUNDEX_MIN_DEFAULT);
 
       value = value.toLowerCase();
       value = value.replace(LETTERS_ONLY, '');
