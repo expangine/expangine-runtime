@@ -37,11 +37,11 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(BooleanOps.isTrue, (params) => (context) => 
-    _bool(params.value, context, false) === true
+    _bool(params.value, context, false)
   );
 
   run.setOperation(BooleanOps.isFalse, (params) => (context) => 
-    _bool(params.value, context, false) === false
+    !_bool(params.value, context, false)
   );
 
 };

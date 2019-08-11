@@ -25,14 +25,14 @@ import { UpdateExpression } from '../../exprs/Update';
 export default (run: Runtime) => 
 {
 
-  run.setExpression(ConstantExpression, (expr, run) => 
+  run.setExpression(ConstantExpression, (expr, _thisRun) => 
   {
     return () => expr.value
   });
 
-  run.setExpression(GetExpression, (expr, run) => 
+  run.setExpression(GetExpression, (expr, thisRun) => 
   {
-    const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
+    const parts: Command[] = expr.path.map(sub => thisRun.getCommand(sub));
 
     return (context) => 
     {
@@ -54,11 +54,11 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(SetExpression, (expr, run) => 
+  run.setExpression(SetExpression, (expr, thisRun) => 
   {
-    const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
+    const parts: Command[] = expr.path.map(sub => thisRun.getCommand(sub));
     const last = parts.length - 1;
-    const getValue = run.getCommand(expr.value);
+    const getValue = thisRun.getCommand(expr.value);
 
     return (context) => 
     {
@@ -88,11 +88,11 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(UpdateExpression, (expr, run) => 
+  run.setExpression(UpdateExpression, (expr, thisRun) => 
   {
-    const parts: Command[] = expr.path.map(sub => run.getCommand(sub));
+    const parts: Command[] = expr.path.map(sub => thisRun.getCommand(sub));
     const last = parts.length - 1;
-    const getValue = run.getCommand(expr.value);
+    const getValue = thisRun.getCommand(expr.value);
 
     return (context) => 
     {
@@ -128,24 +128,30 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(OperationExpression, (expr, run) => 
+  run.setExpression(OperationExpression, (expr, thisRun) => 
   {
-    const params = mapObject(expr.params, expr => run.getCommand(expr));
+    const params = mapObject(expr.params, e => thisRun.getCommand(e));
     const op = run.getOperation(expr.name);
 
-    if (!op) {
+    if (!op) 
+    { 
       throw new Error(`Operation with ${expr.name} is not defined in the given runtime.`);
     }
     
     const defaults = run.getOperationScopeDefaults(expr.name);
     let scopeAlias = expr.scopeAlias;
 
-    if (defaults) {
-      for (let prop in defaults) {
-        if (!(prop in scopeAlias)) {
-          if (scopeAlias === expr.scopeAlias) {
+    if (defaults) 
+    {
+      for (const prop in defaults) 
+      {
+        if (!(prop in scopeAlias)) 
+        { 
+          if (scopeAlias === expr.scopeAlias) 
+          {
             scopeAlias = { ...scopeAlias };
           }
+
           scopeAlias[prop] = defaults[prop];
         }
       }
@@ -154,23 +160,23 @@ export default (run: Runtime) =>
     return op(params, scopeAlias);
   });
 
-  run.setExpression(ChainExpression, (expr, run) => 
+  run.setExpression(ChainExpression, (expr, thisRun) => 
   { 
-    const chain = expr.chain.map(data => run.getCommand(data));
+    const chain = expr.chain.map(data => thisRun.getCommand(data));
 
     return (context) => chain.reduce<any>((_, cmd) => cmd(context), undefined)
   });
 
-  run.setExpression(IfExpression, (expr, run) => 
+  run.setExpression(IfExpression, (expr, thisRun) => 
   {
-    const cases = expr.cases.map(([test, result]) => [run.getCommand(test), run.getCommand(result)]);
-    const otherwise = run.getCommand(expr.otherwise);
+    const cases = expr.cases.map(([test, result]) => [thisRun.getCommand(test), thisRun.getCommand(result)]);
+    const otherwise = thisRun.getCommand(expr.otherwise);
 
     return (context) => 
     {
-      for (let i = 0; i < cases.length; i++) 
+      for (const caseExpression of cases)
       {
-        const [test, result] = cases[i];
+        const [test, result] = caseExpression;
 
         if (test(context)) 
         {
@@ -182,15 +188,15 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(SwitchExpression, (expr, run) => 
+  run.setExpression(SwitchExpression, (expr, thisRun) => 
   {
-    const valueCommand = run.getCommand(expr.value);
+    const valueCommand = thisRun.getCommand(expr.value);
     const cases: [Command[], Command][] = expr.cases.map(([tests, result]) => [
-      tests.map(t => run.getCommand(t)),
-      run.getCommand(result)
+      tests.map(t => thisRun.getCommand(t)),
+      thisRun.getCommand(result)
     ]);
-    const defaultCase = run.getCommand(expr.defaultCase);
-    const isEqual = run.getOperation(expr.op);
+    const defaultCase = thisRun.getCommand(expr.defaultCase);
+    const isEqual = thisRun.getOperation(expr.op);
     const noScope = {};
     
     return (context) => 
@@ -222,23 +228,23 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(NotExpression, (expr, run) => 
+  run.setExpression(NotExpression, (expr, thisRun) => 
   {
-    const expression = run.getCommand(expr.expression);
+    const expression = thisRun.getCommand(expr.expression);
 
     return (context) => !expression(context);
   });
 
-  run.setExpression(AndExpression, (expr, run) => 
+  run.setExpression(AndExpression, (expr, thisRun) => 
   {
-    const expressions = expr.expressions.map(expr => run.getCommand(expr));
+    const expressions = expr.expressions.map(e => thisRun.getCommand(e));
     const defaultResult = expressions.length > 0;
 
     return (context) => 
     {
-      for (let i = 0; i < expressions.length; i++)
+      for (const and of expressions)
       {
-        if (!expressions[i](context))
+        if (!and(context))
         {
           return false;
         }
@@ -248,16 +254,16 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(OrExpression, (expr, run) => 
+  run.setExpression(OrExpression, (expr, thisRun) => 
   {
-    const expressions = expr.expressions.map(expr => run.getCommand(expr));
+    const expressions = expr.expressions.map(e => thisRun.getCommand(e));
     const defaultResult = expressions.length === 0;
 
     return (context) => 
     {
-      for (let i = 0; i < expressions.length; i++)
+      for (const or of expressions)
       {
-        if (expressions[i](context))
+        if (or(context))
         {
           return true;
         }
@@ -267,12 +273,12 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(ForExpression, (expr, run) => 
+  run.setExpression(ForExpression, (expr, thisRun) => 
   {
     const variable = expr.variable;
-    const start = run.getCommand(expr.start);
-    const end = run.getCommand(expr.end);
-    const body = run.getCommand(expr.body);
+    const start = thisRun.getCommand(expr.start);
+    const end = thisRun.getCommand(expr.end);
+    const body = thisRun.getCommand(expr.body);
     const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
@@ -286,7 +292,7 @@ export default (run: Runtime) =>
       let i = start(context);
       let iterations = 0;
       let stop = end(context);
-      let last = undefined;
+      let last;
       const dir = i < stop ? 1 : -1;
 
       while ((dir === 1 ? i <= stop : i >= stop) && iterations++ < max) 
@@ -309,17 +315,17 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(WhileExpression, (expr, run) => 
+  run.setExpression(WhileExpression, (expr, thisRun) => 
   {
-    const condition = run.getCommand(expr.condition);
-    const body = run.getCommand(expr.body);
+    const condition = thisRun.getCommand(expr.condition);
+    const body = thisRun.getCommand(expr.body);
     const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
     return (context) => 
     {
       let iterations = 0;
-      let last = undefined;
+      let last;
 
       const popBreak = context[breakVariable];
 
@@ -340,17 +346,17 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(DoExpression, (expr, run) => 
+  run.setExpression(DoExpression, (expr, thisRun) => 
   {
-    const condition = run.getCommand(expr.condition);
-    const body = run.getCommand(expr.body);
+    const condition = thisRun.getCommand(expr.condition);
+    const body = thisRun.getCommand(expr.body);
     const breakVariable = expr.breakVariable;
     const max = expr.maxIterations;
 
     return (context) => 
     {
       let iterations = 0;
-      let last = undefined;
+      let last;
 
       const popBreak = context[breakVariable];
 
@@ -372,26 +378,29 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(DefineExpression, (expr, run) => 
+  run.setExpression(DefineExpression, (expr, thisRun) => 
   {
-    const define = mapObject(expr.define, e => run.getCommand(e));
-    const body = run.getCommand(expr.body);
+    const define = mapObject(expr.define, e => thisRun.getCommand(e));
+    const body = thisRun.getCommand(expr.body);
 
     return (context) =>
     {
       const pop = {};
 
-      for (let prop in define) {
+      for (const prop in define) 
+      {
         pop[prop] = context[prop];
       }
 
-      for (let prop in define) {
+      for (const prop in define) 
+      {
         context[prop] = define[prop](context);
       }
 
       const result = body(context)
 
-      for (let prop in define) {
+      for (const prop in define) 
+      {
         context[prop] = pop[prop];
       }
 
@@ -399,13 +408,16 @@ export default (run: Runtime) =>
     };
   });
 
-  run.setExpression(TemplateExpression, (expr, run) => 
+  run.setExpression(TemplateExpression, (expr, thisRun) => 
   {
-    const params = mapObject(expr.params, e => run.getCommand(e));
+    const SECTION_TYPES = 2;
+    const SECTION_INDEX_CONSTANT = 0;
+
+    const params = mapObject(expr.params, e => thisRun.getCommand(e));
     const template = expr.template;
 
     const sections = template.split(/[\{\}]/).map((section, index) => {
-      return index % 2 === 0
+      return index % SECTION_TYPES === SECTION_INDEX_CONSTANT
         ? (_source: any) => section
         : (source: any) => source && section in source ? source[section] : '';
     });

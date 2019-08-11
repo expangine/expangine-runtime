@@ -1,5 +1,5 @@
 
-import { Type, TypeInput, TypeMap } from './Type';
+import { Type, TypeInput, TypeMap, TypeMapStrict, TypeResolved } from './Type';
 import { mapObject } from './fns';
 import { GenericType } from './types/Generic';
 
@@ -21,10 +21,10 @@ export interface OperationFlags
 }
 
 export interface Operation<
-  R extends TypeInput = any, 
-  P extends TypeMap = never, 
-  O extends TypeMap = never, 
-  S extends TypeMap = never,
+  R extends Type = any, 
+  P extends TypeMapStrict = never, 
+  O extends TypeMapStrict = never, 
+  S extends TypeMapStrict = never,
   G extends string = never
 > extends OperationFlags {
   id: string;
@@ -35,6 +35,14 @@ export interface Operation<
   generics?: Record<G, GenericType>;
 }
 
+export type OperationResolved<
+  R extends TypeInput = any, 
+  P extends TypeMap = never, 
+  O extends TypeMap = never, 
+  S extends TypeMap = never,
+  G extends string = never
+> = Operation<TypeResolved<R>, TypeResolved<P>, TypeResolved<O>, TypeResolved<S>, G>;
+
 export interface OperationBuilder<
   T extends Type,
   R extends TypeInput = any, 
@@ -44,9 +52,10 @@ export interface OperationBuilder<
   G extends string = never
 > {
   id: string;
+  dynamic: boolean;
   complexity: number;
   scopeDefaults?: Record<keyof S, string>;
-  (type: T): Operation<R, P, O, S, G>;
+  (type: T): OperationResolved<R, P, O, S, G>;
 }
 
 export class Operations<T extends Type> 
@@ -84,12 +93,20 @@ export class Operations<T extends Type>
     const id = this.prefix + localId;
     const mutates = flags.mutates || [];
     const complexity = flags.complexity || 0;
-    const op = { id, mutates, complexity, returnType, params, optional, scope };
+    const op = { 
+      id, 
+      mutates, 
+      complexity, 
+      returnType: Type.resolve(returnType), 
+      params: Type.resolve(params),
+      optional: Type.resolve(optional), 
+      scope: Type.resolve(scope)
+    };
     const scopeDefaults = scope 
       ? mapObject(scope, (_, key) => key) as Record<keyof S, string>
       : undefined;
 
-    return this.put(id, complexity, scopeDefaults, () => op);
+    return this.put(id, false, complexity, scopeDefaults, () => op);
   }
 
   public build<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never>(
@@ -104,23 +121,34 @@ export class Operations<T extends Type>
     const mutates = flags.mutates || [];
     const complexity = flags.complexity || 0;
 
-    return this.put(id, complexity, scopeDefaults, (type) =>
+    return this.put(id, true, complexity, scopeDefaults, (type) =>
     {
       const [returnType, params, optional, scope] = getOptions(type, generics);
 
-      return { id, mutates, complexity, returnType, params, optional, scope, generics };
+      return { 
+        id, 
+        mutates, 
+        complexity, 
+        returnType: Type.resolve(returnType), 
+        params: Type.resolve(params), 
+        optional: Type.resolve(optional), 
+        scope: Type.resolve(scope), 
+        generics 
+      };
     });
   }
 
   private put<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never>(
     id: string, 
+    dynamic: boolean,
     complexity: number,
     scopeDefaults: Record<keyof S, string> | undefined,
-    getOperation: (type: T) => Operation<R, P, O, S, G>): OperationBuilder<T, R, P, O, S, G>
+    getOperation: (type: T) => OperationResolved<R, P, O, S, G>): OperationBuilder<T, R, P, O, S, G>
   {
     const builder = getOperation as OperationBuilder<T, R, P, O, S, G>;
 
     builder.id = id;
+    builder.dynamic = dynamic;
     builder.complexity = complexity;
     builder.scopeDefaults = scopeDefaults;
 

@@ -1,6 +1,10 @@
 import { Operation, Operations } from './Operation';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeMap = Record<string, TypeInput>;
+export declare type TypeMapStrict = Record<string, Type>;
+export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeMap ? Record<keyof T, Type> : {
+    [K in keyof T]: TypeResolved<T[K]>;
+};
 export interface TypeProvider {
     getType(data: any): Type;
 }
@@ -25,6 +29,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
 }
 export declare abstract class Type<O = any> {
     static fromInput(input: TypeInput): Type;
+    static resolve<T>(types: T): TypeResolved<T>;
     options: O;
     operations?: Record<string, Operation>;
     constructor(options: O);

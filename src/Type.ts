@@ -1,11 +1,25 @@
 
-import { mapObject } from './fns';
+import { mapObject, isArray, isObject } from './fns';
 import { Operation, Operations } from './Operation';
 
 
 export type TypeInput = TypeClass | Type;
 
 export type TypeMap = Record<string, TypeInput>;
+
+export type TypeMapStrict = Record<string, Type>;
+
+export type TypeResolved<T> = T extends (null | undefined)
+  ? undefined
+  : T extends TypeInput
+    ? Type
+    : T extends TypeInput[]
+      ? Type[]
+      : T extends TypeMap
+        ? Record<keyof T, Type>
+        : {
+          [K in keyof T]: TypeResolved<T[K]>
+        };
 
 export interface TypeProvider 
 {
@@ -45,6 +59,33 @@ export abstract class Type<O = any>
     return input instanceof Type
       ? input
       : input.baseType;
+  }
+
+  public static resolve<T>(types: T): TypeResolved<T>
+  {
+    let result: any;
+
+    if (!types)
+    {
+    }
+    else if (types instanceof Type)
+    {
+      result = types;
+    }
+    else if ((types as any).baseType instanceof Type)
+    {
+      result = (types as any).baseType;
+    }
+    else if (isArray(types))
+    {
+      result = types.map(t => this.resolve(t));
+    }
+    else if (isObject(types))
+    {
+      result = mapObject(types as any, t => this.resolve(t));
+    }
+
+    return result as unknown as TypeResolved<T>;
   }
 
   public options: O;

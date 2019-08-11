@@ -4,7 +4,7 @@ import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
 import { OperationBuilder } from './Operation';
-import { TypeMap } from './Type';
+import { TypeMap, TypeInput } from './Type';
 
 
 export class Runtime 
@@ -21,9 +21,9 @@ export class Runtime
     this.exprs = Object.create(null);
   }
 
-  public setOperation<P extends TypeMap = any, O extends TypeMap = any, S extends TypeMap = any>(
-    builder: OperationBuilder<any, any, P, O, S>, 
-    op: OperationToCommand<P, O, S>
+  public setOperation<R extends TypeInput, P extends TypeMap = any, O extends TypeMap = any, S extends TypeMap = any>(
+    builder: OperationBuilder<any, R, P, O, S>, 
+    op: OperationToCommand<R, P, O, S>
   ): void 
   {
     this.ops[builder.id] = op;
