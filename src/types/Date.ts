@@ -1,7 +1,8 @@
 
-import { isDate, isEmpty, isNumber, isString } from '../fns';
+import { isDate, isEmpty } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
 
 
 const INDEX_OPTIONS = 1;
@@ -9,6 +10,12 @@ const INDEX_OPTIONS = 1;
 export interface DateOptions 
 {
   parseAsUTC?: boolean;
+  validateMin?: Date;
+  validateMax?: Date;
+  forceMin?: Date;
+  forceMax?: Date;
+  forceStartOf?: Unit;
+  forceEndOf?: Unit;
 }
 
 export class DateType extends Type<DateOptions> 
@@ -36,7 +43,15 @@ export class DateType extends Type<DateOptions>
   
   public static describe(data: any, describer: TypeDescribeProvider): Type | null
   {
-    return isDate(data) ? this.baseType : null;
+    if (!isDate(data))
+    {
+      return null;
+    }
+
+    return new DateType({
+      validateMin: new Date(data.getTime()),
+      validateMax: new Date(data.getTime())
+    });
   }
 
   public merge(type: DateType, describer: TypeDescribeProvider): void
@@ -45,6 +60,16 @@ export class DateType extends Type<DateOptions>
     const o2 = type.options;
 
     o1.parseAsUTC = o1.parseAsUTC && o2.parseAsUTC;
+    
+    if (o1.validateMin && o2.validateMin)
+    {
+      o1.validateMin.setTime(Math.min(o1.validateMin.getTime(), o2.validateMin.getTime()));
+    }
+
+    if (o1.validateMax && o2.validateMax)
+    {
+      o1.validateMax.setTime(Math.max(o1.validateMax.getTime(), o2.validateMax.getTime()));
+    }
   }
 
   public getSubTypes(): null
@@ -64,43 +89,58 @@ export class DateType extends Type<DateOptions>
 
   public isValid(value: any): boolean 
   {
-    return isDate(this.normalize(value));
+    const { parseAsUTC, validateMin, validateMax } = this.options;
+    const parsed = parse(value, parseAsUTC);
+
+    if (!parsed)
+    {
+      return false;
+    }
+
+    if (validateMin && parsed.getTime() < validateMin.getTime())
+    {
+      return false;
+    }
+
+    if (validateMax && parsed.getTime() > validateMax.getTime())
+    {
+      return false;
+    }
+
+    return true;
   }
 
   public normalize(value: any): any
   {
-    if (isDate(value))
+    const { parseAsUTC, forceMin, forceMax, forceStartOf, forceEndOf } = this.options;
+    const parsed = parse(value, parseAsUTC);
+
+    if (!parsed)
     {
       return value;
     }
 
-    if (isNumber(value) && value > 0)
+    if (forceMin && parsed.getTime() < forceMin.getTime())
     {
-      return new Date(value);
+      parsed.setTime(forceMin.getTime());
+    }
+    
+    if (forceMax && parsed.getTime() > forceMax.getTime())
+    {
+      parsed.setTime(forceMax.getTime());
     }
 
-    if (isString(value))
+    if (forceStartOf)
     {
-      if (this.options.parseAsUTC)
-      {
-        const withUTC = value + ' UTC';
-        const parsedUTC = Date.parse(withUTC);
-
-        if (isFinite(parsedUTC))
-        {
-          return new Date(parsedUTC);
-        }
-      }
-
-      const parsed = Date.parse(value);
-
-      if (isFinite(parsed))
-      {
-        return new Date(parsed);
-      }
+      startOf[forceStartOf](parsed);
     }
 
-    return value;
+    if (forceEndOf)
+    {
+      endOf[forceEndOf](parsed);
+    }
+
+    return parsed;
   }
 
   public encode(): any 

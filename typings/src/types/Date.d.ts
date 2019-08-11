@@ -1,7 +1,14 @@
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { Unit } from '../util/DateFunctions';
 export interface DateOptions {
     parseAsUTC?: boolean;
+    validateMin?: Date;
+    validateMax?: Date;
+    forceMin?: Date;
+    forceMax?: Date;
+    forceStartOf?: Unit;
+    forceEndOf?: Unit;
 }
 export declare class DateType extends Type<DateOptions> {
     static id: string;
