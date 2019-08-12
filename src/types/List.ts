@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, isArray } from '../fns';
+import { isNumber, isEmpty, isArray, coalesce } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
@@ -9,6 +9,8 @@ import { ObjectType } from './Object';
 
 const INDEX_ITEM = 1;
 const INDEX_OPTIONS = 2;
+const RANDOM_MIN = 2;
+const RANDOM_MAX = 5;
 
 export interface ListOptions 
 {
@@ -153,6 +155,25 @@ export class ListType extends Type<ListOptions>
   public encode(): any 
   {
     return ListType.encode(this);
+  }
+
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    const { min, max } = this.options;
+    const chosenMin = coalesce(min, RANDOM_MIN);
+    const chosenMax = coalesce(max, RANDOM_MAX);
+    const start = Math.min(chosenMin, chosenMax);
+    const end = Math.max(chosenMin, chosenMax);
+    const n = rnd(start, end + 1, true);
+    const out: any[] = [];
+
+    for (let i = 0; i < n; i++)
+    {
+      out.push(this.options.item.random(rnd));
+    }
+
+    return out;
   }
 
   public getSplitResultType()

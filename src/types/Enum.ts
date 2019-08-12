@@ -90,4 +90,11 @@ export class EnumType extends Type<EnumOptions>
     return EnumType.encode(this);
   }
 
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    const values = toArray(this.options.constants.values());
+
+    return values[rnd(0, values.length, true)];
+  }
+
 }

@@ -12,6 +12,7 @@ export declare function isEmpty(value: any): boolean;
 export declare function mapObject<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey?: (key: string, value: V) => string): Record<string, R>;
 export declare function toArray<T>(iter: IterableIterator<T>): T[];
 export declare function getCompare(less: number, more: number): number;
+export declare function coalesce<T>(x?: T, y?: T): T;
 export declare const COMPARE_TYPE_ORDER: {
     'boolean': number;
     'number': number;

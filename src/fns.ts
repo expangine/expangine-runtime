@@ -100,6 +100,11 @@ export function getCompare(less: number, more: number): number
     : less < more ? 1 : -1;
 }
 
+export function coalesce<T>(x?: T, y?: T): T
+{
+  return x === undefined ? y : x;
+}
+
 export const COMPARE_TYPE_ORDER = {
   'boolean':    0,
   'number':     1,

@@ -41,4 +41,5 @@ export declare abstract class Type<O = any> {
     abstract isValid(value: any): boolean;
     abstract normalize(value: any): any;
     abstract encode(): any;
+    abstract random(rnd: (a: number, b: number, whole: boolean) => number): any;
 }

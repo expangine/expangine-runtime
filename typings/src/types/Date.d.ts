@@ -25,4 +25,5 @@ export declare class DateType extends Type<DateOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): any;
 }

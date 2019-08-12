@@ -6,6 +6,7 @@ import { NumberType } from './Number';
 
 
 const INDEX_OPTIONS = 1;
+const RANDOM_TRUE_PROBABILITY = 0.5;
 
 export interface BooleanOptions 
 {
@@ -106,6 +107,11 @@ export class BooleanType extends Type<BooleanOptions>
   public encode(): any 
   {
     return BooleanType.encode(this);
+  }
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    return rnd(0, 1, false) < RANDOM_TRUE_PROBABILITY;
   }
 
 }

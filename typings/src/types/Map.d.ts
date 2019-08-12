@@ -26,6 +26,7 @@ export declare class MapType extends Type<MapOptions> {
     normalize(test: any): any;
     private iterate;
     encode(): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): any;
     getValuesType(): ListType;
     getKeysType(): ListType;
     getEntriesType(): ObjectType;

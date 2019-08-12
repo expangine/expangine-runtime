@@ -1,10 +1,12 @@
 
-import { isNumber, isEmpty } from '../fns';
+import { isNumber, isEmpty, coalesce } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
 const INDEX_OPTIONS = 1;
+const RANDOM_MIN = 0;
+const RANDOM_MAX = 10;
 
 export interface NumberOptions 
 {
@@ -90,6 +92,15 @@ export class NumberType extends Type<NumberOptions>
   public encode(): any 
   {
     return NumberType.encode(this);
+  }
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    const { min, max, whole } = this.options;
+    const chosenMin = coalesce(min, RANDOM_MIN);
+    const chosenMax = coalesce(max, RANDOM_MAX);
+
+    return rnd(chosenMin, chosenMax, whole);
   }
 
 }

@@ -5,6 +5,7 @@ import { AnyType } from './Any';
 
 
 const INDEX_TYPE = 1;
+const RANDOM_CHANCE = 0.3;
 
 export class OptionalType extends Type<Type>
 {
@@ -83,6 +84,13 @@ export class OptionalType extends Type<Type>
   public encode(): any 
   {
     return OptionalType.encode(this);
+  }
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    return this.options && rnd(0, 1, false) > RANDOM_CHANCE
+      ? this.options.random(rnd)
+      : undefined;
   }
 
 }

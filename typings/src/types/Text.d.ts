@@ -24,4 +24,5 @@ export declare class TextType extends Type<TextOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): any;
 }

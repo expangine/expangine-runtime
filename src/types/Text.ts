@@ -1,10 +1,13 @@
 
-import { isString, isNumber, isEmpty } from '../fns';
+import { isString, isNumber, isEmpty, coalesce } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
 
 const INDEX_OPTIONS = 1;
+const RANDOM_MIN = 1;
+const RANDOM_MAX = 16;
+const RANDOM_CHARACTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-+=:.';
 
 export interface TextOptions 
 {
@@ -139,6 +142,27 @@ export class TextType extends Type<TextOptions>
   public encode(): any 
   {
     return TextType.encode(this);
+  }
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    const { min, max, requireLower, forceLower, requireUpper, forceUpper } = this.options;
+    const lower = requireLower || forceLower;
+    const upper = requireUpper || forceUpper;
+    const chosenMin = coalesce(min, RANDOM_MIN);
+    const chosenMax = coalesce(max, RANDOM_MAX);
+    const n = rnd(chosenMin, chosenMax + 1, true);
+    let out = '';
+
+    for (let i = 0; i < n; i++)
+    {
+      out += RANDOM_CHARACTERS.charAt(rnd(0, RANDOM_CHARACTERS.length, true));
+    }
+
+    if (lower) out = out.toLowerCase();
+    if (upper) out = out.toUpperCase();
+
+    return out;
   }
 
 }

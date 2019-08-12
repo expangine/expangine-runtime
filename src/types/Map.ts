@@ -10,6 +10,8 @@ import { ObjectType } from './Object';
 
 const INDEX_VALUE = 1;
 const INDEX_KEY = 2;
+const RANDOM_MIN = 2;
+const RANDOM_MAX = 5;
 
 export interface MapOptions 
 {
@@ -164,6 +166,23 @@ export class MapType extends Type<MapOptions>
   public encode(): any 
   {
     return MapType.encode(this);
+  }
+
+  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  {
+    const { key, value } = this.options;
+    const n = rnd(RANDOM_MIN, RANDOM_MAX + 1, true);
+    const out = new Map<any, any>();
+
+    for (let i = 0; i < n; i++)
+    {
+      const k = key.random(rnd);
+      const v = value.random(rnd);
+
+      out.set(k, v);
+    }
+
+    return out;
   }
 
   public getValuesType()
