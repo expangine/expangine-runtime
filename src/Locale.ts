@@ -1,4 +1,6 @@
 
+// tslint:disable: no-magic-numbers
+
 export interface LocaleOptions
 {
 
