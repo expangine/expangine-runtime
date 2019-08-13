@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { mapObject } from '../fns';
+import { objectMap } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 
@@ -15,7 +15,7 @@ export class DefineExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): DefineExpression 
   {
-    const define = mapObject(data[INDEX_DEFINE], (d: any) => exprs.getExpression(d));
+    const define = objectMap(data[INDEX_DEFINE], (d: any) => exprs.getExpression(d));
     const body = exprs.getExpression(data[INDEX_BODY]);
     
     return new DefineExpression(define, body);
@@ -23,7 +23,7 @@ export class DefineExpression extends Expression
 
   public static encode(expr: DefineExpression): any 
   {
-    const define = mapObject(expr.define, e => e.encode());
+    const define = objectMap(expr.define, e => e.encode());
 
     return [this.id, define, expr.body.encode()];
   }
@@ -52,7 +52,7 @@ export class DefineExpression extends Expression
 
   public getScope()
   {
-    return mapObject(this.define, () => AnyType.baseType);
+    return objectMap(this.define, () => AnyType.baseType);
   }
 
   public encode(): any 

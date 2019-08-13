@@ -8,6 +8,16 @@ const INDEX_CONSTANT = 1;
 export class ConstantExpression extends Expression 
 {
 
+  public static has(e: Expression, constant: any): boolean
+  {
+    return e instanceof ConstantExpression && e.value === constant;
+  }
+
+  public static is(e: Expression): e is ConstantExpression
+  {
+    return e instanceof ConstantExpression;
+  }
+
   public static id = 'constant';
 
   public static decode(data: any[], expr: ExpressionProvider): ConstantExpression 

@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
 export interface ObjectOptions {
     props: Record<string, Type>;
@@ -11,6 +11,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     static encode(type: ObjectType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static from(types?: TypeMap): ObjectType;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

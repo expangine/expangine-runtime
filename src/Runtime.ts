@@ -5,6 +5,7 @@ import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
 import { OperationBuilder } from './Operation';
 import { TypeMap, TypeInput } from './Type';
+import { FunctionType } from './types/Function';
 
 
 export class Runtime 
@@ -21,6 +22,16 @@ export class Runtime
     this.exprs = Object.create(null);
   }
 
+  public extend(defs?: Definitions): Runtime
+  {
+    const copy = new Runtime(defs || this.defs);
+
+    Object.assign(copy.ops, this.ops);
+    Object.assign(copy.exprs, this.exprs);
+
+    return copy;
+  }
+
   public setOperation<R extends TypeInput, P extends TypeMap = any, O extends TypeMap = any, S extends TypeMap = any>(
     builder: OperationBuilder<any, R, P, O, S>, 
     op: OperationToCommand<R, P, O, S>
@@ -32,6 +43,11 @@ export class Runtime
   public setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<T>) 
   {
     this.exprs[type.id] = getter;
+  }
+
+  public getFunction (name: string): FunctionType
+  {
+    return this.defs.getFunction(name);
   }
 
   public getOperation (id: string): OperationToCommand 

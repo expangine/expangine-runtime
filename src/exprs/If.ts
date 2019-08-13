@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { ConstantExpression } from './Constant';
 
 
 const INDEX_CASES = 1;
@@ -23,7 +24,7 @@ export class IfExpression extends Expression
   {
     const cases = expr.cases.map(([test, result]) => [test.encode(), result.encode()]);
 
-    return Expression.hasConstant(expr.otherwise, undefined)
+    return ConstantExpression.has(expr.otherwise, undefined)
       ? [this.id, cases]
       : [this.id, cases, expr.otherwise.encode()];
   }

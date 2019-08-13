@@ -1,5 +1,5 @@
 
-import { mapObject } from '../fns';
+import { objectMap } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 
@@ -15,14 +15,14 @@ export class TemplateExpression extends Expression
   public static decode(data: any[], exprs: ExpressionProvider): TemplateExpression 
   {
     const template = data[INDEX_TEMPLATE];
-    const params: Record<string, Expression> = mapObject(data[INDEX_PARAMS], value => exprs.getExpression(value));
+    const params: Record<string, Expression> = objectMap(data[INDEX_PARAMS], value => exprs.getExpression(value));
     
     return new TemplateExpression(template, params);
   }
 
   public static encode(expr: TemplateExpression): any 
   {
-    const params = mapObject(expr.params, e => e.encode());
+    const params = objectMap(expr.params, e => e.encode());
 
     return [this.id, expr.template, params];
   }

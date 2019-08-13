@@ -4,15 +4,18 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { AnyType } from './Any';
+import { Expression } from '../Expression';
 
 
 const INDEX_RETURN = 1;
 const INDEX_PARAMS = 2;
+const INDEX_EXPRESSION = 3;
 
 export interface FunctionOptions 
 {
   returnType: Type;
   params: ObjectType;
+  expression: Expression;
 }
 
 export class FunctionType extends Type<FunctionOptions> 
@@ -22,24 +25,27 @@ export class FunctionType extends Type<FunctionOptions>
 
   public static operations = new Operations<FunctionType>('func:');
 
-  public static baseType = new FunctionType({ returnType: AnyType.baseType, params: ObjectType.baseType });
+  public static baseType = new FunctionType({ returnType: AnyType.baseType, params: ObjectType.baseType, expression: null });
 
-  public static decode(data: any[], types: TypeProvider): FunctionType 
+  public static decode(data: any[], types: TypeProvider): FunctionType
   {
     const returnType = types.getType(data[INDEX_RETURN]);
     const params = types.getType([ObjectType.id, data[INDEX_PARAMS]]) as ObjectType;
+    const expression = types.getExpression(data[INDEX_EXPRESSION]);
 
-    return new FunctionType({ returnType, params });
+    return new FunctionType({ returnType, params, expression });
   }
 
   public static encode(type: FunctionType): any 
   {
-    let options: any = type.options;
-    if (!options.true && !options.false) {
-      options = undefined;
-    }
-
-    return options ? [this.id, options] : this.id;
+    const { returnType, params, expression } = type.options;
+    
+    return [
+      this.id,
+      returnType.encode(),
+      params.encode(),
+      expression.encode()
+    ];
   }
 
   public static describePriority: number = -1;
@@ -68,7 +74,9 @@ export class FunctionType extends Type<FunctionOptions>
 
   public isCompatible(other: Type): boolean 
   {
-    return other instanceof FunctionType;
+    return other instanceof FunctionType
+      && this.options.returnType.isCompatible(other.options.returnType)
+      && this.options.params.isCompatible(other.options.params);
   }
 
   public isValid(value: any): boolean 
@@ -88,7 +96,7 @@ export class FunctionType extends Type<FunctionOptions>
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
-    return undefined;
+    return () => this.options.returnType.random(rnd);
   }
 
 }

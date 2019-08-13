@@ -1,6 +1,7 @@
 
-import { mapObject, isArray, isObject } from './fns';
+import { objectMap, isArray, isObject } from './fns';
 import { Operation, Operations } from './Operation';
+import { Expression } from './Expression';
 
 
 export type TypeInput = TypeClass | Type;
@@ -24,6 +25,7 @@ export type TypeResolved<T> = T extends (null | undefined)
 export interface TypeProvider 
 {
   getType(data: any): Type;
+  getExpression(data: any): Expression;
 }
 
 export interface TypeDescribeProvider
@@ -82,7 +84,7 @@ export abstract class Type<O = any>
     }
     else if (isObject(types))
     {
-      result = mapObject(types as any, t => this.resolve(t));
+      result = objectMap(types as any, t => this.resolve(t));
     }
 
     return result as unknown as TypeResolved<T>;
@@ -100,7 +102,7 @@ export abstract class Type<O = any>
   {
     if (!this.operations) 
     {
-      this.operations = mapObject(type.operations.map, builder => builder(this));
+      this.operations = objectMap(type.operations.map, builder => builder(this));
     }
 
     return this.operations;

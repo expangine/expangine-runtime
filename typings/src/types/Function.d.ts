@@ -1,9 +1,11 @@
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
+import { Expression } from '../Expression';
 export interface FunctionOptions {
     returnType: Type;
     params: ObjectType;
+    expression: Expression;
 }
 export declare class FunctionType extends Type<FunctionOptions> {
     static id: string;

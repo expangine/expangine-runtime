@@ -1,19 +1,26 @@
 
-import { isArray, mapObject, isSameClass } from './fns';
-import { Type, TypeClass, TypeParser } from './Type';
+import { isArray, objectMap, isSameClass, objectValues } from './fns';
+import { Type, TypeClass, TypeParser, TypeInput, TypeMap } from './Type';
 import { Expression, ExpressionClass } from './Expression';
 import { Operations, OperationBuilder } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
+import { FunctionType } from './types/Function';
+import { ObjectType } from './types/Object';
 
 
-interface DefinitionsOptions
+export interface DefinitionsImportOptions
+{
+  aliases?: Record<string, Type | any>;
+  functions?: Record<string, FunctionType | any>;
+}
+
+export interface DefinitionsOptions extends DefinitionsImportOptions
 {
   types?: TypeClass[];
   expressions?: ExpressionClass[];
-  aliases?: Record<string, Type | any>;
 }
 
 export class Definitions 
@@ -24,32 +31,54 @@ export class Definitions
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
   public operations: Operations<any>;
+  public aliased: Record<string, Type>;
+  public functions: Record<string, FunctionType>;
 
   public constructor(initial?: DefinitionsOptions)
   { 
     this.types = Object.create(null);
     this.expressions = Object.create(null);
     this.parsers = Object.create(null);
+    this.functions = Object.create(null);
     this.describers = [];
     this.operations = new Operations('');
 
     if (initial) 
     {
-      if (initial.types) 
-      {
-        initial.types.forEach(type => this.addType(type));
-      }
-
-      if (initial.expressions) 
-      {
-        initial.expressions.forEach(expr => this.addExpression(expr));
-      }
-
-      if (initial.aliases) 
-      {
-        mapObject(initial.aliases, (instance, alias) => this.addAlias(alias, instance));
-      }
+      this.add(initial);
     }
+  }
+
+  public extend(deepCopy: boolean = false, initial?: DefinitionsOptions): Definitions
+  { 
+    const copy = new Definitions({
+      types: objectValues(this.types),
+      expressions: objectValues(this.expressions),
+      aliases: objectMap(this.aliased, a => deepCopy ? a.encode() : a),
+      functions: objectMap(this.functions, f => deepCopy ? f.encode() : f)
+    });
+
+    if (initial)
+    {
+      copy.add(initial);
+    }
+
+    return copy;
+  }
+
+  public add(options: DefinitionsOptions)
+  {
+    if (options.types) 
+    {
+      options.types.forEach(type => this.addType(type));
+    }
+
+    if (options.expressions) 
+    {
+      options.expressions.forEach(expr => this.addExpression(expr));
+    }
+
+    this.import(options);
   }
 
   public describe(data: any): Type
@@ -187,14 +216,43 @@ export class Definitions
       : this.getType(instance);
 
     this.parsers[alias] = () => type;
+    this.aliased[alias] = type;
   }
 
   public getType(value: any): Type 
   {
+    if (value instanceof Type)
+    {
+      return value;
+    }
+
     const id = isArray(value) ? value[0] : value;
     const data = isArray(value) ? value : [];
 
     return this.parsers[id](data, this);
+  }
+
+  public addFunction(name: string, returnType: TypeInput, params: TypeMap, expr: any): FunctionType
+  {
+    const func = new FunctionType({
+      returnType: Type.resolve(returnType),
+      params: ObjectType.from(Type.resolve(params)),
+      expression: this.getExpression(expr)
+    });
+
+    this.functions[name] = func;
+
+    return func;
+  }
+
+  public setFunction(name: string, typeValue: any): FunctionType
+  {
+    return this.functions[name] = this.getType(typeValue) as FunctionType;
+  }
+
+  public getFunction(name: string): FunctionType
+  {
+    return this.functions[name];
   }
 
   public getOperationBuilder(id: string): OperationBuilder<any> | null
@@ -219,7 +277,11 @@ export class Definitions
 
   public getExpression(value: any): Expression 
   {
-    if (isArray(value))
+    if (value instanceof Expression)
+    {
+      return value;
+    }
+    else if (isArray(value))
     {
       const exprClass = this.expressions[value[0]];
 
@@ -232,6 +294,31 @@ export class Definitions
     }
 
     return new ConstantExpression(value);
+  }
+
+  public export(): DefinitionsImportOptions
+  {
+    return {
+      aliases: objectMap(this.aliased, a => a.encode()),
+      functions: objectMap(this.functions, f => f.encode())
+    };
+  }
+
+  public import(exported: DefinitionsImportOptions): void
+  {
+    if (exported.aliases) 
+    {
+      objectMap(exported.aliases, (instance, alias) => 
+        this.addAlias(alias, instance)
+      );
+    }
+
+    if (exported.functions)
+    {
+      objectMap(exported.functions, (func, name) => 
+        this.setFunction(name, func)
+      );
+    }
   }
 
 }

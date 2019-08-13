@@ -197,11 +197,9 @@ export class MapType extends Type<MapOptions>
 
   public getEntriesType()
   {
-    return new ObjectType({ 
-      props: {
-        keys: this.getKeysType(),
-        values: this.getValuesType()
-      }
+    return ObjectType.from({ 
+      keys: this.getKeysType(),
+      values: this.getValuesType()
     });
   }
 

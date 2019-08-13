@@ -68,7 +68,7 @@ export function isEmpty(value: any): boolean
   return value === null || value === undefined;
 }
 
-export function mapObject<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey: (key: string, value: V) => string = ((key) => key) ): Record<string, R> 
+export function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey: (key: string, value: V) => string = ((key) => key) ): Record<string, R> 
 {
   const mapped: Record<string, R> = {};
 
@@ -79,6 +79,18 @@ export function mapObject<R, V>(map: Record<string, V>, getValue: (value: V, key
   }
 
   return mapped;
+}
+
+export function objectValues<V>(map: Record<string, V>): V[]
+{
+  const values: V[] = [];
+
+  for (const key in map)
+  {
+    values.push(map[key]);
+  }
+
+  return values;
 }
 
 export function toArray<T>(iter: IterableIterator<T>): T[]

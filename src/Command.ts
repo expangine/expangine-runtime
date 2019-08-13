@@ -1,6 +1,7 @@
 
 import { TypeMap, TypeInput } from './Type';
 import { Expression } from './Expression';
+import { FunctionType } from './types/Function';
 
 
 export interface Command 
@@ -38,4 +39,5 @@ export interface CommandProvider
   getCommand(expr: Expression): Command;
   getOperation(id: string): OperationToCommand;
   getOperationScopeDefaults(id: string): Record<string, string>;
+  getFunction(name: string): FunctionType;
 }

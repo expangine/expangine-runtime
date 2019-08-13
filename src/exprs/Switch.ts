@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { ConstantExpression } from './Constant';
 
 
 const INDEX_VALUE = 1;
@@ -31,7 +32,7 @@ export class SwitchExpression extends Expression
     const value = expr.value.encode();
     const cases = expr.cases.map(([tests, result]) => [tests.map(t => t.encode()), result.encode()]);
 
-    return Expression.hasConstant(expr.defaultCase, undefined)
+    return ConstantExpression.has(expr.defaultCase, undefined)
       ? [this.id, value, expr.op, cases]
       : [this.id, value, expr.op, cases, expr.defaultCase.encode()];
   }

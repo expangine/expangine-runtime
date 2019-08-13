@@ -1,4 +1,5 @@
 import { Operation, Operations } from './Operation';
+import { Expression } from './Expression';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeMap = Record<string, TypeInput>;
 export declare type TypeMapStrict = Record<string, Type>;
@@ -7,6 +8,7 @@ export declare type TypeResolved<T> = T extends (null | undefined) ? undefined :
 };
 export interface TypeProvider {
     getType(data: any): Type;
+    getExpression(data: any): Expression;
 }
 export interface TypeDescribeProvider {
     describe(data: any): Type;

@@ -178,12 +178,7 @@ export class ListType extends Type<ListOptions>
 
   public getSplitResultType()
   {
-    return new ObjectType({ 
-      props: { 
-        pass: this, 
-        fail: this 
-      } 
-    });
+    return ObjectType.from({ pass: this, fail: this });
   }
 
   public getIterationScope()

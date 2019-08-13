@@ -1,5 +1,5 @@
 
-import { isUndefined, mapObject } from '../../fns';
+import { isUndefined, objectMap } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
 
@@ -19,6 +19,7 @@ import { SetExpression } from '../../exprs/Set';
 import { DoExpression } from '../../exprs/Do';
 import { TemplateExpression } from '../../exprs/Template';
 import { UpdateExpression } from '../../exprs/Update';
+import { InvokeExpression } from '../../exprs/Invoke';
 
 
 
@@ -130,7 +131,7 @@ export default (run: Runtime) =>
 
   run.setExpression(OperationExpression, (expr, thisRun) => 
   {
-    const params = mapObject(expr.params, e => thisRun.getCommand(e));
+    const params = objectMap(expr.params, e => thisRun.getCommand(e));
     const op = run.getOperation(expr.name);
 
     if (!op) 
@@ -158,6 +159,15 @@ export default (run: Runtime) =>
     }
 
     return op(params, scopeAlias);
+  });
+
+  run.setExpression(InvokeExpression, (expr, thisRun) =>
+  {
+    const func = thisRun.getFunction(expr.name);
+    const command = thisRun.getCommand(func.options.expression);
+    const args = objectMap(expr.args, a => thisRun.getCommand(a));
+
+    return (context) => command(objectMap(args, a => a(context)));
   });
 
   run.setExpression(ChainExpression, (expr, thisRun) => 
@@ -380,7 +390,7 @@ export default (run: Runtime) =>
 
   run.setExpression(DefineExpression, (expr, thisRun) => 
   {
-    const define = mapObject(expr.define, e => thisRun.getCommand(e));
+    const define = objectMap(expr.define, e => thisRun.getCommand(e));
     const body = thisRun.getCommand(expr.body);
 
     return (context) =>
@@ -413,7 +423,7 @@ export default (run: Runtime) =>
     const SECTION_TYPES = 2;
     const SECTION_INDEX_CONSTANT = 0;
 
-    const params = mapObject(expr.params, e => thisRun.getCommand(e));
+    const params = objectMap(expr.params, e => thisRun.getCommand(e));
     const template = expr.template;
 
     const sections = template.split(/[\{\}]/).map((section, index) => {
@@ -424,7 +434,7 @@ export default (run: Runtime) =>
 
     return (context) =>
     {
-      const source = mapObject(params, p => p(context));
+      const source = objectMap(params, p => p(context));
 
       return sections.reduce((out, section) => out + section(source), '');
     };

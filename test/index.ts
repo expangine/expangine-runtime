@@ -1,6 +1,8 @@
 // import { describe, it, expect } from 'jest';
 
+import { NumberType } from '../src';
 import { runtime } from '../src/runtimes/js';
+
 
 // tslint:disable: no-magic-numbers
 
@@ -150,5 +152,32 @@ describe('index', () => {
     expect(context.x).toEqual(8);
 
   });
+
+  it('functions', () =>
+  {
+    runtime.defs.addFunction(
+      'timesTwo', 
+      NumberType, 
+      { x: NumberType }, 
+      ['op', 'num:*', {
+        value: ['get', ['x']],
+        multiplier: 2
+      }]
+    );
+
+    const process = runtime.eval(['invoke', 'timesTwo', {
+      x: 3
+    }]);
+
+    const context = {
+      x: 4
+    };
+
+    const result = process(context);
+
+    expect(result).toEqual(6);
+  });
+
+
 
 })

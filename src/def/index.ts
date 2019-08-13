@@ -31,6 +31,7 @@ import { UpdateExpression } from '../exprs/Update';
 import { EnumType } from '../types/Enum';
 import { DateType } from '../types/Date';
 import { NullType } from '../types/Null';
+import { InvokeExpression } from '../exprs/Invoke';
 
 
 export const defs = new Definitions({
@@ -66,5 +67,6 @@ export const defs = new Definitions({
     DefineExpression,
     TemplateExpression,
     UpdateExpression,
+    InvokeExpression,
   ]
 });

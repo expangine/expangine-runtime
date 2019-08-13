@@ -1,6 +1,6 @@
 
-import { mapObject, isObject } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { objectMap, isObject } from '../fns';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
 
 
@@ -18,18 +18,18 @@ export class ObjectType extends Type<ObjectOptions>
 
   public static operations = new Operations<ObjectType>('obj:');
 
-  public static baseType = new ObjectType({ props: {} });
+  public static baseType = ObjectType.from();
 
   public static decode(data: any[], types: TypeProvider): ObjectType 
   {
-    const props = mapObject(data[INDEX_PROPS], value => types.getType(value));
+    const props = objectMap(data[INDEX_PROPS], value => types.getType(value));
     
-    return new ObjectType({ props });
+    return ObjectType.from(props);
   }
 
   public static encode(type: ObjectType): any 
   {
-    const props = mapObject(type.options.props, p => p.encode());
+    const props = objectMap(type.options.props, p => p.encode());
 
     return [this.id, props];
   }
@@ -43,14 +43,14 @@ export class ObjectType extends Type<ObjectOptions>
       return null;
     }
 
-    const props: Record<string, Type> = Object.create(null);
+    return ObjectType.from(objectMap(data, d => describer.describe(d)));
+  }
 
-    for (const prop in data)
-    {
-      props[prop] = describer.describe(data[prop]);
-    }
-
-    return new ObjectType({ props });
+  public static from(types?: TypeMap): ObjectType
+  {
+    return new ObjectType({
+      props: types ? Type.resolve(types) : {}
+    });
   }
 
   public merge(type: ObjectType, describer: TypeDescribeProvider): void

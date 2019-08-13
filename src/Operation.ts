@@ -1,6 +1,6 @@
 
 import { Type, TypeInput, TypeMap, TypeMapStrict, TypeResolved } from './Type';
-import { mapObject } from './fns';
+import { objectMap } from './fns';
 import { GenericType } from './types/Generic';
 
 
@@ -103,7 +103,7 @@ export class Operations<T extends Type>
       scope: Type.resolve(scope)
     };
     const scopeDefaults = scope 
-      ? mapObject(scope, (_, key) => key) as Record<keyof S, string>
+      ? objectMap(scope, (_, key) => key) as Record<keyof S, string>
       : undefined;
 
     return this.put(id, false, complexity, scopeDefaults, () => op);
