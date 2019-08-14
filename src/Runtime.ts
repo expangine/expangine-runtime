@@ -34,7 +34,7 @@ export class Runtime
 
   public setOperation<R extends TypeInput, P extends TypeMap = any, O extends TypeMap = any, S extends TypeMap = any>(
     builder: OperationBuilder<any, R, P, O, S>, 
-    op: OperationToCommand<R, P, O, S>
+    op: OperationToCommand<P, O, S>
   ): void 
   {
     this.ops[builder.id] = op;

@@ -1,5 +1,5 @@
 
-import { TypeMap, TypeInput } from './Type';
+import { TypeMap } from './Type';
 import { Expression } from './Expression';
 import { FunctionType } from './types/Function';
 
@@ -22,7 +22,6 @@ export type CommandsFor<T extends TypeMap> = [T] extends [never]
 
 
 export type OperationToCommand<
-  R extends TypeInput = any,
   P extends TypeMap = never,
   O extends TypeMap = never,
   S extends TypeMap = never
