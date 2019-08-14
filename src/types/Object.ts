@@ -53,6 +53,11 @@ export class ObjectType extends Type<ObjectOptions>
     });
   }
 
+  public getId(): string
+  {
+    return ObjectType.id;
+  }
+
   public merge(type: ObjectType, describer: TypeDescribeProvider): void
   {
     const p1 = this.options.props;

@@ -11,6 +11,7 @@ export declare class NullType extends Type<NullOptions> {
     static encode(type: NullType): any;
     static describePriority: number;
     static describe(data: any): Type | null;
+    getId(): string;
     merge(type: NullType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

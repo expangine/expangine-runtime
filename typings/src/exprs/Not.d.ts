@@ -6,6 +6,7 @@ export declare class NotExpression extends Expression {
     static encode(expr: NotExpression): any;
     expression: Expression;
     constructor(expression: Expression);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

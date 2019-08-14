@@ -7,6 +7,7 @@ export declare class InvokeExpression extends Expression {
     name: string;
     args: Record<string, Expression>;
     constructor(name: string, args: Record<string, Expression>);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

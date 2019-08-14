@@ -8,6 +8,7 @@ export declare class DefineExpression extends Expression {
     define: Record<string, Expression>;
     body: Expression;
     constructor(define: Record<string, Expression>, body: Expression);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): Record<string, AnyType>;
     encode(): any;

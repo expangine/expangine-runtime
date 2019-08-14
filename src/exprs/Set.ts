@@ -31,9 +31,14 @@ export class SetExpression extends Expression
 
   public constructor(path: Expression[], value: Expression) 
   {
-    super(SetExpression.id);
+    super();
     this.path = path;
     this.value = value;
+  }
+
+  public getId(): string
+  {
+    return SetExpression.id;
   }
 
   public getComplexity(def: Definitions): number

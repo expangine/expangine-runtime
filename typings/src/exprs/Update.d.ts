@@ -9,6 +9,7 @@ export declare class UpdateExpression extends Expression {
     value: Expression;
     currentVariable: string;
     constructor(path: Expression[], value: Expression, currentVariable: string);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): {
         [x: string]: AnyType;

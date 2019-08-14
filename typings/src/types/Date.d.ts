@@ -18,6 +18,7 @@ export declare class DateType extends Type<DateOptions> {
     static encode(type: DateType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    getId(): string;
     merge(type: DateType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

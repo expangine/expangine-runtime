@@ -28,8 +28,13 @@ export class OrExpression extends Expression
 
   public constructor(expressions: Expression[]) 
   {
-    super(OrExpression.id);
+    super();
     this.expressions = expressions;
+  }
+
+  public getId(): string
+  {
+    return OrExpression.id;
   }
 
   public getComplexity(def: Definitions): number

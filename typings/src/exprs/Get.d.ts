@@ -6,6 +6,7 @@ export declare class GetExpression extends Expression {
     static encode(expr: GetExpression): any;
     path: Expression[];
     constructor(path: Expression[]);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

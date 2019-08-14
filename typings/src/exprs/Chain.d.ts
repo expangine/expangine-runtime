@@ -6,6 +6,7 @@ export declare class ChainExpression extends Expression {
     static encode(expr: ChainExpression): any;
     chain: Expression[];
     constructor(chain: Expression[]);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

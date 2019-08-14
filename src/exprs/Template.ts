@@ -32,9 +32,14 @@ export class TemplateExpression extends Expression
 
   public constructor(template: string, params: Record<string, Expression>) 
   {
-    super(TemplateExpression.id);
+    super();
     this.template = template;
     this.params = params;
+  }
+
+  public getId(): string
+  {
+    return TemplateExpression.id;
   }
 
   public getComplexity(def: Definitions): number

@@ -55,6 +55,11 @@ export class FunctionType extends Type<FunctionOptions>
     return null;
   }
 
+  public getId(): string
+  {
+    return FunctionType.id;
+  }
+
   public merge(type: FunctionType, describer: TypeDescribeProvider): void
   {
     

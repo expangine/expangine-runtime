@@ -28,8 +28,13 @@ export class ChainExpression extends Expression
 
   public constructor(chain: Expression[]) 
   {
-    super(ChainExpression.id);
+    super();
     this.chain = chain;
+  }
+
+  public getId(): string
+  {
+    return ChainExpression.id;
   }
 
   public getComplexity(def: Definitions): number

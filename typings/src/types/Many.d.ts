@@ -11,6 +11,7 @@ export declare class ManyType extends Type<Type[]> {
     subs?: Record<string, Type>;
     getOperations(type: TypeClass<any, any>): Record<string, Operation>;
     private forMany;
+    getId(): string;
     merge(type: ManyType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

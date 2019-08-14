@@ -58,6 +58,11 @@ export class TextType extends Type<TextOptions>
     });
   }
 
+  public getId(): string
+  {
+    return TextType.id;
+  }
+
   public merge(type: TextType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

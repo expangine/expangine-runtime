@@ -28,8 +28,13 @@ export class AndExpression extends Expression
 
   public constructor(expressions: Expression[]) 
   {
-    super(AndExpression.id);
+    super();
     this.expressions = expressions;
+  }
+
+  public getId(): string
+  {
+    return AndExpression.id;
   }
 
   public getComplexity(def: Definitions): number

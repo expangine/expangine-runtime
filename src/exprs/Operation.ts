@@ -37,10 +37,15 @@ export class OperationExpression extends Expression
 
   public constructor(name: string, params: Record<string, Expression>, scopeAlias: Record<string, string>) 
   {
-    super(OperationExpression.id);
+    super();
     this.name = name;
     this.params = params;
     this.scopeAlias = scopeAlias;
+  }
+
+  public getId(): string
+  {
+    return OperationExpression.id;
   }
 
   public getComplexity(def: Definitions): number

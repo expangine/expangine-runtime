@@ -34,9 +34,14 @@ export class IfExpression extends Expression
 
   public constructor(cases: [Expression, Expression][], otherwise: Expression) 
   {
-    super(IfExpression.id);
+    super();
     this.cases = cases;
     this.otherwise = otherwise;
+  }
+
+  public getId(): string
+  {
+    return IfExpression.id;
   }
 
   public getComplexity(def: Definitions): number

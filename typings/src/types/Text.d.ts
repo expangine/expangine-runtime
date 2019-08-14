@@ -17,6 +17,7 @@ export declare class TextType extends Type<TextOptions> {
     static encode(type: TextType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    getId(): string;
     merge(type: TextType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

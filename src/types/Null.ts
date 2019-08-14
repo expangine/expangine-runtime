@@ -39,6 +39,11 @@ export class NullType extends Type<NullOptions>
     return data === null ? this.baseType : null;
   }
 
+  public getId(): string
+  {
+    return NullType.id;
+  }
+
   public merge(type: NullType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

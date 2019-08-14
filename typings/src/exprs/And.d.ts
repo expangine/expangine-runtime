@@ -6,6 +6,7 @@ export declare class AndExpression extends Expression {
     static encode(expr: AndExpression): any;
     expressions: Expression[];
     constructor(expressions: Expression[]);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

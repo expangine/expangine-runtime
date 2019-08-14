@@ -28,8 +28,13 @@ export class GetExpression extends Expression
 
   public constructor(path: Expression[]) 
   {
-    super(GetExpression.id);
+    super();
     this.path = path;
+  }
+
+  public getId(): string
+  {
+    return GetExpression.id;
   }
 
   public getComplexity(def: Definitions): number

@@ -9,6 +9,7 @@ export declare class OptionalType extends Type<Type> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getOperations(type: TypeClass<any, any>): Record<string, Operation>;
+    getId(): string;
     merge(type: OptionalType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

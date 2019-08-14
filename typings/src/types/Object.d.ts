@@ -12,6 +12,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static from(types?: TypeMap): ObjectType;
+    getId(): string;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

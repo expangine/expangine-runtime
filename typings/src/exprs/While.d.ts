@@ -11,6 +11,7 @@ export declare class WhileExpression extends Expression {
     breakVariable: string;
     maxIterations: number;
     constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): {
         [x: string]: BooleanType;

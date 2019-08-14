@@ -14,6 +14,7 @@ export declare class NumberType extends Type<NumberOptions> {
     static encode(type: NumberType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    getId(): string;
     merge(type: NumberType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

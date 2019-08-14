@@ -33,9 +33,14 @@ export class DefineExpression extends Expression
 
   public constructor(define: Record<string, Expression>, body: Expression) 
   {
-    super(DefineExpression.id);
+    super();
     this.define = define;
     this.body = body;
+  }
+
+  public getId(): string
+  {
+    return DefineExpression.id;
   }
 
   public getComplexity(def: Definitions): number

@@ -28,8 +28,13 @@ export class NotExpression extends Expression
 
   public constructor(expression: Expression) 
   {
-    super(NotExpression.id);
+    super();
     this.expression = expression;
+  }
+
+  public getId(): string
+  {
+    return NotExpression.id;
   }
 
   public getComplexity(def: Definitions): number

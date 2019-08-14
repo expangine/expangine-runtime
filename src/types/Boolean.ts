@@ -42,6 +42,11 @@ export class BooleanType extends Type<BooleanOptions>
     return isBoolean(data) ? this.baseType : null;
   }
 
+  public getId(): string
+  {
+    return BooleanType.id;
+  }
+
   public merge(type: BooleanType, describer: TypeDescribeProvider): void
   {
     

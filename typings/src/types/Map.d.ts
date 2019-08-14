@@ -15,6 +15,7 @@ export declare class MapType extends Type<MapOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
+    getId(): string;
     merge(type: MapType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         key: Type<any>;

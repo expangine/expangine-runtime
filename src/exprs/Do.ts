@@ -50,11 +50,16 @@ export class DoExpression extends Expression
 
   public constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number) 
   {
-    super(DoExpression.id);
+    super();
     this.condition = condition;
     this.body = body;
     this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
+  }
+
+  public getId(): string
+  {
+    return DoExpression.id;
   }
 
   public getComplexity(def: Definitions): number

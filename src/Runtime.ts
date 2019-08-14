@@ -69,7 +69,7 @@ export class Runtime
 
   public getCommand(expr: Expression): Command 
   {
-    return this.exprs[expr.id](expr, this);
+    return this.exprs[expr.getId()](expr, this);
   }
 
   public eval (value: any): Command 

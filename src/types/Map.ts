@@ -74,6 +74,11 @@ export class MapType extends Type<MapOptions>
     return new MapType({ key, value });
   }
 
+  public getId(): string
+  {
+    return MapType.id;
+  }
+
   public merge(type: MapType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

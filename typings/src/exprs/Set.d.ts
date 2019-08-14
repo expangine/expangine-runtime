@@ -7,6 +7,7 @@ export declare class SetExpression extends Expression {
     path: Expression[];
     value: Expression;
     constructor(path: Expression[], value: Expression);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

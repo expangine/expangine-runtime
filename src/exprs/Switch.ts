@@ -44,11 +44,16 @@ export class SwitchExpression extends Expression
 
   public constructor(value: Expression, op: string, cases: [Expression[], Expression][], defaultCase: Expression) 
   {
-    super(SwitchExpression.id);
+    super();
     this.value = value;
     this.op = op;
     this.cases = cases;
     this.defaultCase = defaultCase;
+  }
+
+  public getId(): string
+  {
+    return SwitchExpression.id;
   }
 
   public getComplexity(def: Definitions): number

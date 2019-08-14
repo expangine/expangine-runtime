@@ -79,6 +79,11 @@ export class ListType extends Type<ListOptions>
     return new ListType({ item });
   }
 
+  public getId(): string
+  {
+    return ListType.id;
+  }
+
   public merge(type: ListType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

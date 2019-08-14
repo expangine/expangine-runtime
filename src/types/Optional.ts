@@ -45,6 +45,11 @@ export class OptionalType extends Type<Type>
     return this.operations;
   }
 
+  public getId(): string
+  {
+    return OptionalType.id;
+  }
+
   public merge(type: OptionalType, describer: TypeDescribeProvider): void
   {
     

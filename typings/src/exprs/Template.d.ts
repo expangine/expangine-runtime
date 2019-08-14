@@ -7,6 +7,7 @@ export declare class TemplateExpression extends Expression {
     template: string;
     params: Record<string, Expression>;
     constructor(template: string, params: Record<string, Expression>);
+    getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;

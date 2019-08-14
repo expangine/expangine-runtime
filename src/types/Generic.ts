@@ -45,6 +45,11 @@ export class GenericType extends Type<string>
     return this.operations;
   }
 
+  public getId(): string
+  {
+    return GenericType.id;
+  }
+
   public merge(type: GenericType, describer: TypeDescribeProvider): void
   {
     

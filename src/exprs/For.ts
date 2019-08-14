@@ -57,13 +57,18 @@ export class ForExpression extends Expression
 
   public constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable: string, maxIterations: number) 
   {
-    super(ForExpression.id);
+    super();
     this.variable = variable;
     this.start = start;
     this.end = end;
     this.body = body;
     this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
+  }
+
+  public getId(): string
+  {
+    return ForExpression.id;
   }
 
   public getComplexity(def: Definitions): number

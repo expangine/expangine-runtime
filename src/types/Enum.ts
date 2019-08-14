@@ -53,6 +53,11 @@ export class EnumType extends Type<EnumOptions>
     return null;
   }
 
+  public getId(): string
+  {
+    return EnumType.id;
+  }
+
   public merge(type: EnumType, describer: TypeDescribeProvider): void
   {
     

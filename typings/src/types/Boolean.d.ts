@@ -12,6 +12,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     static encode(type: BooleanType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    getId(): string;
     merge(type: BooleanType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

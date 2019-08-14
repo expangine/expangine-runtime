@@ -54,6 +54,11 @@ export class DateType extends Type<DateOptions>
     });
   }
 
+  public getId(): string
+  {
+    return DateType.id;
+  }
+
   public merge(type: DateType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

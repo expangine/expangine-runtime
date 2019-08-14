@@ -36,8 +36,13 @@ export class ConstantExpression extends Expression
 
   public constructor(value: any) 
   {
-    super(ConstantExpression.id);
+    super();
     this.value = value;
+  }
+
+  public getId(): string
+  {
+    return ConstantExpression.id;
   }
 
   public getComplexity(): number

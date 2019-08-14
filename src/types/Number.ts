@@ -54,6 +54,11 @@ export class NumberType extends Type<NumberOptions>
     });
   }
 
+  public getId(): string
+  {
+    return NumberType.id;
+  }
+
   public merge(type: NumberType, describer: TypeDescribeProvider): void
   {
     const o1 = this.options;

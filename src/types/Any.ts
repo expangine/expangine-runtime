@@ -29,6 +29,11 @@ export class AnyType extends Type
     return this.baseType;
   }
 
+  public getId(): string
+  {
+    return AnyType.id;
+  }
+
   public merge(type: AnyType, describer: TypeDescribeProvider): void
   {
     

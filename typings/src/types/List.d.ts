@@ -17,6 +17,7 @@ export declare class ListType extends Type<ListOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(itemOrClass: TypeInput): ListType;
+    getId(): string;
     merge(type: ListType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         length: NumberType;

@@ -39,10 +39,15 @@ export class UpdateExpression extends Expression
 
   public constructor(path: Expression[], value: Expression, currentVariable: string) 
   {
-    super(UpdateExpression.id);
+    super();
     this.path = path;
     this.value = value;
     this.currentVariable = currentVariable;
+  }
+
+  public getId(): string
+  {
+    return UpdateExpression.id;
   }
 
   public getComplexity(def: Definitions): number

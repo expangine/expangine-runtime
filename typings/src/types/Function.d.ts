@@ -15,6 +15,7 @@ export declare class FunctionType extends Type<FunctionOptions> {
     static encode(type: FunctionType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    getId(): string;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         returnType: Type<any>;

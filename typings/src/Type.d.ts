@@ -36,6 +36,7 @@ export declare abstract class Type<O = any> {
     operations?: Record<string, Operation>;
     constructor(options: O);
     getOperations(type: TypeClass<any, O>): Record<string, Operation>;
+    abstract getId(): string;
     abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
     abstract getSubTypes(): Record<string, Type> | null;
     abstract getExactType(value: any): Type<O>;

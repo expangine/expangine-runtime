@@ -108,6 +108,8 @@ export abstract class Type<O = any>
     return this.operations;
   }
 
+  public abstract getId(): string;
+
   public abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
 
   public abstract getSubTypes(): Record<string, Type> | null;

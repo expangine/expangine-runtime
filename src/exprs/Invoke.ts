@@ -32,9 +32,14 @@ export class InvokeExpression extends Expression
 
   public constructor(name: string, args: Record<string, Expression>) 
   {
-    super(InvokeExpression.id);
+    super();
     this.name = name;
     this.args = args;
+  }
+
+  public getId(): string
+  {
+    return InvokeExpression.id;
   }
 
   public getComplexity(def: Definitions): number

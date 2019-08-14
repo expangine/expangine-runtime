@@ -7,6 +7,7 @@ export declare class ConstantExpression extends Expression {
     static encode(expr: ConstantExpression): any;
     value: any;
     constructor(value: any);
+    getId(): string;
     getComplexity(): number;
     getScope(): null;
     encode(): any;

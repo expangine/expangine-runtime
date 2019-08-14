@@ -75,6 +75,11 @@ export class ManyType extends Type<Type[]>
     return otherwise;
   }
 
+  public getId(): string
+  {
+    return ManyType.id;
+  }
+
   public merge(type: ManyType, describer: TypeDescribeProvider): void
   {
     

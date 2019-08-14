@@ -18,17 +18,12 @@ export interface ExpressionClass<T extends Expression = any>
 export abstract class Expression 
 {
 
-  public id: string;
+  public abstract getId(): string;
 
-  public constructor(id: string) 
-  {
-    this.id = id;
-  }
+  public abstract getScope(): Record<string, Type> | null;
 
-  abstract getScope(): Record<string, Type> | null;
+  public abstract getComplexity(def: Definitions): number;
 
-  abstract getComplexity(def: Definitions): number;
-
-  abstract encode(): any;
+  public abstract encode(): any;
 
 }

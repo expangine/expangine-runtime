@@ -13,6 +13,7 @@ export declare class EnumType extends Type<EnumOptions> {
     static encode(type: EnumType): any;
     static describePriority: number;
     static describe(): Type | null;
+    getId(): string;
     merge(type: EnumType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         key: Type<any>;
