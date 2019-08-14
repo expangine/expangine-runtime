@@ -4,7 +4,7 @@ import { DateOps } from '../../def/DateOps';
 import { _number, _date, _text, _bool } from './helper';
 import { DateType } from '../../types/Date';
 import { currentLocale } from '../../locales';
-import { compare, startOf, mutate, add, getters, setters, endOf, getDaysInMonth, getDaysInYear, getWeeksInYear, diff, adjusters, getDateOffset, isDaylightSavingTime, isLeapYear, Unit } from '../../util/DateFunctions';
+import { compareDates, startOf, mutate, add, getters, setters, endOf, getDaysInMonth, getDaysInYear, getWeeksInYear, diff, adjusters, getDateOffset, isDaylightSavingTime, isLeapYear, Unit } from '../../util/DateFunctions';
 import { DateFormat } from '../../util/DateFormat';
 
 
@@ -130,7 +130,7 @@ export default (run: Runtime) =>
     const test = _date(params.test, context);
     const unit = _text(params.unit, context, 'millis') as Unit;
 
-    return unit in startOf ? compare(value, test, unit) : 0;
+    return unit in startOf ? compareDates(value, test, unit) : 0;
   });
 
   run.setOperation(DateOps.diff, (params) => (context) => {
@@ -192,8 +192,8 @@ export default (run: Runtime) =>
     const startInclusive = _bool(params.startInclusive, context, true);
     const endInclusive = _bool(params.endInclusive, context, false);
 
-    const startCompare = compare(value, start, unit);
-    const endCompare = compare(value, end, unit);
+    const startCompare = compareDates(value, start, unit);
+    const endCompare = compareDates(value, end, unit);
     
     const startOffset = startInclusive ? 0 : 1;
     const endOffset = endInclusive ? 0 : -1;

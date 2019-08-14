@@ -1,0 +1,15 @@
+import { Command } from '../../Command';
+export declare function saveScope<K extends string>(context: any, scope: Record<K, string>): Record<K, any>;
+export declare function restoreScope<K extends string>(context: any, saved: Record<K, any>): void;
+export declare function _optional(cmd: Command | undefined, context: object, defaultValue?: any): any;
+export declare function _bool(cmd: Command | undefined, context: object, defaultValue?: boolean): boolean;
+export declare function _typed<T>(isValid: (value: any) => value is T, invalidValueDefault: T): (cmd: Command, context: object, invalidValue?: T) => T;
+export declare function _typedDynamic<T>(isValid: (value: any) => value is T, invalidValueDefault: () => T): (cmd: Command, context: object, invalidValue?: () => T) => T;
+export declare const _number: (cmd: Command, context: object, invalidValue?: number) => number;
+export declare const _numberMaybe: (cmd: Command, context: object, invalidValue?: number) => number;
+export declare const _text: (cmd: Command, context: object, invalidValue?: string) => string;
+export declare const _textMaybe: (cmd: Command, context: object, invalidValue?: string) => string;
+export declare const _list: (cmd: Command, context: object, invalidValue?: () => any[]) => any[];
+export declare const _map: (cmd: Command, context: object, invalidValue?: () => Map<any, any>) => Map<any, any>;
+export declare const _object: (cmd: Command, context: object, invalidValue?: () => any) => any;
+export declare const _date: (cmd: Command, context: object, invalidValue?: () => Date) => Date;

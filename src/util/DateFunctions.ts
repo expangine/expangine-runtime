@@ -169,7 +169,7 @@ export function mutate(a: Date, mutator: (a: Date, options?: LocaleOptions) => v
   return b;
 }
 
-export function compare(a: Date, b: Date, precision: Unit = 'millis', options: LocaleOptions = currentLocale): number
+export function compareDates(a: Date, b: Date, precision: Unit = 'millis', options: LocaleOptions = currentLocale): number
 {
   const starter = startOf[precision];
   const x = mutate(a, starter, options);
