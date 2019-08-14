@@ -1,9 +1,9 @@
 {
   "name": "expangine-runtime",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A TypeScript/JS library for visual programming tools",
   "main": "dist/expangine-runtime.js",
-  "typings": "typings/src/index.d.ts",
+  "typings": "typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://www.github.com/expangine/expangine-runtime-ts"
