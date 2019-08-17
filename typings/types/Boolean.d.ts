@@ -2,7 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 export interface BooleanOptions {
     true?: Record<string, true>;
-    false?: Record<string, false>;
+    false?: Record<string, true>;
 }
 export declare class BooleanType extends Type<BooleanOptions> {
     static id: string;

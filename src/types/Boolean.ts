@@ -11,7 +11,7 @@ const RANDOM_TRUE_PROBABILITY = 0.5;
 export interface BooleanOptions 
 {
   true?: Record<string, true>;
-  false?: Record<string, false>;
+  false?: Record<string, true>;
 }
 
 export class BooleanType extends Type<BooleanOptions> 
