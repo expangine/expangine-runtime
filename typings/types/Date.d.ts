@@ -9,6 +9,7 @@ export interface DateOptions {
     forceMax?: Date;
     forceStartOf?: Unit;
     forceEndOf?: Unit;
+    withTime?: boolean;
 }
 export declare class DateType extends Type<DateOptions> {
     static id: string;
