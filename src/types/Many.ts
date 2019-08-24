@@ -138,4 +138,36 @@ export class ManyType extends Type<Type[]>
     return options[chosen].random(rnd);
   }
 
+  public fromJson(json: any): any
+  {
+    const options = this.options;
+
+    for (const many of options)
+    {
+      const parsed = many.normalize(json);
+
+      if (parsed !== null && parsed !== undefined)
+      {
+        return parsed;
+      }
+    }
+
+    return json;
+  }
+
+  public toJson(value: any): any
+  {
+    const options = this.options;
+
+    for (const many of options)
+    {
+      if (many.isValid(value))
+      {
+        return many.toJson(value);
+      }
+    }
+
+    return value;
+  }
+
 }

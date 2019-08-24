@@ -45,4 +45,6 @@ export declare abstract class Type<O = any> {
     abstract normalize(value: any): any;
     abstract encode(): any;
     abstract random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    abstract fromJson(json: any): any;
+    abstract toJson(value: any): any;
 }

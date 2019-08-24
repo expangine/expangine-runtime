@@ -27,4 +27,6 @@ export declare class FunctionType extends Type<FunctionOptions> {
     normalize(value: any): any;
     encode(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    fromJson(json: any): any;
+    toJson(value: any): any;
 }

@@ -157,4 +157,22 @@ export class ObjectType extends Type<ObjectOptions>
     return out;
   }
 
+  public fromJson(json: any): any
+  {
+    return objectMap(json, (value, key) => {
+      const propType = this.options.props[key];
+
+      return propType ? propType.fromJson(value) : value;
+    });
+  }
+
+  public toJson(value: any): any
+  {
+    return objectMap(value, (subvalue, key) => {
+      const propType = this.options.props[key];
+      
+      return propType ? propType.toJson(subvalue) : subvalue;
+    });
+  }
+
 }

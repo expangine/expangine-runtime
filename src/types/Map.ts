@@ -1,5 +1,5 @@
 
-import { isObject, isMap } from '../fns';
+import { isObject, isMap, toArray } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
@@ -188,6 +188,26 @@ export class MapType extends Type<MapOptions>
     }
 
     return out;
+  }
+
+  public fromJson(json: Array<[any, any]>): Map<any, any>
+  {
+    const { key, value } = this.options;
+
+    return new Map(json.map(([k, v]) => [
+      key.fromJson(k),
+      value.fromJson(v)
+    ]));
+  }
+
+  public toJson(map: Map<any, any>): Array<[any, any]>
+  {
+    const { key, value } = this.options;
+
+    return toArray(map.entries()).map(([k, v]) => [
+      key.toJson(k),
+      value.toJson(v)
+    ]);
   }
 
   public getValuesType()

@@ -90,6 +90,14 @@ export class GenericType extends Type<string>
     return this.inferredType ? this.inferredType.random(rnd) : undefined;
   }
 
-  
+  public fromJson(json: any): any
+  {
+    return json;
+  }
+
+  public toJson(value: any): any
+  {
+    return value;
+  }
 
 }

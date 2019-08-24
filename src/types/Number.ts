@@ -108,4 +108,14 @@ export class NumberType extends Type<NumberOptions>
     return rnd(chosenMin, chosenMax, whole);
   }
 
+  public fromJson(json: number): number
+  {
+    return json;
+  }
+
+  public toJson(value: number): number
+  {
+    return value;
+  }
+
 }

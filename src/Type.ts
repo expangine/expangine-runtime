@@ -125,5 +125,9 @@ export abstract class Type<O = any>
   public abstract encode(): any;
 
   public abstract random(rnd: (a: number, b: number, whole: boolean) => number): any;
+
+  public abstract fromJson(json: any): any;
+
+  public abstract toJson(value: any): any;
   
 }

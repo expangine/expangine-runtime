@@ -170,4 +170,14 @@ export class TextType extends Type<TextOptions>
     return out;
   }
 
+  public fromJson(json: string): string
+  {
+    return json;
+  }
+
+  public toJson(value: string): string
+  {
+    return value;
+  }
+
 }

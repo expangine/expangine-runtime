@@ -119,4 +119,14 @@ export class BooleanType extends Type<BooleanOptions>
     return rnd(0, 1, false) < RANDOM_TRUE_PROBABILITY;
   }
 
+  public fromJson(json: boolean): boolean
+  {
+    return json;
+  }
+
+  public toJson(value: boolean): boolean
+  {
+    return value;
+  }
+
 }

@@ -168,4 +168,14 @@ export class DateType extends Type<DateOptions>
     return new Date(rnd(start, end, true));
   }
 
+  public fromJson(json: string): Date
+  {
+    return new Date(json);
+  }
+
+  public toJson(value: Date): string
+  {
+    return value.toISOString();
+  }
+
 }

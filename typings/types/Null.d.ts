@@ -20,4 +20,6 @@ export declare class NullType extends Type<NullOptions> {
     normalize(value: any): any;
     encode(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    fromJson(json: null): null;
+    toJson(value: null): null;
 }

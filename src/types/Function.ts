@@ -104,4 +104,20 @@ export class FunctionType extends Type<FunctionOptions>
     return () => this.options.returnType.random(rnd);
   }
 
+  public fromJson(json: any): any
+  {
+    // tslint:disable-next-line: prefer-const
+    let fn = null;
+
+    // tslint:disable-next-line: no-eval
+    eval('fn = ' + json);
+
+    return fn;
+  }
+
+  public toJson(value: any): any
+  {
+    return value.toString();
+  }
+
 }

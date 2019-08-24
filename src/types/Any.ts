@@ -74,4 +74,14 @@ export class AnyType extends Type
     return null;
   }
 
+  public fromJson(json: any): any
+  {
+    return json;
+  }
+
+  public toJson(value: any): any
+  {
+    return value;
+  }
+
 }

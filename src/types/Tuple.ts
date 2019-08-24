@@ -142,4 +142,14 @@ export class TupleType extends Type<Type[]>
     return this.options.map(e => e.random(rnd));
   }
 
+  public fromJson(json: any[]): any[]
+  {
+    return this.options.map((e, i) => e.fromJson(json[i]));
+  }
+
+  public toJson(value: any[]): any[]
+  {
+    return this.options.map((e, i) => e.toJson(value[i]));
+  }
+
 }

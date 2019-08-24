@@ -102,4 +102,14 @@ export class EnumType extends Type<EnumOptions>
     return values[rnd(0, values.length, true)];
   }
 
+  public fromJson(json: any): any
+  {
+    return this.options.value.fromJson(json);
+  }
+
+  public toJson(value: any): any
+  {
+    return this.options.value.toJson(value);
+  }
+
 }

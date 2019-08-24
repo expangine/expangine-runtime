@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { NumberType } from '../src';
+import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType } from '../src';
 import { runtime } from '../src/runtimes/js';
 
 
@@ -176,6 +176,37 @@ describe('index', () => {
     const result = process(context);
 
     expect(result).toEqual(6);
+  });
+
+  it('tofromJson', () => 
+  {
+    const type = ObjectType.from({
+      a: TextType.baseType,
+      b: NumberType.baseType,
+      c: new OptionalType(BooleanType.baseType),
+      d: DateType.baseType,
+      e: new MapType({ key: TextType.baseType, value: NumberType.baseType }),
+    });
+
+    const data = {
+      a: 'hello',
+      b: 123,
+      d: new Date(Date.UTC(1989, 0, 3, 0, 0, 0, 0)),
+      e: new Map([['a', 45], ['b', 67]]),
+    };
+
+    const json = type.toJson(data);
+
+    expect(json).toEqual({
+      a: 'hello',
+      b: 123,
+      d: '1989-01-03T00:00:00.000Z',
+      e: [['a', 45], ['b', 67]],
+    });
+
+    const value = type.fromJson(json);
+
+    expect(value).toEqual(data);
   });
 
 

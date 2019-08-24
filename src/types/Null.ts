@@ -89,4 +89,14 @@ export class NullType extends Type<NullOptions>
     return null;
   }
 
+  public fromJson(json: null): null
+  {
+    return null;
+  }
+
+  public toJson(value: null): null
+  {
+    return null;
+  }
+
 }

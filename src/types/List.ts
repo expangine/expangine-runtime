@@ -181,6 +181,16 @@ export class ListType extends Type<ListOptions>
     return out;
   }
 
+  public fromJson(json: any[]): any[]
+  {
+    return json.map((e: any) => this.options.item.fromJson(e));
+  }
+
+  public toJson(value: any[]): any[]
+  {
+    return value.map((e: any) => this.options.item.toJson(e));
+  }
+
   public getSplitResultType()
   {
     return ObjectType.from({ pass: this, fail: this });
