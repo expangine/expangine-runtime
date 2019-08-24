@@ -11,6 +11,7 @@ import addListOperations from './list';
 import addMapOperations from './map';
 import addObjectOperations from './object';
 import addDateOperations from './date';
+import addTupleOperations from './tuple';
 
 
 export const runtime = new Runtime(defs);
@@ -24,3 +25,4 @@ addMapOperations(runtime);
 addNumberOperations(runtime);
 addObjectOperations(runtime);
 addTextOperations(runtime);
+addTupleOperations(runtime);

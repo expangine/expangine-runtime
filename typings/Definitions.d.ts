@@ -29,7 +29,7 @@ export declare class Definitions {
     getTypes(type: Type): Type[];
     getReducedType(type: Type[]): Type;
     sortDescribers(): void;
-    addType<T extends Type>(type: TypeClass<T>): void;
+    addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
     addAlias<T extends Type>(alias: string, instance: T | any): void;
     getType(value: any): Type;
     addFunction(name: string, returnType: TypeInput, params: TypeMap, expr: any): FunctionType;

@@ -70,8 +70,10 @@ export class Definitions
   {
     if (options.types) 
     {
-      options.types.forEach(type => this.addType(type));
+      options.types.forEach(type => this.addType(type, true));
     }
+
+    this.sortDescribers();
 
     if (options.expressions) 
     {
@@ -201,12 +203,16 @@ export class Definitions
     this.describers.sort((a, b) => b.describePriority - a.describePriority);
   }
 
-  public addType<T extends Type>(type: TypeClass<T>) 
+  public addType<T extends Type>(type: TypeClass<T>, delaySort: boolean = false) 
   {
     this.types[type.id] = type;
     this.parsers[type.id] = (data, types) => type.decode(data, types);
     this.describers.push(type);
-    this.sortDescribers();
+
+    if (!delaySort)
+    {
+      this.sortDescribers();
+    }
   }
 
   public addAlias<T extends Type>(alias: string, instance: T | any) 

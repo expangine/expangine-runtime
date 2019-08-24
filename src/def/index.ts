@@ -11,6 +11,7 @@ import { AnyType } from '../types/Any';
 import { ManyType } from '../types/Many';
 import { OptionalType } from '../types/Optional';
 import { MapType } from '../types/Map';
+import { TupleType } from '../types/Tuple';
 
 import { ConstantExpression } from '../exprs/Constant';
 import { GetExpression } from '../exprs/Get';
@@ -49,6 +50,7 @@ export const defs = new Definitions({
     EnumType,
     DateType,
     NullType,
+    TupleType,
   ],
   expressions: [
     ConstantExpression,

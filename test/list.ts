@@ -3,7 +3,7 @@ import { runtime } from '../src/runtimes/js';
 
 // tslint:disable: no-magic-numbers
 
-describe('index', () => {
+describe('list', () => {
 
   it('create', () =>
   {
