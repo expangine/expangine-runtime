@@ -31,14 +31,33 @@ export class TextType extends Type<TextOptions>
 
   public static decode(data: any[]): TextType 
   {
-    return new TextType(data[INDEX_OPTIONS] || {});
+    return new TextType(this.decodeOptions(data[INDEX_OPTIONS] || {}));
   }
 
   public static encode(type: TextType): any 
   {
     return isEmpty(type.options)
       ? this.id
-      : [this.id, type.options];
+      : [this.id, this.encodeOptions(type.options)];
+  }
+
+  private static decodeOptions(options: any): TextOptions
+  {
+    const matches = options.matches;
+
+    if (matches) options.matches = new RegExp(matches[0], matches[1]);
+
+    return options;
+  }
+
+  private static encodeOptions(options: TextOptions): any
+  {
+    const encoded: any = { ...options };
+    const matches = encoded.matches;
+
+    if (matches) encoded.matches = [matches.source, matches.flags];
+
+    return encoded;
   }
 
   public static describePriority: number = 3;

@@ -30,14 +30,36 @@ export class DateType extends Type<DateOptions>
 
   public static decode(data: any[], types: TypeProvider): DateType 
   {
-    return new DateType(data[INDEX_OPTIONS] || {});
+    return new DateType(this.decodeOptions(data[INDEX_OPTIONS] || {}));
   }
 
   public static encode(type: DateType): any 
   {
     return isEmpty(type.options)
       ? this.id
-      : [this.id, type.options];
+      : [this.id, this.encodeOptions(type.options)];
+  }
+
+  private static decodeOptions(options: any): DateOptions
+  {
+    if (options.validateMin) options.validateMin = new Date(options.validateMin);
+    if (options.validateMax) options.validateMax = new Date(options.validateMax);
+    if (options.forceMin) options.forceMin = new Date(options.forceMin);
+    if (options.forceMax) options.forceMax = new Date(options.forceMax);
+
+    return options;
+  }
+
+  private static encodeOptions(options: DateOptions): any
+  {
+    const encoded: any = { ...options };
+
+    if (encoded.validateMin) encoded.validateMin = encoded.validateMin.toISOString();
+    if (encoded.validateMax) encoded.validateMax = encoded.validateMax.toISOString();
+    if (encoded.forceMin) encoded.forceMin = encoded.forceMin.toISOString();
+    if (encoded.forceMax) encoded.forceMax = encoded.forceMax.toISOString();
+
+    return encoded;
   }
 
   public static describePriority: number = 6;

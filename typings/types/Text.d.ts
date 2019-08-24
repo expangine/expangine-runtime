@@ -15,6 +15,8 @@ export declare class TextType extends Type<TextOptions> {
     static baseType: TextType;
     static decode(data: any[]): TextType;
     static encode(type: TextType): any;
+    private static decodeOptions;
+    private static encodeOptions;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;

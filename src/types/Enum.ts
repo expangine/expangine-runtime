@@ -29,7 +29,10 @@ export class EnumType extends Type<EnumOptions>
   {
     const key = types.getType(data[INDEX_KEY]);
     const value = types.getType(data[INDEX_VALUE]);
-    const constants = new Map(data[INDEX_CONSTANTS]);
+    const constants = new Map(data[INDEX_CONSTANTS].map(([k, v]: [any, any]) => [
+      key.fromJson(k),
+      value.fromJson(v)
+    ]));
 
     return new EnumType({ key, value, constants });
   }
@@ -42,7 +45,10 @@ export class EnumType extends Type<EnumOptions>
       this.id,
       key.encode(),
       value.encode(),
-      toArray(constants.entries())
+      toArray(constants.entries()).map(([k, v]) => [
+        key.toJson(k),
+        value.toJson(v)
+      ])
     ];
   }
 
