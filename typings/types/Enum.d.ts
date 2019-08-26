@@ -21,7 +21,7 @@ export declare class EnumType extends Type<EnumOptions> {
     };
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
-    isValid(value: any): boolean;
+    isValid(test: any): boolean;
     normalize(value: any): any;
     encode(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

@@ -1,5 +1,5 @@
 
-import { toArray } from '../fns';
+import { toArray, compare } from '../fns';
 import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
@@ -86,14 +86,29 @@ export class EnumType extends Type<EnumOptions>
     return other instanceof EnumType;
   }
 
-  public isValid(value: any): boolean 
+  public isValid(test: any): boolean 
   {
-    return this.options.constants.has(value);
+    const { constants, value } = this.options;
+
+    if (!value.isValid(value))
+    {
+      return false;
+    }
+
+    for (const constantValue of constants.values())
+    {
+      if (compare(constantValue, test) === 0)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public normalize(value: any): any
   {
-    return value;
+    return this.options.value.normalize(value);
   }
 
   public encode(): any 

@@ -144,7 +144,25 @@ export function compare (a: any, b: any): number
   
   if (al)
   {
-    return a.length - b.length;
+    let dl = a.length - b.length;
+
+    if (dl === 0)
+    {
+      let less = 0;
+      let more = 0;
+
+      for (let i = 0; i < a.length; i++)
+      {
+        const c = compare(a[i], b[i]);
+
+        if (c < 0) less++;
+        if (c > 0) more++;
+      }
+
+      dl = getCompare(less, more);
+    }
+
+    return dl;
   }
 
   switch (at)
