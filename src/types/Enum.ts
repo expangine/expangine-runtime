@@ -90,7 +90,7 @@ export class EnumType extends Type<EnumOptions>
   {
     const { constants, value } = this.options;
 
-    if (!value.isValid(value))
+    if (!value.isValid(test))
     {
       return false;
     }

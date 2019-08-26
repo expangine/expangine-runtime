@@ -209,6 +209,20 @@ describe('index', () => {
     expect(value).toEqual(data);
   });
 
+  it('enum validate', () => 
+  {
+    const type = runtime.defs.getType(['enum', 'text', 'num', [
+      ['Male', 1],
+      ['Female', 2],
+      ['Unknown', 3],
+    ]]);
+
+    expect(type.isValid(0)).toBeFalsy();
+    expect(type.isValid(1)).toBeTruthy();
+    expect(type.isValid(2)).toBeTruthy();
+    expect(type.isValid(3)).toBeTruthy();
+    expect(type.isValid(4)).toBeFalsy();
+  });
 
 
 })
