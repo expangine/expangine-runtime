@@ -168,6 +168,11 @@ export class TextType extends Type<TextOptions>
     return TextType.encode(this);
   }
 
+  public create(): string
+  {
+    return '';
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const { min, max, requireLower, forceLower, requireUpper, forceUpper } = this.options;

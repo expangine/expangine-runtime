@@ -85,6 +85,11 @@ export class GenericType extends Type<string>
     return GenericType.encode(this);
   }
 
+  public create(): any
+  {
+    return this.inferredType ? this.inferredType.create() : null;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return this.inferredType ? this.inferredType.random(rnd) : undefined;

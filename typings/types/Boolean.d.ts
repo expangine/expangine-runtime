@@ -20,6 +20,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    create(): boolean;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: boolean): boolean;
     toJson(value: boolean): boolean;

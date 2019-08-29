@@ -27,6 +27,7 @@ export declare class TextType extends Type<TextOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    create(): string;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: string): string;
     toJson(value: string): string;

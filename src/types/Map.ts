@@ -173,6 +173,11 @@ export class MapType extends Type<MapOptions>
     return MapType.encode(this);
   }
 
+  public create(): Map<any, any>
+  {
+    return new Map();
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const { key, value } = this.options;

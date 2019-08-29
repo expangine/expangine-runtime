@@ -137,6 +137,11 @@ export class TupleType extends Type<Type[]>
     return TupleType.encode(this);
   }
 
+  public create(): any[]
+  {
+    return this.options.map(e => e.create());
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return this.options.map(e => e.random(rnd));

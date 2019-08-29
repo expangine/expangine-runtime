@@ -99,6 +99,11 @@ export class FunctionType extends Type<FunctionOptions>
     return FunctionType.encode(this);
   }
 
+  public create(): any
+  {
+    return () => { /**/ };
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return () => this.options.returnType.random(rnd);

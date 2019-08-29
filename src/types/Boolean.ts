@@ -114,6 +114,11 @@ export class BooleanType extends Type<BooleanOptions>
     return BooleanType.encode(this);
   }
 
+  public create(): boolean
+  {
+    return false;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return rnd(0, 1, false) < RANDOM_TRUE_PROBABILITY;

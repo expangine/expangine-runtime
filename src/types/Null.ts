@@ -84,6 +84,11 @@ export class NullType extends Type<NullOptions>
     return NullType.encode(this);
   }
 
+  public create(): null
+  {
+    return null;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return null;

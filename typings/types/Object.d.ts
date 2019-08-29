@@ -20,6 +20,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: any): any;
     toJson(value: any): any;

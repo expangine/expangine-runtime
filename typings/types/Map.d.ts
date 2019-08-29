@@ -27,6 +27,7 @@ export declare class MapType extends Type<MapOptions> {
     normalize(test: any): any;
     private iterate;
     encode(): any;
+    create(): Map<any, any>;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: Array<[any, any]>): Map<any, any>;
     toJson(map: Map<any, any>): Array<[any, any]>;

@@ -130,6 +130,13 @@ export class ManyType extends Type<Type[]>
     return ManyType.encode(this);
   }
 
+  public create(): any
+  {
+    return this.options.length > 0
+      ? this.options[0].create()
+      : null;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const options = this.options;

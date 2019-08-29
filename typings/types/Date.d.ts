@@ -29,6 +29,7 @@ export declare class DateType extends Type<DateOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: string): Date;
     toJson(value: Date): string;

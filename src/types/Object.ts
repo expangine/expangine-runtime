@@ -144,6 +144,11 @@ export class ObjectType extends Type<ObjectOptions>
     return ObjectType.encode(this);
   }
 
+  public create(): any
+  {
+    return Object.create(null);
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const { props } = this.options;

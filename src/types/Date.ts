@@ -176,6 +176,11 @@ export class DateType extends Type<DateOptions>
     return DateType.encode(this);
   }
 
+  public create(): any
+  {
+    return new Date();
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const { validateMin, validateMax, forceMin, forceMax } = this.options;

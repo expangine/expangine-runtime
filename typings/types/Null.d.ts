@@ -19,6 +19,7 @@ export declare class NullType extends Type<NullOptions> {
     isValid(value: any): boolean;
     normalize(value: any): any;
     encode(): any;
+    create(): null;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: null): null;
     toJson(value: null): null;

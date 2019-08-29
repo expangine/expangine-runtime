@@ -99,6 +99,11 @@ export class NumberType extends Type<NumberOptions>
     return NumberType.encode(this);
   }
 
+  public create(): number
+  {
+    return 0;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const { min, max, whole } = this.options;

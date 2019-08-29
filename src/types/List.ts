@@ -162,6 +162,10 @@ export class ListType extends Type<ListOptions>
     return ListType.encode(this);
   }
 
+  public create(): any[]
+  {
+    return [];
+  }
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {

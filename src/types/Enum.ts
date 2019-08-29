@@ -116,6 +116,14 @@ export class EnumType extends Type<EnumOptions>
     return EnumType.encode(this);
   }
 
+  public create(): any
+  {
+    const { value, constants } = this.options;
+    const firstKey = constants.keys().next();
+
+    return firstKey ? constants.get(firstKey) : value.create();
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     const values = toArray(this.options.constants.values());

@@ -69,6 +69,11 @@ export class AnyType extends Type
     return AnyType.encode(this);
   }
 
+  public create(): any
+  {
+    return '';
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return null;

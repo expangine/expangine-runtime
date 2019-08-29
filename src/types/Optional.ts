@@ -91,6 +91,11 @@ export class OptionalType extends Type<Type>
     return OptionalType.encode(this);
   }
 
+  public create(): any
+  {
+    return this.options ? this.options.create() : undefined;
+  }
+
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
     return this.options && rnd(0, 1, false) > RANDOM_CHANCE
