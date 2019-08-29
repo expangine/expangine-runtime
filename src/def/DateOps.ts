@@ -9,8 +9,8 @@ import { EnumType } from '../types/Enum';
 const ops = DateType.operations;
 
 const DateProperty = new EnumType({
-  key: TextType.baseType, 
-  value: TextType.baseType,
+  key: TextType.baseType.newInstance(), 
+  value: TextType.baseType.newInstance(),
   constants: new Map([
     ['Timestamp', 'timestamp'],
     ['Timestamp (seconds)', 'timestampSeconds'],
@@ -46,8 +46,8 @@ const DateProperty = new EnumType({
 });
 
 const DateUnits = new EnumType({
-  key: TextType.baseType, 
-  value: TextType.baseType,
+  key: TextType.baseType.newInstance(), 
+  value: TextType.baseType.newInstance(),
   constants: new Map([
     ['Millisecond', 'millis'],
     ['Second', 'second'],
@@ -62,8 +62,8 @@ const DateUnits = new EnumType({
 });
 
 const DateAdjust = new EnumType({
-  key: TextType.baseType,
-  value: TextType.baseType,
+  key: TextType.baseType.newInstance(),
+  value: TextType.baseType.newInstance(),
   constants: new Map([
     ['None', 'none'],
     ['Floor', 'floor'],

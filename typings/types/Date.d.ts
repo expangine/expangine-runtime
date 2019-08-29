@@ -28,6 +28,8 @@ export declare class DateType extends Type<DateOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): DateType;
+    clone(): DateType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

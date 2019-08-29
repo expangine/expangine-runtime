@@ -1,5 +1,5 @@
 
-import { isBoolean, isEmpty } from '../fns';
+import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
@@ -107,6 +107,16 @@ export class BooleanType extends Type<BooleanOptions>
     }
 
     return value;
+  }
+
+  public newInstance(): BooleanType
+  {
+    return new BooleanType({});
+  }
+
+  public clone(): BooleanType
+  {
+    return new BooleanType(copy(this.options));
   }
 
   public encode(): any 

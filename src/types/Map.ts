@@ -168,6 +168,26 @@ export class MapType extends Type<MapOptions>
     return otherwise;
   }
 
+  public newInstance(): MapType
+  {
+    const { key, value } = this.options;
+
+    return new MapType({
+      key: key.newInstance(),
+      value: value.newInstance(),
+    });
+  }
+
+  public clone(): MapType
+  {
+    const { key, value } = this.options;
+
+    return new MapType({
+      key: key.clone(),
+      value: value.clone(),
+    });
+  }
+
   public encode(): any 
   {
     return MapType.encode(this);

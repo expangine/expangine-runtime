@@ -111,6 +111,28 @@ export class EnumType extends Type<EnumOptions>
     return this.options.value.normalize(value);
   }
 
+  public newInstance(): EnumType
+  {
+    const { key, value } = this.options;
+
+    return new EnumType({
+      key: key.newInstance(),
+      value: value.newInstance(),
+      constants: new Map(),
+    });
+  }
+
+  public clone(): EnumType
+  {
+    const { key, value, constants } = this.options;
+
+    return new EnumType({
+      key: key.clone(),
+      value: value.clone(),
+      constants: new Map(constants.entries()),
+    });
+  }
+
   public encode(): any 
   {
     return EnumType.encode(this);

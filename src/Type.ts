@@ -76,7 +76,7 @@ export abstract class Type<O = any>
     }
     else if ((types as any).baseType instanceof Type)
     {
-      result = (types as any).baseType;
+      result = (types as any).baseType.newInstance();
     }
     else if (isArray(types))
     {
@@ -121,6 +121,10 @@ export abstract class Type<O = any>
   public abstract isValid(value: any): boolean;
 
   public abstract normalize(value: any): any;
+
+  public abstract newInstance(): Type<O>;
+
+  public abstract clone(): Type<O>;
 
   public abstract encode(): any;
 

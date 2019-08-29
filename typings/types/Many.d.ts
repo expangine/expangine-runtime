@@ -18,6 +18,8 @@ export declare class ManyType extends Type<Type[]> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): ManyType;
+    clone(): ManyType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

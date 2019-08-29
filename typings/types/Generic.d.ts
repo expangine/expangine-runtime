@@ -17,6 +17,8 @@ export declare class GenericType extends Type<string> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): GenericType;
+    clone(): GenericType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

@@ -25,6 +25,8 @@ export declare class FunctionType extends Type<FunctionOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): FunctionType;
+    clone(): FunctionType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

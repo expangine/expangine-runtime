@@ -157,6 +157,26 @@ export class ListType extends Type<ListOptions>
     return value;
   }
 
+  public newInstance(): ListType
+  {
+    const { item } = this.options;
+
+    return new ListType({
+      item: item.newInstance(),
+    });
+  }
+
+  public clone(): ListType
+  {
+    const { item, min, max } = this.options;
+
+    return new ListType({
+      item: item.clone(),
+      min,
+      max,
+    });
+  }
+
   public encode(): any 
   {
     return ListType.encode(this);

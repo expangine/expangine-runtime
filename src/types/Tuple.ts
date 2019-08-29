@@ -132,6 +132,16 @@ export class TupleType extends Type<Type[]>
     return value;
   }
 
+  public newInstance(): TupleType
+  {
+    return new TupleType([]);
+  }
+
+  public clone(): TupleType
+  {
+    return new TupleType(this.options.map(e => e.clone()));
+  }
+
   public encode(): any 
   {
     return TupleType.encode(this);

@@ -19,6 +19,8 @@ export declare class BooleanType extends Type<BooleanOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): BooleanType;
+    clone(): BooleanType;
     encode(): any;
     create(): boolean;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

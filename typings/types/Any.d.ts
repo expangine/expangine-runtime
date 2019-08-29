@@ -15,6 +15,8 @@ export declare class AnyType extends Type {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): AnyType;
+    clone(): AnyType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

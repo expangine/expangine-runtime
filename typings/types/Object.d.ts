@@ -19,6 +19,8 @@ export declare class ObjectType extends Type<ObjectOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): ObjectType;
+    clone(): ObjectType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

@@ -26,6 +26,8 @@ export declare class MapType extends Type<MapOptions> {
     isValid(test: any): boolean;
     normalize(test: any): any;
     private iterate;
+    newInstance(): MapType;
+    clone(): MapType;
     encode(): any;
     create(): Map<any, any>;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

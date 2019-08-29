@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, coalesce } from '../fns';
+import { isNumber, isEmpty, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
@@ -92,6 +92,16 @@ export class NumberType extends Type<NumberOptions>
   public normalize(value: any): any
   {
     return value;
+  }
+
+  public newInstance(): NumberType
+  {
+    return new NumberType({});
+  }
+
+  public clone(): NumberType
+  {
+    return new NumberType(copy(this.options));
   }
 
   public encode(): any 

@@ -1,5 +1,5 @@
 
-import { isString, isNumber, isEmpty, coalesce } from '../fns';
+import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
@@ -161,6 +161,16 @@ export class TextType extends Type<TextOptions>
     }
 
     return value;
+  }
+
+  public newInstance(): TextType
+  {
+    return new TextType({});
+  }
+
+  public clone(): TextType
+  {
+    return new TextType(copy(this.options));
   }
 
   public encode(): any 

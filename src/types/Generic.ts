@@ -80,6 +80,28 @@ export class GenericType extends Type<string>
     return this.inferredType ? this.inferredType.normalize(value) : value;
   }
 
+  public newInstance(): GenericType
+  {
+    const instance = new GenericType(this.options);
+    
+    instance.inferredType = this.inferredType 
+      ? this.inferredType.newInstance()
+      : undefined;
+
+    return instance;
+  }
+
+  public clone(): GenericType
+  {
+    const instance = new GenericType(this.options);
+    
+    instance.inferredType = this.inferredType 
+      ? this.inferredType.clone()
+      : undefined;
+
+    return instance;
+  }
+
   public encode(): any 
   {
     return GenericType.encode(this);

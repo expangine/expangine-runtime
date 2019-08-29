@@ -18,6 +18,8 @@ export declare class NullType extends Type<NullOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): NullType;
+    clone(): NullType;
     encode(): any;
     create(): null;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

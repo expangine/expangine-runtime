@@ -94,6 +94,28 @@ export class FunctionType extends Type<FunctionOptions>
     return value;
   }
 
+  public newInstance(): FunctionType
+  {
+    const { returnType, params, expression } = this.options;
+
+    return new FunctionType({
+      returnType: returnType.newInstance(),
+      params: params.newInstance(),
+      expression, // TODO copy expression
+    });
+  }
+
+  public clone(): FunctionType
+  {
+    const { returnType, params, expression } = this.options;
+
+    return new FunctionType({
+      returnType: returnType.clone(),
+      params: params.clone(),
+      expression, // TODO copy expression
+    });
+  }
+
   public encode(): any 
   {
     return FunctionType.encode(this);

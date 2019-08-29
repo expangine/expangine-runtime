@@ -1,5 +1,5 @@
 
-import { isEmpty } from '../fns';
+import { isEmpty, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
@@ -77,6 +77,16 @@ export class NullType extends Type<NullOptions>
   public normalize(value: any): any
   {
     return value;
+  }
+
+  public newInstance(): NullType
+  {
+    return new NullType({});
+  }
+
+  public clone(): NullType
+  {
+    return new NullType(copy(this.options));
   }
 
   public encode(): any 

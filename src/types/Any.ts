@@ -64,6 +64,16 @@ export class AnyType extends Type
     return value;
   }
 
+  public newInstance(): AnyType
+  {
+    return new AnyType({});
+  }
+
+  public clone(): AnyType
+  {
+    return new AnyType({});
+  }
+
   public encode(): any 
   {
     return AnyType.encode(this);

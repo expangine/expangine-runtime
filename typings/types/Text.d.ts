@@ -26,6 +26,8 @@ export declare class TextType extends Type<TextOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): TextType;
+    clone(): TextType;
     encode(): any;
     create(): string;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

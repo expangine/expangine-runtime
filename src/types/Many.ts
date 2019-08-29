@@ -125,6 +125,16 @@ export class ManyType extends Type<Type[]>
     return this.forMany(value, many => many.isValid(value) ? many.normalize(value) : undefined);
   }
 
+  public newInstance(): ManyType
+  {
+    return new ManyType([]);
+  }
+
+  public clone(): ManyType
+  {
+    return new ManyType(this.options.map(e => e.clone()));
+  }
+
   public encode(): any 
   {
     return ManyType.encode(this);

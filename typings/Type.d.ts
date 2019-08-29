@@ -43,6 +43,8 @@ export declare abstract class Type<O = any> {
     abstract isCompatible(other: Type<O>): boolean;
     abstract isValid(value: any): boolean;
     abstract normalize(value: any): any;
+    abstract newInstance(): Type<O>;
+    abstract clone(): Type<O>;
     abstract encode(): any;
     abstract create(): any;
     abstract random(rnd: (a: number, b: number, whole: boolean) => number): any;

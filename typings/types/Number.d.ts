@@ -21,6 +21,8 @@ export declare class NumberType extends Type<NumberOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): NumberType;
+    clone(): NumberType;
     encode(): any;
     create(): number;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

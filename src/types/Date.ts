@@ -1,5 +1,5 @@
 
-import { isDate, isEmpty } from '../fns';
+import { isDate, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
@@ -169,6 +169,16 @@ export class DateType extends Type<DateOptions>
     }
 
     return parsed;
+  }
+
+  public newInstance(): DateType
+  {
+    return new DateType({});
+  }
+
+  public clone(): DateType
+  {
+    return new DateType(copy(this.options));
   }
 
   public encode(): any 

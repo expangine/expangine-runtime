@@ -139,6 +139,18 @@ export class ObjectType extends Type<ObjectOptions>
     return value;
   }
 
+  public newInstance(): ObjectType
+  {
+    return new ObjectType({ props: {} });
+  }
+
+  public clone(): ObjectType
+  {
+    return new ObjectType({
+      props: objectMap(this.options.props, p => p.clone()),
+    });
+  }
+
   public encode(): any 
   {
     return ObjectType.encode(this);

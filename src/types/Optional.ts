@@ -86,6 +86,16 @@ export class OptionalType extends Type<Type>
       : this.options.normalize(value);
   }
 
+  public newInstance(): OptionalType
+  {
+    return new OptionalType(this.options.newInstance());
+  }
+
+  public clone(): OptionalType
+  {
+    return new OptionalType(this.options.clone());
+  }
+
   public encode(): any 
   {
     return OptionalType.encode(this);

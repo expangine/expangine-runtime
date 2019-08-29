@@ -16,6 +16,8 @@ export declare class TupleType extends Type<Type[]> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): TupleType;
+    clone(): TupleType;
     encode(): any;
     create(): any[];
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

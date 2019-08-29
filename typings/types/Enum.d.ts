@@ -23,6 +23,8 @@ export declare class EnumType extends Type<EnumOptions> {
     isCompatible(other: Type): boolean;
     isValid(test: any): boolean;
     normalize(value: any): any;
+    newInstance(): EnumType;
+    clone(): EnumType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

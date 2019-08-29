@@ -27,6 +27,8 @@ export declare class ListType extends Type<ListOptions> {
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;
+    newInstance(): ListType;
+    clone(): ListType;
     encode(): any;
     create(): any[];
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
