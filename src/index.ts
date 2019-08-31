@@ -23,6 +23,7 @@ export * from './types/Number';
 export * from './types/Object';
 export * from './types/Optional';
 export * from './types/Text';
+export * from './types/Tuple';
 
 export * from './exprs/And';
 export * from './exprs/Chain';
