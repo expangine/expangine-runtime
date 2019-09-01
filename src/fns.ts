@@ -49,6 +49,11 @@ export function isSameClass(a: any, b: any): boolean
   return a.constructor === b.constructor;
 }
 
+export function isWhole(x: number, epsilon: number = 0.000001): boolean
+{
+  return Math.abs(x - Math.round(x)) <= epsilon;
+}
+
 export function isEmpty(value: any): boolean 
 {
   if (isArray(value)) 

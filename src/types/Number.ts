@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, coalesce, copy } from '../fns';
+import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 
@@ -86,7 +86,29 @@ export class NumberType extends Type<NumberOptions>
 
   public isValid(value: any): boolean 
   {
-    return isNumber(value);
+    if (!isNumber(value))
+    {
+      return false;
+    }
+
+    const { min, max, whole } = this.options;
+
+    if (isNumber(min) && value < min)
+    {
+      return false;
+    }
+
+    if (isNumber(max) && value > max)
+    {
+      return false;
+    }
+
+    if (whole && !isWhole(value))
+    {
+      return false;
+    }
+
+    return true;
   }
 
   public normalize(value: any): any

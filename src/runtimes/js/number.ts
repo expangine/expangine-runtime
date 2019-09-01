@@ -2,7 +2,7 @@
 import { Runtime } from '../../Runtime';
 import { NumberOps } from '../../def/NumberOps';
 import { _number, _bool, _text, _numberMaybe, _textMaybe } from './helper';
-import { isNumber, isUndefined, isString } from '../../fns';
+import { isNumber, isUndefined, isString, isWhole } from '../../fns';
 
 
 
@@ -391,14 +391,16 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.isWhole, (params) => (context) => {
     const value = _number(params.value, context);
+    const eps = _number(params.epsilon, context, epsilon);
 
-    return Math.abs(value - Math.floor(value)) <= _number(params.epsilon, context, epsilon);
+    return isWhole(value, eps);
   });
 
   run.setOperation(NumberOps.isDecimal, (params) => (context) => {
     const value = _number(params.value, context);
+    const eps = _number(params.epsilon, context, epsilon);
 
-    return Math.abs(value - Math.floor(value)) > _number(params.epsilon, context, epsilon);
+    return !isWhole(value, eps);
   });
 
   run.setOperation(NumberOps.isPositive, (params) => (context) =>
