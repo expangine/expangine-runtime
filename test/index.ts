@@ -1,7 +1,8 @@
 // import { describe, it, expect } from 'jest';
 
-import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType } from '../src';
+import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType, OperationExpression, ConstantExpression } from '../src';
 import { runtime } from '../src/runtimes/js';
+import { ListOps } from '../src/def/ListOps';
 
 
 // tslint:disable: no-magic-numbers
@@ -222,6 +223,16 @@ describe('index', () => {
     expect(type.isValid(2)).toBeTruthy();
     expect(type.isValid(3)).toBeTruthy();
     expect(type.isValid(4)).toBeFalsy();
+  });
+
+  it('create op', () =>
+  {
+    OperationExpression.create(ListOps.copy, {
+      list: new ConstantExpression([]),
+      deepCopy: new ConstantExpression(0),
+    }, {
+      copy: 'cc'
+    });
   });
 
 

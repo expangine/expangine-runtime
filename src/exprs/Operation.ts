@@ -2,6 +2,8 @@
 import { objectMap, isEmpty } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { TypeMap } from '../Type';
+import { OperationBuilder } from '../Operation';
 
 
 const INDEX_NAME = 1;
@@ -29,6 +31,14 @@ export class OperationExpression extends Expression
     return isEmpty(expr.scopeAlias)
       ? [this.id, expr.name, params]
       : [this.id, expr.name, params, expr.scopeAlias]
+  }
+
+  public static create<P extends TypeMap, O extends TypeMap, S extends TypeMap>(
+    op: OperationBuilder<any, any, P, O, S>, 
+    params: Record<keyof P, Expression> & Partial<Record<keyof O, Expression>>,
+    scopeAlias: Partial<Record<keyof S, string>> = {}
+  ): OperationExpression {
+    return new OperationExpression(op.id, params, scopeAlias);
   }
 
   public name: string;
