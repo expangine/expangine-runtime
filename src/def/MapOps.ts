@@ -12,6 +12,12 @@ const ops = MapType.operations;
 export const MapOps = 
 {
 
+  // Static
+
+  create: ops.build('create', {},
+    (map) => [map]
+  ),
+
   // Operations
 
   get: ops.build('get', {}, 

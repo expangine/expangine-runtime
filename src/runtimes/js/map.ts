@@ -11,6 +11,12 @@ import { toArray, getCompare } from '../../fns';
 export default (run: Runtime) =>
 {
 
+  // Static
+
+  run.setOperation(MapOps.create, (params) => (context) =>
+    new Map()
+  );
+
   // Operations
 
   run.setOperation(MapOps.get, (params) => (context) => 

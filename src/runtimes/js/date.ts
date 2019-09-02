@@ -14,7 +14,11 @@ import { DateFormat } from '../../util/DateFormat';
 export default (run: Runtime) =>
 {
 
-  // Operations
+  // Static
+
+  run.setOperation(DateOps.create, (params) => (context) =>
+    new Date()
+  ),
 
   run.setOperation(DateOps.now, (params) => (context) =>
     new Date()
@@ -31,6 +35,8 @@ export default (run: Runtime) =>
   run.setOperation(DateOps.yesterday, (params) => (context) =>
     mutate(mutate(new Date(), startOf.day), d => add.day(d, -1))
   );
+
+  // Operations
 
   run.setOperation(DateOps.parse, (params) => (context) => 
     _bool(params.parseAsUTC, context, false)

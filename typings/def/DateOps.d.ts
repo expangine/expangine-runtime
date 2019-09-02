@@ -5,6 +5,7 @@ import { NumberType } from '../types/Number';
 import { TextType } from '../types/Text';
 import { EnumType } from '../types/Enum';
 export declare const DateOps: {
+    create: import("..").OperationBuilder<DateType, typeof DateType, never, never, never, never>;
     now: import("..").OperationBuilder<DateType, typeof DateType, never, never, never, never>;
     today: import("..").OperationBuilder<DateType, typeof DateType, never, never, never, never>;
     tomorrow: import("..").OperationBuilder<DateType, typeof DateType, never, never, never, never>;

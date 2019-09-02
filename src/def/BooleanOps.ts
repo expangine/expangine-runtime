@@ -9,6 +9,10 @@ const ops = BooleanType.operations;
 export const BooleanOps = 
 {
 
+  // Static
+
+  create: ops.set('create', {}, BooleanType),
+
   // Operations
 
   and: ops.set('&', {}, BooleanType, { a: BooleanType, b: BooleanType }),

@@ -81,6 +81,8 @@ export const DateOps =
 
   // Static
 
+  create: ops.set('create', {}, DateType),
+
   now: ops.set('now', {}, DateType),
 
   today: ops.set('today', {}, DateType),

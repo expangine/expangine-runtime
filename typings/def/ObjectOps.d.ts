@@ -4,6 +4,7 @@ import { BooleanType } from '../types/Boolean';
 import { TextType } from '../types/Text';
 import { AnyType } from '../types/Any';
 export declare const ObjectOps: {
+    create: import("..").OperationBuilder<ObjectType, ObjectType, never, never, never, never>;
     has: import("..").OperationBuilder<ObjectType, typeof BooleanType, {
         object: ObjectType;
         key: typeof TextType;
@@ -16,6 +17,10 @@ export declare const ObjectOps: {
         object: ObjectType;
         key: typeof TextType;
         value: typeof AnyType;
+    }, never, never, never>;
+    delete: import("..").OperationBuilder<ObjectType, typeof AnyType, {
+        object: ObjectType;
+        key: typeof TextType;
     }, never, never, never>;
     cmp: import("..").OperationBuilder<ObjectType, typeof NumberType, {
         value: ObjectType;

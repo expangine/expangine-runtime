@@ -28,12 +28,26 @@ export default (run: Runtime) =>
     return object;
   });
 
+  run.setOperation(ObjectOps.delete, (params) => (context) => {
+    const object = _object(params.object, context);
+    const key = params.key(context);
+    const value = object[key];
+
+    delete object[key];
+
+    return value;
+  });
+
   run.setOperation(ObjectOps.cmp, (params) => (context) => 
     compare(_object(params.value, context), _object(params.test, context))
   );
 
   run.setOperation(ObjectOps.copy, (params) => (context) =>
     copy(_object(params.object, context))
+  );
+
+  run.setOperation(ObjectOps.create, (params) => (context) =>
+    Object.create(null)
   );
 
   // Comparisons

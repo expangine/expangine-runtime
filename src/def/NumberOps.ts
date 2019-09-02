@@ -10,7 +10,9 @@ const ops = NumberType.operations;
 export const NumberOps = 
 {
 
-  // Statics
+  // Static
+
+  create: ops.set('create', {}, NumberType ),
 
   pi: ops.set('pi', {}, NumberType ),
 

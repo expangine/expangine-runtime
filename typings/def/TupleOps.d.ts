@@ -3,6 +3,7 @@ import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { AnyType } from '../types/Any';
 export declare const TupleOps: {
+    create: import("..").OperationBuilder<TupleType, typeof TupleType, never, never, never, never>;
     cmp: import("..").OperationBuilder<TupleType, typeof NumberType, {
         value: typeof TupleType;
         test: typeof TupleType;

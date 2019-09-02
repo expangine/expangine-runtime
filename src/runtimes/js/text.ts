@@ -9,6 +9,12 @@ import { isString } from '../../fns';
 export default (run: Runtime) =>
 {
 
+  // Statics
+
+  run.setOperation(TextOps.create, (params) => (context) => 
+    ''
+  );
+
   // Operations
 
   run.setOperation(TextOps.append, (params) => (context) => 

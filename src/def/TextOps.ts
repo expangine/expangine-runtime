@@ -12,6 +12,10 @@ const TextListType = ListType.forItem(TextType);
 export const TextOps = 
 {
 
+  // Statics
+
+  create: ops.set('create', {}, TextType),
+
   // Operations
 
   append: ops.set('+', {}, TextType, { value: TextType, append: TextType }),

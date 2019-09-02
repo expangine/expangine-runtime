@@ -2,6 +2,7 @@ import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { TextType } from '../types/Text';
 export declare const NumberOps: {
+    create: import("..").OperationBuilder<NumberType, typeof NumberType, never, never, never, never>;
     pi: import("..").OperationBuilder<NumberType, typeof NumberType, never, never, never, never>;
     pi2: import("..").OperationBuilder<NumberType, typeof NumberType, never, never, never, never>;
     piHalf: import("..").OperationBuilder<NumberType, typeof NumberType, never, never, never, never>;

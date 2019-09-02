@@ -12,6 +12,12 @@ const ops = ObjectType.operations;
 export const ObjectOps = 
 {
 
+  // Static
+
+  create: ops.build('create', {}, 
+    (object) => [object]
+  ),
+
   // Operations
 
   has: ops.build('has', {}, 
@@ -24,6 +30,10 @@ export const ObjectOps =
 
   set: ops.build('set', { mutates: ['object'] }, 
     (object) => [object, { object, key: TextType, value: AnyType }]
+  ),
+
+  delete: ops.build('del', { mutates: ['object'] }, 
+    (object) => [AnyType, { object, key: TextType }]
   ),
 
   cmp: ops.build('cmp', {}, 

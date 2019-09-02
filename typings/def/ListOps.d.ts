@@ -6,7 +6,8 @@ import { TextType } from '../types/Text';
 import { GenericType } from '../types/Generic';
 import { MapType } from '../types/Map';
 export declare const ListOps: {
-    create: import("..").OperationBuilder<ListType, ListType, {
+    create: import("..").OperationBuilder<ListType, ListType, never, never, never, never>;
+    build: import("..").OperationBuilder<ListType, ListType, {
         count: typeof NumberType;
         item: GenericType;
     }, {

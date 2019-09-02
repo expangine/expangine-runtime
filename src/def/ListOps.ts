@@ -13,9 +13,15 @@ const ops = ListType.operations;
 export const ListOps = 
 {
 
+  // Static
+
+  create: ops.build('create', {},
+    (list) => [list]
+  ),
+
   // Operations
 
-  create: ops.build('new', {}, 
+  build: ops.build('new', {}, 
     (_, generics) => [ListType.forItem(generics.T), { count: NumberType, item: generics.T }, { sameItem: BooleanType }, { list: ListType.forItem(generics.T), index: NumberType, last: generics.T, count: NumberType }],
     { list: 'list', index: 'index', last: 'last', count: 'count' },
     { T: new GenericType('T') }

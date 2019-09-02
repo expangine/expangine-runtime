@@ -12,9 +12,15 @@ import { getCompare } from '../../fns';
 export default (run: Runtime) =>
 {
 
+  // Static
+
+  run.setOperation(ListOps.create, (params) => (context) => 
+    []
+  );
+
   // Operations
 
-  run.setOperation(ListOps.create, (params, scope) => (context) => {
+  run.setOperation(ListOps.build, (params, scope) => (context) => {
     const n = _number(params.count, context);
     const list: any[] = [];
 

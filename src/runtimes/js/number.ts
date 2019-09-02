@@ -14,6 +14,10 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   // Statics
 
+  run.setOperation(NumberOps.create, (params) => (context) =>
+    0
+  );
+
   run.setOperation(NumberOps.pi, (params) => (context) =>
     Math.PI
   );

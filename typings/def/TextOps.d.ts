@@ -3,6 +3,7 @@ import { BooleanType } from '../types/Boolean';
 import { TextType } from '../types/Text';
 import { ListType } from '../types/List';
 export declare const TextOps: {
+    create: import("..").OperationBuilder<TextType, typeof TextType, never, never, never, never>;
     append: import("..").OperationBuilder<TextType, typeof TextType, {
         value: typeof TextType;
         append: typeof TextType;

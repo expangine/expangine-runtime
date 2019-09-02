@@ -1,6 +1,7 @@
 import { BooleanType } from '../types/Boolean';
 import { NumberType } from '../types/Number';
 export declare const BooleanOps: {
+    create: import("..").OperationBuilder<BooleanType, typeof BooleanType, never, never, never, never>;
     and: import("..").OperationBuilder<BooleanType, typeof BooleanType, {
         a: typeof BooleanType;
         b: typeof BooleanType;

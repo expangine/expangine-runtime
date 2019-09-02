@@ -4,6 +4,7 @@ import { BooleanType } from '../types/Boolean';
 import { GenericType } from '../types/Generic';
 import { AnyType } from '../types/Any';
 export declare const MapOps: {
+    create: import("..").OperationBuilder<MapType, MapType, never, never, never, never>;
     get: import("..").OperationBuilder<MapType, import("..").Type<any>, {
         map: MapType;
         key: import("..").Type<any>;

@@ -8,6 +8,12 @@ import { _list, _number } from './helper';
 export default (run: Runtime) =>
 {
 
+  // Statics
+
+  run.setOperation(TupleOps.create, (params) => (context) =>
+    []
+  );
+
   // Operations
 
   run.setOperation(TupleOps.cmp, (params) => (context) => 

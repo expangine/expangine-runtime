@@ -11,6 +11,10 @@ const ops = TupleType.operations;
 export const TupleOps = 
 {
 
+  // Statics
+
+  create: ops.set('create', {}, TupleType ),
+
   // Operations
 
   cmp: ops.set('cmp', {}, NumberType, { value: TupleType, test: TupleType }),

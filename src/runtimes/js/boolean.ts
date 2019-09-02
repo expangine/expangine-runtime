@@ -8,6 +8,12 @@ import { BooleanOps } from '../../def/BooleanOps';
 export default (run: Runtime) =>
 {
 
+  // Static
+  
+  run.setOperation(BooleanOps.cmp, (params) => (context) =>
+    false
+  );
+
   // Operations
 
   run.setOperation(BooleanOps.and, (params) => (context) => 
