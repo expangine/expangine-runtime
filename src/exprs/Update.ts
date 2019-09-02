@@ -1,7 +1,8 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
+import { toExpr } from '../fns';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -33,11 +34,16 @@ export class UpdateExpression extends Expression
       : [this.id, path, value, expr.currentVariable]
   }
 
+  public static create(path: ExpressionValue[], value: ExpressionValue, currentVariable: string = DEFAULT_CURRENT)
+  {
+    return new UpdateExpression(toExpr(path), toExpr(value), currentVariable);
+  }
+
   public path: Expression[];
   public value: Expression;
   public currentVariable: string;
 
-  public constructor(path: Expression[], value: Expression, currentVariable: string) 
+  public constructor(path: Expression[], value: Expression, currentVariable: string = DEFAULT_CURRENT) 
   {
     super();
     this.path = path;

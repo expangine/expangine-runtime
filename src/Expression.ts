@@ -15,9 +15,11 @@ export interface ExpressionClass<T extends Expression = any>
   new(...args: any[]): T;
 }
 
+export type ExpressionValue = any | Expression;
+
 export abstract class Expression 
 {
-
+  
   public abstract getId(): string;
 
   public abstract getScope(): Record<string, Type> | null;

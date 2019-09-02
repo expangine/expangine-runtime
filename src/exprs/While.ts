@@ -48,7 +48,7 @@ export class WhileExpression extends Expression
   public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number) 
+  public constructor(condition: Expression, body: Expression, breakVariable: string = DEFAULT_BREAK, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.condition = condition;

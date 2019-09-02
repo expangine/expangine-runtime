@@ -55,7 +55,7 @@ export class ForExpression extends Expression
   public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable: string, maxIterations: number) 
+  public constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable: string = DEFAULT_BREAK, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.variable = variable;

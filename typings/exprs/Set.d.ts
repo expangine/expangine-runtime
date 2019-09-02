@@ -1,9 +1,10 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 export declare class SetExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): SetExpression;
     static encode(expr: SetExpression): any;
+    static create(path: ExpressionValue[], value: ExpressionValue): SetExpression;
     path: Expression[];
     value: Expression;
     constructor(path: Expression[], value: Expression);

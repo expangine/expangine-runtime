@@ -9,6 +9,7 @@ export interface ExpressionClass<T extends Expression = any> {
     encode(this: ExpressionClass<T>, expr: T): any;
     new (...args: any[]): T;
 }
+export declare type ExpressionValue = any | Expression;
 export declare abstract class Expression {
     abstract getId(): string;
     abstract getScope(): Record<string, Type> | null;

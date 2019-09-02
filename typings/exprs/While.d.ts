@@ -10,7 +10,7 @@ export declare class WhileExpression extends Expression {
     body: Expression;
     breakVariable: string;
     maxIterations: number;
-    constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number);
+    constructor(condition: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
     getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): {

@@ -1,6 +1,7 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
+import { toExpr } from '../fns';
 
 
 const INDEX_PATH = 1;
@@ -22,6 +23,11 @@ export class GetExpression extends Expression
     const path = expr.path.map(e => e.encode());
 
     return [this.id, path];
+  }
+
+  public static create(path: ExpressionValue[])
+  {
+    return new GetExpression(toExpr(path));
   }
 
   public path: Expression[];

@@ -1,3 +1,4 @@
+import { Expression, ExpressionValue } from './Expression';
 export declare function isNumber(value: any): value is number;
 export declare function isString(value: any): value is string;
 export declare function isArray<T = any>(value: any): value is T[];
@@ -10,6 +11,8 @@ export declare function isUndefined(value: any): value is undefined;
 export declare function isSameClass(a: any, b: any): boolean;
 export declare function isWhole(x: number, epsilon?: number): boolean;
 export declare function isEmpty(value: any): boolean;
+export declare function toExpr(values: ExpressionValue[]): Expression[];
+export declare function toExpr(value: ExpressionValue): Expression;
 export declare function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey?: (key: string, value: V) => string): Record<string, R>;
 export declare function objectValues<V>(map: Record<string, V>): V[];
 export declare function toArray<T>(iter: IterableIterator<T>): T[];

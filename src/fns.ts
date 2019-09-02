@@ -1,3 +1,5 @@
+import { Expression, ExpressionValue } from './Expression';
+import { ConstantExpression } from './exprs/Constant';
 
 export function isNumber(value: any): value is number 
 {
@@ -71,6 +73,17 @@ export function isEmpty(value: any): boolean
   }
 
   return value === null || value === undefined;
+}
+
+export function toExpr(values: ExpressionValue[]): Expression[]
+export function toExpr(value: ExpressionValue): Expression
+export function toExpr(value: ExpressionValue | ExpressionValue[]): Expression | Expression[]
+{
+  return isArray(value)
+    ? value.map(toExpr)
+    : value instanceof Expression 
+      ? value 
+      : new ConstantExpression(value);
 }
 
 export function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey: (key: string, value: V) => string = ((key) => key) ): Record<string, R> 

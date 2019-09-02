@@ -45,7 +45,7 @@ export class OperationExpression extends Expression
   public params: Record<string, Expression>;
   public scopeAlias: Record<string, string>;
 
-  public constructor(name: string, params: Record<string, Expression>, scopeAlias: Record<string, string>) 
+  public constructor(name: string, params: Record<string, Expression>, scopeAlias: Record<string, string> = {}) 
   {
     super();
     this.name = name;
