@@ -8,6 +8,12 @@ import { _object } from './helper';
 export default (run: Runtime) =>
 {
 
+  // Static 
+
+  run.setOperation(ObjectOps.create, (params) => (context) =>
+    Object.create(null)
+  );
+
   // Operations
 
   run.setOperation(ObjectOps.has, (params) => (context) =>
@@ -44,10 +50,6 @@ export default (run: Runtime) =>
 
   run.setOperation(ObjectOps.copy, (params) => (context) =>
     copy(_object(params.object, context))
-  );
-
-  run.setOperation(ObjectOps.create, (params) => (context) =>
-    Object.create(null)
   );
 
   // Comparisons

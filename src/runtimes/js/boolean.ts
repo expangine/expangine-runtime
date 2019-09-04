@@ -10,7 +10,7 @@ export default (run: Runtime) =>
 
   // Static
   
-  run.setOperation(BooleanOps.cmp, (params) => (context) =>
+  run.setOperation(BooleanOps.create, (params) => (context) =>
     false
   );
 
