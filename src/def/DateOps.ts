@@ -1,9 +1,14 @@
-import { DateType } from '../types/Date';
-import { BooleanType } from '../types/Boolean';
-import { ManyType } from '../types/Many';
+import { AnyType } from '../types/Any';
 import { NumberType } from '../types/Number';
+import { BooleanType } from '../types/Boolean';
+import { DateType } from '../types/Date';
+import { ListType } from '../types/List';
+import { MapType } from '../types/Map';
+import { ObjectType } from '../types/Object';
 import { TextType } from '../types/Text';
+import { TupleType } from '../types/Tuple';
 import { EnumType } from '../types/Enum';
+import { ManyType } from '../types/Many';
 
 
 const ops = DateType.operations;
@@ -95,8 +100,6 @@ export const DateOps =
 
   parse: ops.set('parse', {}, DateType, { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
 
-  fromText: ops.set('>text', {}, DateType, { value: TextType }),
-
   fromTimestamp: ops.set('>tms', {}, DateType, { value: NumberType }),
 
   fromTimestampSeconds: ops.set('>tmss', {}, DateType, { value: NumberType }),
@@ -158,5 +161,25 @@ export const DateOps =
   isDST: ops.set('dst?', {}, BooleanType, { value: DateType }),
 
   isLeapYear: ops.set('leap?', {}, BooleanType, { value: DateType }),
+
+  // Casts
+
+  asAny: ops.set('~any', {}, AnyType, { value: DateType }),
+
+  asBoolean: ops.set('~bool', {}, BooleanType, { value: DateType }),
+
+  asDate: ops.set('~date', {}, DateType, { value: DateType }),
+
+  asList: ops.set('~list', {}, ListType.forItem(DateType), { value: DateType }),
+
+  asMap: ops.set('~map', {}, MapType.forItem(DateType), { value: DateType }),
+
+  asNumber: ops.set('~num', {}, NumberType, { value: DateType }),
+
+  asObject: ops.set('~obj', {}, ObjectType, { value: DateType }),
+
+  asText: ops.set('~text', {}, TextType, { value: DateType }),
+
+  asTuple: ops.set('~tuple', {}, TupleType.forItem([DateType]), { value: DateType }),
 
 };

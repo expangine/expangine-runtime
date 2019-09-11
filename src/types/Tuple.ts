@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { isArray } from '../fns';
@@ -35,6 +35,11 @@ export class TupleType extends Type<Type[]>
   public static describe(data: any, describer: TypeDescribeProvider): Type | null
   {
     return null;
+  }
+
+  public static forItem(types: TypeInput[])
+  {
+    return new TupleType(types.map((t) => Type.fromInput(t)));
   }
 
   public subs?: Record<string, Type>;

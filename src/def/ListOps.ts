@@ -6,6 +6,9 @@ import { AnyType } from '../types/Any';
 import { TextType } from '../types/Text';
 import { GenericType } from '../types/Generic';
 import { MapType } from '../types/Map';
+import { DateType } from '../types/Date';
+import { ObjectType } from '../types/Object';
+import { TupleType } from '../types/Tuple';
 
 
 const ops = ListType.operations;
@@ -257,4 +260,43 @@ export const ListOps =
     ListType.CompareScopeDefaults
   ),
 
+  // Casts
+  
+
+  asAny: ops.build('~any', {}, 
+    (value) => [value, { value }]
+  ),
+
+  asBoolean: ops.build('~bool', {}, 
+    (value) => [BooleanType, { value }]
+  ),
+
+  asDate: ops.build('~date', {}, 
+    (value) => [DateType, { value }]
+  ),
+
+  asList: ops.build('~list', {}, 
+    (value) => [value, { value }]
+  ),
+
+  asMap: ops.build('~map', {}, 
+    (value) => [MapType.forItem(value.options.item), { value }]
+  ),
+
+  asNumber: ops.build('~num', {}, 
+    (value) => [NumberType, { value }]
+  ),
+
+  asObject: ops.build('~obj', {}, 
+    (value) => [ObjectType, { value }]
+  ),
+
+  asText: ops.build('~text', {}, 
+    (value) => [TextType, { value }]
+  ),
+
+  asTuple: ops.build('~tuple', {}, 
+    (value) => [TupleType, { value }]
+  ),
+  
 };
