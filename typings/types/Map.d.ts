@@ -8,7 +8,7 @@ export interface MapOptions {
 }
 export declare class MapType extends Type<MapOptions> {
     static id: string;
-    static operations: Operations<MapType>;
+    static operations: Operations;
     static baseType: MapType;
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;
@@ -16,6 +16,7 @@ export declare class MapType extends Type<MapOptions> {
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: MapType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         key: Type<any>;

@@ -11,7 +11,7 @@ export interface TextOptions {
 }
 export declare class TextType extends Type<TextOptions> {
     static id: string;
-    static operations: Operations<TextType>;
+    static operations: Operations;
     static baseType: TextType;
     static decode(data: any[]): TextType;
     static encode(type: TextType): any;
@@ -20,6 +20,7 @@ export declare class TextType extends Type<TextOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: TextType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

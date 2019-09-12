@@ -1,5 +1,4 @@
 
-import { TypeMap } from './Type';
 import { Expression } from './Expression';
 import { FunctionType } from './types/Function';
 
@@ -11,21 +10,21 @@ export interface Command
 
 
 export type CommandParams<
-  P extends TypeMap,
-  O extends TypeMap
+  P extends string,
+  O extends string
 > = CommandsFor<P> & Partial<CommandsFor<O>>;
 
 
-export type CommandsFor<T extends TypeMap> = [T] extends [never] 
+export type CommandsFor<T extends string | never> = [T] extends [never] 
   ? {} 
-  : Record<keyof T, Command>;
+  : Record<T, Command>;
 
 
 export type OperationToCommand<
-  P extends TypeMap = never,
-  O extends TypeMap = never,
-  S extends TypeMap = never
-> = (params: CommandParams<P, O>, scope: Record<keyof S, string>) => Command;
+  P extends string = never,
+  O extends string = never,
+  S extends string = never
+> = (params: CommandParams<P, O>, scope: Record<S, string>) => Command;
 
 
 export type CommandBuilder<

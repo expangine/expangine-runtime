@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { TupleOps } from '../../def/TupleOps';
+import { TupleOps } from '../../ops/TupleOps';
 import { compare, copy } from '../../fns';
 import { _list, _number } from './helper';
 

@@ -1,15 +1,17 @@
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 export declare class TupleType extends Type<Type[]> {
     static id: string;
-    static operations: Operations<TupleType>;
+    static operations: Operations;
     static baseType: TupleType;
     static decode(data: any[], types: TypeProvider): TupleType;
     static encode(type: TupleType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static forItem(types: TypeInput[]): TupleType;
     subs?: Record<string, Type>;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: TupleType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

@@ -7,13 +7,14 @@ export interface EnumOptions {
 }
 export declare class EnumType extends Type<EnumOptions> {
     static id: string;
-    static operations: Operations<EnumType>;
+    static operations: Operations;
     static baseType: EnumType;
     static decode(data: any[], types: TypeProvider): EnumType;
     static encode(type: EnumType): any;
     static describePriority: number;
     static describe(): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: EnumType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         key: Type<any>;

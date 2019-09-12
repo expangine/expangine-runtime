@@ -1,18 +1,6 @@
 
-import { Type, TypeInput, TypeMap, TypeMapStrict, TypeResolved } from './Type';
-import { objectMap } from './fns';
-import { GenericType } from './types/Generic';
+import { Type, TypeInput } from './Type';
 
-
-export type OperationOptions<
-  R extends TypeInput, 
-  P extends TypeMap = never, 
-  O extends TypeMap = never, 
-  S extends TypeMap = never
-> = [R]
-  | [R, P]
-  | [R, P, O] 
-  | [R, P, O, S];
 
 export interface OperationFlags
 {
@@ -21,140 +9,119 @@ export interface OperationFlags
 }
 
 export interface Operation<
-  R extends Type = any, 
-  P extends TypeMapStrict = never, 
-  O extends TypeMapStrict = never, 
-  S extends TypeMapStrict = never,
-  G extends string = never
+  P extends string = never, 
+  O extends string = never,
+  S extends string = never
 > extends OperationFlags {
   id: string;
-  returnType: R;
-  params?: P;
-  optional?: O;
-  scope?: S;
-  generics?: Record<G, GenericType>;
+  params: P[];
+  optional: O[];
+  scope: S[];
+  scopeDefaults?: Record<S, string>;
 }
 
-export type OperationResolved<
-  R extends TypeInput = any, 
-  P extends TypeMap = never, 
-  O extends TypeMap = never, 
-  S extends TypeMap = never,
-  G extends string = never
-> = Operation<TypeResolved<R>, TypeResolved<P>, TypeResolved<O>, TypeResolved<S>, G>;
+export type OperationTypeInput<I extends string> = TypeInput | ((inputs: Record<I, Type | undefined>) => TypeInput);
 
-export interface OperationBuilder<
-  T extends Type,
-  R extends TypeInput = any, 
-  P extends TypeMap = never, 
-  O extends TypeMap = never, 
-  S extends TypeMap = never,
-  G extends string = never
+export interface OperationTypes<
+  P extends string = never, 
+  O extends string = never,
+  S extends string = never
 > {
-  id: string;
-  dynamic: boolean;
-  complexity: number;
-  scopeDefaults?: Record<keyof S, string>;
-  (type: T): OperationResolved<R, P, O, S, G>;
+  returnType: OperationTypeInput<P | O>,
+  params: Record<P, OperationTypeInput<P | O>>;
+  optional: Record<O, OperationTypeInput<P | O>>;
+  scope: Record<S, OperationTypeInput<P | O>>;
 }
 
-export class Operations<T extends Type> 
+export class Operations
 {
 
   public prefix: string;
 
-  public map: Record<string, OperationBuilder<T>>;
+  public map: Record<string, Operation<any, any, any>>;
+  public types: Record<string, OperationTypes<any, any, any>>;
 
   public constructor(prefix: string)
   { 
     this.prefix = prefix;
     this.map = Object.create(null);
+    this.types = Object.create(null);
   }
 
-  public getBuilder (id: string): OperationBuilder<any>
+  public get (id: string): Operation<any, any, any>
   {
     return this.map[id] || this.map[this.prefix + id];
   }
 
-  public get (id: string, type: T): Operation<any, any, any, any, any>
+  public getTypes (id: string): OperationTypes<any, any, any>
   {
-    return this.getBuilder( id )( type );
+    return this.types[id] || this.types[this.prefix + id];
   }
 
-  public set<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never>(
+  public set<P extends string = never, O extends string = never, S extends string = never>(
     localId: string, 
     flags: Partial<OperationFlags> = {},
-    returnType: R, 
-    params?: P, 
-    optional?: O, 
-    scope?: S
-  ): OperationBuilder<T, R, P, O, S> 
+    params: P[] = [], 
+    optional: O[] = [], 
+    scope: S[] = []
+  ): Operation<P, O, S> 
   {
     const id = this.prefix + localId;
     const mutates = flags.mutates || [];
     const complexity = flags.complexity || 0;
+    const scopeDefaults: Record<S, string> = Object.create(null);
+    scope.forEach((s) => scopeDefaults[s] = s);
+
     const op = { 
       id, 
       mutates, 
       complexity, 
-      returnType: Type.resolve(returnType), 
-      params: Type.resolve(params),
-      optional: Type.resolve(optional), 
-      scope: Type.resolve(scope)
+      params,
+      optional,
+      scope,
+      scopeDefaults,
     };
-    const scopeDefaults = scope 
-      ? objectMap(scope, (_, key) => key) as Record<keyof S, string>
-      : undefined;
+    
+    this.map[id] = op;
 
-    return this.put(id, false, complexity, scopeDefaults, () => op);
+    return op;
   }
 
-  public build<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never>(
-    localId: string,
-    flags: Partial<OperationFlags> = {},
-    getOptions: (type: T, generics?: Record<G, GenericType>) => OperationOptions<R, P, O, S>,
-    scopeDefaults?: Record<keyof S, string>,
-    generics?: Record<G, GenericType>
-  ): OperationBuilder<T, R, P, O, S> 
-  {
-    const id = this.prefix + localId;
-    const mutates = flags.mutates || [];
-    const complexity = flags.complexity || 0;
+  public setTypes(
+    op: Operation<never, never, never>,
+    returnType: OperationTypeInput<never>
+  ) : OperationTypes<never, never, never>
+  public setTypes<P extends string>(
+    op: Operation<P, never, never>,
+    returnType: OperationTypeInput<P>,
+    params: Record<P, OperationTypeInput<P>>
+  ) : OperationTypes<P, never, never>
+  public setTypes<P extends string, O extends string>(
+    op: Operation<P, O, never>,
+    returnType: OperationTypeInput<P | O>,
+    params: Record<P, OperationTypeInput<P | O>>,
+    optional: Record<O, OperationTypeInput<P | O>>
+  ) : OperationTypes<P, O, never>
+  public setTypes<P extends string, O extends string, S extends string>(
+    op: Operation<P, O, S>,
+    returnType: OperationTypeInput<P | O>,
+    params: Record<P, OperationTypeInput<P | O>>,
+    optional: Record<O, OperationTypeInput<P | O>>,
+    scope: Record<S, OperationTypeInput<P | O>>
+  ) : OperationTypes<P, O, S>
+  public setTypes<P extends string = never, O extends string = never, S extends string = never>(
+    op: Operation<P, O, S>, 
+    returnType: OperationTypeInput<P | O>,
+    params: Record<P, OperationTypeInput<P | O>> = Object.create(null),
+    optional: Record<O, OperationTypeInput<P | O>> = Object.create(null),
+    scope: Record<S, OperationTypeInput<P | O>> = Object.create(null)
+  ): OperationTypes<P, O, S> {
 
-    return this.put(id, true, complexity, scopeDefaults, (type) =>
-    {
-      const [returnType, params, optional, scope] = getOptions(type, generics);
+    const types = { returnType, params, optional, scope };
 
-      return { 
-        id, 
-        mutates, 
-        complexity, 
-        returnType: Type.resolve(returnType), 
-        params: Type.resolve(params), 
-        optional: Type.resolve(optional), 
-        scope: Type.resolve(scope), 
-        generics 
-      };
-    });
-  }
+    this.types[op.id] = types;
 
-  private put<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never>(
-    id: string, 
-    dynamic: boolean,
-    complexity: number,
-    scopeDefaults: Record<keyof S, string> | undefined,
-    getOperation: (type: T) => OperationResolved<R, P, O, S, G>): OperationBuilder<T, R, P, O, S, G>
-  {
-    const builder = getOperation as OperationBuilder<T, R, P, O, S, G>;
-
-    builder.id = id;
-    builder.dynamic = dynamic;
-    builder.complexity = complexity;
-    builder.scopeDefaults = scopeDefaults;
-
-    this.map[id] = builder as unknown as OperationBuilder<T>;
-
-    return builder;
+    return types;
   }
 
 }

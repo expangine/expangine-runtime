@@ -13,7 +13,7 @@ export interface DateOptions {
 }
 export declare class DateType extends Type<DateOptions> {
     static id: string;
-    static operations: Operations<DateType>;
+    static operations: Operations;
     static baseType: DateType;
     static decode(data: any[], types: TypeProvider): DateType;
     static encode(type: DateType): any;
@@ -22,6 +22,7 @@ export declare class DateType extends Type<DateOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: DateType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

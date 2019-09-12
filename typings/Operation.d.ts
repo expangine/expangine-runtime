@@ -1,33 +1,32 @@
-import { Type, TypeInput, TypeMap, TypeMapStrict, TypeResolved } from './Type';
-import { GenericType } from './types/Generic';
-export declare type OperationOptions<R extends TypeInput, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never> = [R] | [R, P] | [R, P, O] | [R, P, O, S];
+import { Type, TypeInput } from './Type';
 export interface OperationFlags {
     complexity: number;
     mutates: string[];
 }
-export interface Operation<R extends Type = any, P extends TypeMapStrict = never, O extends TypeMapStrict = never, S extends TypeMapStrict = never, G extends string = never> extends OperationFlags {
+export interface Operation<P extends string = never, O extends string = never, S extends string = never> extends OperationFlags {
     id: string;
-    returnType: R;
-    params?: P;
-    optional?: O;
-    scope?: S;
-    generics?: Record<G, GenericType>;
+    params: P[];
+    optional: O[];
+    scope: S[];
+    scopeDefaults?: Record<S, string>;
 }
-export declare type OperationResolved<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never> = Operation<TypeResolved<R>, TypeResolved<P>, TypeResolved<O>, TypeResolved<S>, G>;
-export interface OperationBuilder<T extends Type, R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never> {
-    id: string;
-    dynamic: boolean;
-    complexity: number;
-    scopeDefaults?: Record<keyof S, string>;
-    (type: T): OperationResolved<R, P, O, S, G>;
+export declare type OperationTypeInput<I extends string> = TypeInput | ((inputs: Record<I, Type | undefined>) => TypeInput);
+export interface OperationTypes<P extends string = never, O extends string = never, S extends string = never> {
+    returnType: OperationTypeInput<P | O>;
+    params: Record<P, OperationTypeInput<P | O>>;
+    optional: Record<O, OperationTypeInput<P | O>>;
+    scope: Record<S, OperationTypeInput<P | O>>;
 }
-export declare class Operations<T extends Type> {
+export declare class Operations {
     prefix: string;
-    map: Record<string, OperationBuilder<T>>;
+    map: Record<string, Operation<any, any, any>>;
+    types: Record<string, OperationTypes<any, any, any>>;
     constructor(prefix: string);
-    getBuilder(id: string): OperationBuilder<any>;
-    get(id: string, type: T): Operation<any, any, any, any, any>;
-    set<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never>(localId: string, flags: Partial<OperationFlags>, returnType: R, params?: P, optional?: O, scope?: S): OperationBuilder<T, R, P, O, S>;
-    build<R extends TypeInput = any, P extends TypeMap = never, O extends TypeMap = never, S extends TypeMap = never, G extends string = never>(localId: string, flags: Partial<OperationFlags>, getOptions: (type: T, generics?: Record<G, GenericType>) => OperationOptions<R, P, O, S>, scopeDefaults?: Record<keyof S, string>, generics?: Record<G, GenericType>): OperationBuilder<T, R, P, O, S>;
-    private put;
+    get(id: string): Operation<any, any, any>;
+    getTypes(id: string): OperationTypes<any, any, any>;
+    set<P extends string = never, O extends string = never, S extends string = never>(localId: string, flags?: Partial<OperationFlags>, params?: P[], optional?: O[], scope?: S[]): Operation<P, O, S>;
+    setTypes(op: Operation<never, never, never>, returnType: OperationTypeInput<never>): OperationTypes<never, never, never>;
+    setTypes<P extends string>(op: Operation<P, never, never>, returnType: OperationTypeInput<P>, params: Record<P, OperationTypeInput<P>>): OperationTypes<P, never, never>;
+    setTypes<P extends string, O extends string>(op: Operation<P, O, never>, returnType: OperationTypeInput<P | O>, params: Record<P, OperationTypeInput<P | O>>, optional: Record<O, OperationTypeInput<P | O>>): OperationTypes<P, O, never>;
+    setTypes<P extends string, O extends string, S extends string>(op: Operation<P, O, S>, returnType: OperationTypeInput<P | O>, params: Record<P, OperationTypeInput<P | O>>, optional: Record<O, OperationTypeInput<P | O>>, scope: Record<S, OperationTypeInput<P | O>>): OperationTypes<P, O, S>;
 }

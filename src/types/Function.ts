@@ -23,7 +23,7 @@ export class FunctionType extends Type<FunctionOptions>
 
   public static id = 'func';
 
-  public static operations = new Operations<FunctionType>('func:');
+  public static operations = new Operations('func:');
 
   public static baseType = new FunctionType({ returnType: AnyType.baseType, params: ObjectType.baseType, expression: null });
 
@@ -58,6 +58,11 @@ export class FunctionType extends Type<FunctionOptions>
   public getId(): string
   {
     return FunctionType.id;
+  }
+
+  public getOperations()
+  {
+    return FunctionType.operations.map;
   }
 
   public merge(type: FunctionType, describer: TypeDescribeProvider): void

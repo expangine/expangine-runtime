@@ -3,8 +3,7 @@ import { Command, CommandBuilder, OperationToCommand } from './Command';
 import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
-import { OperationBuilder } from './Operation';
-import { TypeMap, TypeInput } from './Type';
+import { Operation } from './Operation';
 import { FunctionType } from './types/Function';
 
 
@@ -12,7 +11,7 @@ export class Runtime
 {
 
   public defs: Definitions;
-  public ops: Record<string, OperationToCommand>;
+  public ops: Record<string, OperationToCommand<any, any, any>>;
   public exprs: Record<string, CommandBuilder>;
 
   public constructor (defs: Definitions) 
@@ -32,17 +31,21 @@ export class Runtime
     return copy;
   }
 
-  public setOperation<R extends TypeInput, P extends TypeMap = any, O extends TypeMap = any, S extends TypeMap = any>(
-    builder: OperationBuilder<any, R, P, O, S>, 
-    op: OperationToCommand<P, O, S>
-  ): void 
+  public setOperation<P extends string = any, O extends string = any, S extends string = any>(
+    operation: Operation<P, O, S>, 
+    impl: OperationToCommand<P, O, S>
+  ): this 
   {
-    this.ops[builder.id] = op;
+    this.ops[operation.id] = impl;
+
+    return this;
   }
 
-  public setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<T>) 
+  public setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<T>): this
   {
     this.exprs[type.id] = getter;
+
+    return this;
   }
 
   public getFunction (name: string): FunctionType
@@ -57,9 +60,9 @@ export class Runtime
   
   public getOperationScopeDefaults (id: string): Record<string, string>
   {
-    const builder = this.defs.getOperationBuilder(id);
+    const op = this.defs.getOperation(id);
 
-    return builder ? builder.scopeDefaults : {};
+    return op ? op.scopeDefaults : {};
   }
 
   public getExpression (id: string): CommandBuilder

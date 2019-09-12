@@ -44,7 +44,7 @@ export interface TypeParser
 export interface TypeClass<T extends Type<O> = any, O = any> 
 {
   id: string;
-  operations: Operations<T>;
+  operations: Operations;
   baseType: T;
   decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
   encode(this: TypeClass<T>, type: T): any;
@@ -91,22 +91,14 @@ export abstract class Type<O = any>
   }
 
   public options: O;
-  public operations?: Record<string, Operation>;
+  public operations?: Record<string, Operation<any, any, any>>;
 
   public constructor(options: O) 
   {
     this.options = options;
   }
 
-  public getOperations(type: TypeClass<any, O>): Record<string, Operation> 
-  {
-    if (!this.operations) 
-    {
-      this.operations = objectMap(type.operations.map, builder => builder(this));
-    }
-
-    return this.operations;
-  }
+  public abstract getOperations(): Record<string, Operation<any, any, any>>;
 
   public abstract getId(): string;
 

@@ -1,0 +1,20 @@
+export declare const BooleanOps: {
+    create: import("..").Operation<never, never, never>;
+    and: import("..").Operation<"a" | "b", never, never>;
+    or: import("..").Operation<"a" | "b", never, never>;
+    xor: import("..").Operation<"a" | "b", never, never>;
+    not: import("..").Operation<"a", never, never>;
+    cmp: import("..").Operation<"value" | "test", never, never>;
+    isValid: import("..").Operation<"value", never, never>;
+    isTrue: import("..").Operation<"value", never, never>;
+    isFalse: import("..").Operation<"value", never, never>;
+    asAny: import("..").Operation<"value", never, never>;
+    asBoolean: import("..").Operation<"value", never, never>;
+    asDate: import("..").Operation<"value", never, never>;
+    asList: import("..").Operation<"value", never, never>;
+    asMap: import("..").Operation<"value", never, never>;
+    asNumber: import("..").Operation<"value", never, never>;
+    asObject: import("..").Operation<"value", never, never>;
+    asText: import("..").Operation<"value", never, never>;
+    asTuple: import("..").Operation<"value", never, never>;
+};

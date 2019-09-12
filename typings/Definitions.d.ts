@@ -1,6 +1,6 @@
 import { Type, TypeClass, TypeParser, TypeInput, TypeMap } from './Type';
 import { Expression, ExpressionClass } from './Expression';
-import { Operations, OperationBuilder } from './Operation';
+import { Operations, Operation } from './Operation';
 import { FunctionType } from './types/Function';
 export interface DefinitionsImportOptions {
     aliases?: Record<string, Type | any>;
@@ -15,7 +15,7 @@ export declare class Definitions {
     describers: TypeClass[];
     parsers: Record<string, TypeParser>;
     expressions: Record<string, ExpressionClass>;
-    operations: Operations<any>;
+    operations: Operations;
     aliased: Record<string, Type>;
     functions: Record<string, FunctionType>;
     constructor(initial?: DefinitionsOptions);
@@ -35,7 +35,7 @@ export declare class Definitions {
     addFunction(name: string, returnType: TypeInput, params: TypeMap, expr: any): FunctionType;
     setFunction(name: string, typeValue: any): FunctionType;
     getFunction(name: string): FunctionType;
-    getOperationBuilder(id: string): OperationBuilder<any> | null;
+    getOperation(id: string): Operation<any, any, any> | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
     getExpression(value: any): Expression;
     export(): DefinitionsImportOptions;

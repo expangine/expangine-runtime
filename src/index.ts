@@ -14,7 +14,6 @@ export * from './types/Boolean';
 export * from './types/Date';
 export * from './types/Enum';
 export * from './types/Function';
-export * from './types/Generic';
 export * from './types/List';
 export * from './types/Many';
 export * from './types/Map';
@@ -45,15 +44,25 @@ export * from './exprs/While';
 
 export * from './def';
 
-export * from './def/AnyOps';
-export * from './def/BooleanOps';
-export * from './def/DateOps';
-export * from './def/ListOps';
-export * from './def/MapOps';
-export * from './def/NumberOps';
-export * from './def/ObjectOps';
-export * from './def/TextOps';
-export * from './def/TupleOps';
+export * from './ops/AnyOps';
+export * from './ops/BooleanOps';
+export * from './ops/DateOps';
+export * from './ops/ListOps';
+export * from './ops/MapOps';
+export * from './ops/NumberOps';
+export * from './ops/ObjectOps';
+export * from './ops/TextOps';
+export * from './ops/TupleOps';
+
+export * from './ops/types/AnyOpsTypes';
+export * from './ops/types/BooleanOpsTypes';
+export * from './ops/types/DateOpsTypes';
+export * from './ops/types/ListOpsTypes';
+export * from './ops/types/MapOpsTypes';
+export * from './ops/types/NumberOpsTypes';
+export * from './ops/types/ObjectOpsTypes';
+export * from './ops/types/TextOpsTypes';
+export * from './ops/types/TupleOpsTypes';
 
 export * from './locales';
 

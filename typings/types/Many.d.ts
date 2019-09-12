@@ -1,15 +1,15 @@
-import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
-import { Operations, Operation } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Operations } from '../Operation';
 export declare class ManyType extends Type<Type[]> {
     static id: string;
-    static operations: Operations<ManyType>;
+    static operations: Operations;
     static baseType: ManyType;
     static decode(data: any[], types: TypeProvider): ManyType;
     static encode(type: ManyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     subs?: Record<string, Type>;
-    getOperations(type: TypeClass<any, any>): Record<string, Operation>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     private forMany;
     getId(): string;
     merge(type: ManyType, describer: TypeDescribeProvider): void;

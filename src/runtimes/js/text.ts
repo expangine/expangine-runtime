@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { TextOps } from '../../def/TextOps';
+import { TextOps } from '../../ops/TextOps';
 import { _number, _bool, _text, _numberMaybe } from './helper';
 import { isString } from '../../fns';
 
@@ -64,7 +64,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.sub, (params) => (context) => 
-    _text(params.value, context).substring(_number(params.start, context), _numberMaybe(params.end, context))
+    _text(params.value, context).substring(_number(params.start, context, 0), _numberMaybe(params.end, context))
   );
 
   run.setOperation(TextOps.indexOf, (params) => (context) => 

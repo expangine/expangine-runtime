@@ -24,7 +24,7 @@ export class DateType extends Type<DateOptions>
 
   public static id = 'date';
 
-  public static operations = new Operations<DateType>('date:');
+  public static operations = new Operations('date:');
 
   public static baseType = new DateType({});
 
@@ -80,6 +80,11 @@ export class DateType extends Type<DateOptions>
   public getId(): string
   {
     return DateType.id;
+  }
+
+  public getOperations()
+  {
+    return DateType.operations.map;
   }
 
   public merge(type: DateType, describer: TypeDescribeProvider): void

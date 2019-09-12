@@ -17,7 +17,7 @@ export declare class ForExpression extends Expression {
     getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): {
-        [x: string]: NumberType | BooleanType;
+        [x: string]: BooleanType | NumberType;
     };
     encode(): any;
 }

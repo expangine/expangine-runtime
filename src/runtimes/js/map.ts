@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { MapOps } from '../../def/MapOps';
+import { MapOps } from '../../ops/MapOps';
 import { saveScope, restoreScope, _map, _optional, _number } from './helper';
 import { toArray, getCompare } from '../../fns';
 

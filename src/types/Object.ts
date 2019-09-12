@@ -16,7 +16,7 @@ export class ObjectType extends Type<ObjectOptions>
 
   public static id = 'obj';
 
-  public static operations = new Operations<ObjectType>('obj:');
+  public static operations = new Operations('obj:');
 
   public static baseType = ObjectType.from();
 
@@ -56,6 +56,11 @@ export class ObjectType extends Type<ObjectOptions>
   public getId(): string
   {
     return ObjectType.id;
+  }
+
+  public getOperations()
+  {
+    return ObjectType.operations.map;
   }
 
   public merge(type: ObjectType, describer: TypeDescribeProvider): void

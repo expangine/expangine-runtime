@@ -16,7 +16,7 @@ export class NullType extends Type<NullOptions>
 
   public static id = 'null';
 
-  public static operations = new Operations<NullType>('null:');
+  public static operations = new Operations('null:');
 
   public static baseType = new NullType({});
 
@@ -42,6 +42,11 @@ export class NullType extends Type<NullOptions>
   public getId(): string
   {
     return NullType.id;
+  }
+
+  public getOperations()
+  {
+    return NullType.operations.map;
   }
 
   public merge(type: NullType, describer: TypeDescribeProvider): void

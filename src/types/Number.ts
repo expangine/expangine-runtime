@@ -22,7 +22,7 @@ export class NumberType extends Type<NumberOptions>
 
   public static id = 'num';
 
-  public static operations = new Operations<NumberType>('num:');
+  public static operations = new Operations('num:');
 
   public static baseType = new NumberType({});
 
@@ -57,6 +57,11 @@ export class NumberType extends Type<NumberOptions>
   public getId(): string
   {
     return NumberType.id;
+  }
+
+  public getOperations()
+  {
+    return NumberType.operations.map;
   }
 
   public merge(type: NumberType, describer: TypeDescribeProvider): void

@@ -10,7 +10,7 @@ export interface ListOptions {
 export declare class ListType extends Type<ListOptions> {
     static lengthType: NumberType;
     static id: string;
-    static operations: Operations<ListType>;
+    static operations: Operations;
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
@@ -18,6 +18,7 @@ export declare class ListType extends Type<ListOptions> {
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(itemOrClass: TypeInput): ListType;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: ListType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         length: NumberType;

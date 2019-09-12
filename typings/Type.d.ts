@@ -21,7 +21,7 @@ export interface TypeParser {
 }
 export interface TypeClass<T extends Type<O> = any, O = any> {
     id: string;
-    operations: Operations<T>;
+    operations: Operations;
     baseType: T;
     decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
     encode(this: TypeClass<T>, type: T): any;
@@ -33,9 +33,9 @@ export declare abstract class Type<O = any> {
     static fromInput(input: TypeInput): Type;
     static resolve<T>(types: T): TypeResolved<T>;
     options: O;
-    operations?: Record<string, Operation>;
+    operations?: Record<string, Operation<any, any, any>>;
     constructor(options: O);
-    getOperations(type: TypeClass<any, O>): Record<string, Operation>;
+    abstract getOperations(): Record<string, Operation<any, any, any>>;
     abstract getId(): string;
     abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
     abstract getSubTypes(): Record<string, Type> | null;

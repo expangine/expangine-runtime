@@ -5,13 +5,14 @@ export interface NullOptions {
 }
 export declare class NullType extends Type<NullOptions> {
     static id: string;
-    static operations: Operations<NullType>;
+    static operations: Operations;
     static baseType: NullType;
     static decode(data: any[]): NullType;
     static encode(type: NullType): any;
     static describePriority: number;
     static describe(data: any): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: NullType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

@@ -8,13 +8,14 @@ export interface NumberOptions {
 export declare class NumberType extends Type<NumberOptions> {
     static WHOLE_EPSILON: number;
     static id: string;
-    static operations: Operations<NumberType>;
+    static operations: Operations;
     static baseType: NumberType;
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: NumberType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

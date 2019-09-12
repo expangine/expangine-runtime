@@ -2,7 +2,7 @@
 import { isArray, objectMap, isSameClass, objectValues } from './fns';
 import { Type, TypeClass, TypeParser, TypeInput, TypeMap } from './Type';
 import { Expression, ExpressionClass } from './Expression';
-import { Operations, OperationBuilder } from './Operation';
+import { Operations, Operation } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
@@ -30,7 +30,7 @@ export class Definitions
   public describers: TypeClass[];
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
-  public operations: Operations<any>;
+  public operations: Operations;
   public aliased: Record<string, Type>;
   public functions: Record<string, FunctionType>;
 
@@ -261,9 +261,9 @@ export class Definitions
     return this.functions[name];
   }
 
-  public getOperationBuilder(id: string): OperationBuilder<any> | null
+  public getOperation(id: string): Operation<any, any, any> | null
   {
-    const op = this.operations.getBuilder(id);
+    const op = this.operations.get(id);
 
     if (op)
     {
@@ -273,7 +273,7 @@ export class Definitions
     const [typeName] = id.split(':');
     const type = this.types[typeName];
 
-    return type ? type.operations.getBuilder(id) : null;
+    return type ? type.operations.get(id) : null;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 

@@ -1,6 +1,6 @@
 
-import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
-import { Operations, Operation } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Operations } from '../Operation';
 import { AnyType } from './Any';
 
 
@@ -11,7 +11,7 @@ export class ManyType extends Type<Type[]>
 
   public static id = 'many';
 
-  public static operations = new Operations<ManyType>('many:');
+  public static operations = new Operations('many:');
 
   public static baseType = new ManyType([AnyType.baseType]);
 
@@ -38,7 +38,7 @@ export class ManyType extends Type<Type[]>
 
   public subs?: Record<string, Type>;
 
-  public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
+  public getOperations()
   {
     if (!this.operations)
     {
@@ -46,7 +46,7 @@ export class ManyType extends Type<Type[]>
 
       this.options.forEach(many => 
       {
-        const ops = many.getOperations((many as any).constructor as TypeClass<any, any>);
+        const ops = many.getOperations();
         
         for (const prop in ops) 
         {

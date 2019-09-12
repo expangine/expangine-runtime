@@ -1,6 +1,6 @@
 
-import { Type, TypeProvider, TypeClass, TypeDescribeProvider } from '../Type';
-import { Operations, Operation } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Operations } from '../Operation';
 import { AnyType } from './Any';
 
 
@@ -12,7 +12,7 @@ export class OptionalType extends Type<Type>
 
   public static id = '?';
 
-  public static operations = new Operations<OptionalType>('?:');
+  public static operations = new Operations('?:');
 
   public static baseType = new OptionalType(AnyType.baseType);
 
@@ -35,14 +35,9 @@ export class OptionalType extends Type<Type>
     return null;
   }
 
-  public getOperations(type: TypeClass<any, any>): Record<string, Operation> 
+  public getOperations()
   {
-    if (!this.operations)
-    {
-      this.operations = this.options.getOperations(type);
-    }
-
-    return this.operations;
+    return this.options.getOperations();
   }
 
   public getId(): string

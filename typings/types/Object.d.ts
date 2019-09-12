@@ -5,7 +5,7 @@ export interface ObjectOptions {
 }
 export declare class ObjectType extends Type<ObjectOptions> {
     static id: string;
-    static operations: Operations<ObjectType>;
+    static operations: Operations;
     static baseType: ObjectType;
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
@@ -13,6 +13,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static from(types?: TypeMap): ObjectType;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;

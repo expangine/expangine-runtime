@@ -6,13 +6,14 @@ export interface BooleanOptions {
 }
 export declare class BooleanType extends Type<BooleanOptions> {
     static id: string;
-    static operations: Operations<BooleanType>;
+    static operations: Operations;
     static baseType: BooleanType;
     static decode(data: any[], types: TypeProvider): BooleanType;
     static encode(type: BooleanType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: BooleanType, describer: TypeDescribeProvider): void;
     getSubTypes(): null;
     getExactType(value: any): Type;

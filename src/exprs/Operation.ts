@@ -2,8 +2,7 @@
 import { objectMap, isEmpty } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
-import { TypeMap } from '../Type';
-import { OperationBuilder } from '../Operation';
+import { Operation } from '../Operation';
 
 
 const INDEX_NAME = 1;
@@ -33,10 +32,10 @@ export class OperationExpression extends Expression
       : [this.id, expr.name, params, expr.scopeAlias]
   }
 
-  public static create<P extends TypeMap, O extends TypeMap, S extends TypeMap>(
-    op: OperationBuilder<any, any, P, O, S>, 
-    params: Record<keyof P, Expression> & Partial<Record<keyof O, Expression>>,
-    scopeAlias: Partial<Record<keyof S, string>> = {}
+  public static create<P extends string, O extends string, S extends string>(
+    op: Operation<P, O, S>, 
+    params: Record<P, Expression> & Partial<Record<O, Expression>>,
+    scopeAlias: Partial<Record<S, string>> = Object.create(null)
   ): OperationExpression {
     return new OperationExpression(op.id, params, scopeAlias);
   }
@@ -60,8 +59,8 @@ export class OperationExpression extends Expression
 
   public getComplexity(def: Definitions): number
   {
-    const builder = def.getOperationBuilder(this.name);
-    let complexity = builder ? builder.complexity : 0;
+    const op = def.getOperation(this.name);
+    let complexity = op ? op.complexity : 0;
 
     for (const prop in this.params)
     {

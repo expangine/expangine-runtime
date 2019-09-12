@@ -24,7 +24,7 @@ export class MapType extends Type<MapOptions>
 
   public static id = 'map';
 
-  public static operations = new Operations<MapType>('map:');
+  public static operations = new Operations('map:');
 
   public static baseType = new MapType({ key: TextType.baseType, value: AnyType.baseType });
 
@@ -77,6 +77,11 @@ export class MapType extends Type<MapOptions>
   public getId(): string
   {
     return MapType.id;
+  }
+
+  public getOperations()
+  {
+    return MapType.operations.map;
   }
 
   public merge(type: MapType, describer: TypeDescribeProvider): void

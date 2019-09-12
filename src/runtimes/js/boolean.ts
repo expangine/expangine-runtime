@@ -1,7 +1,7 @@
 import { Runtime } from '../../Runtime';
 import { _bool } from './helper';
 import { isBoolean } from '../../fns';
-import { BooleanOps } from '../../def/BooleanOps';
+import { BooleanOps } from '../../ops/BooleanOps';
 
 
 

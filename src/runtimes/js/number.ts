@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { NumberOps } from '../../def/NumberOps';
+import { NumberOps } from '../../ops/NumberOps';
 import { _number, _bool, _text, _numberMaybe, _textMaybe } from './helper';
 import { isNumber, isUndefined, isString, isWhole } from '../../fns';
 

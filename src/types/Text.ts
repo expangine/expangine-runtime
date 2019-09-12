@@ -25,7 +25,7 @@ export class TextType extends Type<TextOptions>
 
   public static id = 'text';
 
-  public static operations = new Operations<TextType>('text:');
+  public static operations = new Operations('text:');
   
   public static baseType = new TextType({});
 
@@ -80,6 +80,11 @@ export class TextType extends Type<TextOptions>
   public getId(): string
   {
     return TextType.id;
+  }
+
+  public getOperations()
+  {
+    return TextType.operations.map;
   }
 
   public merge(type: TextType, describer: TypeDescribeProvider): void

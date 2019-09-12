@@ -12,7 +12,7 @@ export class TupleType extends Type<Type[]>
 
   public static id = 'tuple';
 
-  public static operations = new Operations<TupleType>('tuple:');
+  public static operations = new Operations('tuple:');
 
   public static baseType = new TupleType([AnyType.baseType]);
 
@@ -47,6 +47,11 @@ export class TupleType extends Type<Type[]>
   public getId(): string
   {
     return TupleType.id;
+  }
+
+  public getOperations()
+  {
+    return TupleType.operations.map;
   }
 
   public merge(type: TupleType, describer: TypeDescribeProvider): void

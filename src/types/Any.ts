@@ -8,7 +8,7 @@ export class AnyType extends Type
 
   public static id = 'any';
 
-  public static operations = new Operations<AnyType>('any:');
+  public static operations = new Operations('any:');
 
   public static baseType = new AnyType({});
 
@@ -32,6 +32,11 @@ export class AnyType extends Type
   public getId(): string
   {
     return AnyType.id;
+  }
+
+  public getOperations()
+  {
+    return AnyType.operations.map;
   }
 
   public merge(type: AnyType, describer: TypeDescribeProvider): void

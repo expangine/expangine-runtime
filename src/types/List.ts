@@ -26,7 +26,7 @@ export class ListType extends Type<ListOptions>
 
   public static id = 'list';
 
-  public static operations = new Operations<ListType>('list:');
+  public static operations = new Operations('list:');
 
   public static baseType = new ListType({ item: AnyType.baseType });
 
@@ -82,6 +82,11 @@ export class ListType extends Type<ListOptions>
   public getId(): string
   {
     return ListType.id;
+  }
+
+  public getOperations()
+  {
+    return ListType.operations.map;
   }
 
   public merge(type: ListType, describer: TypeDescribeProvider): void

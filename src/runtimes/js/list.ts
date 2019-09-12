@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { ListOps } from '../../def/ListOps';
+import { ListOps } from '../../ops/ListOps';
 import { _list, _optional, _number, saveScope, restoreScope, _text, _bool } from './helper';
 import { Command } from '../../Command';
 import { getCompare } from '../../fns';

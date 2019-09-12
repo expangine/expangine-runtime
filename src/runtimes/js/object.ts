@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { ObjectOps } from '../../def/ObjectOps';
+import { ObjectOps } from '../../ops/ObjectOps';
 import { compare, copy } from '../../fns';
 import { _object } from './helper';
 

@@ -21,7 +21,7 @@ export class EnumType extends Type<EnumOptions>
 
   public static id = 'enum';
 
-  public static operations = new Operations<EnumType>('enum:');
+  public static operations = new Operations('enum:');
   
   public static baseType = new EnumType({ key: TextType.baseType, value: TextType.baseType, constants: new Map() });
 
@@ -62,6 +62,11 @@ export class EnumType extends Type<EnumOptions>
   public getId(): string
   {
     return EnumType.id;
+  }
+
+  public getOperations()
+  {
+    return this.options.value.getOperations();
   }
 
   public merge(type: EnumType, describer: TypeDescribeProvider): void

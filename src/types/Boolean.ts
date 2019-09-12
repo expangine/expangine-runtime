@@ -19,7 +19,7 @@ export class BooleanType extends Type<BooleanOptions>
 
   public static id = 'bool';
 
-  public static operations = new Operations<BooleanType>('bool:');
+  public static operations = new Operations('bool:');
 
   public static baseType = new BooleanType({});
 
@@ -45,6 +45,11 @@ export class BooleanType extends Type<BooleanOptions>
   public getId(): string
   {
     return BooleanType.id;
+  }
+
+  public getOperations()
+  {
+    return BooleanType.operations.map;
   }
 
   public merge(type: BooleanType, describer: TypeDescribeProvider): void

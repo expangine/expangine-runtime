@@ -2,7 +2,7 @@
 
 import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType, OperationExpression, ConstantExpression } from '../src';
 import { runtime } from '../src/runtimes/js';
-import { ListOps } from '../src/def/ListOps';
+import { ListOps } from '../src/ops/ListOps';
 
 
 // tslint:disable: no-magic-numbers

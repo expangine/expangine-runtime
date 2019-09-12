@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { AnyOps } from '../../def/AnyOps';
+import { AnyOps } from '../../ops/AnyOps';
 import { compare, copy } from '../../fns';
 
 

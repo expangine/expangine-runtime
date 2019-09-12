@@ -9,13 +9,14 @@ export interface FunctionOptions {
 }
 export declare class FunctionType extends Type<FunctionOptions> {
     static id: string;
-    static operations: Operations<FunctionType>;
+    static operations: Operations;
     static baseType: FunctionType;
     static decode(data: any[], types: TypeProvider): FunctionType;
     static encode(type: FunctionType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;
     getSubTypes(): {
         returnType: Type<any>;

@@ -1,6 +1,6 @@
 
 import { Runtime } from '../../Runtime';
-import { DateOps } from '../../def/DateOps';
+import { DateOps } from '../../ops/DateOps';
 import { _number, _date, _text, _bool } from './helper';
 import { DateType } from '../../types/Date';
 import { currentLocale } from '../../locales';
