@@ -24,12 +24,19 @@ export default (run: Runtime) =>
     _object(params.object, context)[params.key(context)]
   );
 
-  run.setOperation(ObjectOps.set, (params) => (context) => {
+  run.setOperation(ObjectOps.set, (params, scope) => (context) => {
     const object = _object(params.object, context);
     const key = params.key(context);
+
+    const popExisting = context[scope.existingValue];
+
+    context[scope.existingValue] = object[key];
+
     const value = params.value(context);
 
     object[key] = value;
+
+    context[scope.existingValue] = popExisting;
 
     return object;
   });

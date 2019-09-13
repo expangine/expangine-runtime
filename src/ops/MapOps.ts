@@ -24,7 +24,7 @@ export const MapOps =
 
   get: ops.set('get', {}, ['map', 'key']),
 
-  set: ops.set('set', { mutates: ['map'] }, ['map', 'key', 'value']),
+  set: ops.set('set', { mutates: ['map'] }, ['map', 'key', 'value'], [], ['existingValue']),
 
   has: ops.set('has', {}, ['map', 'key']),
 

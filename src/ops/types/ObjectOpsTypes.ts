@@ -39,7 +39,9 @@ export const ObjectOpsTypes =
 
   set: ops.setTypes(ObjectOps.set, 
     GivenObject,
-    { object: GivenObject, key: TextType, value: AnyType }
+    { object: GivenObject, key: TextType, value: AnyType },
+    {},
+    { existingValue: AnyType }
   ),
 
   delete: ops.setTypes(ObjectOps.delete, 

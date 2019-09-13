@@ -23,9 +23,23 @@ export default (run: Runtime) =>
     _map(params.map, context).get(params.key(context))
   );
 
-  run.setOperation(MapOps.set, (params) => (context) => 
-    _map(params.map, context).set(params.key(context), params.value(context))
-  );
+  run.setOperation(MapOps.set, (params, scope) => (context) => {
+    const map = _map(params.map, context);
+    const key = params.key(context);
+    const existing = map.get(key);
+
+    const popExisting = context[scope.existingValue];
+
+    context[scope.existingValue] = existing;
+
+    const value = params.value(context);
+
+    map.set(key, value);
+
+    context[scope.existingValue] = popExisting;
+
+    return existing;
+  });
 
   run.setOperation(MapOps.has, (params) => (context) =>
     _map(params.map, context).has(params.key(context))

@@ -1,7 +1,7 @@
 export declare const MapOps: {
     create: import("..").Operation<never, never, never>;
     get: import("..").Operation<"key" | "map", never, never>;
-    set: import("..").Operation<"key" | "value" | "map", never, never>;
+    set: import("..").Operation<"key" | "value" | "map", any, "existingValue">;
     has: import("..").Operation<"key" | "map", never, never>;
     delete: import("..").Operation<"key" | "map", never, never>;
     keys: import("..").Operation<"map", never, never>;

@@ -26,7 +26,7 @@ export const ObjectOps =
 
   get: ops.set('get', {}, ['object', 'key']),
 
-  set: ops.set('set', { mutates: ['object'] }, ['object', 'key', 'value']),
+  set: ops.set('set', { mutates: ['object'] }, ['object', 'key', 'value'], [], ['existingValue']),
 
   delete: ops.set('del', { mutates: ['object'] }, ['object', 'key']),
 

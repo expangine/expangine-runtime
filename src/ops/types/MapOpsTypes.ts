@@ -40,7 +40,9 @@ export const MapOpsTypes =
 
   set: ops.setTypes(MapOps.set, 
     GivenMapValue,
-    { map: GivenMap, key: GivenMapKey, value: GivenMapValue }
+    { map: GivenMap, key: GivenMapKey, value: GivenMapValue },
+    {},
+    { existingValue: GivenMapValue }
   ),
 
   has: ops.setTypes(MapOps.has, 
