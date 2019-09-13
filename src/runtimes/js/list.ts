@@ -704,7 +704,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(ListOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(ListOps.asText, (params) => (context) => {

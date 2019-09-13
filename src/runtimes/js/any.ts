@@ -77,7 +77,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(AnyOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(AnyOps.asText, (params) => (context) => 

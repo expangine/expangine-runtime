@@ -448,7 +448,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
   );
 
   run.setOperation(NumberOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(NumberOps.asText, (params) => (context) => 

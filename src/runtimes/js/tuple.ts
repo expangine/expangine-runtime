@@ -1,7 +1,7 @@
 
+import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isString } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { TupleOps } from '../../ops/TupleOps';
-import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isObject, isString } from '../../fns';
 import { _list, _number } from './helper';
 
 
@@ -94,7 +94,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TupleOps.asObject, (params) => (context) => 
-    _list(params.value, context).find(isObject) || {}
+    ({ value: params.value(context) })
   );
 
   run.setOperation(TupleOps.asText, (params) => (context) => 

@@ -83,7 +83,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(BooleanOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(BooleanOps.asText, (params) => (context) => 

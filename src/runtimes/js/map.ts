@@ -234,7 +234,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(MapOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(MapOps.asText, (params) => (context) => 

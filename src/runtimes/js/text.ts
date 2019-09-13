@@ -278,7 +278,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(TextOps.asText, (params) => (context) => 

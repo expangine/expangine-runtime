@@ -265,7 +265,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(DateOps.asObject, (params) => (context) => 
-    ({})
+    ({ value: params.value(context) })
   );
 
   run.setOperation(DateOps.asText, (params) => (context) => 
