@@ -1,6 +1,6 @@
 import { Runtime } from '../../Runtime';
 import { _bool } from './helper';
-import { isBoolean } from '../../fns';
+import { isBoolean, isEmpty } from '../../fns';
 import { BooleanOps } from '../../ops/BooleanOps';
 
 
@@ -48,6 +48,50 @@ export default (run: Runtime) =>
 
   run.setOperation(BooleanOps.isFalse, (params) => (context) => 
     !_bool(params.value, context, false)
+  );
+
+  // Casts
+
+  run.setOperation(BooleanOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(BooleanOps.asBoolean, (params) => (context) =>
+    !!params.value(context)
+  );
+
+  run.setOperation(BooleanOps.asDate, (params) => (context) =>
+    new Date()
+  );
+
+  run.setOperation(BooleanOps.asList, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? [] : [value];
+  });
+
+  run.setOperation(BooleanOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(BooleanOps.asNumber, (params) => (context) => {
+    const value = params.value(context);
+
+    return value ? 1 : 0;
+  });
+
+  run.setOperation(BooleanOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(BooleanOps.asText, (params) => (context) => 
+    params.value(context) ? 'true' : 'false'
+  );
+
+  run.setOperation(BooleanOps.asTuple, (params) => (context) => 
+    [params.value(context)]
   );
 
 };

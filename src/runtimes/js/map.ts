@@ -207,6 +207,44 @@ export default (run: Runtime) =>
     run.getOperation(MapOps.cmp.id)(params, scope)(context) >= 0
   );
 
+  // Casts
+
+  run.setOperation(MapOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(MapOps.asBoolean, (params) => (context) =>
+    _map(params.value, context).size > 0
+  );
+
+  run.setOperation(MapOps.asDate, (params) => (context) =>
+    new Date()
+  );
+
+  run.setOperation(MapOps.asList, (params) => (context) => 
+    toArray(_map(params.value, context).values())
+  );
+
+  run.setOperation(MapOps.asMap, (params) => (context) => 
+    params.value(context)
+  );
+
+  run.setOperation(MapOps.asNumber, (params) => (context) => 
+    _map(params.value, context).size
+  );
+
+  run.setOperation(MapOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(MapOps.asText, (params) => (context) => 
+    ''
+  );
+
+  run.setOperation(MapOps.asTuple, (params) => (context) => 
+    [params.value(context)]
+  );
+
 };
 
 function handleMap<R>(map: Map<any, any>, context: object, scope: Record<string, string>, handle: (map: Map<any, any>) => R): R

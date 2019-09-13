@@ -4,8 +4,9 @@ import { DateOps } from '../../ops/DateOps';
 import { _number, _date, _text, _bool } from './helper';
 import { DateType } from '../../types/Date';
 import { currentLocale } from '../../locales';
-import { compareDates, startOf, mutate, add, getters, setters, endOf, getDaysInMonth, getDaysInYear, getWeeksInYear, diff, adjusters, getDateOffset, isDaylightSavingTime, isLeapYear, Unit } from '../../util/DateFunctions';
+import { compareDates, startOf, mutate, add, getters, setters, endOf, getDaysInMonth, getDaysInYear, getWeeksInYear, diff, adjusters, getDateOffset, isDaylightSavingTime, isLeapYear, Unit, parse } from '../../util/DateFunctions';
 import { DateFormat } from '../../util/DateFormat';
+import { isEmpty } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -231,6 +232,48 @@ export default (run: Runtime) =>
 
   run.setOperation(DateOps.isDST, (params) => (context) => 
     isLeapYear(_date(params.value, context))
+  );
+
+  // Casts
+
+  run.setOperation(DateOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(DateOps.asBoolean, (params) => (context) =>
+    true
+  );
+
+  run.setOperation(DateOps.asDate, (params) => (context) =>
+    parse(params.value(context)) || new Date()
+  );
+
+  run.setOperation(DateOps.asList, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? [] : [value];
+  });
+
+  run.setOperation(DateOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(DateOps.asNumber, (params) => (context) => 
+    _date(params.value, context).getTime()
+  );
+
+  run.setOperation(DateOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(DateOps.asText, (params) => (context) => 
+    params.value(context) + ''
+  );
+
+  run.setOperation(DateOps.asTuple, (params) => (context) => 
+    [params.value(context)]
   );
 
 };

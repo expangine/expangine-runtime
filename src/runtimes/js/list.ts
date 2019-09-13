@@ -1,9 +1,9 @@
 
+import { getCompare, isBoolean, isEmpty, isDate, isNumber, isString } from '../../fns';
 import { Runtime } from '../../Runtime';
+import { Command } from '../../Command';
 import { ListOps } from '../../ops/ListOps';
 import { _list, _optional, _number, saveScope, restoreScope, _text, _bool } from './helper';
-import { Command } from '../../Command';
-import { getCompare } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -668,7 +668,54 @@ export default (run: Runtime) =>
   run.setOperation(ListOps.isGreaterOrEqual, (params, scope) => (context) =>
     run.getOperation(ListOps.cmp.id)(params, scope)(context) >= 0
   );
-  
+
+  // Casts
+
+  run.setOperation(ListOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(ListOps.asBoolean, (params) => (context) => {
+    const value = _list(params.value, context);
+
+    return isBoolean(value[0]) ? value[0] : !isEmpty(value);
+  });
+
+  run.setOperation(ListOps.asDate, (params) => (context) => {
+    const value = _list(params.value, context);
+
+    return isDate(value[0]) ? value[0] : new Date();
+  });
+
+  run.setOperation(ListOps.asList, (params) => (context) => 
+    _list(params.value, context)
+  );
+
+  run.setOperation(ListOps.asMap, (params) => (context) => {
+    const value = _list(params.value, context);
+
+    return new Map(value.map((v, i) => [i.toString(), v]));
+  });
+
+  run.setOperation(ListOps.asNumber, (params) => (context) => {
+    const value = _list(params.value, context);
+
+    return isNumber(value[0]) ? value[0] : value.length;
+  });
+
+  run.setOperation(ListOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(ListOps.asText, (params) => (context) => {
+    const value = _list(params.value, context);
+
+    return isString(value[0]) ? value[0] : ''
+  });
+
+  run.setOperation(ListOps.asTuple, (params) => (context) => 
+    [params.value(context)]
+  );
 
 };
 

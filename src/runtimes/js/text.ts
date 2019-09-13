@@ -2,7 +2,8 @@
 import { Runtime } from '../../Runtime';
 import { TextOps } from '../../ops/TextOps';
 import { _number, _bool, _text, _numberMaybe } from './helper';
-import { isString } from '../../fns';
+import { isString, isEmpty } from '../../fns';
+import { parse } from '../../util/DateFunctions';
 
 
 
@@ -245,6 +246,48 @@ export default (run: Runtime) =>
 
     return value.localeCompare(value.toUpperCase()) === 0;
   });
+
+  // Casts
+
+  run.setOperation(TextOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(TextOps.asBoolean, (params) => (context) =>
+    /^(true|t|1|y|x)$/.test(_text(params.value, context))
+  );
+
+  run.setOperation(TextOps.asDate, (params) => (context) =>
+    parse(params.value(context)) || new Date()
+  );
+
+  run.setOperation(TextOps.asList, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? [] : [value];
+  });
+
+  run.setOperation(TextOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(TextOps.asNumber, (params) => (context) => 
+    _number(params.value, context, 0)
+  );
+
+  run.setOperation(TextOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(TextOps.asText, (params) => (context) => 
+    params.value(context)
+  );
+
+  run.setOperation(TextOps.asTuple, (params) => (context) => 
+    [params.value(context)]
+  );
 
 };
 

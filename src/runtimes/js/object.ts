@@ -1,7 +1,7 @@
 
+import { compare, copy, toString, isEmpty } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { ObjectOps } from '../../ops/ObjectOps';
-import { compare, copy } from '../../fns';
 import { _object } from './helper';
 
 
@@ -76,6 +76,48 @@ export default (run: Runtime) =>
 
   run.setOperation(ObjectOps.isGreaterOrEqual, (params) => (context) => 
     compare(_object(params.value, context), _object(params.test, context)) >= 0
+  );
+
+  // Casts
+
+  run.setOperation(ObjectOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(ObjectOps.asBoolean, (params) => (context) =>
+    true
+  );
+
+  run.setOperation(ObjectOps.asDate, (params) => (context) =>
+    new Date()
+  );
+
+  run.setOperation(ObjectOps.asList, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? [] : [value];
+  });
+
+  run.setOperation(ObjectOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(ObjectOps.asNumber, (params) => (context) => 
+    0
+  );
+
+  run.setOperation(ObjectOps.asObject, (params) => (context) => 
+    params.value(context)
+  );
+
+  run.setOperation(ObjectOps.asText, (params) => (context) => 
+    toString(params.value(context))
+  );
+
+  run.setOperation(ObjectOps.asTuple, (params) => (context) => 
+    [params.value(context)]
   );
 
 };

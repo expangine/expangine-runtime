@@ -297,3 +297,10 @@ export function pad(x: string, length: number, padding: string, before: boolean)
 
   return x;
 }
+
+export function toString(x: any)
+{
+  return isArray(x) || isObject(x)
+    ? JSON.stringify(x)
+    : x + '';
+}

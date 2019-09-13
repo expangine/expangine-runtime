@@ -1,9 +1,9 @@
 
+import { isNumber, isUndefined, isString, isWhole, isEmpty } from '../../fns';
 import { Runtime } from '../../Runtime';
+import { parse } from '../../util/DateFunctions';
 import { NumberOps } from '../../ops/NumberOps';
 import { _number, _bool, _text, _numberMaybe, _textMaybe } from './helper';
-import { isNumber, isUndefined, isString, isWhole } from '../../fns';
-
 
 
 const DEFAULT_BASE = 10;
@@ -417,6 +417,46 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
 
   run.setOperation(NumberOps.isDivisible, (params) => (context) =>
     Math.abs(_number(params.value, context) % _number(params.by, context)) <= _number(params.epsilon, context, epsilon)
+  );
+
+  // Casts
+
+  run.setOperation(NumberOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(NumberOps.asBoolean, (params) => (context) =>
+    !!params.value(context)
+  );
+
+  run.setOperation(NumberOps.asDate, (params) => (context) =>
+    parse(params.value(context)) || new Date()
+  );
+
+  run.setOperation(NumberOps.asList, (params) => (context) =>
+    [params.value(context)]
+  );
+
+  run.setOperation(NumberOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(NumberOps.asNumber, (params) => (context) => 
+    params.value(context)
+  );
+
+  run.setOperation(NumberOps.asObject, (params) => (context) => 
+    ({})
+  );
+
+  run.setOperation(NumberOps.asText, (params) => (context) => 
+    params.value(context) + ''
+  );
+
+  run.setOperation(NumberOps.asTuple, (params) => (context) => 
+    [params.value(context)]
   );
 
 };

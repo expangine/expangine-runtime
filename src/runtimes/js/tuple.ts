@@ -1,7 +1,7 @@
 
 import { Runtime } from '../../Runtime';
 import { TupleOps } from '../../ops/TupleOps';
-import { compare, copy } from '../../fns';
+import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isObject, isString } from '../../fns';
 import { _list, _number } from './helper';
 
 
@@ -61,6 +61,48 @@ export default (run: Runtime) =>
 
   run.setOperation(TupleOps.isGreaterOrEqual, (params) => (context) => 
     compare(params.value(context), params.test(context)) >= 0
+  );
+
+  // Casts
+
+  run.setOperation(TupleOps.asAny, (params) => (context) =>
+    params.value(context)
+  );
+
+  run.setOperation(TupleOps.asBoolean, (params) => (context) =>
+    _list(params.value, context).find(isBoolean) || false
+  );
+
+  run.setOperation(TupleOps.asDate, (params) => (context) =>
+    _list(params.value, context).find(isDate) || new Date()
+  );
+
+  run.setOperation(TupleOps.asList, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? [] : [value];
+  });
+
+  run.setOperation(TupleOps.asMap, (params) => (context) => {
+    const value = params.value(context);
+
+    return isEmpty(value) ? new Map() : new Map([['0', value]]);
+  });
+
+  run.setOperation(TupleOps.asNumber, (params) => (context) => 
+    _list(params.value, context).find(isNumber) || 0
+  );
+
+  run.setOperation(TupleOps.asObject, (params) => (context) => 
+    _list(params.value, context).find(isObject) || {}
+  );
+
+  run.setOperation(TupleOps.asText, (params) => (context) => 
+    _list(params.value, context).find(isString) || ''
+  );
+
+  run.setOperation(TupleOps.asTuple, (params) => (context) => 
+    params.value(context)
   );
 
 };
