@@ -8,6 +8,7 @@ export declare type CommandsFor<T extends string | never> = [T] extends [never] 
 export declare type OperationToCommand<P extends string = never, O extends string = never, S extends string = never> = (params: CommandParams<P, O>, scope: Record<S, string>) => Command;
 export declare type CommandBuilder<T extends Expression = any> = (expr: T, commands: CommandProvider) => Command;
 export interface CommandProvider {
+    returnProperty: string;
     getCommand(expr: Expression): Command;
     getOperation(id: string): OperationToCommand;
     getOperationScopeDefaults(id: string): Record<string, string>;

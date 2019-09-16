@@ -20,6 +20,8 @@ import { DoExpression } from '../../exprs/Do';
 import { TemplateExpression } from '../../exprs/Template';
 import { UpdateExpression } from '../../exprs/Update';
 import { InvokeExpression } from '../../exprs/Invoke';
+import { ReturnExpression } from '../../exprs/Return';
+import { restoreScope } from './helper';
 
 
 
@@ -132,14 +134,14 @@ export default (run: Runtime) =>
   run.setExpression(OperationExpression, (expr, thisRun) => 
   {
     const params = objectMap(expr.params, e => thisRun.getCommand(e));
-    const op = run.getOperation(expr.name);
+    const op = thisRun.getOperation(expr.name);
 
     if (!op) 
     { 
       throw new Error(`Operation with ${expr.name} is not defined in the given runtime.`);
     }
     
-    const defaults = run.getOperationScopeDefaults(expr.name);
+    const defaults = thisRun.getOperationScopeDefaults(expr.name);
     let scopeAlias = expr.scopeAlias;
 
     if (defaults) 
@@ -158,23 +160,38 @@ export default (run: Runtime) =>
       }
     }
 
-    return op(params, scopeAlias);
-  });
+    const operationCommand = op(params, scopeAlias);
 
-  run.setExpression(InvokeExpression, (expr, thisRun) =>
-  {
-    const func = thisRun.getFunction(expr.name);
-    const command = thisRun.getCommand(func.options.expression);
-    const args = objectMap(expr.args, a => thisRun.getCommand(a));
+    return (context) =>
+    {
+      if (thisRun.returnProperty in context) return;
 
-    return (context) => command(objectMap(args, a => a(context)));
+      return operationCommand(context);
+    };
   });
 
   run.setExpression(ChainExpression, (expr, thisRun) => 
   { 
     const chain = expr.chain.map(data => thisRun.getCommand(data));
 
-    return (context) => chain.reduce<any>((_, cmd) => cmd(context), undefined)
+    return (context) => 
+    {
+      if (thisRun.returnProperty in context) return;
+
+      let last;
+
+      for (const cmd of chain)
+      {
+        last = cmd(context);
+
+        if (thisRun.returnProperty in context)
+        {
+          return;
+        }
+      }
+
+      return last;
+    };
   });
 
   run.setExpression(IfExpression, (expr, thisRun) => 
@@ -184,15 +201,21 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       for (const caseExpression of cases)
       {
         const [test, result] = caseExpression;
 
         if (test(context)) 
         {
-          return result(context);
+          return thisRun.returnProperty in context
+            ? undefined
+            : result(context);
         }
       }
+      
+      if (thisRun.returnProperty in context) return;
 
       return otherwise(context);
     };
@@ -211,7 +234,11 @@ export default (run: Runtime) =>
     
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       const value = valueCommand(context);
+
+      if (thisRun.returnProperty in context) return;
 
       for (const [tests, result] of cases)
       {
@@ -221,11 +248,15 @@ export default (run: Runtime) =>
         { 
           const test = testCommand(context);
 
+          if (thisRun.returnProperty in context) return;
+
           if (isEqual({ value, test }, noScope)(context)) 
           {
             matches = true;
             break;
           }
+
+          if (thisRun.returnProperty in context) return;
         }
 
         if (matches) 
@@ -252,9 +283,11 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       for (const and of expressions)
       {
-        if (!and(context))
+        if (!and(context) || thisRun.returnProperty in context)
         {
           return false;
         }
@@ -271,9 +304,11 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       for (const or of expressions)
       {
-        if (or(context))
+        if (or(context) || thisRun.returnProperty in context)
         {
           return true;
         }
@@ -294,6 +329,8 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       const popVariable = context[variable];
       const popBreak = context[breakVariable];
 
@@ -305,17 +342,27 @@ export default (run: Runtime) =>
       let last;
       const dir = i < stop ? 1 : -1;
 
+      if (thisRun.returnProperty in context)
+      {
+        context[breakVariable] = popBreak;
+
+        return;
+      }
+
       while ((dir === 1 ? i <= stop : i >= stop) && iterations++ < max) 
       {
         context[variable] = i;
         last = body(context);
 
-        if (context[breakVariable]) {
+        if (context[breakVariable] || thisRun.returnProperty in context) 
+        {
           break;
         }
 
         i += dir;
         stop = end(context);
+
+        if (thisRun.returnProperty in context) return;
       }
 
       context[variable] = popVariable;
@@ -334,6 +381,8 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       let iterations = 0;
       let last;
 
@@ -343,9 +392,12 @@ export default (run: Runtime) =>
 
       while (condition(context) && iterations++ < max)
       {
+        if (thisRun.returnProperty in context) return;
+
         last = body(context);
 
-        if (context[breakVariable]) {
+        if (context[breakVariable] || thisRun.returnProperty in context) 
+        {
           break;
         }
       }
@@ -365,6 +417,8 @@ export default (run: Runtime) =>
 
     return (context) => 
     {
+      if (thisRun.returnProperty in context) return;
+
       let iterations = 0;
       let last;
 
@@ -374,9 +428,12 @@ export default (run: Runtime) =>
 
       do
       {
+        if (thisRun.returnProperty in context) return;
+
         last = body(context);
 
-        if (context[breakVariable]) {
+        if (context[breakVariable] || thisRun.returnProperty in context) 
+        {
           break;
         }
 
@@ -395,6 +452,8 @@ export default (run: Runtime) =>
 
     return (context) =>
     {
+      if (thisRun.returnProperty in context) return;
+
       const pop = {};
 
       for (const prop in define) 
@@ -405,14 +464,18 @@ export default (run: Runtime) =>
       for (const prop in define) 
       {
         context[prop] = define[prop](context);
+
+        if (thisRun.returnProperty in context)
+        {
+          restoreScope(context, pop);
+
+          return;
+        }
       }
 
-      const result = body(context)
+      const result = body(context);
 
-      for (const prop in define) 
-      {
-        context[prop] = pop[prop];
-      }
+      restoreScope(context, pop);
 
       return result;
     };
@@ -438,6 +501,31 @@ export default (run: Runtime) =>
 
       return sections.reduce((out, section) => out + section(source), '');
     };
+  });
+
+  run.setExpression(InvokeExpression, (expr, thisRun) =>
+  {
+    const func = thisRun.getFunction(expr.name);
+    const command = thisRun.getCommand(func.options.expression);
+    const args = objectMap(expr.args, a => thisRun.getCommand(a));
+
+    return (context) => 
+    {
+      if (thisRun.returnProperty in context) return;
+
+      const params = objectMap(args, a => a(context));
+
+      command(params);
+
+      return params[thisRun.returnProperty];
+    };
+  });
+
+  run.setExpression(ReturnExpression, (expr, thisRun) =>
+  {
+    const returnValue = thisRun.getCommand(expr.expression);
+
+    return (context) => context[thisRun.returnProperty] = returnValue(context);
   });
 
 };

@@ -34,6 +34,7 @@ export type CommandBuilder<
 
 export interface CommandProvider 
 {
+  returnProperty: string;
   getCommand(expr: Expression): Command;
   getOperation(id: string): OperationToCommand;
   getOperationScopeDefaults(id: string): Record<string, string>;

@@ -4,9 +4,11 @@ import { Expression, ExpressionClass } from './Expression';
 import { Operation } from './Operation';
 import { FunctionType } from './types/Function';
 export declare class Runtime {
+    static DEFAULT_RETURN_PROPERTY: string;
     defs: Definitions;
     ops: Record<string, OperationToCommand<any, any, any>>;
     exprs: Record<string, CommandBuilder>;
+    returnProperty: string;
     constructor(defs: Definitions);
     extend(defs?: Definitions): Runtime;
     setOperation<P extends string = any, O extends string = any, S extends string = any>(operation: Operation<P, O, S>, impl: OperationToCommand<P, O, S>): this;

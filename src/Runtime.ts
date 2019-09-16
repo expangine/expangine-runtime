@@ -10,15 +10,19 @@ import { FunctionType } from './types/Function';
 export class Runtime 
 {
 
+  public static DEFAULT_RETURN_PROPERTY = '$$return';
+
   public defs: Definitions;
   public ops: Record<string, OperationToCommand<any, any, any>>;
   public exprs: Record<string, CommandBuilder>;
+  public returnProperty: string;
 
   public constructor (defs: Definitions) 
   {
     this.defs = defs;
     this.ops = Object.create(null);
     this.exprs = Object.create(null);
+    this.returnProperty = Runtime.DEFAULT_RETURN_PROPERTY;
   }
 
   public extend(defs?: Definitions): Runtime
@@ -27,6 +31,7 @@ export class Runtime
 
     Object.assign(copy.ops, this.ops);
     Object.assign(copy.exprs, this.exprs);
+    copy.returnProperty = this.returnProperty;
 
     return copy;
   }

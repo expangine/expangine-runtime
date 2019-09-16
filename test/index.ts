@@ -160,10 +160,12 @@ describe('index', () => {
       'timesTwo', 
       NumberType, 
       { x: NumberType }, 
-      ['op', 'num:*', {
-        value: ['get', ['x']],
-        multiplier: 2
-      }]
+      ['return', 
+        ['op', 'num:*', {
+          value: ['get', ['x']],
+          multiplier: 2
+        }]
+      ]
     );
 
     const process = runtime.eval(['invoke', 'timesTwo', {
@@ -173,10 +175,36 @@ describe('index', () => {
     const context = {
       x: 4
     };
-
+    
     const result = process(context);
 
     expect(result).toEqual(6);
+  });
+
+  it('functions early exit', () =>
+  {
+    runtime.defs.addFunction(
+      'isEven', 
+      NumberType, 
+      { x: NumberType }, 
+      ['chain', [
+        ['if', [
+          [['op', 'num:%?', { value: ['get', ['x']], by: 2 }], 
+            ['return', true]]
+        ]],
+        ['return', false]
+      ]]
+    );
+
+    const process = runtime.eval(['invoke', 'isEven', {
+      x: ['get', ['x']]
+    }]);
+
+    expect(process({x: 0})).toStrictEqual(true);
+    expect(process({x: 1})).toStrictEqual(false);
+    expect(process({x: 2})).toStrictEqual(true);
+    expect(process({x: 3})).toStrictEqual(false);
+    expect(process({x: 4})).toStrictEqual(true);
   });
 
   it('tofromJson', () => 
