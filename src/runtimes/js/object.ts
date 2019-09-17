@@ -1,7 +1,8 @@
 
-import { compare, copy, toString, isEmpty } from '../../fns';
+import { compare, copy, toString, isEmpty, isObject, isBoolean, isDate, isArray, isMap, isNumber, isString } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { ObjectOps } from '../../ops/ObjectOps';
+import { Command } from '../../Command';
 import { _object } from './helper';
 
 
@@ -92,27 +93,23 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ObjectOps.asBoolean, (params) => (context) =>
-    true
+    tryCastValue(params.value, context, isBoolean, () => true)
   );
 
   run.setOperation(ObjectOps.asDate, (params) => (context) =>
-    new Date()
+    tryCastValue(params.value, context, isDate, () => new Date())
   );
 
-  run.setOperation(ObjectOps.asList, (params) => (context) => {
-    const value = params.value(context);
+  run.setOperation(ObjectOps.asList, (params) => (context) => 
+    tryCastValue(params.value, context, isArray, v => isEmpty(v) ? [] : [v])
+  );
 
-    return isEmpty(value) ? [] : [value];
-  });
-
-  run.setOperation(ObjectOps.asMap, (params) => (context) => {
-    const value = params.value(context);
-
-    return isEmpty(value) ? new Map() : new Map([['0', value]]);
-  });
+  run.setOperation(ObjectOps.asMap, (params) => (context) => 
+    tryCastValue(params.value, context, isMap, v => isEmpty(v) ? new Map() : new Map([['0', v]]))
+  );
 
   run.setOperation(ObjectOps.asNumber, (params) => (context) => 
-    0
+    tryCastValue(params.value, context, isNumber, () => 0)
   );
 
   run.setOperation(ObjectOps.asObject, (params) => (context) => 
@@ -120,11 +117,20 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ObjectOps.asText, (params) => (context) => 
-    toString(params.value(context))
+    tryCastValue(params.value, context, isString, v => toString(v))
   );
 
   run.setOperation(ObjectOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    tryCastValue(params.value, context, isArray, v => [v])
   );
 
 };
+
+function tryCastValue(value: Command, context: any, isType: (value: any) => boolean, otherwise: (value: any) => any)
+{
+  const val = value(context);
+
+  return isObject(val) && isType(val.value)
+    ? val.value
+    : otherwise(val);
+}

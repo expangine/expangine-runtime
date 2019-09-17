@@ -273,9 +273,11 @@ export default (run: Runtime) =>
     return isEmpty(value) ? new Map() : new Map([['0', value]]);
   });
 
-  run.setOperation(TextOps.asNumber, (params) => (context) => 
-    _number(params.value, context, 0)
-  );
+  run.setOperation(TextOps.asNumber, (params) => (context) => {
+    const value = parseFloat(params.value(context));
+
+    return isFinite(value) ? value : 0;
+  });
 
   run.setOperation(TextOps.asObject, (params) => (context) => 
     ({ value: params.value(context) })
