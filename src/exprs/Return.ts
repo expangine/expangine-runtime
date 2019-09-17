@@ -3,7 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 
 
-const INDEX_EXPR = 1;
+const INDEX_VALUE = 1;
 
 export class ReturnExpression extends Expression 
 {
@@ -12,26 +12,26 @@ export class ReturnExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): ReturnExpression 
   {
-    const expression = exprs.getExpression(data[INDEX_EXPR]);
+    const value = exprs.getExpression(data[INDEX_VALUE]);
     
-    return new ReturnExpression(expression);
+    return new ReturnExpression(value);
   }
 
   public static encode(expr: ReturnExpression): any 
   {
-    const returnValue = expr.expression.encode();
+    const returnValue = expr.value.encode();
 
     return returnValue !== undefined
       ? [this.id, returnValue]
-      : [this.id];
+      : this.id;
   }
 
-  public expression: Expression;
+  public value: Expression;
 
-  public constructor(expression: Expression) 
+  public constructor(value: Expression) 
   {
     super();
-    this.expression = expression;
+    this.value = value;
   }
 
   public getId(): string
@@ -41,9 +41,7 @@ export class ReturnExpression extends Expression
 
   public getComplexity(def: Definitions): number
   {
-    return this.expression
-      ? this.expression.getComplexity(def)
-      : 0;
+    return this.value.getComplexity(def);
   }
 
   public getScope(): null

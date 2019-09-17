@@ -523,7 +523,7 @@ export default (run: Runtime) =>
 
   run.setExpression(ReturnExpression, (expr, thisRun) =>
   {
-    const returnValue = thisRun.getCommand(expr.expression);
+    const returnValue = thisRun.getCommand(expr.value);
 
     return (context) => context[thisRun.returnProperty] = returnValue(context);
   });

@@ -4,8 +4,8 @@ export declare class ReturnExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): ReturnExpression;
     static encode(expr: ReturnExpression): any;
-    expression: Expression;
-    constructor(expression: Expression);
+    value: Expression;
+    constructor(value: Expression);
     getId(): string;
     getComplexity(def: Definitions): number;
     getScope(): null;
