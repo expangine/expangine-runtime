@@ -1,8 +1,8 @@
 
 import { Runtime } from '../../Runtime';
 import { TextOps } from '../../ops/TextOps';
-import { _number, _bool, _text, _numberMaybe } from './helper';
-import { isString, isEmpty } from '../../fns';
+import { _number, _bool, _text, _numberMaybe, _asList, _asMap, _asObject, _asTuple } from './helper';
+import { isString } from '../../fns';
 import { parse } from '../../util/DateFunctions';
 
 
@@ -261,17 +261,13 @@ export default (run: Runtime) =>
     parse(params.value(context)) || new Date()
   );
 
-  run.setOperation(TextOps.asList, (params) => (context) => {
-    const value = params.value(context);
+  run.setOperation(TextOps.asList, (params) => (context) => 
+    _asList(params.value, context)
+  );
 
-    return isEmpty(value) ? [] : [value];
-  });
-
-  run.setOperation(TextOps.asMap, (params) => (context) => {
-    const value = params.value(context);
-
-    return isEmpty(value) ? new Map() : new Map([['0', value]]);
-  });
+  run.setOperation(TextOps.asMap, (params) => (context) => 
+    _asMap(params.value, context)
+  );
 
   run.setOperation(TextOps.asNumber, (params) => (context) => {
     const value = parseFloat(params.value(context));
@@ -280,7 +276,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(TextOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+    _asObject(params.value, context)
   );
 
   run.setOperation(TextOps.asText, (params) => (context) => 
@@ -288,7 +284,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TextOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    _asTuple(params.value, context)
   );
 
 };

@@ -109,7 +109,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(ObjectOps.asMap, (params) => (context) => 
-    tryCastValue(params.value, context, isMap, v => isEmpty(v) ? new Map() : new Map([['0', v]]))
+    tryCastValue(params.value, context, isMap, v => isEmpty(v) ? new Map() : new Map([['value', v]]))
   );
 
   run.setOperation(ObjectOps.asNumber, (params) => (context) => 

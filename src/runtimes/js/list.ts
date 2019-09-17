@@ -3,7 +3,7 @@ import { getCompare, isBoolean, isEmpty, isDate, isNumber, isString, isArray } f
 import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
 import { ListOps } from '../../ops/ListOps';
-import { _list, _optional, _number, saveScope, restoreScope, _text, _bool } from './helper';
+import { _list, _optional, _number, saveScope, restoreScope, _text, _bool, _asTuple, _asObject } from './helper';
 
 
 // tslint:disable: no-magic-numbers
@@ -679,17 +679,13 @@ export default (run: Runtime) =>
     params.value(context)
   );
 
-  run.setOperation(ListOps.asBoolean, (params) => (context) => {
-    const value = _list(params.value, context);
+  run.setOperation(ListOps.asBoolean, (params) => (context) =>
+    tryCastValue(params.value, context, isBoolean, (v) => !isEmpty(v))
+  );
 
-    return isBoolean(value[0]) ? value[0] : !isEmpty(value);
-  });
-
-  run.setOperation(ListOps.asDate, (params) => (context) => {
-    const value = _list(params.value, context);
-
-    return isDate(value[0]) ? value[0] : new Date();
-  });
+  run.setOperation(ListOps.asDate, (params) => (context) =>
+    tryCastValue(params.value, context, isDate, () => new Date())
+  );
 
   run.setOperation(ListOps.asList, (params) => (context) => 
     _list(params.value, context)
@@ -701,27 +697,32 @@ export default (run: Runtime) =>
     return new Map(value.map((v, i) => [i.toString(), v]));
   });
 
-  run.setOperation(ListOps.asNumber, (params) => (context) => {
-    const value = _list(params.value, context);
-
-    return isNumber(value[0]) ? value[0] : value.length;
-  });
-
-  run.setOperation(ListOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+  run.setOperation(ListOps.asNumber, (params) => (context) => 
+    tryCastValue(params.value, context, isNumber, (v) => v.length)
   );
 
-  run.setOperation(ListOps.asText, (params) => (context) => {
-    const value = _list(params.value, context);
+  run.setOperation(ListOps.asObject, (params) => (context) => 
+    _asObject(params.value, context)
+  );
 
-    return isString(value[0]) ? value[0] : ''
-  });
+  run.setOperation(ListOps.asText, (params) => (context) => 
+    tryCastValue(params.value, context, isString, () => '')
+  );
 
   run.setOperation(ListOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    _asTuple(params.value, context)
   );
 
 };
+
+function tryCastValue(value: Command, context: any, isType: (value: any) => boolean, otherwise: (value: any) => any)
+{
+  const val = value(context);
+
+  return isArray(val) && isType(val[0])
+    ? val[0]
+    : otherwise(val);
+}
 
 function swap(arr: any[], i: number, k: number)
 {

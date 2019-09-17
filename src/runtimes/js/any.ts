@@ -1,8 +1,9 @@
 
 import { Runtime } from '../../Runtime';
 import { AnyOps } from '../../ops/AnyOps';
-import { compare, copy, isEmpty, toString } from '../../fns';
+import { compare, copy, toString } from '../../fns';
 import { parse } from '../../util/DateFunctions';
+import { _asList, _asTuple, _asMap, _asObject } from './helper';
 
 
 export default (run: Runtime) =>
@@ -62,17 +63,13 @@ export default (run: Runtime) =>
     parse(params.value(context)) || new Date()
   );
 
-  run.setOperation(AnyOps.asList, (params) => (context) => {
-    const value = params.value(context);
+  run.setOperation(AnyOps.asList, (params) => (context) =>
+    _asList(params.value, context)
+  );
 
-    return isEmpty(value) ? [] : [value];
-  });
-
-  run.setOperation(AnyOps.asMap, (params) => (context) => {
-    const value = params.value(context);
-
-    return isEmpty(value) ? new Map() : new Map([['0', value]]);
-  });
+  run.setOperation(AnyOps.asMap, (params) => (context) => 
+    _asMap(params.value, context)
+  );
 
   run.setOperation(AnyOps.asNumber, (params) => (context) => {
     const value = parseFloat(params.value(context));
@@ -81,7 +78,7 @@ export default (run: Runtime) =>
   });
 
   run.setOperation(AnyOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+    _asObject(params.value, context)
   );
 
   run.setOperation(AnyOps.asText, (params) => (context) => 
@@ -89,7 +86,7 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(AnyOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    _asTuple(params.value, context)
   );
 
 };

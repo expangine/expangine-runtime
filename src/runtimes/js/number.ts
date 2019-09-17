@@ -1,9 +1,9 @@
 
-import { isNumber, isUndefined, isString, isWhole, isEmpty } from '../../fns';
+import { isNumber, isUndefined, isString, isWhole } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { parse } from '../../util/DateFunctions';
 import { NumberOps } from '../../ops/NumberOps';
-import { _number, _bool, _text, _numberMaybe, _textMaybe } from './helper';
+import { _number, _bool, _text, _numberMaybe, _textMaybe, _asTuple, _asObject, _asMap, _asList } from './helper';
 
 
 const DEFAULT_BASE = 10;
@@ -434,21 +434,19 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
   );
 
   run.setOperation(NumberOps.asList, (params) => (context) =>
-    [params.value(context)]
+    _asList(params.value, context)
   );
 
-  run.setOperation(NumberOps.asMap, (params) => (context) => {
-    const value = params.value(context);
-
-    return isEmpty(value) ? new Map() : new Map([['0', value]]);
-  });
+  run.setOperation(NumberOps.asMap, (params) => (context) =>
+    _asMap(params.value, context)
+  );
 
   run.setOperation(NumberOps.asNumber, (params) => (context) => 
     params.value(context)
   );
 
   run.setOperation(NumberOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+    _asObject(params.value, context)
   );
 
   run.setOperation(NumberOps.asText, (params) => (context) => 
@@ -456,7 +454,7 @@ export default (run: Runtime, epsilon: number = 0.000001) =>
   );
 
   run.setOperation(NumberOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    _asTuple(params.value, context)
   );
 
 };

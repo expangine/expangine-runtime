@@ -80,3 +80,24 @@ export const _map = _typedDynamic<Map<any, any>> (isMap, () => new Map());
 export const _object = _typedDynamic<any>(isObject, () => ({}));
 
 export const _date = _typedDynamic<Date>(isDate, () => new Date());
+
+
+export function _asList(getValue: Command, context: any)
+{
+  return [ getValue(context) ];
+}
+
+export function _asMap(getValue: Command, context: any)
+{
+  return new Map([['value', getValue(context) ]]);
+}
+
+export function _asObject(getValue: Command, context: any)
+{
+  return { value: getValue(context) };
+}
+
+export function _asTuple(getValue: Command, context: any)
+{
+  return [ getValue(context) ];
+}

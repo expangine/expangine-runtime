@@ -1,8 +1,9 @@
 
-import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isString, isArray } from '../../fns';
+import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isString, isArray, isMap, isObject } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { TupleOps } from '../../ops/TupleOps';
 import { _list, _number } from './helper';
+import { Command } from '../../Command';
 
 
 export default (run: Runtime) =>
@@ -74,35 +75,31 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(TupleOps.asBoolean, (params) => (context) =>
-    _list(params.value, context).find(isBoolean) || false
+    tryCastValue(params.value, context, isBoolean, (v) => v.find ? v.find(isBoolean) || false : false)
   );
 
   run.setOperation(TupleOps.asDate, (params) => (context) =>
-    _list(params.value, context).find(isDate) || new Date()
+    tryCastValue(params.value, context, isDate, (v) => v.find ? v.find(isDate) || new Date() : new Date())
   );
 
-  run.setOperation(TupleOps.asList, (params) => (context) => {
-    const value = params.value(context);
+  run.setOperation(TupleOps.asList, (params) => (context) => 
+    tryCastValue(params.value, context, isArray, (v) => isEmpty(v) ? [] : [v])
+  );
 
-    return isEmpty(value) ? [] : [value];
-  });
-
-  run.setOperation(TupleOps.asMap, (params) => (context) => {
-    const value = params.value(context);
-
-    return isEmpty(value) ? new Map() : new Map([['0', value]]);
-  });
+  run.setOperation(TupleOps.asMap, (params) => (context) => 
+    tryCastValue(params.value, context, isMap, (v) => isEmpty(v) ? new Map() : new Map([['value', v]]))
+  );
 
   run.setOperation(TupleOps.asNumber, (params) => (context) => 
-    _list(params.value, context).find(isNumber) || 0
+    tryCastValue(params.value, context, isNumber, (v) => v.find ? v.find(isNumber) || 0 : 0)
   );
 
   run.setOperation(TupleOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+    tryCastValue(params.value, context, isObject, (value) => ({ value }))
   );
 
   run.setOperation(TupleOps.asText, (params) => (context) => 
-    _list(params.value, context).find(isString) || ''
+    tryCastValue(params.value, context, isString, (v) => v.find ? v.find(isString) || '' : '')
   );
 
   run.setOperation(TupleOps.asTuple, (params) => (context) => 
@@ -110,3 +107,12 @@ export default (run: Runtime) =>
   );
 
 };
+
+function tryCastValue(value: Command, context: any, isType: (value: any) => boolean, otherwise: (value: any) => any)
+{
+  const val = value(context);
+
+  return isArray(val) && isType(val[0])
+    ? val[0]
+    : otherwise(val);
+}

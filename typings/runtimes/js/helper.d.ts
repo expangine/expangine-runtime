@@ -13,3 +13,9 @@ export declare const _list: (cmd: Command, context: object, invalidValue?: () =>
 export declare const _map: (cmd: Command, context: object, invalidValue?: () => Map<any, any>) => Map<any, any>;
 export declare const _object: (cmd: Command, context: object, invalidValue?: () => any) => any;
 export declare const _date: (cmd: Command, context: object, invalidValue?: () => Date) => Date;
+export declare function _asList(getValue: Command, context: any): any[];
+export declare function _asMap(getValue: Command, context: any): Map<string, any>;
+export declare function _asObject(getValue: Command, context: any): {
+    value: any;
+};
+export declare function _asTuple(getValue: Command, context: any): any[];

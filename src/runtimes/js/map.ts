@@ -2,7 +2,8 @@
 import { Runtime } from '../../Runtime';
 import { MapOps } from '../../ops/MapOps';
 import { saveScope, restoreScope, _map, _optional, _number } from './helper';
-import { toArray, getCompare, isMap } from '../../fns';
+import { toArray, getCompare, isMap, isBoolean, isDate, isNumber, isObject, isString, isArray } from '../../fns';
+import { Command } from '../../Command';
 
 
 // tslint:disable: no-magic-numbers
@@ -232,11 +233,11 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(MapOps.asBoolean, (params) => (context) =>
-    _map(params.value, context).size > 0
+    tryCastValue(params.value, context, isBoolean, (v) => v.size > 0)
   );
 
   run.setOperation(MapOps.asDate, (params) => (context) =>
-    new Date()
+    tryCastValue(params.value, context, isDate, (v) => new Date())
   );
 
   run.setOperation(MapOps.asList, (params) => (context) => 
@@ -248,22 +249,31 @@ export default (run: Runtime) =>
   );
 
   run.setOperation(MapOps.asNumber, (params) => (context) => 
-    _map(params.value, context).size
+    tryCastValue(params.value, context, isNumber, (v) => v.size)
   );
 
   run.setOperation(MapOps.asObject, (params) => (context) => 
-    ({ value: params.value(context) })
+    tryCastValue(params.value, context, isObject, (value) => ({ value }))
   );
 
   run.setOperation(MapOps.asText, (params) => (context) => 
-    ''
+    tryCastValue(params.value, context, isString, (v) => '')
   );
 
   run.setOperation(MapOps.asTuple, (params) => (context) => 
-    [params.value(context)]
+    tryCastValue(params.value, context, isArray, (v) => [v])
   );
 
 };
+
+function tryCastValue(value: Command, context: any, isType: (value: any) => boolean, otherwise: (value: any) => any)
+{
+  const val = value(context);
+
+  return isMap(val) && isType(val.get('value'))
+    ? val.get('value')
+    : otherwise(val);
+}
 
 function handleMap<R>(map: Map<any, any>, context: object, scope: Record<string, string>, handle: (map: Map<any, any>) => R): R
 {
