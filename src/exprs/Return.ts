@@ -23,7 +23,7 @@ export class ReturnExpression extends Expression
 
     return returnValue !== undefined
       ? [this.id, returnValue]
-      : this.id;
+      : [this.id];
   }
 
   public value: Expression;
