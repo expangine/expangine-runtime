@@ -200,15 +200,15 @@ export default (run: Runtime) =>
   // Comparisons
 
   run.setOperation(TextOps.isValid, (params) => (context) => 
-    isString(params.a(context))
+    isString(params.value(context))
   );
 
   run.setOperation(TextOps.isEmpty, (params) => (context) => 
-    _text(params.a, context).length === 0
+    _text(params.value, context).length === 0
   );
 
   run.setOperation(TextOps.isNotEmpty, (params) => (context) => 
-    _text(params.a, context).length !== 0
+    _text(params.value, context).length !== 0
   );
 
   run.setOperation(TextOps.isEqual, (params) => (context) => 

@@ -73,11 +73,11 @@ export const TextOpsTypes =
   
   // Comparisons
 
-  isValid: ops.setTypes(TextOps.isValid, BooleanType, { a: TextType }),
+  isValid: ops.setTypes(TextOps.isValid, BooleanType, { value: TextType }),
 
-  isEmpty: ops.setTypes(TextOps.isEmpty, BooleanType, { a: TextType }),
+  isEmpty: ops.setTypes(TextOps.isEmpty, BooleanType, { value: TextType }),
 
-  isNotEmpty: ops.setTypes(TextOps.isNotEmpty, BooleanType, { a: TextType }),
+  isNotEmpty: ops.setTypes(TextOps.isNotEmpty, BooleanType, { value: TextType }),
 
   isEqual: ops.setTypes(TextOps.isEqual, BooleanType, { a: TextType, b: TextType }, { ignoreCase: BooleanType }),
 

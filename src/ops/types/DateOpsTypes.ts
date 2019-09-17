@@ -145,6 +145,8 @@ export const DateOpsTypes =
   toISOText: ops.setTypes(DateOps.toISOText, TextType, { value: DateType }),
 
   // Comparisons
+
+  isValid: ops.setTypes(DateOps.isValid, BooleanType, { value: DateType }),
  
   isEqual: ops.setTypes(DateOps.isEqual, BooleanType, { value: DateType, test: DateType }, { unit: DateUnits }),
 

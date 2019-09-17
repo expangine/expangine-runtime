@@ -4,6 +4,7 @@ export declare const TupleOps: {
     copy: import("..").Operation<"value", never, never>;
     get: import("..").Operation<"value" | "index", never, never>;
     set: import("..").Operation<"value" | "index" | "element", never, never>;
+    isValid: import("..").Operation<"value", never, never>;
     isEqual: import("..").Operation<"value" | "test", never, never>;
     isNotEqual: import("..").Operation<"value" | "test", never, never>;
     isLess: import("..").Operation<"value" | "test", never, never>;

@@ -62,6 +62,10 @@ export default (run: Runtime) =>
 
   // Comparisons
 
+  run.setOperation(ObjectOps.isValid, (params) => (context) => 
+    isObject(params.value(context))
+  );
+
   run.setOperation(ObjectOps.isEqual, (params) => (context) => 
     compare(_object(params.value, context), _object(params.test, context)) === 0
   );

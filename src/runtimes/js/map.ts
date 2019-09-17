@@ -2,7 +2,7 @@
 import { Runtime } from '../../Runtime';
 import { MapOps } from '../../ops/MapOps';
 import { saveScope, restoreScope, _map, _optional, _number } from './helper';
-import { toArray, getCompare } from '../../fns';
+import { toArray, getCompare, isMap } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -173,6 +173,10 @@ export default (run: Runtime) =>
   });
 
   // Comparisons
+
+  run.setOperation(MapOps.isValid, (params) => (context) => 
+    isMap(params.value(context))
+  );
 
   run.setOperation(MapOps.isEqual, (params, scope) => (context) => {
     const map = _map(params.value, context);

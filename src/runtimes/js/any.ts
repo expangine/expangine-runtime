@@ -20,6 +20,10 @@ export default (run: Runtime) =>
 
   // Comparisons
 
+  run.setOperation(AnyOps.isValid, (params) => (context) => 
+    true
+  );
+
   run.setOperation(AnyOps.isEqual, (params) => (context) => 
     compare(params.value(context), params.test(context)) === 0
   );

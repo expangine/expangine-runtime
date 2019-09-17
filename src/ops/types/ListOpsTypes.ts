@@ -290,6 +290,11 @@ export const ListOpsTypes =
 
   // Comparisons
 
+  isValid: ops.setTypes(ListOps.isValid, 
+    BooleanType, 
+    { value: GivenValueList }
+  ),
+
   isEmpty: ops.setTypes(ListOps.isEmpty,
     BooleanType,
     { list: GivenList }

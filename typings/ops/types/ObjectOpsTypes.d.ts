@@ -6,6 +6,7 @@ export declare const ObjectOpsTypes: {
     delete: import("../..").OperationTypes<"object" | "key", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"object", never, never>;
+    isValid: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isNotEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isLess: import("../..").OperationTypes<"value" | "test", never, never>;

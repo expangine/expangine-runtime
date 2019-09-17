@@ -34,6 +34,8 @@ export const TupleOpsTypes =
 
   // Comparisons
 
+  isValid: ops.setTypes(TupleOps.isValid, BooleanType, { value: TupleType }),
+
   isEqual: ops.setTypes(TupleOps.isEqual, BooleanType, { value: TupleType, test: TupleType }),
 
   isNotEqual: ops.setTypes(TupleOps.isNotEqual, BooleanType, { value: TupleType, test: TupleType }),

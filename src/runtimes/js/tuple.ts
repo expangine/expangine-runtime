@@ -1,5 +1,5 @@
 
-import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isString } from '../../fns';
+import { compare, copy, isBoolean, isDate, isEmpty, isNumber, isString, isArray } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { TupleOps } from '../../ops/TupleOps';
 import { _list, _number } from './helper';
@@ -38,6 +38,10 @@ export default (run: Runtime) =>
   });
 
   // Comparisons
+
+  run.setOperation(TupleOps.isValid, (params) => (context) => 
+    isArray(params.value(context))
+  );
 
   run.setOperation(TupleOps.isEqual, (params) => (context) => 
     compare(params.value(context), params.test(context)) === 0

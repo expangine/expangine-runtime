@@ -6,6 +6,7 @@ export declare const ObjectOps: {
     delete: import("..").Operation<"object" | "key", never, never>;
     cmp: import("..").Operation<"value" | "test", never, never>;
     copy: import("..").Operation<"object", never, never>;
+    isValid: import("..").Operation<"value", never, never>;
     isEqual: import("..").Operation<"value" | "test", never, never>;
     isNotEqual: import("..").Operation<"value" | "test", never, never>;
     isLess: import("..").Operation<"value" | "test", never, never>;

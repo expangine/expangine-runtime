@@ -1,6 +1,7 @@
 export declare const AnyOpsTypes: {
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
+    isValid: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isNotEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isLess: import("../..").OperationTypes<"value" | "test", never, never>;

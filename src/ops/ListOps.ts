@@ -109,6 +109,8 @@ export const ListOps =
 
   // Comparisons
 
+  isValid: ops.set('?', {}, ['value']),
+
   isEmpty: ops.set('0?', {}, ['list']),
 
   isNotEmpty: ops.set('!0', {}, ['list']),

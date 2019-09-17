@@ -20,9 +20,9 @@ export declare const TextOpsTypes: {
     length: import("../..").OperationTypes<"value", never, never>;
     compare: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     toNumber: import("../..").OperationTypes<"value", "invalidValue", never>;
-    isValid: import("../..").OperationTypes<"a", never, never>;
-    isEmpty: import("../..").OperationTypes<"a", never, never>;
-    isNotEmpty: import("../..").OperationTypes<"a", never, never>;
+    isValid: import("../..").OperationTypes<"value", never, never>;
+    isEmpty: import("../..").OperationTypes<"value", never, never>;
+    isNotEmpty: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
     isNotEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
     isLess: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;

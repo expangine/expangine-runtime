@@ -70,11 +70,11 @@ export const TextOps =
   
   // Comparisons
 
-  isValid: ops.set('?', {}, ['a']),
+  isValid: ops.set('?', {}, ['value']),
 
-  isEmpty: ops.set('0?', {}, ['a']),
+  isEmpty: ops.set('0?', {}, ['value']),
 
-  isNotEmpty: ops.set('n?', {}, ['a']),
+  isNotEmpty: ops.set('n?', {}, ['value']),
 
   isEqual: ops.set('=', {}, ['a', 'b'], ['ignoreCase']),
 

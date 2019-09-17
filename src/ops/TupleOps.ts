@@ -31,6 +31,8 @@ export const TupleOps =
   set: ops.set('set', { mutates: ['value'] }, ['value', 'index', 'element']),
 
   // Comparisons
+  
+  isValid: ops.set('?', {}, ['value']),
 
   isEqual: ops.set('=', {}, ['value', 'test']),
 

@@ -25,6 +25,8 @@ export const AnyOpsTypes =
 
   // Comparisons
 
+  isValid: ops.setTypes(AnyOps.isValid, BooleanType, { value: AnyType }),
+
   isEqual: ops.setTypes(AnyOps.isEqual, BooleanType, { value: AnyType, test: AnyType }),
 
   isNotEqual: ops.setTypes(AnyOps.isNotEqual, BooleanType, { value: AnyType, test: AnyType }),

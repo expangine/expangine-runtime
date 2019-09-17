@@ -28,6 +28,8 @@ export const AnyOps =
 
   // Comparisons
 
+  isValid: ops.set('?', {}, ['value']),
+
   isEqual: ops.set('=', ANY_COMPLEXITY, ['value', 'test']),
 
   isNotEqual: ops.set('!=', ANY_COMPLEXITY, ['value', 'test']),

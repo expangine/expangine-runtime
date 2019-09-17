@@ -61,6 +61,11 @@ export const ObjectOpsTypes =
 
   // Comparisons
 
+  isValid: ops.setTypes(ObjectOps.isValid, 
+    BooleanType, 
+    { value: ObjectType }
+  ),
+
   isEqual: ops.setTypes(ObjectOps.isEqual, 
     BooleanType,
     { value: ObjectType, test: ObjectType }

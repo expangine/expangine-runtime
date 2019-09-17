@@ -20,9 +20,9 @@ export declare const TextOps: {
     length: import("..").Operation<"value", never, never>;
     compare: import("..").Operation<"value" | "test", "ignoreCase", never>;
     toNumber: import("..").Operation<"value", "invalidValue", never>;
-    isValid: import("..").Operation<"a", never, never>;
-    isEmpty: import("..").Operation<"a", never, never>;
-    isNotEmpty: import("..").Operation<"a", never, never>;
+    isValid: import("..").Operation<"value", never, never>;
+    isEmpty: import("..").Operation<"value", never, never>;
+    isNotEmpty: import("..").Operation<"value", never, never>;
     isEqual: import("..").Operation<"a" | "b", "ignoreCase", never>;
     isNotEqual: import("..").Operation<"a" | "b", "ignoreCase", never>;
     isLess: import("..").Operation<"value" | "test", "ignoreCase", never>;

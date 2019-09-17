@@ -36,6 +36,8 @@ export const ObjectOps =
 
   // Comparisons
 
+  isValid: ops.set('?', {}, ['value']),
+
   isEqual: ops.set('=', {}, ['value', 'test']),
 
   isNotEqual: ops.set('!=', {}, ['value', 'test']),

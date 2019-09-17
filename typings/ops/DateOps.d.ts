@@ -25,6 +25,7 @@ export declare const DateOps: {
     timezoneOffset: import("..").Operation<"value", never, never>;
     toText: import("..").Operation<"value" | "format", never, never>;
     toISOText: import("..").Operation<"value", never, never>;
+    isValid: import("..").Operation<"value", never, never>;
     isEqual: import("..").Operation<"value" | "test", "unit", never>;
     isBefore: import("..").Operation<"value" | "test", "unit", never>;
     isBeforeOrEqual: import("..").Operation<"value" | "test", "unit", never>;

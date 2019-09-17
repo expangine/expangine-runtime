@@ -6,7 +6,7 @@ import { DateType } from '../../types/Date';
 import { currentLocale } from '../../locales';
 import { compareDates, startOf, mutate, add, getters, setters, endOf, getDaysInMonth, getDaysInYear, getWeeksInYear, diff, adjusters, getDateOffset, isDaylightSavingTime, isLeapYear, Unit, parse } from '../../util/DateFunctions';
 import { DateFormat } from '../../util/DateFormat';
-import { isEmpty } from '../../fns';
+import { isEmpty, isDate } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers
@@ -170,6 +170,10 @@ export default (run: Runtime) =>
   );
 
   // Comparisons
+
+  run.setOperation(DateOps.isValid, (params) => (context) => 
+    isDate(params.value(context))
+  );
 
   run.setOperation(DateOps.isEqual, (params, scope) => (context) =>
     run.getOperation(DateOps.cmp.id)(params, scope)(context) === 0

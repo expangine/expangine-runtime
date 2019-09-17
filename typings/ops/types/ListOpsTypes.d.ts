@@ -42,6 +42,7 @@ export declare const ListOpsTypes: {
     cmp: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "list" | "test">;
     group: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "item" | "index">;
     toMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "item" | "index">;
+    isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"list", never, never>;
     isNotEmpty: import("../..").OperationTypes<"list", never, never>;
     isEqual: import("../..").OperationTypes<"list" | "test" | "isEqual", any, "value" | "list" | "test">;

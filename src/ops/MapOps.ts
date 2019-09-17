@@ -50,6 +50,8 @@ export const MapOps =
 
   // Comparisons
 
+  isValid: ops.set('?', {}, ['value']),
+
   isEqual: ops.set('=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test']),
 
   isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test']),

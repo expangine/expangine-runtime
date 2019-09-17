@@ -1,5 +1,5 @@
 
-import { getCompare, isBoolean, isEmpty, isDate, isNumber, isString } from '../../fns';
+import { getCompare, isBoolean, isEmpty, isDate, isNumber, isString, isArray } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
 import { ListOps } from '../../ops/ListOps';
@@ -613,6 +613,10 @@ export default (run: Runtime) =>
   });
 
   // Comparisons
+
+  run.setOperation(ListOps.isValid, (params) => (context) => 
+    isArray(params.value(context))
+  );
 
   run.setOperation(ListOps.isEmpty, (params, scope) => (context) =>
     _list(params.list, context).length === 0
