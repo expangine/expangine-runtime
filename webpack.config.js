@@ -13,10 +13,18 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: DESTINATION,
+        /*  
         libraryTarget: 'umd',
         library: '[name]',
         umdNamedDefine: true,
         globalObject: 'this'
+        */
+    },
+
+    mode: 'development',
+
+    optimization: {
+      usedExports: true,
     },
 
     resolve: {

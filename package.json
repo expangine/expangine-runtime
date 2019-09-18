@@ -4,6 +4,7 @@
   "description": "A TypeScript/JS library for visual programming tools",
   "main": "dist/expangine-runtime.js",
   "typings": "typings/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://www.github.com/expangine/expangine-runtime-ts"
