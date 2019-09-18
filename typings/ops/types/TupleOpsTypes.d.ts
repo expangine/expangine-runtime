@@ -2,8 +2,8 @@ export declare const TupleOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
-    get: import("../..").OperationTypes<"value" | "index", never, never>;
-    set: import("../..").OperationTypes<"value" | "index" | "element", never, never>;
+    get: import("../..").OperationTypes<"index" | "value", never, never>;
+    set: import("../..").OperationTypes<"index" | "value" | "element", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isNotEqual: import("../..").OperationTypes<"value" | "test", never, never>;

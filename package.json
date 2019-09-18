@@ -7,7 +7,7 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://www.github.com/expangine/expangine-runtime-ts"
+    "url": "https://www.github.com/expangine/expangine-runtime"
   },
   "authors": [
     "Philip Diffenderfer <pdiffenderfer@gmail.com>"

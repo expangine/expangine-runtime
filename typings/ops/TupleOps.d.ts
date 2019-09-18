@@ -2,8 +2,8 @@ export declare const TupleOps: {
     create: import("..").Operation<never, never, never>;
     cmp: import("..").Operation<"value" | "test", never, never>;
     copy: import("..").Operation<"value", never, never>;
-    get: import("..").Operation<"value" | "index", never, never>;
-    set: import("..").Operation<"value" | "index" | "element", never, never>;
+    get: import("..").Operation<"index" | "value", never, never>;
+    set: import("..").Operation<"index" | "value" | "element", never, never>;
     isValid: import("..").Operation<"value", never, never>;
     isEqual: import("..").Operation<"value" | "test", never, never>;
     isNotEqual: import("..").Operation<"value" | "test", never, never>;
