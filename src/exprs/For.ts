@@ -1,8 +1,9 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
+import { toExpr } from '../fns';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -87,6 +88,41 @@ export class ForExpression extends Expression
   public encode(): any 
   {
     return ForExpression.encode(this);
+  }
+
+  public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
+  {
+    return new ForExpression(variable, toExpr(start), toExpr(end), body || this.body, breakVariable || this.breakVariable, maxIterations || this.maxIterations);
+  }
+
+  public startAt(start: ExpressionValue): ForExpression
+  {
+    return new ForExpression(this.variable, toExpr(start), this.end, this.body, this.breakVariable, this.maxIterations);
+  }
+
+  public endAt(end: ExpressionValue): ForExpression
+  {
+    return new ForExpression(this.variable, this.start, toExpr(end), this.body, this.breakVariable, this.maxIterations);
+  }
+
+  public run(expr: Expression): ForExpression
+  {
+    return new ForExpression(this.variable, this.start, this.end, expr, this.breakVariable, this.maxIterations);
+  }
+
+  public withVariable(name: string)
+  {
+    return new ForExpression(name, this.start, this.end, this.body, this.breakVariable, this.maxIterations);
+  }
+
+  public withBreak(name: string)
+  {
+    return new ForExpression(this.variable, this.start, this.end, this.body, name, this.maxIterations);
+  }
+
+  public withMax(iterations: number)
+  {
+    return new ForExpression(this.variable, this.start, this.end, this.body, this.breakVariable, iterations);
   }
 
 }

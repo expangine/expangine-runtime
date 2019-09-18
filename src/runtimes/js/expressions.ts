@@ -246,13 +246,9 @@ export default (run: Runtime) =>
       {
         let matches = false;
 
-        for (const testCommand of tests) 
+        for (const test of tests) 
         { 
-          const test = testCommand(context);
-
-          if (thisRun.returnProperty in context) return;
-
-          if (isEqual({ value, test }, noScope)(context)) 
+          if (isEqual({ value: () => value, test }, noScope)(context)) 
           {
             matches = true;
             break;

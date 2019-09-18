@@ -1,4 +1,4 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 export declare class DefineExpression extends Expression {
@@ -12,4 +12,7 @@ export declare class DefineExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): Record<string, AnyType>;
     encode(): any;
+    with(name: string, value: ExpressionValue): DefineExpression;
+    with(defines: Record<string, ExpressionValue>): DefineExpression;
+    run(expr: Expression): DefineExpression;
 }

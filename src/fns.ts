@@ -41,6 +41,11 @@ export function isObject(value: any): value is any
   return typeof value === 'object' && !Array.isArray(value);
 }
 
+export function isRecord(value: any): value is Record<string, any> 
+{
+  return typeof value === 'object' && !Array.isArray(value);
+}
+
 export function isUndefined(value: any): value is undefined 
 {
   return typeof value === 'undefined';
@@ -76,14 +81,17 @@ export function isEmpty(value: any): boolean
 }
 
 export function toExpr(values: ExpressionValue[]): Expression[]
+export function toExpr(values: Record<string, ExpressionValue>): Record<string, Expression>
 export function toExpr(value: ExpressionValue): Expression
-export function toExpr(value: ExpressionValue | ExpressionValue[]): Expression | Expression[]
+export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<string, ExpressionValue>): Expression | Expression[] | Record<string, Expression>
 {
   return isArray(value)
     ? value.map(toExpr)
     : value instanceof Expression 
-      ? value 
-      : new ConstantExpression(value);
+      ? value
+      : isObject(value)
+        ? objectMap<Expression, ExpressionValue>(value, toExpr)
+        : new ConstantExpression(value);
 }
 
 export function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey: (key: string, value: V) => string = ((key) => key) ): Record<string, R> 

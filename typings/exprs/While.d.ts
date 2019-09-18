@@ -17,4 +17,8 @@ export declare class WhileExpression extends Expression {
         [x: string]: BooleanType;
     };
     encode(): any;
+    while(condition: Expression): WhileExpression;
+    run(body: Expression): WhileExpression;
+    withBreak(name: string): WhileExpression;
+    withMax(iterations: number): WhileExpression;
 }

@@ -2,7 +2,7 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
-import { toExpr } from '../fns';
+import { toExpr, isArray } from '../fns';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -71,6 +71,25 @@ export class UpdateExpression extends Expression
   public encode(): any 
   {
     return UpdateExpression.encode(this);
+  }
+
+  public add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression
+  {
+    const append = isArray(expr)
+      ? expr
+      : [expr];
+
+    return new UpdateExpression(this.path.concat(toExpr(append)), this.value, this.currentVariable);
+  }
+
+  public to(value: ExpressionValue, currentVariable?: string): UpdateExpression
+  {
+    return new UpdateExpression(this.path, toExpr(value), currentVariable || this.currentVariable);
+  }
+
+  public withVariable(name: string): UpdateExpression
+  {
+    return new UpdateExpression(this.path, this.value, name);
   }
 
 }

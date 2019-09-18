@@ -1,15 +1,18 @@
 
-import { objectMap, isEmpty } from '../fns';
-import { Expression, ExpressionProvider } from '../Expression';
+import { objectMap, isEmpty, isArray, toExpr } from '../fns';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Operation } from '../Operation';
+import { AndExpression } from './And';
+import { OrExpression } from './Or';
+import { NotExpression } from './Not';
 
 
 const INDEX_NAME = 1;
 const INDEX_PARAMS = 2;
 const INDEX_SCOPE = 3;
 
-export class OperationExpression extends Expression 
+export class OperationExpression<P extends string = never, O extends string = never, S extends string = never> extends Expression 
 {
 
   public static id = 'op';
@@ -36,8 +39,8 @@ export class OperationExpression extends Expression
     op: Operation<P, O, S>, 
     params: Record<P, Expression> & Partial<Record<O, Expression>>,
     scopeAlias: Partial<Record<S, string>> = Object.create(null)
-  ): OperationExpression {
-    return new OperationExpression(op.id, params, scopeAlias);
+  ): OperationExpression<P, O, S> {
+    return new OperationExpression<P, O, S>(op.id, params, scopeAlias);
   }
 
   public name: string;
@@ -78,6 +81,41 @@ export class OperationExpression extends Expression
   public encode(): any 
   {
     return OperationExpression.encode(this);
+  }
+
+  public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>
+  {
+    return new OperationExpression<P, O, S>(this.name, {
+      ...this.params,
+      [name]: toExpr(value),
+    }, this.scopeAlias);
+  }
+
+  public alias(scoped: S, alias: string): OperationExpression<P, O, S>
+  {
+    return new OperationExpression<P, O, S>(this.name, this.params, {
+      ...this.scopeAlias,
+      [scoped]: alias
+    });
+  }
+
+  public and(exprs: Expression | Expression[]): AndExpression
+  {
+    const append = isArray(exprs) ? exprs : [exprs];
+
+    return new AndExpression([this as Expression].concat(append));
+  }
+
+  public or(exprs: Expression | Expression[]): OrExpression
+  {
+    const append = isArray(exprs) ? exprs : [exprs];
+
+    return new OrExpression([this as Expression].concat(append));
+  }
+
+  public not(): NotExpression
+  {
+    return new NotExpression(this);
   }
 
 }

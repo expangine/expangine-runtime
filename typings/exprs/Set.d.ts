@@ -12,4 +12,6 @@ export declare class SetExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    add(expr: ExpressionValue | ExpressionValue[]): SetExpression;
+    to(value: ExpressionValue): SetExpression;
 }

@@ -16,4 +16,7 @@ export declare class UpdateExpression extends Expression {
         [x: string]: AnyType;
     };
     encode(): any;
+    add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression;
+    to(value: ExpressionValue, currentVariable?: string): UpdateExpression;
+    withVariable(name: string): UpdateExpression;
 }

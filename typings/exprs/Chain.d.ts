@@ -10,4 +10,5 @@ export declare class ChainExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    add(exprs: Expression | Expression[]): ChainExpression;
 }

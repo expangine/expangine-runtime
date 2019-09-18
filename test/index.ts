@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType, OperationExpression, ConstantExpression } from '../src';
+import { NumberType, ObjectType, TextType, OptionalType, BooleanType, DateType, MapType, OperationExpression, ConstantExpression, ExpressionBuilder, NumberOps } from '../src';
 import { runtime } from '../src/runtimes/js';
 import { ListOps } from '../src/ops/ListOps';
 
@@ -207,6 +207,36 @@ describe('index', () => {
     expect(process({x: 4})).toStrictEqual(true);
   });
 
+  it('functions early exit with builder', () =>
+  {
+    const ex = new ExpressionBuilder();
+
+    runtime.defs.addFunction(
+      'isEven', 
+      NumberType, 
+      { x: NumberType }, 
+      ex.body(
+      ex.if(ex.op(NumberOps.isDivisible, {
+          value: ex.get('x'),
+          by: 2 }))
+        .then(
+          ex.return(true
+        )),
+      ex.return(false),
+      )
+    );
+
+    const process = runtime.eval(['invoke', 'isEven', {
+      x: ['get', ['x']]
+    }]);
+
+    expect(process({x: 0})).toStrictEqual(true);
+    expect(process({x: 1})).toStrictEqual(false);
+    expect(process({x: 2})).toStrictEqual(true);
+    expect(process({x: 3})).toStrictEqual(false);
+    expect(process({x: 4})).toStrictEqual(true);
+  });
+
   it('tofromJson', () => 
   {
     const type = ObjectType.from({
@@ -261,6 +291,32 @@ describe('index', () => {
     }, {
       copy: 'cc'
     });
+  });
+
+  it('switch', () => 
+  {
+    const ex = new ExpressionBuilder();
+
+    const code = ex
+      .switch(ex.get('value'), NumberOps.isEqual)
+        .case(1)
+        .case(2)
+        .case(ex.get('other'))
+          .then('a')
+        .case(3)
+          .then('b')
+        .default('c')
+    ;
+
+    const program = runtime.getCommand(code);
+
+    expect(program({value: 0, other: 4})).toEqual('c');
+    expect(program({value: 1, other: 4})).toEqual('a');
+    expect(program({value: 2, other: 4})).toEqual('a');
+    expect(program({value: 3, other: 4})).toEqual('b');
+    expect(program({value: 4, other: 4})).toEqual('a');
+    expect(program({value: 5, other: 4})).toEqual('c');
+    expect(program({value: 5, other: 5})).toEqual('a');
   });
 
 

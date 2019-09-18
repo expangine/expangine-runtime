@@ -11,4 +11,8 @@ export declare class IfExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    if(condition: Expression, body?: Expression): IfExpression;
+    then(body: Expression): IfExpression;
+    elseif(condition: Expression, body?: Expression): IfExpression;
+    else(body: Expression): IfExpression;
 }

@@ -1,6 +1,6 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
-import { objectMap } from '../fns';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { objectMap, isString, toExpr } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 
@@ -63,6 +63,25 @@ export class DefineExpression extends Expression
   public encode(): any 
   {
     return DefineExpression.encode(this);
+  }
+
+  public with(name: string, value: ExpressionValue): DefineExpression
+  public with(defines: Record<string, ExpressionValue>): DefineExpression
+  public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression
+  {
+    const append = isString(nameOrDefines)
+      ? { [nameOrDefines]: value }
+      : nameOrDefines;
+
+    return new DefineExpression({
+      ...this.define,
+      ...toExpr(append),
+    }, this.body);
+  }
+
+  public run(expr: Expression): DefineExpression
+  {
+    return new DefineExpression({ ...this.define }, expr);
   }
 
 }

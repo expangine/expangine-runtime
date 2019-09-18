@@ -1,4 +1,4 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 export declare class InvokeExpression extends Expression {
     static id: string;
@@ -11,4 +11,7 @@ export declare class InvokeExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    named(name: string): InvokeExpression;
+    arg(name: string, value: ExpressionValue): InvokeExpression;
+    arg(args: Record<string, ExpressionValue>): InvokeExpression;
 }

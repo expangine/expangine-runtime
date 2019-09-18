@@ -1,7 +1,7 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { objectMap } from '../fns';
+import { objectMap, isString, toExpr } from '../fns';
 
 
 const INDEX_NAME = 1;
@@ -62,6 +62,25 @@ export class InvokeExpression extends Expression
   public encode(): any 
   {
     return InvokeExpression.encode(this);
+  }
+
+  public named(name: string): InvokeExpression
+  {
+    return new InvokeExpression(name, this.args);
+  }
+
+  public arg(name: string, value: ExpressionValue): InvokeExpression
+  public arg(args: Record<string, ExpressionValue>): InvokeExpression
+  public arg(nameOrArgs: string | Record<string, ExpressionValue>, value?: Expression): InvokeExpression
+  {
+    const append = isString(nameOrArgs)
+      ? { [nameOrArgs]: value }
+      : nameOrArgs;
+
+    return new InvokeExpression(this.name, {
+      ...this.args,
+      ...toExpr(append),
+    });
   }
 
 }

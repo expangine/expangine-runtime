@@ -1,4 +1,4 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 export declare class TemplateExpression extends Expression {
     static id: string;
@@ -11,4 +11,6 @@ export declare class TemplateExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    param(name: string, value: ExpressionValue): TemplateExpression;
+    param(params: Record<string, ExpressionValue>): TemplateExpression;
 }

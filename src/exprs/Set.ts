@@ -1,7 +1,7 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { toExpr } from '../fns';
+import { toExpr, isArray } from '../fns';
 
 
 const INDEX_PATH = 1;
@@ -60,6 +60,20 @@ export class SetExpression extends Expression
   public encode(): any 
   {
     return SetExpression.encode(this);
+  }
+
+  public add(expr: ExpressionValue | ExpressionValue[]): SetExpression
+  {
+    const append = isArray(expr)
+      ? expr
+      : [expr];
+
+    return new SetExpression(this.path.concat(toExpr(append)), this.value);
+  }
+
+  public to(value: ExpressionValue): SetExpression
+  {
+    return new SetExpression(this.path, toExpr(value));
   }
 
 }

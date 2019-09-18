@@ -1,4 +1,4 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
@@ -20,4 +20,11 @@ export declare class ForExpression extends Expression {
         [x: string]: BooleanType | NumberType;
     };
     encode(): any;
+    loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
+    startAt(start: ExpressionValue): ForExpression;
+    endAt(end: ExpressionValue): ForExpression;
+    run(expr: Expression): ForExpression;
+    withVariable(name: string): ForExpression;
+    withBreak(name: string): ForExpression;
+    withMax(iterations: number): ForExpression;
 }

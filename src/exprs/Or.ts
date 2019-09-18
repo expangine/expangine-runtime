@@ -1,6 +1,8 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { isArray } from '../fns';
+import { AndExpression } from './And';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -50,6 +52,20 @@ export class OrExpression extends Expression
   public encode(): any 
   {
     return OrExpression.encode(this);
+  }
+
+  public or(exprs: Expression | Expression[]): OrExpression
+  {
+    const append = isArray(exprs) ? exprs : [exprs];
+
+    return new OrExpression(this.expressions.concat(append));
+  }
+
+  public and(exprs: Expression | Expression[]): AndExpression
+  {
+    const append = isArray(exprs) ? exprs : [exprs];
+
+    return new AndExpression([this as Expression].concat(append));
   }
 
 }

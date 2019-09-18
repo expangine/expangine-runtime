@@ -1,6 +1,6 @@
 
-import { objectMap } from '../fns';
-import { Expression, ExpressionProvider } from '../Expression';
+import { objectMap, isString, toExpr } from '../fns';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 
 
@@ -62,6 +62,20 @@ export class TemplateExpression extends Expression
   public encode(): any 
   {
     return TemplateExpression.encode(this);
+  }
+
+  public param(name: string, value: ExpressionValue): TemplateExpression
+  public param(params: Record<string, ExpressionValue>): TemplateExpression
+  public param(nameOrParams: string | Record<string, ExpressionValue>, value?: Expression): TemplateExpression
+  {
+    const append = isString(nameOrParams)
+      ? { [nameOrParams]: value }
+      : nameOrParams;
+
+    return new TemplateExpression(this.template, {
+      ...this.params,
+      ...toExpr(append),
+    });
   }
 
 }

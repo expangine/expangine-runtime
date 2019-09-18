@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { isArray } from '../fns';
 
 
 const INDEX_CHAIN = 1;
@@ -50,6 +51,13 @@ export class ChainExpression extends Expression
   public encode(): any 
   {
     return ChainExpression.encode(this);
+  }
+
+  public add(exprs: Expression | Expression[]): ChainExpression
+  {
+    const append = isArray(exprs) ? exprs : [exprs];
+
+    return new ChainExpression(this.chain.concat(append));
   }
 
 }

@@ -48,7 +48,7 @@ export class DoExpression extends Expression
   public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(condition: Expression, body: Expression, breakVariable: string, maxIterations: number) 
+  public constructor(condition: Expression, body: Expression, breakVariable: string = DEFAULT_BREAK, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.condition = condition;
@@ -77,6 +77,26 @@ export class DoExpression extends Expression
   public encode(): any 
   {
     return DoExpression.encode(this);
+  }
+
+  public do(body: Expression, condition?: Expression): DoExpression
+  {
+    return new DoExpression(condition || this.condition, body, this.breakVariable, this.maxIterations);
+  }
+
+  public while(condition: Expression): DoExpression
+  {
+    return new DoExpression(condition, this.body, this.breakVariable, this.maxIterations);
+  }
+
+  public withBreak(name: string)
+  {
+    return new DoExpression(this.condition, this.body, name, this.maxIterations);
+  }
+
+  public withMax(iterations: number)
+  {
+    return new DoExpression(this.condition, this.body, this.breakVariable, iterations);
   }
 
 }

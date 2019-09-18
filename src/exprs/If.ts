@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
+import { NoExpression } from './No';
 
 
 const INDEX_CASES = 1;
@@ -64,6 +65,35 @@ export class IfExpression extends Expression
   public encode(): any 
   {
     return IfExpression.encode(this);
+  }
+
+  public if(condition: Expression, body?: Expression)
+  {
+    const cases = this.cases.slice();
+    cases.push([condition, body || NoExpression.instance]);
+
+    return new IfExpression(cases, this.otherwise);
+  }
+
+  public then(body: Expression)
+  {
+    const cases = this.cases.slice();
+    cases[cases.length - 1][1] = body;
+
+    return new IfExpression(cases, this.otherwise);
+  }
+
+  public elseif(condition: Expression, body?: Expression)
+  {
+    const cases = this.cases.slice();
+    cases.push([condition, body || NoExpression.instance]);
+
+    return new IfExpression(cases, this.otherwise);
+  }
+
+  public else(body: Expression)
+  {
+    return new IfExpression(this.cases, body);
   }
 
 }

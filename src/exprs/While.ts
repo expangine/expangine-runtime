@@ -79,4 +79,24 @@ export class WhileExpression extends Expression
     return WhileExpression.encode(this);
   }
 
+  public while(condition: Expression): WhileExpression
+  {
+    return new WhileExpression(condition, this.body, this.breakVariable, this.maxIterations);
+  }
+
+  public run(body: Expression): WhileExpression
+  {
+    return new WhileExpression(this.condition, body, this.breakVariable, this.maxIterations);
+  }
+
+  public withBreak(name: string)
+  {
+    return new WhileExpression(this.condition, this.body, name, this.maxIterations);
+  }
+
+  public withMax(iterations: number)
+  {
+    return new WhileExpression(this.condition, this.body, this.breakVariable, iterations);
+  }
+
 }

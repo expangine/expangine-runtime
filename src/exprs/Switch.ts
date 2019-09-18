@@ -1,7 +1,10 @@
 
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
+import { Operation } from '../Operation';
+import { NoExpression } from './No';
+import { toExpr } from '../fns';
 
 
 const INDEX_VALUE = 1;
@@ -82,6 +85,46 @@ export class SwitchExpression extends Expression
   public encode(): any 
   {
     return SwitchExpression.encode(this);
+  }
+
+  private copyCases(): Array<[Expression[], Expression]>
+  {
+    return this.cases.map(([a, b]) => [a.slice(), b]);
+  }
+
+  public val(value: ExpressionValue, op?: Operation): SwitchExpression
+  {
+    return new SwitchExpression(toExpr(value), op ? op.id : this.op, this.cases, this.defaultCase);
+  }
+
+  public case(test: ExpressionValue): SwitchExpression
+  {
+    const cases = this.copyCases();
+    const n = cases.length - 1;
+
+    if (n >= 0 && cases[n][1] === NoExpression.instance)
+    {
+      cases[n][0].push(toExpr(test));
+    }
+    else
+    {
+      cases.push([[toExpr(test)], NoExpression.instance]);
+    }
+
+    return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
+  }
+
+  public then(body: ExpressionValue): SwitchExpression
+  {
+    const cases = this.copyCases();
+    cases[cases.length - 1][1] = toExpr(body);
+    
+    return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
+  }
+
+  public default(body: ExpressionValue)
+  {
+    return new SwitchExpression(this.value, this.op, this.cases, toExpr(body));
   }
 
 }

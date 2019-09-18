@@ -4,6 +4,7 @@ export * from './fns';
 export * from './Command';
 export * from './Definitions';
 export * from './Expression';
+export * from './ExpressionBuilder';
 export * from './Locale';
 export * from './Operation';
 export * from './Runtime';
