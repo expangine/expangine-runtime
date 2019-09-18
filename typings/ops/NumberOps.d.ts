@@ -48,7 +48,7 @@ export declare const NumberOps: {
     atan: import("..").Operation<"value", never, never>;
     factorial: import("..").Operation<"value", never, never>;
     bitFlip: import("..").Operation<"value", never, never>;
-    clamp: import("..").Operation<"min" | "max" | "value", never, never>;
+    clamp: import("..").Operation<"value" | "min" | "max", never, never>;
     triangleHeight: import("..").Operation<"base" | "side1" | "side2", never, never>;
     lerp: import("..").Operation<"start" | "end" | "delta", never, never>;
     rnd: import("..").Operation<any, "min" | "max" | "whole" | "includeMax", never>;
@@ -62,7 +62,7 @@ export declare const NumberOps: {
     isLessOrEqual: import("..").Operation<"value" | "test", never, never>;
     isGreater: import("..").Operation<"value" | "test", never, never>;
     isGreaterOrEqual: import("..").Operation<"value" | "test", never, never>;
-    isBetween: import("..").Operation<"min" | "max" | "value", "minInclusive" | "maxInclusive", never>;
+    isBetween: import("..").Operation<"value" | "min" | "max", "minInclusive" | "maxInclusive", never>;
     isWhole: import("..").Operation<"value", "epsilon", never>;
     isDecimal: import("..").Operation<"value", "epsilon", never>;
     isPositive: import("..").Operation<"value", never, never>;

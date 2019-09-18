@@ -48,7 +48,7 @@ export declare const NumberOpsTypes: {
     atan: import("../..").OperationTypes<"value", never, never>;
     factorial: import("../..").OperationTypes<"value", never, never>;
     bitFlip: import("../..").OperationTypes<"value", never, never>;
-    clamp: import("../..").OperationTypes<"min" | "max" | "value", never, never>;
+    clamp: import("../..").OperationTypes<"value" | "min" | "max", never, never>;
     triangleHeight: import("../..").OperationTypes<"base" | "side1" | "side2", never, never>;
     lerp: import("../..").OperationTypes<"start" | "end" | "delta", never, never>;
     rnd: import("../..").OperationTypes<any, "min" | "max" | "whole" | "includeMax", never>;
@@ -62,7 +62,7 @@ export declare const NumberOpsTypes: {
     isLessOrEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isGreater: import("../..").OperationTypes<"value" | "test", never, never>;
     isGreaterOrEqual: import("../..").OperationTypes<"value" | "test", never, never>;
-    isBetween: import("../..").OperationTypes<"min" | "max" | "value", "minInclusive" | "maxInclusive", never>;
+    isBetween: import("../..").OperationTypes<"value" | "min" | "max", "minInclusive" | "maxInclusive", never>;
     isWhole: import("../..").OperationTypes<"value", "epsilon", never>;
     isDecimal: import("../..").OperationTypes<"value", "epsilon", never>;
     isPositive: import("../..").OperationTypes<"value", never, never>;

@@ -7,7 +7,6 @@ export declare function isMap<K, V>(value: any): value is Map<K, V>;
 export declare function isBoolean(value: any): value is boolean;
 export declare function isFunction(value: any): value is ((...args: any[]) => any);
 export declare function isObject(value: any): value is any;
-export declare function isRecord(value: any): value is Record<string, any>;
 export declare function isUndefined(value: any): value is undefined;
 export declare function isSameClass(a: any, b: any): boolean;
 export declare function isWhole(x: number, epsilon?: number): boolean;

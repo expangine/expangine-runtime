@@ -4,7 +4,7 @@ export declare const TextOps: {
     prepend: import("..").Operation<"value" | "prepend", never, never>;
     lower: import("..").Operation<"value", never, never>;
     upper: import("..").Operation<"value", never, never>;
-    char: import("..").Operation<"index" | "value", "outside", never>;
+    char: import("..").Operation<"value" | "index", "outside", never>;
     replace: import("..").Operation<"replace" | "value" | "find", never, never>;
     repeat: import("..").Operation<"value" | "times", never, never>;
     split: import("..").Operation<"value" | "by", "limit", never>;

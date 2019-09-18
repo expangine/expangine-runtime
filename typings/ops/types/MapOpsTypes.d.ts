@@ -1,7 +1,7 @@
 export declare const MapOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
     get: import("../..").OperationTypes<"key" | "map", never, never>;
-    set: import("../..").OperationTypes<"value" | "key" | "map", any, "existingValue">;
+    set: import("../..").OperationTypes<"key" | "value" | "map", any, "existingValue">;
     has: import("../..").OperationTypes<"key" | "map", never, never>;
     delete: import("../..").OperationTypes<"key" | "map", never, never>;
     keys: import("../..").OperationTypes<"map", never, never>;
@@ -9,17 +9,17 @@ export declare const MapOpsTypes: {
     entries: import("../..").OperationTypes<"map", never, never>;
     clear: import("../..").OperationTypes<"map", never, never>;
     count: import("../..").OperationTypes<"map", never, never>;
-    cmp: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "test" | "key">;
-    copy: import("../..").OperationTypes<"map", "deepCopy" | "deepCopyKey", "value" | "key" | "map">;
-    map: import("../..").OperationTypes<"map", "transform" | "transformKey", "value" | "key" | "map">;
+    cmp: import("../..").OperationTypes<"value" | "test" | "compare", any, "key" | "value" | "test">;
+    copy: import("../..").OperationTypes<"map", "deepCopy" | "deepCopyKey", "key" | "value" | "map">;
+    map: import("../..").OperationTypes<"map", "transform" | "transformKey", "key" | "value" | "map">;
     toPlainObject: import("../..").OperationTypes<"map", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
-    isEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", any, "value" | "test" | "key">;
-    isNotEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", any, "value" | "test" | "key">;
-    isLess: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "test" | "key">;
-    isLessOrEqual: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "test" | "key">;
-    isGreater: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "test" | "key">;
-    isGreaterOrEqual: import("../..").OperationTypes<"value" | "test" | "compare", any, "value" | "test" | "key">;
+    isEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", any, "key" | "value" | "test">;
+    isNotEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", any, "key" | "value" | "test">;
+    isLess: import("../..").OperationTypes<"value" | "test" | "compare", any, "key" | "value" | "test">;
+    isLessOrEqual: import("../..").OperationTypes<"value" | "test" | "compare", any, "key" | "value" | "test">;
+    isGreater: import("../..").OperationTypes<"value" | "test" | "compare", any, "key" | "value" | "test">;
+    isGreaterOrEqual: import("../..").OperationTypes<"value" | "test" | "compare", any, "key" | "value" | "test">;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
     asDate: import("../..").OperationTypes<"value", never, never>;

@@ -38,12 +38,7 @@ export function isFunction(value: any): value is ((...args: any[]) => any)
 
 export function isObject(value: any): value is any 
 {
-  return typeof value === 'object' && !Array.isArray(value);
-}
-
-export function isRecord(value: any): value is Record<string, any> 
-{
-  return typeof value === 'object' && !Array.isArray(value);
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function isUndefined(value: any): value is undefined 
