@@ -2,6 +2,7 @@
 import { isUndefined, objectMap } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
+import { restoreScope } from './helper';
 
 import { ConstantExpression } from '../../exprs/Constant';
 import { GetExpression } from '../../exprs/Get';
@@ -21,7 +22,8 @@ import { TemplateExpression } from '../../exprs/Template';
 import { UpdateExpression } from '../../exprs/Update';
 import { InvokeExpression } from '../../exprs/Invoke';
 import { ReturnExpression } from '../../exprs/Return';
-import { restoreScope } from './helper';
+import { NoExpression } from '../../exprs/No';
+
 
 
 
@@ -527,5 +529,7 @@ export default (run: Runtime) =>
 
     return (context) => context[thisRun.returnProperty] = returnValue(context);
   });
+
+  run.setExpression(NoExpression, () => () => undefined);
 
 };

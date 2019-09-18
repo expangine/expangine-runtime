@@ -34,6 +34,7 @@ import { DateType } from '../types/Date';
 import { NullType } from '../types/Null';
 import { InvokeExpression } from '../exprs/Invoke';
 import { ReturnExpression } from '../exprs/Return';
+import { NoExpression } from '../exprs/No';
 
 
 export const defs = new Definitions({
@@ -72,5 +73,6 @@ export const defs = new Definitions({
     UpdateExpression,
     InvokeExpression,
     ReturnExpression,
+    NoExpression,
   ]
 });
