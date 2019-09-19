@@ -3,7 +3,7 @@ import { compare, copy, toString, isEmpty, isObject, isBoolean, isDate, isArray,
 import { Runtime } from '../../Runtime';
 import { ObjectOps } from '../../ops/ObjectOps';
 import { Command } from '../../Command';
-import { _object } from './helper';
+import { _object, restoreScope, saveScope } from './helper';
 
 
 export default (run: Runtime) =>
@@ -28,8 +28,7 @@ export default (run: Runtime) =>
   run.setOperation(ObjectOps.set, (params, scope) => (context) => {
     const object = _object(params.object, context);
     const key = params.key(context);
-
-    const popExisting = context[scope.existingValue];
+    const saved = saveScope(context, scope);
 
     context[scope.existingValue] = object[key];
 
@@ -37,7 +36,7 @@ export default (run: Runtime) =>
 
     object[key] = value;
 
-    context[scope.existingValue] = popExisting;
+    restoreScope(context, saved);
 
     return object;
   });

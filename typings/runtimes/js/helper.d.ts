@@ -1,6 +1,7 @@
 import { Command } from '../../Command';
-export declare function saveScope<K extends string>(context: any, scope: Record<K, string>): Record<K, any>;
+export declare function saveScope<K extends string>(context: any, scope: Record<string, K>): Record<K, any>;
 export declare function restoreScope<K extends string>(context: any, saved: Record<K, any>): void;
+export declare function preserveScope<R = any>(context: any, props: string[], run: () => R): R;
 export declare function _optional(cmd: Command | undefined, context: object, defaultValue?: any): any;
 export declare function _bool(cmd: Command | undefined, context: object, defaultValue?: boolean): boolean;
 export declare function _typed<T>(isValid: (value: any) => value is T, invalidValueDefault: T): (cmd: Command, context: object, invalidValue?: T) => T;

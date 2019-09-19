@@ -2,7 +2,7 @@
 import { isUndefined, objectMap } from '../../fns';
 import { Runtime } from '../../Runtime';
 import { Command } from '../../Command';
-import { restoreScope } from './helper';
+import { restoreScope, preserveScope } from './helper';
 
 import { ConstantExpression } from '../../exprs/Constant';
 import { GetExpression } from '../../exprs/Get';
@@ -98,6 +98,7 @@ export default (run: Runtime) =>
     const parts: Command[] = expr.path.map(sub => thisRun.getCommand(sub));
     const last = parts.length - 1;
     const getValue = thisRun.getCommand(expr.value);
+    const currentVariable = expr.currentVariable;
 
     return (context) => 
     {
@@ -118,13 +119,13 @@ export default (run: Runtime) =>
       if (!isUndefined(value)) 
       {
         const dest = parts[last](context);
-        const popCurrent = context[expr.currentVariable];
 
-        context[expr.currentVariable] = value[dest];
+        preserveScope(context, [currentVariable], () => 
+        {
+          context[currentVariable] = value[dest];
         
-        value[dest] = getValue(context);
-
-        context[expr.currentVariable] = popCurrent;
+          value[dest] = getValue(context);
+        });
 
         return true;
       }
@@ -329,44 +330,39 @@ export default (run: Runtime) =>
     {
       if (thisRun.returnProperty in context) return;
 
-      const popVariable = context[variable];
-      const popBreak = context[breakVariable];
-
-      context[breakVariable] = false;
-
-      let i = start(context);
-      let iterations = 0;
-      let stop = end(context);
-      let last;
-      const dir = i < stop ? 1 : -1;
-
-      if (thisRun.returnProperty in context)
+      return preserveScope(context, [variable, breakVariable], () => 
       {
-        context[breakVariable] = popBreak;
+        context[breakVariable] = false;
 
-        return;
-      }
+        let i = start(context);
+        let iterations = 0;
+        let stop = end(context);
+        let last;
+        const dir = i < stop ? 1 : -1;
 
-      while ((dir === 1 ? i <= stop : i >= stop) && iterations++ < max) 
-      {
-        context[variable] = i;
-        last = body(context);
-
-        if (context[breakVariable] || thisRun.returnProperty in context) 
+        if (thisRun.returnProperty in context)
         {
-          break;
+          return;
         }
 
-        i += dir;
-        stop = end(context);
+        while ((dir === 1 ? i <= stop : i >= stop) && iterations++ < max) 
+        {
+          context[variable] = i;
+          last = body(context);
 
-        if (thisRun.returnProperty in context) return;
-      }
+          if (context[breakVariable] || thisRun.returnProperty in context) 
+          {
+            break;
+          }
 
-      context[variable] = popVariable;
-      context[breakVariable] = popBreak;
+          i += dir;
+          stop = end(context);
 
-      return last;
+          if (thisRun.returnProperty in context) return;
+        }
+
+        return last;
+      });
     };
   });
 
@@ -381,28 +377,27 @@ export default (run: Runtime) =>
     {
       if (thisRun.returnProperty in context) return;
 
-      let iterations = 0;
-      let last;
-
-      const popBreak = context[breakVariable];
-
-      context[breakVariable] = false;
-
-      while (condition(context) && iterations++ < max)
+      return preserveScope(context, [breakVariable], () =>
       {
-        if (thisRun.returnProperty in context) return;
+        let iterations = 0;
+        let last;
 
-        last = body(context);
+        context[breakVariable] = false;
 
-        if (context[breakVariable] || thisRun.returnProperty in context) 
+        while (condition(context) && iterations++ < max)
         {
-          break;
+          if (thisRun.returnProperty in context) return;
+
+          last = body(context);
+
+          if (context[breakVariable] || thisRun.returnProperty in context) 
+          {
+            break;
+          }
         }
-      }
 
-      context[breakVariable] = popBreak;
-
-      return last;
+        return last;
+      });
     };
   });
 
@@ -417,29 +412,28 @@ export default (run: Runtime) =>
     {
       if (thisRun.returnProperty in context) return;
 
-      let iterations = 0;
-      let last;
-
-      const popBreak = context[breakVariable];
-
-      context[breakVariable] = false;
-
-      do
+      return preserveScope(context, [breakVariable], () =>
       {
-        if (thisRun.returnProperty in context) return;
+        let iterations = 0;
+        let last;
 
-        last = body(context);
+        context[breakVariable] = false;
 
-        if (context[breakVariable] || thisRun.returnProperty in context) 
+        do
         {
-          break;
-        }
+          if (thisRun.returnProperty in context) return;
 
-      } while(condition(context) && iterations++ < max);
+          last = body(context);
 
-      context[breakVariable] = popBreak;
+          if (context[breakVariable] || thisRun.returnProperty in context) 
+          {
+            break;
+          }
 
-      return last;
+        } while(condition(context) && iterations++ < max);
+
+        return last;
+      });
     };
   });
 

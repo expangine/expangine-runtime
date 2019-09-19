@@ -5,13 +5,15 @@ import { isNumber, isString, isArray, isMap, isObject, isDate } from '../../fns'
 
 
 
-export function saveScope<K extends string>(context: any, scope: Record<K, string>): Record<K, any> 
+export function saveScope<K extends string>(context: any, scope: Record<string, K>): Record<K, any> 
 {
   const popped = {} as Record<K, string>;
 
   for (const prop in scope) 
   {
-    popped[prop] = context[scope[prop]]
+    const alias = scope[prop];
+
+    popped[alias] = context[alias]
   }
 
   return popped;
@@ -21,8 +23,30 @@ export function restoreScope<K extends string>(context: any, saved: Record<K, an
 {
   for (const prop in saved)
   { 
-    context[prop] = saved[prop];
+    if (saved[prop] === undefined)
+    {
+      delete context[prop];
+    }
+    else
+    {
+      context[prop] = saved[prop];
+    }
   }
+}
+
+export function preserveScope<R = any>(context: any, props: string[], run: () => R): R
+{
+  const saved = props.map((p) => context[p]);
+
+  const result = run();
+
+  saved.forEach((last, i) => 
+    last === undefined
+      ? delete context[props[i]]
+      : context[props[i]] = last
+  );
+
+  return result;
 }
 
 export function _optional (cmd: Command | undefined, context: object, defaultValue?: any): any 

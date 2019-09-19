@@ -28,8 +28,7 @@ export default (run: Runtime) =>
     const map = _map(params.map, context);
     const key = params.key(context);
     const existing = map.get(key);
-
-    const popExisting = context[scope.existingValue];
+    const saved = saveScope(context, scope);
 
     context[scope.existingValue] = existing;
 
@@ -37,7 +36,7 @@ export default (run: Runtime) =>
 
     map.set(key, value);
 
-    context[scope.existingValue] = popExisting;
+    restoreScope(context, saved);
 
     return existing;
   });
