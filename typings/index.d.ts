@@ -34,6 +34,7 @@ export * from './exprs/No';
 export * from './exprs/Not';
 export * from './exprs/Operation';
 export * from './exprs/Or';
+export * from './exprs/Return';
 export * from './exprs/Set';
 export * from './exprs/Switch';
 export * from './exprs/Template';
