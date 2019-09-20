@@ -60,8 +60,6 @@ export * from './ops/types/ObjectOpsTypes';
 export * from './ops/types/TextOpsTypes';
 export * from './ops/types/TupleOpsTypes';
 export * from './locales';
-export * from './runtimes/js';
-export * from './runtimes/js/helper';
 export * from './util/DateConstants';
 export * from './util/DateFormat';
 export * from './util/DateFunctions';
