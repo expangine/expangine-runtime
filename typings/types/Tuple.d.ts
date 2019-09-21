@@ -1,5 +1,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export declare class TupleType extends Type<Type[]> {
     static id: string;
     static operations: Operations;
@@ -15,6 +17,9 @@ export declare class TupleType extends Type<Type[]> {
     merge(type: TupleType, describer: TypeDescribeProvider): void;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isCompatible(other: Type): boolean;
     isValid(value: any): boolean;
     normalize(value: any): any;

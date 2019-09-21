@@ -2,6 +2,8 @@ import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ListType } from './List';
 import { ObjectType } from './Object';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface MapOptions {
     key: Type;
     value: Type;
@@ -24,6 +26,9 @@ export declare class MapType extends Type<MapOptions> {
     };
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(test: any): boolean;
     normalize(test: any): any;
     private iterate;

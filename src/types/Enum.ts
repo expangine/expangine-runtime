@@ -3,6 +3,8 @@ import { toArray, compare } from '../fns';
 import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 
 
 const INDEX_KEY = 1;
@@ -89,6 +91,21 @@ export class EnumType extends Type<EnumOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof EnumType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.value.getCreateExpression(ex);
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.value.getValidateExpression(ex);
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.value.getCompareExpression(ex);
   }
 
   public isValid(test: any): boolean 

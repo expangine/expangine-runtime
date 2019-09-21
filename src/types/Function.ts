@@ -5,6 +5,7 @@ import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { AnyType } from './Any';
 import { Expression } from '../Expression';
+import { ExpressionBuilder } from '../ExpressionBuilder';
 
 
 const INDEX_RETURN = 1;
@@ -87,6 +88,21 @@ export class FunctionType extends Type<FunctionOptions>
     return other instanceof FunctionType
       && this.options.returnType.isCompatible(other.options.returnType)
       && this.options.params.isCompatible(other.options.params);
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.returnType.getCreateExpression(ex);
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.returnType.getValidateExpression(ex);
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.returnType.getCompareExpression(ex);
   }
 
   public isValid(value: any): boolean 

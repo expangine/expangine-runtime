@@ -3,6 +3,9 @@ import { isDate, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { DateOps } from '../ops/DateOps';
 
 
 const INDEX_OPTIONS = 1;
@@ -118,6 +121,26 @@ export class DateType extends Type<DateOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof DateType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(DateOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(DateOps.isValid, {
+      value: ex.get('value'),
+    });
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(DateOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

@@ -2,6 +2,9 @@
 import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { TextOps } from '../ops/TextOps';
 
 
 const INDEX_OPTIONS = 1;
@@ -111,6 +114,27 @@ export class TextType extends Type<TextOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof TextType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(TextOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(TextOps.isValid, {
+      value: ex.get('value'),
+    });
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(TextOps.compare, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+      ignoreCase: ex.get(true),
+    });
   }
 
   public isValid(value: any): boolean 

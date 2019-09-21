@@ -2,6 +2,7 @@
 import { objectMap, isArray, isObject } from './fns';
 import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
+import { ExpressionBuilder } from './ExpressionBuilder';
 
 
 export type TypeInput = TypeClass | Type;
@@ -109,6 +110,12 @@ export abstract class Type<O = any>
   public abstract getExactType(value: any): Type<O>;
 
   public abstract isCompatible(other: Type<O>): boolean;
+
+  public abstract getCreateExpression(ex: ExpressionBuilder): Expression;
+
+  public abstract getValidateExpression(ex: ExpressionBuilder): Expression;
+
+  public abstract getCompareExpression(ex: ExpressionBuilder): Expression;
 
   public abstract isValid(value: any): boolean;
 

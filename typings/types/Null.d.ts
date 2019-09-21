@@ -1,5 +1,7 @@
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface NullOptions {
     includeUndefined?: boolean;
 }
@@ -17,6 +19,9 @@ export declare class NullType extends Type<NullOptions> {
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): NullType;

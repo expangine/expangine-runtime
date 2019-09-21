@@ -2,6 +2,8 @@ import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { ObjectType } from './Object';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface ListOptions {
     item: Type;
     min?: number;
@@ -26,6 +28,9 @@ export declare class ListType extends Type<ListOptions> {
     };
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): ListType;

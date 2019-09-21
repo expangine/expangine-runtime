@@ -1,7 +1,10 @@
 
-import { objectMap, isObject } from '../fns';
+import { objectMap, isObject, objectValues } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { ObjectOps } from '../ops/ObjectOps';
 
 
 const INDEX_PROPS = 1;
@@ -117,6 +120,48 @@ export class ObjectType extends Type<ObjectOptions>
     }
 
     return true;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.define({
+      value: ex.op(ObjectOps.create, {})
+    }, ex.body(
+      ...objectValues(objectMap(this.options.props, (t, prop) => 
+        ex.set('value', prop).to(t.getCreateExpression(ex)),
+      )),
+      ex.get('value'),
+    ));
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.and(
+      ex.op(ObjectOps.isValid, {
+        value: ex.get('value'),
+      }),
+      ...objectValues(objectMap(this.options.props, (t, prop) =>
+        ex.define({ 
+          value: ex.get('value', prop) 
+        }).run(
+          t.getValidateExpression(ex),
+        ),
+      )),
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.or(
+      ...objectValues(objectMap(this.options.props, (t, prop) =>
+        ex.define({ 
+          value: ex.get('value', prop),
+          test: ex.get('test', prop) 
+        }).run(
+          t.getCompareExpression(ex),
+        ),
+      )),
+    );
   }
 
   public isValid(value: any): boolean 

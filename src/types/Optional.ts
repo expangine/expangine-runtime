@@ -2,6 +2,9 @@
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { AnyOps } from '../ops/AnyOps';
 
 
 const INDEX_TYPE = 1;
@@ -65,6 +68,44 @@ export class OptionalType extends Type<Type>
     return other instanceof OptionalType
       ? this.options.isCompatible(other.options)
       : this.options.isCompatible(other);
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options.getCreateExpression(ex);
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.or(
+      ex.op(AnyOps.isEqual, {
+        value: ex.get('value'),
+        test: ex.const(undefined),
+      }),
+      this.options.getValidateExpression(ex),
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.define({
+      valueMissing: ex.op(AnyOps.isEqual, {
+        value: ex.get('value'), 
+        test: ex.const(undefined),
+      }),
+      testMissing: ex.op(AnyOps.isEqual, {
+        value: ex.get('test'), 
+        test: ex.const(undefined),
+      }),
+    }, ex
+      .if(ex.and(ex.get('valueMissing'), ex.get('testMissing')))
+      .then(ex.const(0))
+      .if(ex.get('valueMissing'))
+      .then(ex.const(1))
+      .if(ex.get('testMissing'))
+      .then(ex.const(-1))
+      .else(this.options.getCompareExpression(ex)),
+    );
   }
 
   public isValid(value: any): boolean 

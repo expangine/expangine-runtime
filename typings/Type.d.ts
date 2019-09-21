@@ -1,5 +1,6 @@
 import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
+import { ExpressionBuilder } from './ExpressionBuilder';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeMap = Record<string, TypeInput>;
 export declare type TypeMapStrict = Record<string, Type>;
@@ -41,6 +42,9 @@ export declare abstract class Type<O = any> {
     abstract getSubTypes(): Record<string, Type> | null;
     abstract getExactType(value: any): Type<O>;
     abstract isCompatible(other: Type<O>): boolean;
+    abstract getCreateExpression(ex: ExpressionBuilder): Expression;
+    abstract getValidateExpression(ex: ExpressionBuilder): Expression;
+    abstract getCompareExpression(ex: ExpressionBuilder): Expression;
     abstract isValid(value: any): boolean;
     abstract normalize(value: any): any;
     abstract newInstance(): Type<O>;

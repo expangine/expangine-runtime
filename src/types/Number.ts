@@ -2,6 +2,9 @@
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { NumberOps } from '../ops/NumberOps';
 
 
 const INDEX_OPTIONS = 1;
@@ -87,6 +90,26 @@ export class NumberType extends Type<NumberOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof NumberType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(NumberOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(NumberOps.isValid, {
+      value: ex.get('value'),
+    });
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(NumberOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

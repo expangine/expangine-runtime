@@ -2,6 +2,9 @@
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { AnyOps } from '../ops/AnyOps';
 
 
 const INDEX_MANY = 1;
@@ -113,6 +116,26 @@ export class ManyType extends Type<Type[]>
   public isCompatible(other: Type): boolean 
   {
     return this.forMany(false, many => many.isCompatible(other) ? true : undefined);
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return this.options[0].getCreateExpression(ex);
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.or(
+      ...this.options.map((t) => t.getValidateExpression(ex))
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(AnyOps.cmp, {
+      value: ex.get('value'), 
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

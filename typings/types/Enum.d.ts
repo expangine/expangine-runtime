@@ -1,5 +1,7 @@
 import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface EnumOptions {
     key: Type;
     value: Type;
@@ -22,6 +24,9 @@ export declare class EnumType extends Type<EnumOptions> {
     };
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(test: any): boolean;
     normalize(value: any): any;
     newInstance(): EnumType;

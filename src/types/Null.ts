@@ -2,6 +2,9 @@
 import { isEmpty, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { AnyOps } from '../ops/AnyOps';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 
 
 const INDEX_OPTIONS = 1;
@@ -70,6 +73,27 @@ export class NullType extends Type<NullOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof NullType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.const(null);
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(AnyOps.isEqual, {
+      value: ex.get('value'),
+      test: ex.const(null),
+    });
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(AnyOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

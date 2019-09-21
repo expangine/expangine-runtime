@@ -2,7 +2,7 @@ export declare const ObjectOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
     has: import("../..").OperationTypes<"object" | "key", never, never>;
     get: import("../..").OperationTypes<"object" | "key", never, never>;
-    set: import("../..").OperationTypes<"object" | "key" | "value", any, "existingValue">;
+    set: import("../..").OperationTypes<"object" | "value" | "key", any, "existingValue">;
     delete: import("../..").OperationTypes<"object" | "key", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"object", never, never>;

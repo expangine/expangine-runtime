@@ -1,6 +1,9 @@
 
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { AnyOps } from '../ops/AnyOps';
 
 
 export class AnyType extends Type 
@@ -57,6 +60,24 @@ export class AnyType extends Type
   public isCompatible(other: Type): boolean 
   {
     return true;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.const('');
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.const(true);
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(AnyOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

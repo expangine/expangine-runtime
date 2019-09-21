@@ -6,6 +6,10 @@ import { AnyType } from './Any';
 import { TextType } from './Text';
 import { ListType } from './List';
 import { ObjectType } from './Object';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { MapOps } from '../ops/MapOps';
+import { ListOps } from '../ops/ListOps';
 
 
 const INDEX_VALUE = 1;
@@ -110,6 +114,45 @@ export class MapType extends Type<MapOptions>
     return other instanceof MapType && 
       this.options.key.isCompatible(other.options.key) && 
       this.options.value.isCompatible(other.options.value);
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(MapOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.and(
+      ex.op(MapOps.isValid, {
+        value: ex.get('value'),
+      }),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.op(MapOps.values, { map: ex.get('value') }),
+        item: ex.const(null),
+        isEqual: ex.not(this.options.value.getValidateExpression(ex)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.op(MapOps.keys, { map: ex.get('value') }),
+        item: ex.const(null),
+        isEqual: ex.not(this.options.key.getValidateExpression(ex)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(MapOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+      compare: this.options.value.getValidateExpression(ex),
+    });
   }
 
   public isValid(test: any): boolean 

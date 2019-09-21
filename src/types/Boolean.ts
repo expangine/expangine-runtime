@@ -3,6 +3,9 @@ import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { NumberType } from './Number';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { BooleanOps } from '../ops/BooleanOps';
 
 
 const INDEX_OPTIONS = 1;
@@ -70,6 +73,26 @@ export class BooleanType extends Type<BooleanOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof BooleanType || other instanceof NumberType;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(BooleanOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(BooleanOps.isValid, {
+      value: ex.get('value'),
+    });
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(BooleanOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+    });
   }
 
   public isValid(value: any): boolean 

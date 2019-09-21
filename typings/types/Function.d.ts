@@ -2,6 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { Expression } from '../Expression';
+import { ExpressionBuilder } from '../ExpressionBuilder';
 export interface FunctionOptions {
     returnType: Type;
     params: ObjectType;
@@ -24,6 +25,9 @@ export declare class FunctionType extends Type<FunctionOptions> {
     };
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): FunctionType;

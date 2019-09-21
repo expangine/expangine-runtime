@@ -3,6 +3,10 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { isArray } from '../fns';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { TupleOps } from '../ops/TupleOps';
+import { NumberOps } from '../ops/NumberOps';
 
 
 const INDEX_ELEMENTS = 1;
@@ -77,6 +81,48 @@ export class TupleType extends Type<Type[]>
   public getExactType(value: any): Type 
   {
     return this;
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.define({
+      value: ex.op(TupleOps.create, {}),
+    }, ex.body(
+      ...this.options.map((t, i) => 
+        ex.set('value', i).to(t.getCreateExpression(ex))
+      ),
+      ex.get('value')
+    ));
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex
+      .op(TupleOps.isValid, {
+        value: ex.get('value'),
+      })
+      .and(this.options.map((t, i) => ex
+        .define({ value: ex.get('value', i) })
+        .run(t.getValidateExpression(ex)),
+      ),
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.or(
+      ex.op(NumberOps.cmp, {
+        value: ex.get('value', 'length'),
+        test: ex.get('test', 'length'),
+      }),
+      ...this.options.map((t, i) => ex
+        .define({
+          value: ex.get('value', i),
+          test: ex.get('test', i),
+        })
+        .run(t.getCompareExpression(ex)),
+      ),
+    );
   }
 
   public isCompatible(other: Type): boolean 

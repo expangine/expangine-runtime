@@ -5,6 +5,9 @@ import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { ObjectType } from './Object';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { ListOps } from '../ops/ListOps';
 
 
 const INDEX_ITEM = 1;
@@ -115,6 +118,37 @@ export class ListType extends Type<ListOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof ListType && this.options.item.isCompatible(other.options.item);
+  }
+
+  public getCreateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(ListOps.create, {});
+  }
+
+  public getValidateExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.and(
+      ex.op(ListOps.isValid, {
+        value: ex.get('value'),
+      }),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.get('value'),
+        item: ex.const(null),
+        isEqual: ex.not(this.options.item.getValidateExpression(ex)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+    );
+  }
+
+  public getCompareExpression(ex: ExpressionBuilder): Expression
+  {
+    return ex.op(ListOps.cmp, {
+      value: ex.get('value'),
+      test: ex.get('test'),
+      compare: this.options.item.getCompareExpression(ex),
+    });
   }
 
   public isValid(value: any): boolean 

@@ -1,5 +1,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface ObjectOptions {
     props: Record<string, Type>;
 }
@@ -18,6 +20,9 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): ObjectType;

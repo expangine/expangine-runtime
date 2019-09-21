@@ -1,5 +1,7 @@
 import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
 export interface TextOptions {
     min?: number;
     max?: number;
@@ -25,6 +27,9 @@ export declare class TextType extends Type<TextOptions> {
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): TextType;

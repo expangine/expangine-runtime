@@ -11,7 +11,7 @@ export declare const DateOps: {
     min: import("..").Operation<"value" | "test", never, never>;
     max: import("..").Operation<"value" | "test", never, never>;
     get: import("..").Operation<"value" | "property", never, never>;
-    set: import("..").Operation<"value" | "set" | "property", never, never>;
+    set: import("..").Operation<"value" | "property" | "set", never, never>;
     add: import("..").Operation<"value" | "unit", "amount", never>;
     sub: import("..").Operation<"value" | "unit", "amount", never>;
     startOf: import("..").Operation<"value" | "unit", never, never>;
