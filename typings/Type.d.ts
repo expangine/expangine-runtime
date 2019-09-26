@@ -42,6 +42,7 @@ export declare abstract class Type<O = any> {
     abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     abstract getSubTypes(): TypeMap | null;
     abstract getExactType(value: any): Type<O>;
+    abstract getSimplifiedType(): Type;
     abstract isCompatible(other: Type<O>): boolean;
     abstract getCreateExpression(ex: ExpressionBuilder): Expression;
     abstract getValidateExpression(ex: ExpressionBuilder): Expression;

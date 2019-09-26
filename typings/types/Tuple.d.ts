@@ -18,6 +18,7 @@ export declare class TupleType extends Type<Type[]> {
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

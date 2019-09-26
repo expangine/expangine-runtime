@@ -28,6 +28,7 @@ export declare class ListType extends Type<ListOptions> {
         item: Type<any>;
     };
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

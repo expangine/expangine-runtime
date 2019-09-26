@@ -17,6 +17,7 @@ export declare class OptionalType extends Type<Type> {
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

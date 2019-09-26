@@ -165,6 +165,11 @@ export class ListType extends Type<ListOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof ListType && this.options.item.isCompatible(other.options.item);

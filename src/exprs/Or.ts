@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { isArray } from '../fns';
 import { AndExpression } from './And';
 import { Type } from '../Type';
+import { BooleanType } from '../types/Boolean';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -59,6 +60,7 @@ export class OrExpression extends Expression
   {
     const types: Type[] = this.expressions
       .map(e => e.getType(def, context))
+      .concat(BooleanType.baseType)
       .filter(t => !!t)
     ;
     

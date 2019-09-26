@@ -26,6 +26,7 @@ export declare class FunctionType extends Type<FunctionOptions> {
         params: ObjectType;
     };
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

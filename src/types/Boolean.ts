@@ -76,6 +76,11 @@ export class BooleanType extends Type<BooleanOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof BooleanType || other instanceof NumberType;

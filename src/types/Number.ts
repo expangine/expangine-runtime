@@ -93,6 +93,11 @@ export class NumberType extends Type<NumberOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof NumberType;

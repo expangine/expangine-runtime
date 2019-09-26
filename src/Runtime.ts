@@ -37,7 +37,7 @@ export class Runtime<Context = any, Result = any>
   }
 
   public setOperation<P extends string = any, O extends string = any, S extends string = any>(
-    operation: Operation<P, O, S>, 
+    operation: Operation<P, O, S, any, any>, 
     impl: OperationToCommand<Context, Result, P, O, S>
   ): this 
   {

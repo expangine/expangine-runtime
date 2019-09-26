@@ -134,6 +134,11 @@ export class TupleType extends Type<Type[]>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.define({

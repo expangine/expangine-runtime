@@ -26,6 +26,7 @@ export declare class MapType extends Type<MapOptions> {
         value: Type<any>;
     };
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

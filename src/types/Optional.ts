@@ -70,6 +70,11 @@ export class OptionalType extends Type<Type>
     return this.options.getExactType(value);
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof OptionalType

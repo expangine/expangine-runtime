@@ -90,6 +90,11 @@ export class FunctionType extends Type<FunctionOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this.options.returnType;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof FunctionType

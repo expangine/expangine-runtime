@@ -124,6 +124,11 @@ export class DateType extends Type<DateOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof DateType;

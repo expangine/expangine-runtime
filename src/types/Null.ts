@@ -77,6 +77,11 @@ export class NullType extends Type<NullOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof NullType;

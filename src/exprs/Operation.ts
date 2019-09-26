@@ -37,7 +37,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   }
 
   public static create<P extends string, O extends string, S extends string>(
-    op: Operation<P, O, S>, 
+    op: Operation<P, O, S, any, any>, 
     params: Record<P, Expression> & Partial<Record<O, Expression>>,
     scopeAlias: Partial<Record<S, string>> = Object.create(null)
   ): OperationExpression<P, O, S> {

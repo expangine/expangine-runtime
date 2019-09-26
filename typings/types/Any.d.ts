@@ -16,6 +16,7 @@ export declare class AnyType extends Type {
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): null;
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

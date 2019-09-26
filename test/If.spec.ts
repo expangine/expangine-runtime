@@ -28,4 +28,16 @@ describe('If', () => {
     expect(iffType.options[1]).toBeInstanceOf(NumberType);
   });
 
+  it('type simplify', () =>
+  {
+    const iif = ex
+      .if(ex.const(true))
+      .then(ex.const(0))
+      .else(ex.const(1))
+    ;
+    const iffType = iif.getType(defs, context).getSimplifiedType();
+
+    expect(iffType).toBeInstanceOf(NumberType);
+  });
+
 })

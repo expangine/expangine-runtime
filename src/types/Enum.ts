@@ -104,6 +104,11 @@ export class EnumType extends Type<EnumOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this.options.value;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof EnumType 

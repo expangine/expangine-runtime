@@ -341,7 +341,12 @@ export class Definitions
     {
       if (op.hasScope.indexOf(param) === -1)
       {
-        types[param] = params[param].getType(this, context);        
+        const paramType = params[param].getType(this, context);
+
+        if (paramType)
+        {
+          types[param] = paramType.getSimplifiedType();
+        }
       }
     }
 
@@ -355,7 +360,7 @@ export class Definitions
       {
         const alias = scopeAlias[scopeParam] || scopeParam;
 
-        scopeTarget[alias] = scopeType;
+        scopeTarget[alias] = scopeType.getSimplifiedType();
       }
     }
 
@@ -363,7 +368,12 @@ export class Definitions
     {
       if (op.hasScope.indexOf(param) !== -1)
       {
-        types[param] = params[param].getType(this, paramContext);        
+        const paramType = params[param].getType(this, paramContext);
+
+        if (paramType)
+        {
+          types[param] = paramType.getSimplifiedType();
+        }
       }
     }
 

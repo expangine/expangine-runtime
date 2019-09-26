@@ -131,6 +131,13 @@ export class ManyType extends Type<Type[]>
     return this.forMany<Type>(this, many => (many.isValid(value) ? many : undefined));
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this.options.length === 1
+      ? this.options[0]
+      : this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return this.forMany(false, many => many.isCompatible(other) ? true : undefined);

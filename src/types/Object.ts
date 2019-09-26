@@ -139,6 +139,11 @@ export class ObjectType extends Type<ObjectOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type 
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     if (!(other instanceof ObjectType)) 

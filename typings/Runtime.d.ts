@@ -11,7 +11,7 @@ export declare class Runtime<Context = any, Result = any> {
     returnProperty: string;
     constructor(defs: Definitions);
     extend(defs?: Definitions): Runtime<Context, Result>;
-    setOperation<P extends string = any, O extends string = any, S extends string = any>(operation: Operation<P, O, S>, impl: OperationToCommand<Context, Result, P, O, S>): this;
+    setOperation<P extends string = any, O extends string = any, S extends string = any>(operation: Operation<P, O, S, any, any>, impl: OperationToCommand<Context, Result, P, O, S>): this;
     setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<Context, Result, T>): this;
     getFunction(name: string): FunctionType;
     getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;

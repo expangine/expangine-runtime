@@ -71,6 +71,11 @@ export class ExpressionBuilder
     return new InvokeExpression(name, toExpr(args));
   }
 
+  public noop(): NoExpression
+  {
+    return NoExpression.instance;
+  }
+
   public not(expr: Expression): NotExpression
   {
     return new NotExpression(expr);
@@ -99,7 +104,7 @@ export class ExpressionBuilder
     return new SetExpression(toExpr(path), NoExpression.instance);
   }
 
-  public switch<P extends string, O extends string, S extends string>(value: Expression, op: Operation<P, O, S>): SwitchExpression
+  public switch<P extends string, O extends string, S extends string>(value: Expression, op: Operation<P, O, S, any, any>): SwitchExpression
   {
     return new SwitchExpression(value, op.id, [], NoExpression.instance);
   }

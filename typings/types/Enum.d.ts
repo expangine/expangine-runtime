@@ -25,6 +25,7 @@ export declare class EnumType extends Type<EnumOptions> {
         value: Type<any>;
     };
     getExactType(value: any): Type;
+    getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

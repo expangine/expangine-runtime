@@ -159,6 +159,11 @@ export class TextType extends Type<TextOptions>
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return other instanceof TextType;

@@ -9,7 +9,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): OperationExpression;
     static encode(expr: OperationExpression): any;
-    static create<P extends string, O extends string, S extends string>(op: Operation<P, O, S>, params: Record<P, Expression> & Partial<Record<O, Expression>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
+    static create<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, params: Record<P, Expression> & Partial<Record<O, Expression>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
     name: string;
     params: ExpressionMap;
     scopeAlias: Record<string, string>;

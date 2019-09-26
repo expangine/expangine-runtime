@@ -111,6 +111,8 @@ export abstract class Type<O = any>
 
   public abstract getExactType(value: any): Type<O>;
 
+  public abstract getSimplifiedType(): Type;
+
   public abstract isCompatible(other: Type<O>): boolean;
 
   public abstract getCreateExpression(ex: ExpressionBuilder): Expression;

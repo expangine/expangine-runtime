@@ -63,6 +63,11 @@ export class AnyType extends Type
     return this;
   }
 
+  public getSimplifiedType(): Type
+  {
+    return this;
+  }
+
   public isCompatible(other: Type): boolean 
   {
     return true;
