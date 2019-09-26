@@ -1,12 +1,16 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
-import { Operations } from '../Operation';
-import { AnyType } from './Any';
-import { isArray } from '../fns';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeMap } from '../Type';
+import { isArray, isNumber, toArray } from '../fns';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { TupleOps } from '../ops/TupleOps';
+import { TupleOps, TupleOperations } from '../ops/TupleOps';
 import { NumberOps } from '../ops/NumberOps';
+import { Definitions } from '../Definitions';
+import { ConstantExpression } from '../exprs/Constant';
+import { NumberType } from './Number';
+import { EnumType } from './Enum';
+import { TextType } from './Text';
+import { ID } from './ID';
 
 
 const INDEX_ELEMENTS = 1;
@@ -14,11 +18,11 @@ const INDEX_ELEMENTS = 1;
 export class TupleType extends Type<Type[]>
 {
 
-  public static id = 'tuple';
+  public static id = ID.Tuple;
 
-  public static operations = new Operations('tuple:');
+  public static operations = TupleOperations;
 
-  public static baseType = new TupleType([AnyType.baseType]);
+  public static baseType = new TupleType([]);
 
   public static decode(data: any[], types: TypeProvider): TupleType 
   {
@@ -46,7 +50,7 @@ export class TupleType extends Type<Type[]>
     return new TupleType(types.map((t) => Type.fromInput(t)));
   }
 
-  public subs?: Record<string, Type>;
+  public subs?: TypeMap;
 
   public getId(): string
   {
@@ -61,6 +65,53 @@ export class TupleType extends Type<Type[]>
   public merge(type: TupleType, describer: TypeDescribeProvider): void
   {
     
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    if (ConstantExpression.is(expr))
+    {
+      if (expr.value === 'length')
+      {
+        return NumberType.baseType;
+      }
+
+      if (isNumber(expr.value))
+      {
+        return this.options[expr.value];
+      }
+    }
+
+    const exprType = def.requiredType(expr.getType(def, context));
+
+    if (exprType)
+    {
+      if (exprType instanceof NumberType)
+      {
+        return def.mergeTypes(this.options);
+      }
+
+      if (exprType instanceof EnumType)
+      {
+        if (exprType.options.value instanceof NumberType)
+        {
+          const values = toArray(exprType.options.constants.values());
+          const types = values.map(i => this.options[i]).filter(t => !!t);
+          
+          return def.mergeTypes(types);
+        }
+
+        if (exprType.options.value instanceof TextType)
+        {
+          const values = toArray(exprType.options.constants.values());
+
+          if (values.length === 1 && values[0] === 'length')
+          {
+            return NumberType.baseType;
+          }
+        }
+      }
+    }
   }
 
   public getSubTypes()

@@ -1,5 +1,6 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 export declare class GetExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): GetExpression;
@@ -11,5 +12,6 @@ export declare class GetExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    getType(def: Definitions, context: Type): Type | null;
     add(expr: ExpressionValue | ExpressionValue[]): GetExpression;
 }

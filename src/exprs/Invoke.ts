@@ -1,7 +1,8 @@
 
-import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { objectMap, isString, toExpr } from '../fns';
+import { Type } from '../Type';
 
 
 const INDEX_NAME = 1;
@@ -28,9 +29,9 @@ export class InvokeExpression extends Expression
   }
 
   public name: string;
-  public args: Record<string, Expression>;
+  public args: ExpressionMap;
 
-  public constructor(name: string, args: Record<string, Expression>) 
+  public constructor(name: string, args: ExpressionMap) 
   {
     super();
     this.name = name;
@@ -62,6 +63,15 @@ export class InvokeExpression extends Expression
   public encode(): any 
   {
     return InvokeExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    const func = def.getFunction(this.name);
+
+    return func
+      ? func.options.returnType
+      : null;
   }
 
   public named(name: string): InvokeExpression

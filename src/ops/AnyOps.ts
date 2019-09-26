@@ -1,18 +1,11 @@
 
-import { AnyType } from '../types/Any';
-import { BooleanType } from '../types/Boolean';
-import { DateType } from '../types/Date';
-import { ListType } from '../types/List';
-import { MapType } from '../types/Map';
-import { NumberType } from '../types/Number';
-import { ObjectType } from '../types/Object';
-import { TextType } from '../types/Text';
-import { TupleType } from '../types/Tuple';
+import { ID } from '../types/ID';
+import { Operations } from '../Operation';
 
 
-const ops = AnyType.operations;
+export const AnyOperations = new Operations(ID.Any + ':');
 
-
+const ops = AnyOperations;
 const ANY_COMPLEXITY = {
   complexity: 2
 };
@@ -44,22 +37,22 @@ export const AnyOps =
 
   // Casts
 
-  asAny: ops.set('~' + AnyType.id, {}, ['value']),
+  asAny: ops.set('~' + ID.Any, {}, ['value']),
 
-  asBoolean: ops.set('~' + BooleanType.id, {}, ['value']),
+  asBoolean: ops.set('~' + ID.Boolean, {}, ['value']),
 
-  asDate: ops.set('~' + DateType.id, {}, ['value']),
+  asDate: ops.set('~' + ID.Date, {}, ['value']),
 
-  asList: ops.set('~' + ListType.id, {}, ['value']),
+  asList: ops.set('~' + ID.List, {}, ['value']),
 
-  asMap: ops.set('~' + MapType.id, {}, ['value']),
+  asMap: ops.set('~' + ID.Map, {}, ['value']),
 
-  asNumber: ops.set('~' + NumberType.id, {}, ['value']),
+  asNumber: ops.set('~' + ID.Number, {}, ['value']),
 
-  asObject: ops.set('~' + ObjectType.id, {}, ['value']),
+  asObject: ops.set('~' + ID.Object, {}, ['value']),
 
-  asText: ops.set('~' + TextType.id, {}, ['value']),
+  asText: ops.set('~' + ID.Text, {}, ['value']),
 
-  asTuple: ops.set('~' + TupleType.id, {}, ['value']),
+  asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };

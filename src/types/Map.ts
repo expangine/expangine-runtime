@@ -1,15 +1,17 @@
 
-import { isObject, isMap, toArray } from '../fns';
+import { isObject, isMap, toArray, isSameClass } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { TextType } from './Text';
 import { ListType } from './List';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { MapOps } from '../ops/MapOps';
+import { MapOps, MapOperations } from '../ops/MapOps';
 import { ListOps } from '../ops/ListOps';
+import { Definitions } from '../Definitions';
+import { ConstantExpression } from '../exprs/Constant';
+import { ID } from './ID';
 
 
 const INDEX_VALUE = 1;
@@ -26,9 +28,9 @@ export interface MapOptions
 export class MapType extends Type<MapOptions> 
 {
 
-  public static id = 'map';
+  public static id = ID.Map;
 
-  public static operations = new Operations('map:');
+  public static operations = MapOperations;
 
   public static baseType = new MapType({ key: TextType.baseType, value: AnyType.baseType });
 
@@ -97,6 +99,29 @@ export class MapType extends Type<MapOptions>
     o1.value = describer.mergeType(o1.value, o2.value);
   }
 
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    if (ConstantExpression.is(expr))
+    {
+      if (this.options.key.isValid(expr.value))
+      {
+        return this.options.value;
+      }
+    }
+
+    const exprType = def.requiredType(expr.getType(def, context));
+
+    if (exprType)
+    {
+      if (isSameClass(exprType, this.options.key))
+      {
+        return this.options.value;
+      }
+    }
+
+    return null;
+  }
+
   public getSubTypes() 
   {
     const { key, value } = this.options;
@@ -129,7 +154,7 @@ export class MapType extends Type<MapOptions>
       }),
       ex.not(ex.op(ListOps.contains, {
         list: ex.op(MapOps.values, { map: ex.get('value') }),
-        item: ex.const(null),
+        item: ex.null(),
         isEqual: ex.not(this.options.value.getValidateExpression(ex)),
       }, {
         value: 'ignore',
@@ -137,7 +162,7 @@ export class MapType extends Type<MapOptions>
       })),
       ex.not(ex.op(ListOps.contains, {
         list: ex.op(MapOps.keys, { map: ex.get('value') }),
-        item: ex.const(null),
+        item: ex.null(),
         isEqual: ex.not(this.options.key.getValidateExpression(ex)),
       }, {
         value: 'ignore',

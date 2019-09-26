@@ -1,8 +1,8 @@
 {
   "extends": [
     "tslint-config-standard",
-    "tslint-react",
-    "tslint-config-prettier"
+    "tslint-config-prettier",
+    "tslint-no-circular-imports"
   ],
   "rules": {
     "jsx-no-lambda": true,

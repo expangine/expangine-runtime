@@ -1,11 +1,12 @@
 
 import { isDate, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { DateOps } from '../ops/DateOps';
+import { DateOps, DateOperations } from '../ops/DateOps';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_OPTIONS = 1;
@@ -25,9 +26,9 @@ export interface DateOptions
 export class DateType extends Type<DateOptions> 
 {
 
-  public static id = 'date';
+  public static id = ID.Date;
 
-  public static operations = new Operations('date:');
+  public static operations = DateOperations;
 
   public static baseType = new DateType({});
 
@@ -106,6 +107,11 @@ export class DateType extends Type<DateOptions>
     {
       o1.validateMax.setTime(Math.max(o1.validateMax.getTime(), o2.validateMax.getTime()));
     }
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
   }
 
   public getSubTypes(): null

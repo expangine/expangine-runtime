@@ -4,6 +4,8 @@ import { Definitions } from '../Definitions';
 import { AndExpression } from './And';
 import { isArray } from '../fns';
 import { OrExpression } from './Or';
+import { BooleanType } from '../types/Boolean';
+import { Type } from '../Type';
 
 
 const INDEX_EXPR = 1;
@@ -53,6 +55,11 @@ export class NotExpression extends Expression
   public encode(): any 
   {
     return NotExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return BooleanType.baseType;
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

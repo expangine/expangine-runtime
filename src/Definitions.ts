@@ -1,8 +1,8 @@
 
-import { isArray, objectMap, isSameClass, objectValues } from './fns';
-import { Type, TypeClass, TypeParser, TypeInput, TypeMap } from './Type';
-import { Expression, ExpressionClass } from './Expression';
-import { Operations, Operation } from './Operation';
+import { isArray, objectMap, isSameClass, objectValues, isFunction } from './fns';
+import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
+import { Expression, ExpressionClass, ExpressionMap } from './Expression';
+import { Operations, Operation, OperationTypes, OperationTypeInput } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
@@ -31,7 +31,7 @@ export class Definitions
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
   public operations: Operations;
-  public aliased: Record<string, Type>;
+  public aliased: TypeMap;
   public functions: Record<string, FunctionType>;
 
   public constructor(initial?: DefinitionsOptions)
@@ -96,6 +96,23 @@ export class Definitions
     }
 
     return AnyType.baseType;
+  }
+
+  public mergeTypes(readonlyTypes: Type[]): Type | null
+  {
+    if (readonlyTypes.length === 0)
+    {
+      return null;
+    }
+
+    if (readonlyTypes.find(t => t instanceof AnyType))
+    {
+      return AnyType.baseType;
+    }
+
+    const cloned = readonlyTypes.map(t => t.clone());
+
+    return cloned.reduce((a, b) => this.mergeType(a, b));
   }
 
   public merge(type: Type, data: any): Type
@@ -168,7 +185,7 @@ export class Definitions
     return new ManyType([ a, b ]);
   }
 
-  public optionalType(type: Type): Type
+  public optionalType(type: Type): OptionalType
   {
     if (type instanceof OptionalType)
     {
@@ -238,7 +255,7 @@ export class Definitions
     return this.parsers[id](data, this);
   }
 
-  public addFunction(name: string, returnType: TypeInput, params: TypeMap, expr: any): FunctionType
+  public addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType
   {
     const func = new FunctionType({
       returnType: Type.resolve(returnType),
@@ -261,7 +278,7 @@ export class Definitions
     return this.functions[name];
   }
 
-  public getOperation(id: string): Operation<any, any, any> | null
+  public getOperation(id: string): Operation<any, any, any, any, any> | null
   {
     const op = this.operations.get(id);
 
@@ -274,6 +291,118 @@ export class Definitions
     const type = this.types[typeName];
 
     return type ? type.operations.get(id) : null;
+  }
+
+  public getOperationTypes(id: string): OperationTypes<any, any, any> | null
+  {
+    const op = this.operations.getTypes(id);
+
+    if (op)
+    {
+      return op;
+    }
+
+    const [typeName] = id.split(':');
+    const type = this.types[typeName];
+
+    return type ? type.operations.getTypes(id) : null;
+  }
+
+  public getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null
+  {
+    const op = this.getOperation(id);
+    const types = this.getOperationTypes(id);
+    const returnType = types.returnType;
+
+    if (returnType instanceof Type)
+    {
+      return returnType;
+    }
+
+    if (!isFunction(returnType))
+    {
+      return returnType.baseType;
+    }
+
+    const paramTypes = op.resultDependency.length > 0
+      ? this.getOperationParamTypes(id, params, scopeAlias, context)
+      : {};
+
+    return this.getOperationInputType(types.returnType, paramTypes);
+  }
+
+  public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap
+  {
+    const types: TypeMap = {};
+    const op = this.getOperation(id);
+    const opTypes = this.getOperationTypes(id);
+    
+    for (const param in params)
+    {
+      if (op.hasScope.indexOf(param) === -1)
+      {
+        types[param] = params[param].getType(this, context);        
+      }
+    }
+
+    const { context: paramContext, scope: scopeTarget } = this.getContextWithScope(context);
+    
+    for (const scopeParam of op.scope)
+    {
+      const scopeType = this.getOperationInputType(opTypes.scope[scopeParam], types);
+
+      if (scopeType)
+      {
+        const alias = scopeAlias[scopeParam] || scopeParam;
+
+        scopeTarget[alias] = scopeType;
+      }
+    }
+
+    for (const param in params)
+    {
+      if (op.hasScope.indexOf(param) !== -1)
+      {
+        types[param] = params[param].getType(this, paramContext);        
+      }
+    }
+
+    return types;
+  }
+
+  public getContextWithScope(original: Type, scope: TypeMap = {})
+  {
+    const context = original instanceof ObjectType
+      ? new ObjectType({ props: scope = { ...original.options.props, ...scope }})
+      : new ManyType([ original, new ObjectType({ props: scope })]);
+
+    return { context, scope };
+  }
+
+  public getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type
+  {
+    return input instanceof Type
+      ? input
+      : 'baseType' in input
+        ? input.baseType
+        : Type.fromInput(input(params));
+  }
+
+  public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null
+  {
+    let node = context;
+
+    for (let i = 0; i < stopBefore; i++)
+    {
+      node = node.getSubType(path[i], this, context);
+
+      if (!node)
+      {
+        return null;
+      }
+    }
+
+    return node;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 

@@ -11,14 +11,32 @@ export interface OperationFlags
 export interface Operation<
   P extends string = never, 
   O extends string = never,
-  S extends string = never
+  S extends string = never,
+  H extends (P | O) = never,
+  R extends (P | O) = never
 > extends OperationFlags {
   id: string;
   params: P[];
   optional: O[];
   scope: S[];
-  scopeDefaults?: Record<S, string>;
+  scopeDefaults: Record<S, string>;
+  hasScope: H[];
+  resultDependency: R[];
 }
+
+export type OperationResolved<
+  P extends string, 
+  O extends string, 
+  S extends string, 
+  H extends (P | O), 
+  R extends (P | O)
+> = Operation<
+  string extends P ? never : P, 
+  string extends O ? never : O, 
+  string extends S ? never : S, 
+  string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, 
+  string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
+>;
 
 export type OperationTypeInput<I extends string> = TypeInput | ((inputs: Record<I, Type | undefined>) => TypeInput);
 
@@ -38,7 +56,7 @@ export class Operations
 
   public prefix: string;
 
-  public map: Record<string, Operation<any, any, any>>;
+  public map: Record<string, Operation<any, any, any, any, any>>;
   public types: Record<string, OperationTypes<any, any, any>>;
 
   public constructor(prefix: string)
@@ -48,7 +66,7 @@ export class Operations
     this.types = Object.create(null);
   }
 
-  public get (id: string): Operation<any, any, any>
+  public get (id: string): Operation<any, any, any, any, any>
   {
     return this.map[id] || this.map[this.prefix + id];
   }
@@ -58,13 +76,15 @@ export class Operations
     return this.types[id] || this.types[this.prefix + id];
   }
 
-  public set<P extends string = never, O extends string = never, S extends string = never>(
+  public set<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)>(
     localId: string, 
     flags: Partial<OperationFlags> = {},
     params: P[] = [], 
     optional: O[] = [], 
-    scope: S[] = []
-  ): Operation<P, O, S> 
+    scope: S[] = [],
+    hasScope: H[] = [],
+    resultDependency: R[] = []
+  ) : OperationResolved<P, O, S, H, R> 
   {
     const id = this.prefix + localId;
     const mutates = flags.mutates || [];
@@ -80,37 +100,39 @@ export class Operations
       optional,
       scope,
       scopeDefaults,
+      hasScope,
+      resultDependency
     };
     
     this.map[id] = op;
 
-    return op;
+    return op as unknown as OperationResolved<P, O, S, H, R>;
   }
 
   public setTypes(
-    op: Operation<never, never, never>,
+    op: Operation<never, never, never, never, never>,
     returnType: OperationTypeInput<never>
   ) : OperationTypes<never, never, never>
   public setTypes<P extends string>(
-    op: Operation<P, never, never>,
+    op: Operation<P, never, never, any, any>,
     returnType: OperationTypeInput<P>,
     params: Record<P, OperationTypeInput<P>>
   ) : OperationTypes<P, never, never>
   public setTypes<P extends string, O extends string>(
-    op: Operation<P, O, never>,
+    op: Operation<P, O, never, any, any>,
     returnType: OperationTypeInput<P | O>,
     params: Record<P, OperationTypeInput<P | O>>,
     optional: Record<O, OperationTypeInput<P | O>>
   ) : OperationTypes<P, O, never>
   public setTypes<P extends string, O extends string, S extends string>(
-    op: Operation<P, O, S>,
+    op: Operation<P, O, S, any, any>,
     returnType: OperationTypeInput<P | O>,
     params: Record<P, OperationTypeInput<P | O>>,
     optional: Record<O, OperationTypeInput<P | O>>,
     scope: Record<S, OperationTypeInput<P | O>>
   ) : OperationTypes<P, O, S>
   public setTypes<P extends string = never, O extends string = never, S extends string = never>(
-    op: Operation<P, O, S>, 
+    op: Operation<P, O, S, any, any>, 
     returnType: OperationTypeInput<P | O>,
     params: Record<P, OperationTypeInput<P | O>> = Object.create(null),
     optional: Record<O, OperationTypeInput<P | O>> = Object.create(null),

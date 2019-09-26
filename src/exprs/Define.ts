@@ -1,8 +1,9 @@
 
-import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { objectMap, isString, toExpr } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 
 
 const INDEX_DEFINE = 1;
@@ -28,10 +29,10 @@ export class DefineExpression extends Expression
     return [this.id, define, expr.body.encode()];
   }
 
-  public define: Record<string, Expression>;
+  public define: ExpressionMap;
   public body: Expression;
 
-  public constructor(define: Record<string, Expression>, body: Expression) 
+  public constructor(define: ExpressionMap, body: Expression) 
   {
     super();
     this.define = define;
@@ -63,6 +64,15 @@ export class DefineExpression extends Expression
   public encode(): any 
   {
     return DefineExpression.encode(this);
+  }
+
+  public getType(def: Definitions, original: Type): Type | null
+  {
+    const { scope, context } = def.getContextWithScope(original);
+
+    objectMap(this.define, (value, key) => scope[key] = value.getType(def, context));
+
+    return this.body.getType(def, context);
   }
 
   public with(name: string, value: ExpressionValue): DefineExpression

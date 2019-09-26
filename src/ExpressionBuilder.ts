@@ -77,7 +77,7 @@ export class ExpressionBuilder
   }
 
   public op<P extends string, O extends string, S extends string>(
-    op: Operation<P, O, S>, 
+    op: Operation<P, O, S, any, any>, 
     params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>,
     scopeAlias: Partial<Record<S, string>> = Object.create(null)
   ): OperationExpression<P, O, S> {
@@ -117,6 +117,56 @@ export class ExpressionBuilder
   public while(condition: Expression, body: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): WhileExpression
   {
     return new WhileExpression(condition, body, breakVariable, maxIterations);
+  }
+
+  public undefined()
+  {
+    return this.const(undefined);
+  }
+
+  public null()
+  {
+    return this.const(null);
+  }
+
+  public true()
+  {
+    return this.const(true);
+  }
+
+  public false()
+  {
+    return this.const(false);
+  }
+
+  public zero()
+  {
+    return this.const(0);
+  }
+
+  public one()
+  {
+    return this.const(1);
+  }
+
+  public compareEqual()
+  {
+    return this.const(1);
+  }
+
+  public compareLess()
+  {
+    return this.const(-1);
+  }
+
+  public compareGreater()
+  {
+    return this.const(+1);
+  }
+
+  public string()
+  {
+    return this.const('');
   }
 
 }

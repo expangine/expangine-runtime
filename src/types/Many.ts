@@ -1,10 +1,12 @@
 
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
+import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_MANY = 1;
@@ -12,9 +14,9 @@ const INDEX_MANY = 1;
 export class ManyType extends Type<Type[]>
 {
 
-  public static id = 'many';
+  public static id = ID.Many;
 
-  public static operations = new Operations('many:');
+  public static operations = new Operations(ID.Many + ':');
 
   public static baseType = new ManyType([AnyType.baseType]);
 
@@ -39,7 +41,8 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public subs?: Record<string, Type>;
+  public subs?: TypeMap;
+  public operations?: Record<string, Operation<any, any, any, any, any>>;
 
   public getOperations()
   {
@@ -86,6 +89,21 @@ export class ManyType extends Type<Type[]>
   public merge(type: ManyType, describer: TypeDescribeProvider): void
   {
     
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    for (const sub of this.options)
+    {
+      const subType = sub.getSubType(expr, def, context);
+
+      if (subType)
+      {
+        return subType;
+      }
+    }
+
+    return null;
   }
 
   public getSubTypes()

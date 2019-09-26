@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { isArray } from '../fns';
 import { AndExpression } from './And';
+import { Type } from '../Type';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -52,6 +53,16 @@ export class OrExpression extends Expression
   public encode(): any 
   {
     return OrExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    const types: Type[] = this.expressions
+      .map(e => e.getType(def, context))
+      .filter(t => !!t)
+    ;
+    
+    return def.mergeTypes(types);
   }
 
   public or(exprs: Expression | Expression[]): OrExpression

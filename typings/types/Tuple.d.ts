@@ -1,20 +1,21 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeMap } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export declare class TupleType extends Type<Type[]> {
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: TupleType;
     static decode(data: any[], types: TypeProvider): TupleType;
     static encode(type: TupleType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(types: TypeInput[]): TupleType;
-    subs?: Record<string, Type>;
+    subs?: TypeMap;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TupleType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
     getCreateExpression(ex: ExpressionBuilder): Expression;

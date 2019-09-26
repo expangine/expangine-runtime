@@ -1,22 +1,23 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface ObjectOptions {
-    props: Record<string, Type>;
+    props: TypeMap;
 }
 export declare class ObjectType extends Type<ObjectOptions> {
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: ObjectType;
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    static from(types?: TypeMap): ObjectType;
+    static from(types?: TypeInputMap): ObjectType;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

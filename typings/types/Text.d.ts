@@ -1,7 +1,7 @@
 import { Type, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface TextOptions {
     min?: number;
     max?: number;
@@ -13,7 +13,7 @@ export interface TextOptions {
 }
 export declare class TextType extends Type<TextOptions> {
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: TextType;
     static decode(data: any[]): TextType;
     static encode(type: TextType): any;
@@ -22,8 +22,9 @@ export declare class TextType extends Type<TextOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TextType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

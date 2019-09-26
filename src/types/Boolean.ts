@@ -1,11 +1,12 @@
 
 import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { BooleanOps } from '../ops/BooleanOps';
+import { BooleanOps, BooleanOperations } from '../ops/BooleanOps';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_OPTIONS = 1;
@@ -20,9 +21,9 @@ export interface BooleanOptions
 export class BooleanType extends Type<BooleanOptions> 
 {
 
-  public static id = 'bool';
+  public static id = ID.Boolean;
 
-  public static operations = new Operations('bool:');
+  public static operations = BooleanOperations;
 
   public static baseType = new BooleanType({});
 
@@ -58,6 +59,11 @@ export class BooleanType extends Type<BooleanOptions>
   public merge(type: BooleanType, describer: TypeDescribeProvider): void
   {
     
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
   }
 
   public getSubTypes(): null

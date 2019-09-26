@@ -1,7 +1,7 @@
 import { Type, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface NumberOptions {
     min?: number;
     max?: number;
@@ -10,15 +10,16 @@ export interface NumberOptions {
 export declare class NumberType extends Type<NumberOptions> {
     static WHOLE_EPSILON: number;
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: NumberType;
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: NumberType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

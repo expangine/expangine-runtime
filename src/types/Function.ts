@@ -6,6 +6,8 @@ import { ObjectType } from './Object';
 import { AnyType } from './Any';
 import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_RETURN = 1;
@@ -22,9 +24,9 @@ export interface FunctionOptions
 export class FunctionType extends Type<FunctionOptions> 
 {
 
-  public static id = 'func';
+  public static id = ID.Function;
 
-  public static operations = new Operations('func:');
+  public static operations = new Operations(ID.Function + ':');
 
   public static baseType = new FunctionType({ returnType: AnyType.baseType, params: ObjectType.baseType, expression: null });
 
@@ -69,6 +71,11 @@ export class FunctionType extends Type<FunctionOptions>
   public merge(type: FunctionType, describer: TypeDescribeProvider): void
   {
     
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
   }
 
   public getSubTypes() 

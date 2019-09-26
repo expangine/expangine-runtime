@@ -5,6 +5,7 @@ import { ConstantExpression } from './Constant';
 import { Operation } from '../Operation';
 import { NoExpression } from './No';
 import { toExpr } from '../fns';
+import { Type } from '../Type';
 
 
 const INDEX_VALUE = 1;
@@ -85,6 +86,19 @@ export class SwitchExpression extends Expression
   public encode(): any 
   {
     return SwitchExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    const types = this.cases
+      .map(([tests, value]) => value)
+      .concat(this.defaultCase)
+      .filter(e => !!e)
+      .map(e => e.getType(def, context))
+      .filter(t => !!t)
+    ;
+
+    return def.mergeTypes(types);
   }
 
   private copyCases(): Array<[Expression[], Expression]>

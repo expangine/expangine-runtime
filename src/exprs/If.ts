@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
 import { NoExpression } from './No';
+import { Type } from '../Type';
 
 
 const INDEX_CASES = 1;
@@ -65,6 +66,19 @@ export class IfExpression extends Expression
   public encode(): any 
   {
     return IfExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    const types = this.cases
+      .map(([test, value]) => value)
+      .concat(this.otherwise)
+      .filter(e => !!e)
+      .map(e => e.getType(def, context))
+      .filter(t => !!t)
+    ;
+
+    return def.mergeTypes(types);
   }
 
   public if(condition: Expression, body?: Expression)

@@ -1,4 +1,6 @@
 import { Expression, ExpressionProvider } from '../Expression';
+import { Type } from '../Type';
+import { Definitions } from '../Definitions';
 export declare class ConstantExpression extends Expression {
     static has(e: Expression, constant: any): boolean;
     static is(e: Expression): e is ConstantExpression;
@@ -11,4 +13,5 @@ export declare class ConstantExpression extends Expression {
     getComplexity(): number;
     getScope(): null;
     encode(): any;
+    getType(def: Definitions, context: Type): Type | null;
 }

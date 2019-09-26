@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
+import { Type } from '../Type';
 
 
 const INDEX_PATH = 1;
@@ -56,6 +57,11 @@ export class GetExpression extends Expression
   public encode(): any 
   {
     return GetExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return def.getPathType(this.path, context);
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): GetExpression

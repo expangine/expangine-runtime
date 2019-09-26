@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -77,6 +78,13 @@ export class DoExpression extends Expression
   public encode(): any 
   {
     return DoExpression.encode(this);
+  }
+
+  public getType(def: Definitions, original: Type): Type | null
+  {
+    const { context } = def.getContextWithScope(original, this.getScope());
+
+    return def.optionalType(this.body.getType(def, context));
   }
 
   public do(body: Expression, condition?: Expression): DoExpression

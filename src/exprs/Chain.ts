@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { isArray } from '../fns';
+import { Type } from '../Type';
 
 
 const INDEX_CHAIN = 1;
@@ -51,6 +52,11 @@ export class ChainExpression extends Expression
   public encode(): any 
   {
     return ChainExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return this.chain[this.chain.length - 1].getType(def, context);
   }
 
   public add(exprs: Expression | Expression[]): ChainExpression

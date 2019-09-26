@@ -2,6 +2,7 @@ import { Type, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface NullOptions {
     includeUndefined?: boolean;
 }
@@ -14,8 +15,9 @@ export declare class NullType extends Type<NullOptions> {
     static describePriority: number;
     static describe(data: any): Type | null;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: NullType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): null;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

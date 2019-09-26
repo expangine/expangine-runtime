@@ -73,6 +73,14 @@ export const MapOpsTypes =
     { map: GivenMap }
   ),
 
+  pairs: ops.setTypes(MapOps.entries, 
+    i => ListType.forItem(ObjectType.from({
+      key: GivenMapKey(i),
+      value: GivenMapValue(i)
+    })),
+    { map: GivenMap }
+  ),
+
   clear: ops.setTypes(MapOps.clear, 
     GivenMap,
     { map: GivenMap }

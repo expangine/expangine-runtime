@@ -1,9 +1,9 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface ListOptions {
     item: Type;
     min?: number;
@@ -12,7 +12,7 @@ export interface ListOptions {
 export declare class ListType extends Type<ListOptions> {
     static lengthType: NumberType;
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
@@ -20,8 +20,9 @@ export declare class ListType extends Type<ListOptions> {
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(itemOrClass: TypeInput): ListType;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ListType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): {
         length: NumberType;
         item: Type<any>;

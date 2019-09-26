@@ -1,6 +1,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 export declare class WhileExpression extends Expression {
     static MAX_ITERATIONS: number;
     static id: string;
@@ -17,6 +18,7 @@ export declare class WhileExpression extends Expression {
         [x: string]: BooleanType;
     };
     encode(): any;
+    getType(def: Definitions, original: Type): Type | null;
     while(condition: Expression): WhileExpression;
     run(body: Expression): WhileExpression;
     withBreak(name: string): WhileExpression;

@@ -4,6 +4,7 @@ import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { toExpr } from '../fns';
+import { Type } from '../Type';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -88,6 +89,13 @@ export class ForExpression extends Expression
   public encode(): any 
   {
     return ForExpression.encode(this);
+  }
+
+  public getType(def: Definitions, original: Type): Type | null
+  {
+    const { context } = def.getContextWithScope(original, this.getScope());
+
+    return def.optionalType(this.body.getType(def, context));
   }
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression

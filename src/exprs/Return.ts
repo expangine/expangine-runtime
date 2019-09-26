@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 
 
 const INDEX_VALUE = 1;
@@ -52,6 +53,13 @@ export class ReturnExpression extends Expression
   public encode(): any 
   {
     return ReturnExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return this.value 
+      ? this.value.getType(def, context)
+      : null;
   }
 
 }

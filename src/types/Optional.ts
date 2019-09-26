@@ -5,6 +5,8 @@ import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_TYPE = 1;
@@ -13,9 +15,9 @@ const RANDOM_CHANCE = 0.3;
 export class OptionalType extends Type<Type>
 {
 
-  public static id = '?';
+  public static id = ID.Optional;
 
-  public static operations = new Operations('?:');
+  public static operations = new Operations(ID.Optional + ':');
 
   public static baseType = new OptionalType(AnyType.baseType);
 
@@ -53,6 +55,11 @@ export class OptionalType extends Type<Type>
     
   }
 
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return this.options.getSubType(expr, def, context);
+  }
+
   public getSubTypes() 
   {
     return this.options.getSubTypes();
@@ -80,7 +87,7 @@ export class OptionalType extends Type<Type>
     return ex.or(
       ex.op(AnyOps.isEqual, {
         value: ex.get('value'),
-        test: ex.const(undefined),
+        test: ex.undefined(),
       }),
       this.options.getValidateExpression(ex),
     );
@@ -91,19 +98,19 @@ export class OptionalType extends Type<Type>
     return ex.define({
       valueMissing: ex.op(AnyOps.isEqual, {
         value: ex.get('value'), 
-        test: ex.const(undefined),
+        test: ex.undefined(),
       }),
       testMissing: ex.op(AnyOps.isEqual, {
         value: ex.get('test'), 
-        test: ex.const(undefined),
+        test: ex.undefined(),
       }),
     }, ex
       .if(ex.and(ex.get('valueMissing'), ex.get('testMissing')))
-      .then(ex.const(0))
+      .then(ex.compareEqual())
       .if(ex.get('valueMissing'))
-      .then(ex.const(1))
+      .then(ex.compareLess())
       .if(ex.get('testMissing'))
-      .then(ex.const(-1))
+      .then(ex.compareGreater())
       .else(this.options.getCompareExpression(ex)),
     );
   }

@@ -1,10 +1,11 @@
 import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
+import { Definitions } from './Definitions';
 export declare type TypeInput = TypeClass | Type;
-export declare type TypeMap = Record<string, TypeInput>;
-export declare type TypeMapStrict = Record<string, Type>;
-export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeMap ? Record<keyof T, Type> : {
+export declare type TypeInputMap = Record<string, TypeInput>;
+export declare type TypeMap = Record<string, Type>;
+export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeInputMap ? Record<keyof T, Type> : {
     [K in keyof T]: TypeResolved<T[K]>;
 };
 export interface TypeProvider {
@@ -34,12 +35,12 @@ export declare abstract class Type<O = any> {
     static fromInput(input: TypeInput): Type;
     static resolve<T>(types: T): TypeResolved<T>;
     options: O;
-    operations?: Record<string, Operation<any, any, any>>;
     constructor(options: O);
-    abstract getOperations(): Record<string, Operation<any, any, any>>;
+    abstract getOperations(): Record<string, Operation<any, any, any, any, any>>;
     abstract getId(): string;
     abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
-    abstract getSubTypes(): Record<string, Type> | null;
+    abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
+    abstract getSubTypes(): TypeMap | null;
     abstract getExactType(value: any): Type<O>;
     abstract isCompatible(other: Type<O>): boolean;
     abstract getCreateExpression(ex: ExpressionBuilder): Expression;

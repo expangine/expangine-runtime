@@ -2,6 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export declare class OptionalType extends Type<Type> {
     static id: string;
     static operations: Operations;
@@ -10,9 +11,10 @@ export declare class OptionalType extends Type<Type> {
     static encode(type: OptionalType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     getId(): string;
     merge(type: OptionalType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

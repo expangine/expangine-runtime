@@ -92,11 +92,25 @@ export const ListOpsTypes =
     { list: GivenList, index: NumberType }
   ),
 
+  removeWhere: ops.setTypes(ListOps.removeWhere,  
+    GivenList,
+    { list: GivenList, where: BooleanType },
+    {},
+    GivenListIterationScope
+  ),
+
   contains: ops.setTypes(ListOps.contains,
     BooleanType,
     { list: GivenList, item: GivenListItem, isEqual: BooleanType },
     {},
     GivenListCompareScope
+  ),
+
+  find: ops.setTypes(ListOps.find,
+    GivenListItem,
+    { list: GivenList, where: BooleanType },
+    { reverse: BooleanType, start: NumberType },
+    GivenListIterationScope
   ),
 
   copy: ops.setTypes(ListOps.copy,
@@ -189,6 +203,13 @@ export const ListOpsTypes =
     { list: GivenList, item: GivenListItem, isEqual: BooleanType },
     { start: NumberType },
     GivenListCompareScope
+  ),
+
+  findIndex: ops.setTypes(ListOps.findIndex,
+    NumberType,
+    { list: GivenList, where: BooleanType },
+    { reverse: BooleanType, start: NumberType },
+    GivenListIterationScope
   ),
 
   last: ops.setTypes(ListOps.last,

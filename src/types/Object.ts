@@ -1,25 +1,29 @@
 
-import { objectMap, isObject, objectValues } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
-import { Operations } from '../Operation';
+import { objectMap, isObject, objectValues, isString, toArray } from '../fns';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { ObjectOps } from '../ops/ObjectOps';
+import { ObjectOps, ObjectOperations } from '../ops/ObjectOps';
+import { Definitions } from '../Definitions';
+import { ConstantExpression } from '../exprs/Constant';
+import { EnumType } from './Enum';
+import { TextType } from './Text';
+import { ID } from './ID';
 
 
 const INDEX_PROPS = 1;
 
 export interface ObjectOptions 
 {
-  props: Record<string, Type>;
+  props: TypeMap;
 }
 
 export class ObjectType extends Type<ObjectOptions> 
 {
 
-  public static id = 'obj';
+  public static id = ID.Object;
 
-  public static operations = new Operations('obj:');
+  public static operations = ObjectOperations;
 
   public static baseType = ObjectType.from();
 
@@ -49,7 +53,7 @@ export class ObjectType extends Type<ObjectOptions>
     return ObjectType.from(objectMap(data, d => describer.describe(d)));
   }
 
-  public static from(types?: TypeMap): ObjectType
+  public static from(types?: TypeInputMap): ObjectType
   {
     return new ObjectType({
       props: types ? Type.resolve(types) : {}
@@ -90,6 +94,39 @@ export class ObjectType extends Type<ObjectOptions>
         p1[prop] = describer.optionalType(p2[prop]);
       }
     }
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    if (ConstantExpression.is(expr))
+    {
+      if (isString(expr.value))
+      {
+        return this.options.props[expr.value];
+      }
+    }
+
+    const exprType = def.requiredType(expr.getType(def, context));
+
+    if (exprType)
+    {
+      if (exprType instanceof TextType)
+      {
+        const types = objectValues(this.options.props);
+
+        return def.mergeTypes(types);
+      }
+
+      if (exprType instanceof EnumType)
+      {
+        const values = toArray(exprType.options.constants.values());
+        const types = values.map(p => this.options.props[p]).filter(t => !!t);
+
+        return def.mergeTypes(types);
+      }
+    }
+
+    return null;
   }
 
   public getSubTypes() 

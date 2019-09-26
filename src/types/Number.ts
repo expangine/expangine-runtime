@@ -1,10 +1,11 @@
 
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { NumberOps } from '../ops/NumberOps';
+import { NumberOps, NumberOperations } from '../ops/NumberOps';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_OPTIONS = 1;
@@ -23,9 +24,9 @@ export class NumberType extends Type<NumberOptions>
 
   public static WHOLE_EPSILON = 0.000001;
 
-  public static id = 'num';
+  public static id = ID.Number;
 
-  public static operations = new Operations('num:');
+  public static operations = NumberOperations;
 
   public static baseType = new NumberType({});
 
@@ -75,6 +76,11 @@ export class NumberType extends Type<NumberOptions>
     o1.max = Math.max(o1.max, o2.max);
     o1.min = Math.min(o1.min, o2.min);
     o1.whole = o1.whole && o2.whole;
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
   }
 
   public getSubTypes(): null

@@ -1,7 +1,9 @@
 
 import { objectMap, isString, toExpr } from '../fns';
-import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
+import { TextType } from '../types/Text';
+import { Type } from '../Type';
 
 
 const INDEX_TEMPLATE = 1;
@@ -15,7 +17,7 @@ export class TemplateExpression extends Expression
   public static decode(data: any[], exprs: ExpressionProvider): TemplateExpression 
   {
     const template = data[INDEX_TEMPLATE];
-    const params: Record<string, Expression> = objectMap(data[INDEX_PARAMS], value => exprs.getExpression(value));
+    const params: ExpressionMap = objectMap(data[INDEX_PARAMS], value => exprs.getExpression(value));
     
     return new TemplateExpression(template, params);
   }
@@ -28,9 +30,9 @@ export class TemplateExpression extends Expression
   }
 
   public template: string;
-  public params: Record<string, Expression>;
+  public params: ExpressionMap;
 
-  public constructor(template: string, params: Record<string, Expression>) 
+  public constructor(template: string, params: ExpressionMap) 
   {
     super();
     this.template = template;
@@ -62,6 +64,11 @@ export class TemplateExpression extends Expression
   public encode(): any 
   {
     return TemplateExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return TextType.baseType;
   }
 
   public param(name: string, value: ExpressionValue): TemplateExpression

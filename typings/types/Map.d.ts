@@ -1,16 +1,16 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ListType } from './List';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface MapOptions {
     key: Type;
     value: Type;
 }
 export declare class MapType extends Type<MapOptions> {
     static id: string;
-    static operations: Operations;
+    static operations: import("..").Operations;
     static baseType: MapType;
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;
@@ -18,8 +18,9 @@ export declare class MapType extends Type<MapOptions> {
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: MapType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): {
         key: Type<any>;
         value: Type<any>;

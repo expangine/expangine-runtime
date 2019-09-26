@@ -1,6 +1,11 @@
 
-import { isArray } from '../fns';
+import { isArray, isString, isNumber } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
+import { Type } from '../Type';
+import { Definitions } from '../Definitions';
+import { EnumType } from '../types/Enum';
+import { TextType } from '../types/Text';
+import { NumberType } from '../types/Number';
 
 
 const INDEX_CONSTANT = 1;
@@ -58,6 +63,31 @@ export class ConstantExpression extends Expression
   public encode(): any 
   {
     return ConstantExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    const value = this.value;
+
+    if (isString(value)) 
+    {
+      return new EnumType({
+        key: TextType.baseType,
+        value: TextType.baseType,
+        constants: new Map([[value, value]]),
+      });
+    }
+
+    if (isNumber(value)) 
+    {
+      return new EnumType({
+        key: NumberType.baseType,
+        value: NumberType.baseType,
+        constants: new Map([[value, value]]),
+      });
+    }
+
+    return def.describe(this.value);
   }
 
 }

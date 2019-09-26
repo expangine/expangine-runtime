@@ -3,6 +3,8 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
 import { toExpr, isArray } from '../fns';
+import { Type } from '../Type';
+import { BooleanType } from '../types/Boolean';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -71,6 +73,11 @@ export class UpdateExpression extends Expression
   public encode(): any 
   {
     return UpdateExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return BooleanType.baseType;
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression

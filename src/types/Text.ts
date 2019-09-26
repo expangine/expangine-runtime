@@ -1,10 +1,14 @@
 
-import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
+import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
 import { Type, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { TextOps } from '../ops/TextOps';
+import { TextOps, TextOperations } from '../ops/TextOps';
+import { ConstantExpression } from '../exprs/Constant';
+import { NumberType } from './Number';
+import { Definitions } from '../Definitions';
+import { EnumType } from './Enum';
+import { ID } from './ID';
 
 
 const INDEX_OPTIONS = 1;
@@ -26,9 +30,9 @@ export interface TextOptions
 export class TextType extends Type<TextOptions> 
 {
 
-  public static id = 'text';
+  public static id = ID.Text;
 
-  public static operations = new Operations('text:');
+  public static operations = TextOperations;
   
   public static baseType = new TextType({});
 
@@ -99,6 +103,50 @@ export class TextType extends Type<TextOptions>
     o1.min = Math.min(o1.min, o2.min);
     o1.requireLower = o1.requireLower && o2.requireLower;
     o1.requireUpper = o1.requireUpper && o2.requireUpper;
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    if (ConstantExpression.is(expr))
+    {
+      if (expr.value === 'length')
+      {
+        return NumberType.baseType;
+      }
+
+      if (isNumber(expr.value))
+      {
+        return TextType.baseType;
+      }
+    }
+
+    const exprType = def.requiredType(expr.getType(def, context));
+
+    if (exprType)
+    {
+      if (exprType instanceof NumberType)
+      {
+        return TextType.baseType;
+      }
+
+      if (exprType instanceof EnumType)
+      {
+        if (exprType.options.value instanceof NumberType)
+        {
+          return TextType.baseType;
+        }
+
+        if (exprType.options.value instanceof TextType)
+        {
+          const values = toArray(exprType.options.constants.values());
+
+          if (values.length === 1 && values[0] === 'length')
+          {
+            return NumberType.baseType;
+          }
+        }
+      }
+    }
   }
 
   public getSubTypes(): null

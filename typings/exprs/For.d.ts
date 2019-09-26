@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 export declare class ForExpression extends Expression {
     static MAX_ITERATIONS: number;
     static id: string;
@@ -20,6 +21,7 @@ export declare class ForExpression extends Expression {
         [x: string]: BooleanType | NumberType;
     };
     encode(): any;
+    getType(def: Definitions, original: Type): Type | null;
     loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
     startAt(start: ExpressionValue): ForExpression;
     endAt(end: ExpressionValue): ForExpression;

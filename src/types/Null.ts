@@ -5,6 +5,8 @@ import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_OPTIONS = 1;
@@ -17,9 +19,9 @@ export interface NullOptions
 export class NullType extends Type<NullOptions> 
 {
 
-  public static id = 'null';
+  public static id = ID.Null;
 
-  public static operations = new Operations('null:');
+  public static operations = new Operations(ID.Null + ':');
 
   public static baseType = new NullType({});
 
@@ -60,6 +62,11 @@ export class NullType extends Type<NullOptions>
     o1.includeUndefined = o1.includeUndefined || o2.includeUndefined;
   }
 
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
+  }
+
   public getSubTypes(): null
   {
     return null;
@@ -77,14 +84,14 @@ export class NullType extends Type<NullOptions>
 
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
-    return ex.const(null);
+    return ex.null();
   }
 
   public getValidateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(AnyOps.isEqual, {
       value: ex.get('value'),
-      test: ex.const(null),
+      test: ex.null(),
     });
   }
 

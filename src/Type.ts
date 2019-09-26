@@ -3,13 +3,14 @@ import { objectMap, isArray, isObject } from './fns';
 import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
+import { Definitions } from './Definitions';
 
 
 export type TypeInput = TypeClass | Type;
 
-export type TypeMap = Record<string, TypeInput>;
+export type TypeInputMap = Record<string, TypeInput>;
 
-export type TypeMapStrict = Record<string, Type>;
+export type TypeMap = Record<string, Type>;
 
 export type TypeResolved<T> = T extends (null | undefined)
   ? undefined
@@ -17,7 +18,7 @@ export type TypeResolved<T> = T extends (null | undefined)
     ? Type
     : T extends TypeInput[]
       ? Type[]
-      : T extends TypeMap
+      : T extends TypeInputMap
         ? Record<keyof T, Type>
         : {
           [K in keyof T]: TypeResolved<T[K]>
@@ -92,20 +93,21 @@ export abstract class Type<O = any>
   }
 
   public options: O;
-  public operations?: Record<string, Operation<any, any, any>>;
 
   public constructor(options: O) 
   {
     this.options = options;
   }
 
-  public abstract getOperations(): Record<string, Operation<any, any, any>>;
+  public abstract getOperations(): Record<string, Operation<any, any, any, any, any>>;
 
   public abstract getId(): string;
 
   public abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
 
-  public abstract getSubTypes(): Record<string, Type> | null;
+  public abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
+
+  public abstract getSubTypes(): TypeMap | null;
 
   public abstract getExactType(value: any): Type<O>;
 

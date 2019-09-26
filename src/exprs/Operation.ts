@@ -1,11 +1,12 @@
 
 import { objectMap, isEmpty, isArray, toExpr } from '../fns';
-import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Operation } from '../Operation';
 import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
+import { Type } from '../Type';
 
 
 const INDEX_NAME = 1;
@@ -20,7 +21,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public static decode(data: any[], exprs: ExpressionProvider): OperationExpression 
   {
     const name = data[INDEX_NAME];
-    const params: Record<string, Expression> = objectMap(data[INDEX_PARAMS], value => exprs.getExpression(value));
+    const params: ExpressionMap = objectMap(data[INDEX_PARAMS], value => exprs.getExpression(value));
     const scopeAlias: Record<string, string> = data[INDEX_SCOPE] || {};
     
     return new OperationExpression(name, params, scopeAlias);
@@ -44,10 +45,10 @@ export class OperationExpression<P extends string = never, O extends string = ne
   }
 
   public name: string;
-  public params: Record<string, Expression>;
+  public params: ExpressionMap;
   public scopeAlias: Record<string, string>;
 
-  public constructor(name: string, params: Record<string, Expression>, scopeAlias: Record<string, string> = {}) 
+  public constructor(name: string, params: ExpressionMap, scopeAlias: Record<string, string> = {}) 
   {
     super();
     this.name = name;
@@ -81,6 +82,11 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public encode(): any 
   {
     return OperationExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

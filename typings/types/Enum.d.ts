@@ -2,6 +2,7 @@ import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export interface EnumOptions {
     key: Type;
     value: Type;
@@ -16,8 +17,9 @@ export declare class EnumType extends Type<EnumOptions> {
     static describePriority: number;
     static describe(): Type | null;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: EnumType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): {
         key: Type<any>;
         value: Type<any>;

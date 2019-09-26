@@ -29,7 +29,7 @@ export declare class ExpressionBuilder {
     if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;
     invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
     not(expr: Expression): NotExpression;
-    op<P extends string, O extends string, S extends string>(op: Operation<P, O, S>, params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
+    op<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
     or(...exprs: Expression[]): OrExpression;
     return(value?: ExpressionValue): ReturnExpression;
     set(...path: ExpressionValue[]): SetExpression;
@@ -37,4 +37,14 @@ export declare class ExpressionBuilder {
     template(template: string, params?: Record<string, ExpressionValue>): TemplateExpression;
     update(...path: ExpressionValue[]): UpdateExpression;
     while(condition: Expression, body?: Expression, breakVariable?: string, maxIterations?: number): WhileExpression;
+    undefined(): ConstantExpression;
+    null(): ConstantExpression;
+    true(): ConstantExpression;
+    false(): ConstantExpression;
+    zero(): ConstantExpression;
+    one(): ConstantExpression;
+    compareEqual(): ConstantExpression;
+    compareLess(): ConstantExpression;
+    compareGreater(): ConstantExpression;
+    string(): ConstantExpression;
 }

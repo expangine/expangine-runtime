@@ -1,17 +1,18 @@
 
 import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { AnyOps } from '../ops/AnyOps';
+import { Definitions } from '../Definitions';
+import { AnyOps, AnyOperations } from '../ops/AnyOps';
+import { ID } from './ID';
 
 
 export class AnyType extends Type 
 {
 
-  public static id = 'any';
+  public static id = ID.Any;
 
-  public static operations = new Operations('any:');
+  public static operations = AnyOperations;
 
   public static baseType = new AnyType({});
 
@@ -47,6 +48,11 @@ export class AnyType extends Type
     
   }
 
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return null;
+  }
+
   public getSubTypes(): null
   {
     return null;
@@ -64,12 +70,12 @@ export class AnyType extends Type
 
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
-    return ex.const('');
+    return ex.string();
   }
 
   public getValidateExpression(ex: ExpressionBuilder): Expression
   {
-    return ex.const(true);
+    return ex.true();
   }
 
   public getCompareExpression(ex: ExpressionBuilder): Expression

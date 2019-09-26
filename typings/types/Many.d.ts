@@ -1,7 +1,8 @@
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
+import { Operations, Operation } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
 export declare class ManyType extends Type<Type[]> {
     static id: string;
     static operations: Operations;
@@ -10,11 +11,13 @@ export declare class ManyType extends Type<Type[]> {
     static encode(type: ManyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    subs?: Record<string, Type>;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    subs?: TypeMap;
+    operations?: Record<string, Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, Operation<any, any, any, any, any>>;
     private forMany;
     getId(): string;
     merge(type: ManyType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): Record<string, Type<any>>;
     getExactType(value: any): Type;
     isCompatible(other: Type): boolean;

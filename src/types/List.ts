@@ -1,13 +1,17 @@
 
-import { isNumber, isEmpty, isArray, coalesce } from '../fns';
+import { isNumber, isEmpty, isArray, coalesce, toArray } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
-import { Operations } from '../Operation';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { ListOps } from '../ops/ListOps';
+import { ListOps, ListOperations } from '../ops/ListOps';
+import { Definitions } from '../Definitions';
+import { ConstantExpression } from '../exprs/Constant';
+import { EnumType } from './Enum';
+import { TextType } from './Text';
+import { ID } from './ID';
 
 
 const INDEX_ITEM = 1;
@@ -27,9 +31,9 @@ export class ListType extends Type<ListOptions>
 
   public static lengthType = new NumberType({min: 0, whole: true});
 
-  public static id = 'list';
+  public static id = ID.List;
 
-  public static operations = new Operations('list:');
+  public static operations = ListOperations;
 
   public static baseType = new ListType({ item: AnyType.baseType });
 
@@ -102,6 +106,52 @@ export class ListType extends Type<ListOptions>
     o1.max = Math.max(o1.max, o2.max);
   }
 
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    if (ConstantExpression.is(expr))
+    {
+      if (expr.value === 'length')
+      {
+        return ListType.lengthType;
+      }
+
+      if (isNumber(expr.value))
+      {
+        return this.options.item;
+      }
+    }
+
+    const exprType = def.requiredType(expr.getType(def, context));
+
+    if (exprType)
+    {
+      if (exprType instanceof NumberType)
+      {
+        return this.options.item;
+      }
+
+      if (exprType instanceof EnumType)
+      {
+        if (exprType.options.value instanceof NumberType)
+        {
+          return this.options.item;
+        }
+
+        if (exprType.options.value instanceof TextType)
+        {
+          const values = toArray(exprType.options.constants.values());
+
+          if (values.length === 1 && values[0] === 'length')
+          {
+            return ListType.lengthType;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
   public getSubTypes() 
   {
     return {
@@ -133,7 +183,7 @@ export class ListType extends Type<ListOptions>
       }),
       ex.not(ex.op(ListOps.contains, {
         list: ex.get('value'),
-        item: ex.const(null),
+        item: ex.null(),
         isEqual: ex.not(this.options.item.getValidateExpression(ex)),
       }, {
         value: 'ignore',

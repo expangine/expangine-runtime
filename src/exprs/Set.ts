@@ -2,6 +2,8 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
+import { BooleanType } from '../types/Boolean';
+import { Type } from '../Type';
 
 
 const INDEX_PATH = 1;
@@ -60,6 +62,11 @@ export class SetExpression extends Expression
   public encode(): any 
   {
     return SetExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return BooleanType.baseType;
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): SetExpression

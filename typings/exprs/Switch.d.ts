@@ -1,6 +1,7 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Operation } from '../Operation';
+import { Type } from '../Type';
 export declare class SwitchExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): SwitchExpression;
@@ -14,6 +15,7 @@ export declare class SwitchExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    getType(def: Definitions, context: Type): Type | null;
     private copyCases;
     val(value: ExpressionValue, op?: Operation): SwitchExpression;
     case(test: ExpressionValue): SwitchExpression;

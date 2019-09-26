@@ -1,5 +1,6 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 export declare class NoExpression extends Expression {
     static id: string;
     static readonly instance: NoExpression;
@@ -9,4 +10,5 @@ export declare class NoExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    getType(def: Definitions, context: Type): Type | null;
 }

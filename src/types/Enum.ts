@@ -5,6 +5,8 @@ import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
+import { ID } from './ID';
 
 
 const INDEX_KEY = 1;
@@ -21,9 +23,9 @@ export interface EnumOptions
 export class EnumType extends Type<EnumOptions> 
 {
 
-  public static id = 'enum';
+  public static id = ID.Enum;
 
-  public static operations = new Operations('enum:');
+  public static operations = new Operations(ID.Enum + ':');
   
   public static baseType = new EnumType({ key: TextType.baseType, value: TextType.baseType, constants: new Map() });
 
@@ -73,7 +75,21 @@ export class EnumType extends Type<EnumOptions>
 
   public merge(type: EnumType, describer: TypeDescribeProvider): void
   {
-    
+    const c1 = this.options.constants;
+    const c2 = type.options.constants;
+
+    this.options.key = describer.mergeType(this.options.key, type.options.key);
+    this.options.value = describer.mergeType(this.options.value, type.options.value);
+
+    for (const [key, value] of c2.entries())
+    {
+      c1.set(key, value);
+    }
+  }
+
+  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  {
+    return this.options.value.getSubType(expr, def, context);
   }
 
   public getSubTypes()
@@ -90,7 +106,8 @@ export class EnumType extends Type<EnumOptions>
 
   public isCompatible(other: Type): boolean 
   {
-    return other instanceof EnumType;
+    return other instanceof EnumType 
+      && this.options.value.isCompatible(other.options.value);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

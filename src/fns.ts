@@ -1,4 +1,4 @@
-import { Expression, ExpressionValue } from './Expression';
+import { Expression, ExpressionValue, ExpressionMap } from './Expression';
 import { ConstantExpression } from './exprs/Constant';
 
 export function isNumber(value: any): value is number 
@@ -76,9 +76,9 @@ export function isEmpty(value: any): boolean
 }
 
 export function toExpr(values: ExpressionValue[]): Expression[]
-export function toExpr(values: Record<string, ExpressionValue>): Record<string, Expression>
+export function toExpr(values: Record<string, ExpressionValue>): ExpressionMap
 export function toExpr(value: ExpressionValue): Expression
-export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<string, ExpressionValue>): Expression | Expression[] | Record<string, Expression>
+export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<string, ExpressionValue>): Expression | Expression[] | ExpressionMap
 {
   return isArray(value)
     ? value.map(toExpr)

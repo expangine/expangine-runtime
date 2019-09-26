@@ -1,6 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Type } from '../Type';
 
 
 export class NoExpression extends Expression 
@@ -38,6 +39,11 @@ export class NoExpression extends Expression
   public encode(): any 
   {
     return NoExpression.encode(this);
+  }
+
+  public getType(def: Definitions, context: Type): Type | null
+  {
+    return null;
   }
 
 }

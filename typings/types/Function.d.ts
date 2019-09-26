@@ -3,6 +3,7 @@ import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Definitions } from '../Definitions';
 export interface FunctionOptions {
     returnType: Type;
     params: ObjectType;
@@ -17,8 +18,9 @@ export declare class FunctionType extends Type<FunctionOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any>>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(): {
         returnType: Type<any>;
         params: ObjectType;

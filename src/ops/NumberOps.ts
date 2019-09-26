@@ -1,17 +1,11 @@
 
-import { AnyType } from '../types/Any';
-import { BooleanType } from '../types/Boolean';
-import { DateType } from '../types/Date';
-import { ListType } from '../types/List';
-import { MapType } from '../types/Map';
-import { NumberType } from '../types/Number';
-import { ObjectType } from '../types/Object';
-import { TextType } from '../types/Text';
-import { TupleType } from '../types/Tuple';
+import { Operations } from '../Operation';
+import { ID } from '../types/ID';
 
 
-const ops = NumberType.operations;
+export const NumberOperations = new Operations(ID.Number + ':');
 
+const ops = NumberOperations;
 
 export const NumberOps = 
 {
@@ -170,22 +164,22 @@ export const NumberOps =
 
   // Casts
   
-  asAny: ops.set('~' + AnyType.id, {}, ['value']),
+  asAny: ops.set('~' + ID.Any, {}, ['value']),
 
-  asBoolean: ops.set('~' + BooleanType.id, {}, ['value']),
+  asBoolean: ops.set('~' + ID.Boolean, {}, ['value']),
 
-  asDate: ops.set('~' + DateType.id, {}, ['value']),
+  asDate: ops.set('~' + ID.Date, {}, ['value']),
 
-  asList: ops.set('~' + ListType.id, {}, ['value']),
+  asList: ops.set('~' + ID.List, {}, ['value']),
 
-  asMap: ops.set('~' + MapType.id, {}, ['value']),
+  asMap: ops.set('~' + ID.Map, {}, ['value']),
 
-  asNumber: ops.set('~' + NumberType.id, {}, ['value']),
+  asNumber: ops.set('~' + ID.Number, {}, ['value']),
 
-  asObject: ops.set('~' + ObjectType.id, {}, ['value']),
+  asObject: ops.set('~' + ID.Object, {}, ['value']),
 
-  asText: ops.set('~' + TextType.id, {}, ['value']),
+  asText: ops.set('~' + ID.Text, {}, ['value']),
 
-  asTuple: ops.set('~' + TupleType.id, {}, ['value']),
+  asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };

@@ -51,7 +51,7 @@ export declare const NumberOpsTypes: {
     clamp: import("../..").OperationTypes<"value" | "min" | "max", never, never>;
     triangleHeight: import("../..").OperationTypes<"base" | "side1" | "side2", never, never>;
     lerp: import("../..").OperationTypes<"start" | "end" | "delta", never, never>;
-    rnd: import("../..").OperationTypes<any, "min" | "max" | "whole" | "includeMax", never>;
+    rnd: import("../..").OperationTypes<never, "min" | "max" | "whole" | "includeMax", never>;
     toBaseText: import("../..").OperationTypes<"value", "base" | "minDigits", never>;
     toText: import("../..").OperationTypes<"value", "prefix" | "suffix" | "minPlaces" | "maxPlaces" | "useExponent" | "thousandSeparator", never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
