@@ -8,6 +8,7 @@ export * from './Operation';
 export * from './Runtime';
 export * from './Type';
 export * from './TypeBuilder';
+export * from './Traverser';
 export * from './types/Any';
 export * from './types/Boolean';
 export * from './types/Date';

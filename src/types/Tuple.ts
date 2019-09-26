@@ -11,6 +11,7 @@ import { NumberType } from './Number';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_ELEMENTS = 1;
@@ -201,6 +202,13 @@ export class TupleType extends Type<Type[]>
     }
 
     return true;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () =>
+      this.options.map((type, index) => traverse.step(index, type))
+    );
   }
 
   public isValid(value: any): boolean 

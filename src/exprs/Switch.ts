@@ -6,6 +6,7 @@ import { Operation } from '../Operation';
 import { NoExpression } from './No';
 import { toExpr } from '../fns';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_VALUE = 1;
@@ -99,6 +100,26 @@ export class SwitchExpression extends Expression
     ;
 
     return def.mergeTypes(types);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('value', this.value);
+      traverse.step('cases', () => 
+        this.cases.forEach(([tests, result]) => {
+          traverse.step('case', () => 
+            tests.forEach((test, index) => 
+              traverse.step(index, test)
+            )
+          );
+          traverse.step('result', result);
+        })
+      );
+      if (this.defaultCase !== NoExpression.instance) {
+        traverse.step('default', this.defaultCase);
+      }
+    });
   }
 
   private copyCases(): Array<[Expression[], Expression]>

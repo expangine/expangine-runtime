@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 export declare class DefineExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): DefineExpression;
@@ -14,6 +15,7 @@ export declare class DefineExpression extends Expression {
     getScope(): Record<string, AnyType>;
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
+    traverse<R>(traverse: Traverser<Expression, R>): R;
     with(name: string, value: ExpressionValue): DefineExpression;
     with(defines: Record<string, ExpressionValue>): DefineExpression;
     run(expr: Expression): DefineExpression;

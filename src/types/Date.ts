@@ -7,6 +7,7 @@ import { Expression } from '../Expression';
 import { DateOps, DateOperations } from '../ops/DateOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_OPTIONS = 1;
@@ -132,6 +133,11 @@ export class DateType extends Type<DateOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof DateType;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

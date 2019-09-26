@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { isArray } from '../fns';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_CHAIN = 1;
@@ -57,6 +58,15 @@ export class ChainExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return this.chain[this.chain.length - 1].getType(def, context);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => 
+      this.chain.forEach((expr, index) => 
+        traverse.step(index, expr)
+      )
+    );
   }
 
   public add(exprs: Expression | Expression[]): ChainExpression

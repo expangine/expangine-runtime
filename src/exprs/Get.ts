@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_PATH = 1;
@@ -62,6 +63,15 @@ export class GetExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return def.getPathType(this.path, context);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => 
+      this.path.forEach((expr, index) => 
+        traverse.step(index, expr)
+      )
+    );
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): GetExpression

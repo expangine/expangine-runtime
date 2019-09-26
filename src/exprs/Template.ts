@@ -4,6 +4,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { Definitions } from '../Definitions';
 import { TextType } from '../types/Text';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_TEMPLATE = 1;
@@ -69,6 +70,15 @@ export class TemplateExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return TextType.baseType.newInstance();
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => 
+      objectMap(this.params, (expr, param) =>
+        traverse.step(param, expr)
+      )
+    );
   }
 
   public param(name: string, value: ExpressionValue): TemplateExpression

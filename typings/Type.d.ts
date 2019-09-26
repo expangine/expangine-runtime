@@ -2,6 +2,7 @@ import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
+import { Traverser, Traversable } from './Traverser';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
@@ -31,7 +32,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
     describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
     new (options: O): T;
 }
-export declare abstract class Type<O = any> {
+export declare abstract class Type<O = any> implements Traversable<Type> {
     static fromInput(input: TypeInput): Type;
     static resolve<T>(types: T): TypeResolved<T>;
     options: O;
@@ -44,6 +45,7 @@ export declare abstract class Type<O = any> {
     abstract getExactType(value: any): Type<O>;
     abstract getSimplifiedType(): Type;
     abstract isCompatible(other: Type<O>): boolean;
+    abstract traverse<R>(traverse: Traverser<Type, R>): R;
     abstract getCreateExpression(ex: ExpressionBuilder): Expression;
     abstract getValidateExpression(ex: ExpressionBuilder): Expression;
     abstract getCompareExpression(ex: ExpressionBuilder): Expression;

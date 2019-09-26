@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { OrExpression } from './Or';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 export declare class AndExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): AndExpression;
@@ -13,6 +14,7 @@ export declare class AndExpression extends Expression {
     getScope(): null;
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
+    traverse<R>(traverse: Traverser<Expression, R>): R;
     and(exprs: Expression | Expression[]): AndExpression;
     or(exprs: Expression | Expression[]): OrExpression;
 }

@@ -2,6 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Traverser } from '../Traverser';
 export declare class AnyType extends Type {
     static id: string;
     static operations: import("..").Operations;
@@ -18,6 +19,7 @@ export declare class AnyType extends Type {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

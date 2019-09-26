@@ -4,6 +4,7 @@ import { objectMap, isString, toExpr } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_DEFINE = 1;
@@ -73,6 +74,18 @@ export class DefineExpression extends Expression
     objectMap(this.define, (value, key) => scope[key] = value.getType(def, context));
 
     return this.body.getType(def, context);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('define', () =>
+        objectMap(this.define, (expr, prop) => 
+          traverse.step(prop, expr)
+        )
+      );
+      traverse.step('body', this.body);
+    });
   }
 
   public with(name: string, value: ExpressionValue): DefineExpression

@@ -1,5 +1,6 @@
 import { Type, TypeMap } from './Type';
 import { Definitions } from './Definitions';
+import { Traversable, Traverser } from './Traverser';
 
 
 export interface ExpressionProvider 
@@ -19,7 +20,7 @@ export type ExpressionValue = any | Expression;
 
 export type ExpressionMap = Record<string, Expression>;
 
-export abstract class Expression 
+export abstract class Expression implements Traversable<Expression>
 {
   
   public abstract getId(): string;
@@ -31,5 +32,7 @@ export abstract class Expression
   public abstract encode(): any;
 
   public abstract getType(def: Definitions, context: Type): Type | null;
+
+  public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
 
 }

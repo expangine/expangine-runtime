@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 export declare class DoExpression extends Expression {
     static MAX_ITERATIONS: number;
     static id: string;
@@ -19,6 +20,7 @@ export declare class DoExpression extends Expression {
     };
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
+    traverse<R>(traverse: Traverser<Expression, R>): R;
     do(body: Expression, condition?: Expression): DoExpression;
     while(condition: Expression): DoExpression;
     withBreak(name: string): DoExpression;

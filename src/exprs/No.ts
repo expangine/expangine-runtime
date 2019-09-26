@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 export class NoExpression extends Expression 
@@ -44,6 +45,11 @@ export class NoExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return null;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this);
   }
 
 }

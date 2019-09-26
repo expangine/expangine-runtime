@@ -9,6 +9,7 @@ import { NumberType } from './Number';
 import { Definitions } from '../Definitions';
 import { EnumType } from './Enum';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_OPTIONS = 1;
@@ -177,6 +178,11 @@ export class TextType extends Type<TextOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof TextType;
+  }
+  
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

@@ -5,6 +5,7 @@ import { isArray } from '../fns';
 import { AndExpression } from './And';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -65,6 +66,15 @@ export class OrExpression extends Expression
     ;
     
     return def.mergeTypes(types);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => 
+      this.expressions.forEach((expr, index) => 
+        traverse.step(index, expr)
+      )
+    );
   }
 
   public or(exprs: Expression | Expression[]): OrExpression

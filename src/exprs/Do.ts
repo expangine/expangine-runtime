@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -85,6 +86,14 @@ export class DoExpression extends Expression
     const { context } = def.getContextWithScope(original, this.getScope());
 
     return def.optionalType(this.body.getType(def, context));
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('condition', this.condition);
+      traverse.step('body', this.body);
+    });
   }
 
   public do(body: Expression, condition?: Expression): DoExpression

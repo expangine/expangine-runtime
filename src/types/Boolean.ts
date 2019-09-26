@@ -7,6 +7,7 @@ import { Expression } from '../Expression';
 import { BooleanOps, BooleanOperations } from '../ops/BooleanOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_OPTIONS = 1;
@@ -84,6 +85,11 @@ export class BooleanType extends Type<BooleanOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof BooleanType || other instanceof NumberType;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

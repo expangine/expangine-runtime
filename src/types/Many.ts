@@ -8,6 +8,7 @@ import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { isEmpty } from '../fns';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_MANY = 1;
@@ -143,6 +144,13 @@ export class ManyType extends Type<Type[]>
   public isCompatible(other: Type): boolean 
   {
     return this.forMany(false, many => many.isCompatible(other) ? true : undefined);
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () =>
+      this.options.map((type, index) => traverse.step(index, type))
+    );
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

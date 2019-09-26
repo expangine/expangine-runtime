@@ -5,6 +5,7 @@ import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyOps, AnyOperations } from '../ops/AnyOps';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 export class AnyType extends Type 
@@ -71,6 +72,11 @@ export class AnyType extends Type
   public isCompatible(other: Type): boolean 
   {
     return true;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

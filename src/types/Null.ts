@@ -7,6 +7,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_OPTIONS = 1;
@@ -85,6 +86,11 @@ export class NullType extends Type<NullOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof NullType;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this);
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

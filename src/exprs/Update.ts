@@ -5,6 +5,7 @@ import { AnyType } from '../types/Any';
 import { toExpr, isArray } from '../fns';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
+import { Traverser } from '../Traverser';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -78,6 +79,18 @@ export class UpdateExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('path', () => 
+        this.path.forEach((expr, index) => 
+          traverse.step(index, expr)
+        )
+      );
+      traverse.step('value', this.value);
+    });
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression

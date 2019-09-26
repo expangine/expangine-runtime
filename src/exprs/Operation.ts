@@ -7,6 +7,7 @@ import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_NAME = 1;
@@ -87,6 +88,15 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public getType(def: Definitions, context: Type): Type | null
   {
     return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () =>
+      objectMap(this.params, (expr, param) =>
+        traverse.step(param, expr)
+      )
+    );
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

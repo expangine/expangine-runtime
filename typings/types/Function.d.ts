@@ -4,6 +4,7 @@ import { ObjectType } from './Object';
 import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
+import { Traverser } from '../Traverser';
 export interface FunctionOptions {
     returnType: Type;
     params: ObjectType;
@@ -25,6 +26,7 @@ export declare class FunctionType extends Type<FunctionOptions> {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

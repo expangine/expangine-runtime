@@ -7,6 +7,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_KEY = 1;
@@ -111,6 +112,14 @@ export class EnumType extends Type<EnumOptions>
   {
     return other instanceof EnumType 
       && this.options.value.isCompatible(other.options.value);
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('key', this.options.key);
+      traverse.step('value', this.options.value);
+    });
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

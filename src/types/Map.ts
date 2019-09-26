@@ -12,6 +12,7 @@ import { ListOps } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_VALUE = 1;
@@ -142,6 +143,14 @@ export class MapType extends Type<MapOptions>
     return other instanceof MapType && 
       this.options.key.isCompatible(other.options.key) && 
       this.options.value.isCompatible(other.options.value);
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('key', this.options.key);
+      traverse.step('value', this.options.value);
+    });
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

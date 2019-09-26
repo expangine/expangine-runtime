@@ -7,6 +7,7 @@ import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_TYPE = 1;
@@ -80,6 +81,11 @@ export class OptionalType extends Type<Type>
     return other instanceof OptionalType
       ? this.options.isCompatible(other.options)
       : this.options.isCompatible(other);
+  }
+  
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => traverse.step('optional', this.options));
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

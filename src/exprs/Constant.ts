@@ -6,6 +6,7 @@ import { Definitions } from '../Definitions';
 import { EnumType } from '../types/Enum';
 import { TextType } from '../types/Text';
 import { NumberType } from '../types/Number';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_CONSTANT = 1;
@@ -88,6 +89,11 @@ export class ConstantExpression extends Expression
     }
 
     return def.describe(this.value);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this);
   }
 
 }

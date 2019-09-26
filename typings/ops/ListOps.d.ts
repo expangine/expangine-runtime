@@ -2,7 +2,7 @@ import { Operations } from '../Operation';
 export declare const ListOperations: Operations;
 export declare const ListOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
-    build: import("../Operation").Operation<"count" | "item", "sameItem", "list" | "count" | "index" | "last", "item", "item">;
+    build: import("../Operation").Operation<"item" | "count", "sameItem", "list" | "count" | "index" | "last", "item", "item">;
     get: import("../Operation").Operation<"list" | "index", never, never, never, "list">;
     set: import("../Operation").Operation<"list" | "value" | "index", never, never, never, "list">;
     add: import("../Operation").Operation<"list" | "item", never, never, never, "list">;

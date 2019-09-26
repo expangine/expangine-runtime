@@ -4,6 +4,7 @@ import { Operation, Operations } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
+import { Traverser, Traversable } from './Traverser';
 
 
 export type TypeInput = TypeClass | Type;
@@ -55,7 +56,7 @@ export interface TypeClass<T extends Type<O> = any, O = any>
   new(options: O): T;
 }
 
-export abstract class Type<O = any> 
+export abstract class Type<O = any> implements Traversable<Type>
 {
 
   public static fromInput(input: TypeInput): Type
@@ -114,6 +115,8 @@ export abstract class Type<O = any>
   public abstract getSimplifiedType(): Type;
 
   public abstract isCompatible(other: Type<O>): boolean;
+
+  public abstract traverse<R>(traverse: Traverser<Type, R>): R;
 
   public abstract getCreateExpression(ex: ExpressionBuilder): Expression;
 

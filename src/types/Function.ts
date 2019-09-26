@@ -8,6 +8,7 @@ import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_RETURN = 1;
@@ -98,6 +99,14 @@ export class FunctionType extends Type<FunctionOptions>
     return other instanceof FunctionType
       && this.options.returnType.isCompatible(other.options.returnType)
       && this.options.params.isCompatible(other.options.params);
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('returnType', this.options.returnType);
+      traverse.step('params', this.options.params);
+    });
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_PATH = 1;
@@ -67,6 +68,18 @@ export class SetExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('path', () => 
+        this.path.forEach((expr, index) => 
+          traverse.step(index, expr)
+        )
+      );
+      traverse.step('value', this.value);
+    });
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): SetExpression

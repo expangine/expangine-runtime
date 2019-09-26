@@ -2,6 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Traverser } from '../Traverser';
 export interface BooleanOptions {
     true?: Record<string, true>;
     false?: Record<string, true>;
@@ -22,6 +23,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

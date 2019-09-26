@@ -12,6 +12,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_ITEM = 1;
@@ -176,6 +177,13 @@ export class ListType extends Type<ListOptions>
   public isCompatible(other: Type): boolean 
   {
     return other instanceof ListType && this.options.item.isCompatible(other.options.item);
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => 
+      traverse.step('item', this.options.item)
+    );
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression

@@ -5,6 +5,7 @@ import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { toExpr } from '../fns';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -96,6 +97,15 @@ export class ForExpression extends Expression
     const { context } = def.getContextWithScope(original, this.getScope());
 
     return def.optionalType(this.body.getType(def, context));
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('start', this.start);
+      traverse.step('end', this.end);
+      traverse.step('body', this.body);
+    });
   }
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression

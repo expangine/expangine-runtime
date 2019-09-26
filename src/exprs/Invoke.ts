@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { Definitions } from '../Definitions';
 import { objectMap, isString, toExpr } from '../fns';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_NAME = 1;
@@ -72,6 +73,15 @@ export class InvokeExpression extends Expression
     return func
       ? func.options.returnType
       : null;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () =>
+      objectMap(this.args, (expr, arg) =>
+        traverse.step(arg, expr)
+      )
+    );
   }
 
   public named(name: string): InvokeExpression

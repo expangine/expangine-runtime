@@ -6,6 +6,7 @@ import { isArray } from '../fns';
 import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_EXPR = 1;
@@ -60,6 +61,13 @@ export class NotExpression extends Expression
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () =>
+      traverse.step('not', this.expression)
+    );
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

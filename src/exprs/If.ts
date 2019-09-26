@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
 import { NoExpression } from './No';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_CASES = 1;
@@ -79,6 +80,23 @@ export class IfExpression extends Expression
     ;
 
     return def.mergeTypes(types);
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => {
+      traverse.step('cases', () => 
+        this.cases.forEach(([condition, result], index) => 
+          traverse.step(index, () => {
+            traverse.step('if', condition);
+            traverse.step('then', result);
+          })
+        )
+      );
+      if (this.otherwise !== NoExpression.instance) {
+        traverse.step('else', this.otherwise);
+      }
+    });
   }
 
   public if(condition: Expression, body?: Expression)

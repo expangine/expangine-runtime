@@ -2,6 +2,7 @@ import { Type, TypeDescribeProvider } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
+import { Traverser } from '../Traverser';
 export interface NumberOptions {
     min?: number;
     max?: number;
@@ -24,6 +25,7 @@ export declare class NumberType extends Type<NumberOptions> {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

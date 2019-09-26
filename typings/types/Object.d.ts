@@ -3,6 +3,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { TextType } from './Text';
+import { Traverser } from '../Traverser';
 export interface ObjectOptions {
     props: TypeMap;
 }
@@ -23,6 +24,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

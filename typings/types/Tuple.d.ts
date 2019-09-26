@@ -3,6 +3,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { NumberType } from './Number';
+import { Traverser } from '../Traverser';
 export declare class TupleType extends Type<Type[]> {
     static lengthType: NumberType;
     static indexType: NumberType;
@@ -25,6 +26,7 @@ export declare class TupleType extends Type<Type[]> {
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;
     isCompatible(other: Type): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): TupleType;

@@ -2,6 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_VALUE = 1;
@@ -60,6 +61,13 @@ export class ReturnExpression extends Expression
     return this.value 
       ? this.value.getType(def, context)
       : null;
+  }
+
+  public traverse<R>(traverse: Traverser<Expression, R>): R
+  {
+    return traverse.enter(this, () => 
+      traverse.step('value', this.value)
+    );
   }
 
 }

@@ -9,6 +9,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
+import { Traverser } from '../Traverser';
 
 
 const INDEX_PROPS = 1;
@@ -144,6 +145,15 @@ export class ObjectType extends Type<ObjectOptions>
   public getSimplifiedType(): Type 
   {
     return this;
+  }
+
+  public traverse<R>(traverse: Traverser<Type, R>): R
+  {
+    return traverse.enter(this, () => 
+      objectMap(this.options.props, 
+        (type, prop) => traverse.step(prop, type)
+      )
+    );
   }
 
   public isCompatible(other: Type): boolean 
