@@ -62,7 +62,7 @@ export abstract class Type<O = any>
   {
     return input instanceof Type
       ? input
-      : input.baseType;
+      : input.baseType.newInstance();
   }
 
   public static resolve<T>(types: T): TypeResolved<T>

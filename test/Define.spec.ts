@@ -1,4 +1,4 @@
-import { ExpressionBuilder, defs, TextType, ObjectType, NumberType, EnumType } from '../src';
+import { ExpressionBuilder, defs, TextType, NumberType, EnumType, TypeBuilder } from '../src';
 
 // import { describe, it, expect } from 'jest';
 
@@ -8,9 +8,10 @@ import { ExpressionBuilder, defs, TextType, ObjectType, NumberType, EnumType } f
 describe('Define', () => {
 
   const ex = new ExpressionBuilder();
-  const context = ObjectType.from({
-    name: TextType,
-    age: NumberType,
+  const tp = new TypeBuilder();
+  const context = tp.object({
+    name: tp.text(),
+    age: tp.number(),
   })
 
   it('type constant', () =>

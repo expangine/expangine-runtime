@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { defs, ExpressionBuilder, ObjectType, NumberType, TextType } from '../src';
+import { defs, ExpressionBuilder, NumberType, TextType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,10 +8,11 @@ import { defs, ExpressionBuilder, ObjectType, NumberType, TextType } from '../sr
 describe('Chain', () => {
 
   const ex = new ExpressionBuilder();
+  const tp = new TypeBuilder();
 
-  const context = ObjectType.from({
-    a: NumberType,
-    b: TextType
+  const context = tp.object({
+    a: tp.number(),
+    b: tp.text()
   });
 
   it('type last', () =>

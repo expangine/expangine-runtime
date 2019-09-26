@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { defs, ExpressionBuilder, NullType, NumberType, EnumType, ListType, TextType, DateType, MapType, ObjectType, BooleanType } from '../src';
+import { defs, ExpressionBuilder, NumberType, EnumType, ListType, TextType, DateType, MapType, ObjectType, BooleanType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,7 +8,8 @@ import { defs, ExpressionBuilder, NullType, NumberType, EnumType, ListType, Text
 describe('Constant', () => {
 
   const ex = new ExpressionBuilder();
-  const context = NullType.baseType;
+  const tp = new TypeBuilder();
+  const context = tp.null();
 
   it('detect type', () =>
   {

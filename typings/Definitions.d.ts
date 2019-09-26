@@ -44,7 +44,7 @@ export declare class Definitions {
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
     getContextWithScope(original: Type, scope?: TypeMap): {
-        context: ManyType | ObjectType;
+        context: ObjectType | ManyType;
         scope: Record<string, Type<any>>;
     };
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;

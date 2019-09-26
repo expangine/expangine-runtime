@@ -34,6 +34,8 @@ export class TextType extends Type<TextOptions>
 
   public static indexType = new NumberType({min: 0, whole: true});
 
+  public static charType = new TextType({});
+
   public static id = ID.Text;
 
   public static operations = TextOperations;
@@ -120,7 +122,7 @@ export class TextType extends Type<TextOptions>
 
       if (isNumber(expr.value))
       {
-        return TextType.baseType;
+        return TextType.charType;
       }
     }
 
@@ -130,14 +132,14 @@ export class TextType extends Type<TextOptions>
     {
       if (exprType instanceof NumberType)
       {
-        return TextType.baseType;
+        return TextType.charType;
       }
 
       if (exprType instanceof EnumType)
       {
         if (exprType.options.value instanceof NumberType)
         {
-          return TextType.baseType;
+          return TextType.charType;
         }
 
         if (exprType.options.value instanceof TextType)

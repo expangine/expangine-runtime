@@ -81,7 +81,7 @@ export class ForExpression extends Expression
   public getScope()
   {
     return {
-      [this.variable]: NumberType.baseType,
+      [this.variable]: NumberType.baseType.newInstance(),
       [this.breakVariable]: BooleanType.baseType
     };
   }

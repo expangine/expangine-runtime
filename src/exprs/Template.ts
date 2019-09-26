@@ -68,7 +68,7 @@ export class TemplateExpression extends Expression
 
   public getType(def: Definitions, context: Type): Type | null
   {
-    return TextType.baseType;
+    return TextType.baseType.newInstance();
   }
 
   public param(name: string, value: ExpressionValue): TemplateExpression

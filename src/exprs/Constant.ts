@@ -72,8 +72,8 @@ export class ConstantExpression extends Expression
     if (isString(value)) 
     {
       return new EnumType({
-        key: TextType.baseType,
-        value: TextType.baseType,
+        key: TextType.baseType.newInstance(),
+        value: TextType.baseType.newInstance(),
         constants: new Map([[value, value]]),
       });
     }
@@ -81,8 +81,8 @@ export class ConstantExpression extends Expression
     if (isNumber(value)) 
     {
       return new EnumType({
-        key: NumberType.baseType,
-        value: NumberType.baseType,
+        key: NumberType.baseType.newInstance(),
+        value: NumberType.baseType.newInstance(),
         constants: new Map([[value, value]]),
       });
     }

@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { defs, ObjectType, NumberType, ListType, TextType, ExpressionBuilder, DateType, ManyType, TextOps, EnumType, BooleanType, MapType, NumberOps, TupleType } from '../src';
+import { defs, ObjectType, NumberType, TextType, ExpressionBuilder, DateType, ManyType, TextOps, BooleanType, NumberOps, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,31 +8,30 @@ import { defs, ObjectType, NumberType, ListType, TextType, ExpressionBuilder, Da
 describe('Get', () => {
 
   const ex = new ExpressionBuilder();
+  const tp = new TypeBuilder();
 
-  const context0 = ObjectType.from({
-    num: NumberType,
-    num2: NumberType,
-    list: ListType.forItem(DateType),
-    obj: ObjectType.from({
-      txt: TextType
+  const context0 = tp.object({
+    num: tp.number(),
+    num2: tp.number(),
+    list: tp.list(tp.date()),
+    obj: tp.object({
+      txt: tp.text()
     }),
-    obj2: ObjectType.from({
-      txt: TextType,
-      num: NumberType,
+    obj2: tp.object({
+      txt: tp.text(),
+      num: tp.number(),
     }),
-    enum: new EnumType({
-      key: TextType.baseType,
-      value: ObjectType.from({
-        enumSub: BooleanType
-      }),
-      constants: new Map(),
-    }),
-    map: MapType.forItem(TextType, NumberType),
-    tuple: TupleType.forItem([
-      NumberType, 
-      TextType,
-      NumberType
-    ])
+    enum: tp.enum(
+      tp.object({
+        enumSub: tp.bool()
+      })
+    ),
+    map: tp.map(tp.text(), tp.number()),
+    tuple: tp.tuple(
+      tp.number(),
+      tp.text(),
+      tp.number(),
+    ),
   })
 
   it('root', () =>
@@ -165,13 +164,13 @@ describe('Get', () => {
 
   it('many list with props', () => 
   {
-    const context2 = new ManyType([
-      ListType.forItem(TextType),
-      ObjectType.from({
-        length: BooleanType,
-        item: DateType
+    const context2 = tp.many(
+      tp.list(tp.text()),
+      tp.object({
+        length: tp.bool(),
+        item: tp.date()
       })
-    ]);
+    );
 
     const get1 = ex.get(0);
     const getType1 = get1.getType(defs, context2);

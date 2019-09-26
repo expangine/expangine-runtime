@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, ObjectType, TextType, NumberType, defs, ManyType } from '../src';
+import { ExpressionBuilder, TextType, NumberType, defs, ManyType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,10 +8,11 @@ import { ExpressionBuilder, ObjectType, TextType, NumberType, defs, ManyType } f
 describe('If', () => {
 
   const ex = new ExpressionBuilder();
-  const context = ObjectType.from({
-    a: TextType,
-    b: NumberType,
-    c: NumberType
+  const tp = new TypeBuilder();
+  const context = tp.object({
+    a: tp.text(),
+    b: tp.number(),
+    c: tp.number(),
   });
 
   it('type one of', () =>

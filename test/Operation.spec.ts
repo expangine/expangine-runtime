@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, defs, DateType, TextType, BooleanType, TextOps, ObjectType, NumberType, ListType, ListOps, NumberOps, MapType } from '../src';
+import { ExpressionBuilder, defs, TextType, BooleanType, TextOps, ObjectType, NumberType, ListType, ListOps, NumberOps, MapType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,14 +8,15 @@ import { ExpressionBuilder, defs, DateType, TextType, BooleanType, TextOps, Obje
 describe('Operation', () => {
 
   const ex = new ExpressionBuilder();
-  const context = ObjectType.from({
-    num1: NumberType,
-    num2: NumberType,
-    text1: TextType,
-    list1: ListType.forItem(DateType),
-    list2: ListType.forItem(ObjectType.from({
-      num3: NumberType,
-      text2: TextType,
+  const tp = new TypeBuilder();
+  const context = tp.object({
+    num1: tp.number(),
+    num2: tp.number(),
+    text1: tp.text(),
+    list1: tp.list(tp.date()),
+    list2: tp.list(tp.object({
+      num3: tp.number(),
+      text2: tp.text(),
     }))
   });
 

@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, defs, NullType, BooleanType } from '../src';
+import { ExpressionBuilder, defs, BooleanType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,7 +8,8 @@ import { ExpressionBuilder, defs, NullType, BooleanType } from '../src';
 describe('And', () => {
 
   const ex = new ExpressionBuilder();
-  const context = NullType.baseType;
+  const tp = new TypeBuilder();
+  const context = tp.null();
 
   it('type', () =>
   {

@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, ObjectType, TextType, NumberType, defs, OptionalType, BooleanType } from '../src';
+import { ExpressionBuilder, TextType, defs, OptionalType, BooleanType, TypeBuilder } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -8,9 +8,10 @@ import { ExpressionBuilder, ObjectType, TextType, NumberType, defs, OptionalType
 describe('While', () => {
 
   const ex = new ExpressionBuilder();
-  const context = ObjectType.from({
-    a: TextType,
-    b: NumberType
+  const tp = new TypeBuilder();
+  const context = tp.object({
+    a: tp.text(),
+    b: tp.number(),
   });
 
   it('type constant', () =>

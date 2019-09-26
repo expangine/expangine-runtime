@@ -15,6 +15,7 @@ export interface TextOptions {
 export declare class TextType extends Type<TextOptions> {
     static lengthType: NumberType;
     static indexType: NumberType;
+    static charType: TextType;
     static id: string;
     static operations: import("..").Operations;
     static baseType: TextType;

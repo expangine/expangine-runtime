@@ -321,7 +321,7 @@ export class Definitions
 
     if (!isFunction(returnType))
     {
-      return returnType.baseType;
+      return returnType.baseType.newInstance();
     }
 
     const paramTypes = op.resultDependency.length > 0
@@ -394,7 +394,7 @@ export class Definitions
     return input instanceof Type
       ? input
       : 'baseType' in input
-        ? input.baseType
+        ? input.baseType.clone()
         : Type.fromInput(input(params));
   }
 
