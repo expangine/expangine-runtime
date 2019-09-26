@@ -107,7 +107,7 @@ export abstract class Type<O = any>
 
   public abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
 
-  public abstract getSubTypes(): TypeMap | null;
+  public abstract getSubTypes(): [TypeMap, Type[]] | null;
 
   public abstract getExactType(value: any): Type<O>;
 

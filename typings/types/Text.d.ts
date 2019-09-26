@@ -1,6 +1,7 @@
-import { Type, TypeDescribeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeMap } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
+import { NumberType } from './Number';
 import { Definitions } from '../Definitions';
 export interface TextOptions {
     min?: number;
@@ -12,6 +13,8 @@ export interface TextOptions {
     matches?: RegExp;
 }
 export declare class TextType extends Type<TextOptions> {
+    static lengthType: NumberType;
+    static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
     static baseType: TextType;
@@ -25,7 +28,7 @@ export declare class TextType extends Type<TextOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TextType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): null;
+    getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

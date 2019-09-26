@@ -21,10 +21,7 @@ export declare class FunctionType extends Type<FunctionOptions> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): {
-        returnType: Type<any>;
-        params: ObjectType;
-    };
+    getSubTypes(): null;
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

@@ -1,6 +1,6 @@
 
 import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
-import { Type, TypeDescribeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeMap } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations } from '../ops/TextOps';
@@ -29,6 +29,10 @@ export interface TextOptions
 
 export class TextType extends Type<TextOptions> 
 {
+
+  public static lengthType = new NumberType({min: 0, whole: true});
+
+  public static indexType = new NumberType({min: 0, whole: true});
 
   public static id = ID.Text;
 
@@ -111,7 +115,7 @@ export class TextType extends Type<TextOptions>
     {
       if (expr.value === 'length')
       {
-        return NumberType.baseType;
+        return TextType.lengthType;
       }
 
       if (isNumber(expr.value))
@@ -142,16 +146,20 @@ export class TextType extends Type<TextOptions>
 
           if (values.length === 1 && values[0] === 'length')
           {
-            return NumberType.baseType;
+            return TextType.lengthType;
           }
         }
       }
     }
   }
 
-  public getSubTypes(): null
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    return null;
+    return [{
+      length: TextType.lengthType
+    }, [
+      TextType.indexType
+    ]];
   }
 
   public getExactType(value: any): Type 

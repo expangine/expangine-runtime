@@ -40,7 +40,7 @@ export declare abstract class Type<O = any> {
     abstract getId(): string;
     abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
     abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    abstract getSubTypes(): TypeMap | null;
+    abstract getSubTypes(): [TypeMap, Type[]] | null;
     abstract getExactType(value: any): Type<O>;
     abstract getSimplifiedType(): Type;
     abstract isCompatible(other: Type<O>): boolean;

@@ -1,6 +1,6 @@
 
 import { isObject, isMap, toArray, isSameClass } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeMap } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
 import { ListType } from './List';
@@ -122,11 +122,9 @@ export class MapType extends Type<MapOptions>
     return null;
   }
 
-  public getSubTypes() 
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    const { key, value } = this.options;
-
-    return { key, value };
+    return [{}, [this.options.key]];
   }
 
   public getExactType(value: any): Type 

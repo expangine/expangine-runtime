@@ -78,11 +78,9 @@ export class FunctionType extends Type<FunctionOptions>
     return null;
   }
 
-  public getSubTypes() 
+  public getSubTypes(): null
   {
-    const { returnType, params } = this.options;
-
-    return { returnType, params };
+    return null;
   }
 
   public getExactType(value: any): Type 

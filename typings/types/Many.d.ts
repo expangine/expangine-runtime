@@ -11,14 +11,13 @@ export declare class ManyType extends Type<Type[]> {
     static encode(type: ManyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    subs?: TypeMap;
     operations?: Record<string, Operation<any, any, any, any, any>>;
     getOperations(): Record<string, Operation<any, any, any, any, any>>;
     private forMany;
     getId(): string;
     merge(type: ManyType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): Record<string, Type<any>>;
+    getSubTypes(): [TypeMap, Type[]] | null;
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

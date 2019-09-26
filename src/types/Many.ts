@@ -7,6 +7,7 @@ import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
+import { isEmpty } from '../fns';
 
 
 const INDEX_MANY = 1;
@@ -41,7 +42,6 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public subs?: TypeMap;
   public operations?: Record<string, Operation<any, any, any, any, any>>;
 
   public getOperations()
@@ -106,24 +106,26 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public getSubTypes()
+  public getSubTypes(): [TypeMap, Type[]] | null
   {
-    if (!this.subs)
+    const named: TypeMap = {};
+    let types: Type[] = [];
+    const many = this.options;
+
+    for (let i = many.length - 1; i >= 0; i--)
     {
-      this.subs = {};
+      const sub = many[i].getSubTypes();
 
-      this.options.forEach(many => 
+      if (sub)
       {
-        const subs = many.getSubTypes();
-
-        if (subs)
-        {
-          Object.assign(this.subs, subs);
-        }
-      });
+        Object.assign(named, sub[0]);
+        types = types.concat(sub[1]);
+      }
     }
 
-    return this.subs;
+    return isEmpty(named) && types.length === 0
+      ? null
+      : [named, types];
   }
 
   public getExactType(value: any): Type 

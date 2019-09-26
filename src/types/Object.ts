@@ -21,6 +21,8 @@ export interface ObjectOptions
 export class ObjectType extends Type<ObjectOptions> 
 {
 
+  public static propType = new TextType({});
+
   public static id = ID.Object;
 
   public static operations = ObjectOperations;
@@ -129,9 +131,9 @@ export class ObjectType extends Type<ObjectOptions>
     return null;
   }
 
-  public getSubTypes() 
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    return this.options.props;
+    return [this.options.props, [ObjectType.propType]];
   }
 
   public getExactType(value: any): Type 

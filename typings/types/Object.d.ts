@@ -2,10 +2,12 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap } from 
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
+import { TextType } from './Text';
 export interface ObjectOptions {
     props: TypeMap;
 }
 export declare class ObjectType extends Type<ObjectOptions> {
+    static propType: TextType;
     static id: string;
     static operations: import("..").Operations;
     static baseType: ObjectType;
@@ -18,7 +20,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): Record<string, Type<any>>;
+    getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

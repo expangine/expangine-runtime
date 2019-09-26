@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -60,7 +60,7 @@ export class OptionalType extends Type<Type>
     return this.options.getSubType(expr, def, context);
   }
 
-  public getSubTypes() 
+  public getSubTypes(): [TypeMap, Type[]] | null 
   {
     return this.options.getSubTypes();
   }

@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -20,10 +20,7 @@ export declare class EnumType extends Type<EnumOptions> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: EnumType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): {
-        key: Type<any>;
-        value: Type<any>;
-    };
+    getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

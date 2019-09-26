@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeMap } from '../Type';
 import { ListType } from './List';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -21,10 +21,7 @@ export declare class MapType extends Type<MapOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: MapType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): {
-        key: Type<any>;
-        value: Type<any>;
-    };
+    getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

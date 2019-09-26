@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isArray, coalesce, toArray } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeMap } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { ObjectType } from './Object';
@@ -30,6 +30,8 @@ export class ListType extends Type<ListOptions>
 {
 
   public static lengthType = new NumberType({min: 0, whole: true});
+
+  public static indexType = new NumberType({min: 0, whole: true});
 
   public static id = ID.List;
 
@@ -152,12 +154,13 @@ export class ListType extends Type<ListOptions>
     return null;
   }
 
-  public getSubTypes() 
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    return {
+    return [{
       length: ListType.lengthType,
-      item: this.options.item
-    };
+    }, [
+      ListType.indexType
+    ]];
   }
 
   public getExactType(value: any): Type 

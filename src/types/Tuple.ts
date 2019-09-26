@@ -18,6 +18,10 @@ const INDEX_ELEMENTS = 1;
 export class TupleType extends Type<Type[]>
 {
 
+  public static lengthType = new NumberType({min: 0, whole: true});
+
+  public static indexType = new NumberType({min: 0, whole: true});
+
   public static id = ID.Tuple;
 
   public static operations = TupleOperations;
@@ -50,8 +54,6 @@ export class TupleType extends Type<Type[]>
     return new TupleType(types.map((t) => Type.fromInput(t)));
   }
 
-  public subs?: TypeMap;
-
   public getId(): string
   {
     return TupleType.id;
@@ -73,7 +75,7 @@ export class TupleType extends Type<Type[]>
     {
       if (expr.value === 'length')
       {
-        return NumberType.baseType;
+        return TupleType.lengthType;
       }
 
       if (isNumber(expr.value))
@@ -96,7 +98,7 @@ export class TupleType extends Type<Type[]>
         if (exprType.options.value instanceof NumberType)
         {
           const values = toArray(exprType.options.constants.values());
-          const types = values.map(i => this.options[i]).filter(t => !!t);
+          const types = values.map((i: number) => this.options[i]).filter(t => !!t);
           
           return def.mergeTypes(types);
         }
@@ -107,26 +109,20 @@ export class TupleType extends Type<Type[]>
 
           if (values.length === 1 && values[0] === 'length')
           {
-            return NumberType.baseType;
+            return TupleType.lengthType;
           }
         }
       }
     }
   }
 
-  public getSubTypes()
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    if (!this.subs)
-    {
-      this.subs = {};
-
-      this.options.forEach((element, index) => 
-      {
-        this.subs[index] = element;
-      });
-    }
-
-    return this.subs;
+    return [{
+      length: TupleType.lengthType
+    }, [
+      TupleType.indexType
+    ]];
   }
 
   public getExactType(value: any): Type 

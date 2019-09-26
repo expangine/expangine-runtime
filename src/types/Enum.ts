@@ -1,6 +1,6 @@
 
 import { toArray, compare } from '../fns';
-import { Type, TypeDescribeProvider, TypeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeProvider, TypeMap } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -92,11 +92,9 @@ export class EnumType extends Type<EnumOptions>
     return this.options.value.getSubType(expr, def, context);
   }
 
-  public getSubTypes()
+  public getSubTypes(): [TypeMap, Type[]]
   {
-    const { key, value } = this.options;
-
-    return { key, value };
+    return [{}, [this.options.value]];
   }
 
   public getExactType(value: any): Type 

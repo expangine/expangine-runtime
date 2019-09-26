@@ -2,7 +2,10 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeMap } from '..
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
+import { NumberType } from './Number';
 export declare class TupleType extends Type<Type[]> {
+    static lengthType: NumberType;
+    static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
     static baseType: TupleType;
@@ -11,12 +14,11 @@ export declare class TupleType extends Type<Type[]> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static forItem(types: TypeInput[]): TupleType;
-    subs?: TypeMap;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TupleType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): Record<string, Type<any>>;
+    getSubTypes(): [TypeMap, Type[]];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     getCreateExpression(ex: ExpressionBuilder): Expression;
