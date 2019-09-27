@@ -27,6 +27,7 @@ export declare class TupleType extends Type<Type[]> {
     getCompareExpression(ex: ExpressionBuilder): Expression;
     isCompatible(other: Type): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): TupleType;

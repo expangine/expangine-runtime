@@ -96,6 +96,14 @@ export class DoExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.condition.setParent(this);
+    this.body.setParent(this);
+  }
+
   public do(body: Expression, condition?: Expression): DoExpression
   {
     return new DoExpression(condition || this.condition, body, this.breakVariable, this.maxIterations);

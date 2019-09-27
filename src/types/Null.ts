@@ -93,6 +93,11 @@ export class NullType extends Type<NullOptions>
     return traverse.enter(this);
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.null();

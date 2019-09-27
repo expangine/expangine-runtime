@@ -15,6 +15,7 @@ export declare class AndExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     and(exprs: Expression | Expression[]): AndExpression;
     or(exprs: Expression | Expression[]): OrExpression;
 }

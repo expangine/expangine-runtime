@@ -21,6 +21,7 @@ export declare class WhileExpression extends Expression {
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     while(condition: Expression): WhileExpression;
     run(body: Expression): WhileExpression;
     withBreak(name: string): WhileExpression;

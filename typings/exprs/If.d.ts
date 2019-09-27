@@ -15,6 +15,7 @@ export declare class IfExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     if(condition: Expression, body?: Expression): IfExpression;
     then(body: Expression): IfExpression;
     elseif(condition: Expression, body?: Expression): IfExpression;

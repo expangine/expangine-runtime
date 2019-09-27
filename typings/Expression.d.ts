@@ -13,10 +13,12 @@ export interface ExpressionClass<T extends Expression = any> {
 export declare type ExpressionValue = any | Expression;
 export declare type ExpressionMap = Record<string, Expression>;
 export declare abstract class Expression implements Traversable<Expression> {
+    parent?: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;
     abstract getComplexity(def: Definitions): number;
     abstract encode(): any;
     abstract getType(def: Definitions, context: Type): Type | null;
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
+    abstract setParent(parent?: Expression): void;
 }

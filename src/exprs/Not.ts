@@ -70,6 +70,13 @@ export class NotExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.expression.setParent(this);
+  }
+
   public and(exprs: Expression | Expression[]): AndExpression
   {
     const append = isArray(exprs) ? exprs : [exprs];

@@ -77,6 +77,13 @@ export class OrExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.expressions.forEach(e => e.setParent(this));
+  }
+
   public or(exprs: Expression | Expression[]): OrExpression
   {
     const append = isArray(exprs) ? exprs : [exprs];

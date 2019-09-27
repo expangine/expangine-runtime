@@ -82,6 +82,14 @@ export class SetExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.path.forEach(e => e.setParent(this));
+    this.value.setParent(this);
+  }
+
   public add(expr: ExpressionValue | ExpressionValue[]): SetExpression
   {
     const append = isArray(expr)

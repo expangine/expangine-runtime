@@ -71,6 +71,13 @@ export class AndExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.expressions.forEach(e => e.setParent(this));
+  }
+
   public and(exprs: Expression | Expression[]): AndExpression
   {
     const append = isArray(exprs) ? exprs : [exprs];

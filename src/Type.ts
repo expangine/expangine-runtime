@@ -94,6 +94,7 @@ export abstract class Type<O = any> implements Traversable<Type>
   }
 
   public options: O;
+  public parent?: Type;
 
   public constructor(options: O) 
   {
@@ -117,6 +118,8 @@ export abstract class Type<O = any> implements Traversable<Type>
   public abstract isCompatible(other: Type<O>): boolean;
 
   public abstract traverse<R>(traverse: Traverser<Type, R>): R;
+
+  public abstract setParent(parent?: Type): void;
 
   public abstract getCreateExpression(ex: ExpressionBuilder): Expression;
 

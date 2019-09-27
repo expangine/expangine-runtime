@@ -84,6 +84,13 @@ export class InvokeExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    objectMap(this.args, e => e.setParent(this));
+  }
+
   public named(name: string): InvokeExpression
   {
     return new InvokeExpression(name, this.args);

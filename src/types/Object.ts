@@ -156,6 +156,13 @@ export class ObjectType extends Type<ObjectOptions>
     );
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    objectMap(this.options.props, t => t.setParent(this));
+  }
+
   public isCompatible(other: Type): boolean 
   {
     if (!(other instanceof ObjectType)) 

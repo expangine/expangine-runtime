@@ -211,6 +211,13 @@ export class TupleType extends Type<Type[]>
     );
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.forEach(t => t.setParent(this));
+  }
+
   public isValid(value: any): boolean 
   {
     if (!isArray(value))

@@ -21,6 +21,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>;
     alias(scoped: S, alias: string): OperationExpression<P, O, S>;
     and(exprs: Expression | Expression[]): AndExpression;

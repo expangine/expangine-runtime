@@ -18,6 +18,7 @@ export declare class SwitchExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     private copyCases;
     val(value: ExpressionValue, op?: Operation): SwitchExpression;
     case(test: ExpressionValue): SwitchExpression;

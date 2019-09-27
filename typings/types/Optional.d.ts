@@ -21,6 +21,7 @@ export declare class OptionalType extends Type<Type> {
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

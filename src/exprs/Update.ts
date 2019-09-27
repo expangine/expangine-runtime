@@ -93,6 +93,14 @@ export class UpdateExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.path.forEach(e => e.setParent(this));
+    this.value.setParent(this);
+  }
+
   public add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression
   {
     const append = isArray(expr)

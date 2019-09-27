@@ -96,4 +96,9 @@ export class ConstantExpression extends Expression
     return traverse.enter(this);
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+  }
+
 }

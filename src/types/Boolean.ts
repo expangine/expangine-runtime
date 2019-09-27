@@ -92,6 +92,11 @@ export class BooleanType extends Type<BooleanOptions>
     return traverse.enter(this);
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(BooleanOps.create, {});

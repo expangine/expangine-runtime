@@ -153,6 +153,14 @@ export class MapType extends Type<MapOptions>
     });
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.key.setParent(this);
+    this.options.value.setParent(this);
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(MapOps.create, {});

@@ -88,6 +88,13 @@ export class OptionalType extends Type<Type>
     return traverse.enter(this, () => traverse.step('optional', this.options));
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.setParent(this);
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.getCreateExpression(ex);

@@ -108,6 +108,15 @@ export class ForExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.start.setParent(this);
+    this.end.setParent(this);
+    this.body.setParent(this);
+  }
+
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
   {
     return new ForExpression(variable, toExpr(start), toExpr(end), body || this.body, breakVariable || this.breakVariable, maxIterations || this.maxIterations);

@@ -153,6 +153,13 @@ export class ManyType extends Type<Type[]>
     );
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.forEach(t => t.setParent(this));
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options[0].getCreateExpression(ex);

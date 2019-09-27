@@ -186,6 +186,13 @@ export class ListType extends Type<ListOptions>
     );
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.item.setParent(this);
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(ListOps.create, {});

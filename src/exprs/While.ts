@@ -96,6 +96,14 @@ export class WhileExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.condition.setParent(this);
+    this.body.setParent(this);
+  }
+
   public while(condition: Expression): WhileExpression
   {
     return new WhileExpression(condition, this.body, this.breakVariable, this.maxIterations);

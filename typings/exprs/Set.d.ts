@@ -16,6 +16,7 @@ export declare class SetExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     add(expr: ExpressionValue | ExpressionValue[]): SetExpression;
     to(value: ExpressionValue): SetExpression;
 }

@@ -122,6 +122,14 @@ export class EnumType extends Type<EnumOptions>
     });
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.key.setParent(this);
+    this.options.value.setParent(this);
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.value.getCreateExpression(ex);

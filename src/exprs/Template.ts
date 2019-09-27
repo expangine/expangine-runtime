@@ -81,6 +81,13 @@ export class TemplateExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    objectMap(this.params, e => e.setParent(this));
+  }
+
   public param(name: string, value: ExpressionValue): TemplateExpression
   public param(params: Record<string, ExpressionValue>): TemplateExpression
   public param(nameOrParams: string | Record<string, ExpressionValue>, value?: Expression): TemplateExpression

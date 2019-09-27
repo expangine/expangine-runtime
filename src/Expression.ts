@@ -22,6 +22,8 @@ export type ExpressionMap = Record<string, Expression>;
 
 export abstract class Expression implements Traversable<Expression>
 {
+
+  public parent?: Expression;
   
   public abstract getId(): string;
 
@@ -34,5 +36,7 @@ export abstract class Expression implements Traversable<Expression>
   public abstract getType(def: Definitions, context: Type): Type | null;
 
   public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
+
+  public abstract setParent(parent?: Expression): void;
 
 }

@@ -88,6 +88,15 @@ export class DefineExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    objectMap(this.define, e => e.setParent(this));
+    
+    this.body.setParent(this);
+  }
+
   public with(name: string, value: ExpressionValue): DefineExpression
   public with(defines: Record<string, ExpressionValue>): DefineExpression
   public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression

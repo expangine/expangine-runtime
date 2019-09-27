@@ -25,6 +25,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
     isCompatible(other: Type): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

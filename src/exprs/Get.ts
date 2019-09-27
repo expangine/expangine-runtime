@@ -74,6 +74,13 @@ export class GetExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.path.forEach(e => e.setParent(this));
+  }
+
   public add(expr: ExpressionValue | ExpressionValue[]): GetExpression
   {
     const append = isArray(expr)

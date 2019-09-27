@@ -99,6 +99,13 @@ export class OperationExpression<P extends string = never, O extends string = ne
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    objectMap(this.params, e => e.setParent(this));
+  }
+
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>
   {
     return new OperationExpression<P, O, S>(this.name, {

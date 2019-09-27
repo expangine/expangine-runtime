@@ -16,6 +16,7 @@ export declare class DefineExpression extends Expression {
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    setParent(parent?: Expression): void;
     with(name: string, value: ExpressionValue): DefineExpression;
     with(defines: Record<string, ExpressionValue>): DefineExpression;
     run(expr: Expression): DefineExpression;

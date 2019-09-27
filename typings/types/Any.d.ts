@@ -20,6 +20,7 @@ export declare class AnyType extends Type {
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

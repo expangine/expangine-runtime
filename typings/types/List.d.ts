@@ -30,6 +30,7 @@ export declare class ListType extends Type<ListOptions> {
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

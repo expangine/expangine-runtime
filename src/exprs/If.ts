@@ -99,6 +99,18 @@ export class IfExpression extends Expression
     });
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.cases.forEach(([condition, result]) => {
+      condition.setParent(this);
+      result.setParent(this);
+    });
+
+    this.otherwise.setParent(this);
+  }
+
   public if(condition: Expression, body?: Expression)
   {
     const cases = this.cases.slice();

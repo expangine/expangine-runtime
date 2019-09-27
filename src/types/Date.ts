@@ -140,6 +140,11 @@ export class DateType extends Type<DateOptions>
     return traverse.enter(this);
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(DateOps.create, {});

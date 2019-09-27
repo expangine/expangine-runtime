@@ -109,6 +109,14 @@ export class FunctionType extends Type<FunctionOptions>
     });
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+
+    this.options.returnType.setParent(this);
+    this.options.params.setParent(this);
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.returnType.getCreateExpression(ex);

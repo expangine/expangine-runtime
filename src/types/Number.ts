@@ -109,6 +109,11 @@ export class NumberType extends Type<NumberOptions>
     return traverse.enter(this);
   }
 
+  public setParent(parent?: Type): void
+  {
+    this.parent = parent;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(NumberOps.create, {});

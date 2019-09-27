@@ -107,19 +107,33 @@ export class SwitchExpression extends Expression
     return traverse.enter(this, () => {
       traverse.step('value', this.value);
       traverse.step('cases', () => 
-        this.cases.forEach(([tests, result]) => {
-          traverse.step('case', () => 
-            tests.forEach((test, index) => 
-              traverse.step(index, test)
-            )
-          );
-          traverse.step('result', result);
-        })
+        this.cases.forEach(([tests, result], caseIndex) =>
+          traverse.step(caseIndex, () => {
+            traverse.step('case', () => 
+              tests.forEach((test, index) => 
+                traverse.step(index, test)
+              )
+            );
+            traverse.step('result', result);
+          })  
+        )
       );
       if (this.defaultCase !== NoExpression.instance) {
         traverse.step('default', this.defaultCase);
       }
     });
+  }
+
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.value.setParent(this);
+    this.cases.forEach(([tests, result]) => {
+      tests.forEach(e => e.setParent(this));
+      result.setParent(this);
+    });
+    this.defaultCase.setParent(this);
   }
 
   private copyCases(): Array<[Expression[], Expression]>

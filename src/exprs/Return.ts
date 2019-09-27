@@ -70,4 +70,11 @@ export class ReturnExpression extends Expression
     );
   }
 
+  public setParent(parent?: Expression): void
+  {
+    this.parent = parent;
+
+    this.value.setParent(this);
+  }
+
 }
