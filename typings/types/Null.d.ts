@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -19,7 +19,7 @@ export declare class NullType extends Type<NullOptions> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: NullType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): null;
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

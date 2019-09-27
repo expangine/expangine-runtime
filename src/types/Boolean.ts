@@ -1,6 +1,6 @@
 
 import { isBoolean, isEmpty, copy } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { NumberType } from './Number';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -67,9 +67,9 @@ export class BooleanType extends Type<BooleanOptions>
     return null;
   }
 
-  public getSubTypes(): null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return null;
+    return [];
   }
 
   public getExactType(value: any): Type 

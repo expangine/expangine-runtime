@@ -1,6 +1,6 @@
 
 import { objectMap, isObject, objectValues, isString, toArray } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations } from '../ops/ObjectOps';
@@ -132,9 +132,19 @@ export class ObjectType extends Type<ObjectOptions>
     return null;
   }
 
-  public getSubTypes(): [TypeMap, Type[]]
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return [this.options.props, [ObjectType.propType]];
+    return [
+      ...objectValues(objectMap(this.options.props, (value, key) => ({ key, value }))),
+      { 
+        key: ObjectType.propType, 
+        value: def.optionalType(
+          def.mergeTypes(
+            objectValues(this.options.props)
+          )
+        )
+      }
+    ];
   }
 
   public getExactType(value: any): Type 

@@ -1,6 +1,6 @@
 
 import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
-import { Type, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations } from '../ops/TextOps';
@@ -76,7 +76,7 @@ export class TextType extends Type<TextOptions>
 
   public static describePriority: number = 3;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any): Type | null
   {
     if (!isString(data))
     {
@@ -156,13 +156,12 @@ export class TextType extends Type<TextOptions>
     }
   }
 
-  public getSubTypes(): [TypeMap, Type[]]
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return [{
-      length: TextType.lengthType
-    }, [
-      TextType.indexType
-    ]];
+    return [
+      { key: 'length', value: TextType.lengthType },
+      { key: TextType.indexType, value: TextType.charType }
+    ];
   }
 
   public getExactType(value: any): Type 

@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
-import { Type, TypeDescribeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberOps, NumberOperations } from '../ops/NumberOps';
@@ -84,9 +84,9 @@ export class NumberType extends Type<NumberOptions>
     return null;
   }
 
-  public getSubTypes(): null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return null;
+    return [];
   }
 
   public getExactType(value: any): Type 

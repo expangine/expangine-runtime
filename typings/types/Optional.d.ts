@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -16,7 +16,7 @@ export declare class OptionalType extends Type<Type> {
     getId(): string;
     merge(type: OptionalType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): [TypeMap, Type[]] | null;
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

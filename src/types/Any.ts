@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -54,9 +54,9 @@ export class AnyType extends Type
     return null;
   }
 
-  public getSubTypes(): null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return null;
+    return [];
   }
 
   public getExactType(value: any): Type 

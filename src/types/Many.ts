@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations, Operation } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -7,7 +7,7 @@ import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { isEmpty } from '../fns';
+import { isSameClass } from '../fns';
 import { Traverser } from '../Traverser';
 
 
@@ -107,26 +107,27 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public getSubTypes(): [TypeMap, Type[]] | null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    const named: TypeMap = {};
-    let types: Type[] = [];
-    const many = this.options;
+    const subs: TypeSub[] = [];
 
-    for (let i = many.length - 1; i >= 0; i--)
-    {
-      const sub = many[i].getSubTypes();
+    this.options.forEach(type => {
+      type.getSubTypes(def).forEach(sub => {
+        const matching = subs.find(existing => 
+          existing.key === sub.key || (
+            existing.key instanceof Type && 
+            sub.key instanceof Type && 
+            isSameClass(existing.key, sub.key)
+          )
+        );
 
-      if (sub)
-      {
-        Object.assign(named, sub[0]);
-        types = types.concat(sub[1]);
-      }
-    }
+        if (!matching) {
+          subs.push(sub);
+        }
+      });
+    });
 
-    return isEmpty(named) && types.length === 0
-      ? null
-      : [named, types];
+    return subs;
   }
 
   public getExactType(value: any): Type 

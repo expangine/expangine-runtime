@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub } from '../Type';
 import { isArray, isNumber, toArray } from '../fns';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -117,13 +117,13 @@ export class TupleType extends Type<Type[]>
     }
   }
 
-  public getSubTypes(): [TypeMap, Type[]]
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return [{
-      length: TupleType.lengthType
-    }, [
-      TupleType.indexType
-    ]];
+    return [
+      ...this.options.map((value, key) => ({ key, value })),
+      { key: 'length', value: TupleType.lengthType },
+      { key: TupleType.indexType, value: def.mergeTypes(this.options) },
+    ];
   }
 
   public getExactType(value: any): Type 

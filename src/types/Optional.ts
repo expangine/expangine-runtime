@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -61,9 +61,9 @@ export class OptionalType extends Type<Type>
     return this.options.getSubType(expr, def, context);
   }
 
-  public getSubTypes(): [TypeMap, Type[]] | null 
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return this.options.getSubTypes();
+    return this.options.getSubTypes(def);
   }
 
   public getExactType(value: any): Type 

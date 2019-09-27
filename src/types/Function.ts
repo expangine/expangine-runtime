@@ -1,6 +1,6 @@
 
 import { isFunction } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { AnyType } from './Any';
@@ -79,9 +79,9 @@ export class FunctionType extends Type<FunctionOptions>
     return null;
   }
 
-  public getSubTypes(): null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return null;
+    return [];
   }
 
   public getExactType(value: any): Type 

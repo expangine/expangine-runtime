@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { Expression } from '../Expression';
@@ -22,7 +22,7 @@ export declare class FunctionType extends Type<FunctionOptions> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): null;
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

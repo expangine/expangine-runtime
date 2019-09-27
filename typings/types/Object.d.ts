@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -21,7 +21,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ObjectType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): [TypeMap, Type[]];
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     traverse<R>(traverse: Traverser<Type, R>): R;

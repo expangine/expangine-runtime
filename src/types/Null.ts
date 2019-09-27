@@ -1,6 +1,6 @@
 
 import { isEmpty, copy } from '../fns';
-import { Type, TypeDescribeProvider } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub } from '../Type';
 import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -68,9 +68,9 @@ export class NullType extends Type<NullOptions>
     return null;
   }
 
-  public getSubTypes(): null
+  public getSubTypes(def: Definitions): TypeSub[]
   {
-    return null;
+    return [];
   }
 
   public getExactType(value: any): Type 

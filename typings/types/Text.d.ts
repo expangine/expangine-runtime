@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
@@ -25,12 +25,12 @@ export declare class TextType extends Type<TextOptions> {
     private static decodeOptions;
     private static encodeOptions;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any): Type | null;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TextType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): [TypeMap, Type[]];
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

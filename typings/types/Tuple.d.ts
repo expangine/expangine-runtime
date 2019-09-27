@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -19,7 +19,7 @@ export declare class TupleType extends Type<Type[]> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TupleType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): [TypeMap, Type[]];
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     getCreateExpression(ex: ExpressionBuilder): Expression;

@@ -13,6 +13,8 @@ export type TypeInputMap = Record<string, TypeInput>;
 
 export type TypeMap = Record<string, Type>;
 
+export type TypeSub = { key: string | number | Type, value: Type };
+
 export type TypeResolved<T> = T extends (null | undefined)
   ? undefined
   : T extends TypeInput
@@ -109,7 +111,7 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
 
-  public abstract getSubTypes(): [TypeMap, Type[]] | null;
+  public abstract getSubTypes(def: Definitions): TypeSub[];
 
   public abstract getExactType(value: any): Type<O>;
 

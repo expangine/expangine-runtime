@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeMap } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub } from '../Type';
 import { NumberType } from './Number';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -25,7 +25,7 @@ export declare class ListType extends Type<ListOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ListType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(): [TypeMap, Type[]];
+    getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
