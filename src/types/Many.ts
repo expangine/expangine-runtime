@@ -1,6 +1,6 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
-import { Operations, Operation } from '../Operation';
+import { Operations, OperationGeneric } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -43,7 +43,7 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public operations?: Record<string, Operation<any, any, any, any, any>>;
+  public operations?: Record<string, OperationGeneric>;
 
   public getOperations()
   {

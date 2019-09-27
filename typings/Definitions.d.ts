@@ -1,6 +1,6 @@
 import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, Operation, OperationTypes, OperationTypeInput } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair } from './Operation';
 import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
@@ -39,7 +39,7 @@ export declare class Definitions {
     addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType;
     setFunction(name: string, typeValue: any): FunctionType;
     getFunction(name: string): FunctionType;
-    getOperation(id: string): Operation<any, any, any, any, any> | null;
+    getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
@@ -48,6 +48,13 @@ export declare class Definitions {
         scope: Record<string, Type<any>>;
     };
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;
+    getOperationsForExpression(expr: Expression, context: Type): OperationPair[];
+    getOperationsForType(type: Type): OperationPair[];
+    getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes?: TypeMap): OperationPair[];
+    getOperationsWithReturnType(type: Type, paramTypes?: TypeMap): OperationPair[];
+    getOperationsForParamExpressions(params: ExpressionMap, context: Type): OperationPair[];
+    getOperationsForParamTypes(paramTypes: TypeMap): OperationPair[];
+    getOperations(onOperation?: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean): OperationPair[];
     getPathType(path: Expression[], context: Type, stopBefore?: number): Type | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
     getExpression(value: any): Expression;

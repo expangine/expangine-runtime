@@ -58,7 +58,7 @@ export const TupleOpsTypes =
 
   asList: ops.setTypes(TupleOps.asList, i => ListType.forItem(i.value || TupleType), { value: TupleType }),
 
-  asMap: ops.setTypes(TupleOps.asMap, i => MapType.forItem(i.value || TupleType), { value: TextType }),
+  asMap: ops.setTypes(TupleOps.asMap, i => MapType.forItem(i.value || TupleType), { value: TupleType }),
 
   asNumber: ops.setTypes(TupleOps.asNumber, NumberType, { value: TupleType }),
 

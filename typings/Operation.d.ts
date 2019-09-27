@@ -20,12 +20,17 @@ export interface OperationTypes<P extends string = never, O extends string = nev
     optional: Record<O, OperationTypeInput<P | O>>;
     scope: Record<S, OperationTypeInput<P | O>>;
 }
+export declare type OperationGeneric = Operation<any, any, any, any, any>;
+export interface OperationPair<P extends string = any, O extends string = any, S extends string = any> {
+    op: Operation<P, O, S, any, any>;
+    types: OperationTypes<P, O, S>;
+}
 export declare class Operations {
     prefix: string;
-    map: Record<string, Operation<any, any, any, any, any>>;
+    map: Record<string, OperationGeneric>;
     types: Record<string, OperationTypes<any, any, any>>;
     constructor(prefix: string);
-    get(id: string): Operation<any, any, any, any, any>;
+    get(id: string): OperationGeneric;
     getTypes(id: string): OperationTypes<any, any, any>;
     set<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)>(localId: string, flags?: Partial<OperationFlags>, params?: P[], optional?: O[], scope?: S[], hasScope?: H[], resultDependency?: R[]): OperationResolved<P, O, S, H, R>;
     setTypes(op: Operation<never, never, never, never, never>, returnType: OperationTypeInput<never>): OperationTypes<never, never, never>;

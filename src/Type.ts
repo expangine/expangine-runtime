@@ -1,6 +1,6 @@
 
 import { objectMap, isArray, isObject } from './fns';
-import { Operation, Operations } from './Operation';
+import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
@@ -103,7 +103,7 @@ export abstract class Type<O = any> implements Traversable<Type>
     this.options = options;
   }
 
-  public abstract getOperations(): Record<string, Operation<any, any, any, any, any>>;
+  public abstract getOperations(): Record<string, OperationGeneric>;
 
   public abstract getId(): string;
 

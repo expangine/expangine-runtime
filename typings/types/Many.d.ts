@@ -1,5 +1,5 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
-import { Operations, Operation } from '../Operation';
+import { Operations, OperationGeneric } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -12,8 +12,8 @@ export declare class ManyType extends Type<Type[]> {
     static encode(type: ManyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    operations?: Record<string, Operation<any, any, any, any, any>>;
-    getOperations(): Record<string, Operation<any, any, any, any, any>>;
+    operations?: Record<string, OperationGeneric>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     private forMany;
     getId(): string;
     merge(type: ManyType, describer: TypeDescribeProvider): void;

@@ -14,14 +14,16 @@ import { TupleType } from '../../types/Tuple';
 
 
 const ops = MapType.operations;
-const GivenMap = (i: {map?: Type}) => i.map || MapType;
-const GivenMapValue = (i: {map?: Type}) => i.map ? i.map.options.value : AnyType;
-const GivenMapKey = (i: {map?: Type}) => i.map ? i.map.options.key : TextType;
+
+const RequireMap = (map?: Type) => map instanceof MapType ? map : undefined;
+const GivenMap = (i: {map?: Type}) => RequireMap(i.map) || MapType;
+const GivenMapValue = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.value : AnyType;
+const GivenMapKey = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.key : TextType;
 const GivenMapIterationScope = { map: GivenMap, key: GivenMapKey, value: GivenMapValue };
 
-const GivenValueMap = (i: {value?: Type}) => i.value || MapType;
-const GivenValueMapValue = (i: {value?: Type}) => i.value ? i.value.options.value : AnyType;
-const GivenValueMapKey = (i: {value?: Type}) => i.value ? i.value.options.key : TextType;
+const GivenValueMap = (i: {value?: Type}) => RequireMap(i.value) || MapType;
+const GivenValueMapValue = (i: {value?: Type}) => RequireMap(i.value) ? i.value.options.value : AnyType;
+const GivenValueMapKey = (i: {value?: Type}) => RequireMap(i.value) ? i.value.options.key : TextType;
 const GivenValueCompareScope = { key: GivenValueMapKey, value: GivenValueMapValue, test: GivenValueMapValue };
 
 export const MapOpsTypes = 
@@ -73,7 +75,7 @@ export const MapOpsTypes =
     { map: GivenMap }
   ),
 
-  pairs: ops.setTypes(MapOps.entries, 
+  pairs: ops.setTypes(MapOps.pairs, 
     i => ListType.forItem(ObjectType.from({
       key: GivenMapKey(i),
       value: GivenMapValue(i)

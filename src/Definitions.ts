@@ -2,13 +2,14 @@
 import { isArray, objectMap, isSameClass, objectValues, isFunction } from './fns';
 import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, Operation, OperationTypes, OperationTypeInput } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
+
 
 
 export interface DefinitionsImportOptions
@@ -278,7 +279,7 @@ export class Definitions
     return this.functions[name];
   }
 
-  public getOperation(id: string): Operation<any, any, any, any, any> | null
+  public getOperation(id: string): OperationGeneric | null
   {
     const op = this.operations.get(id);
 
@@ -396,6 +397,120 @@ export class Definitions
       : 'baseType' in input
         ? input.baseType.clone()
         : Type.fromInput(input(params));
+  }
+
+  public getOperationsForExpression(expr: Expression, context: Type): OperationPair[]
+  {
+    const type = expr.getType(this, context);
+
+    return type ? this.getOperationsForType(type.getSimplifiedType()) : [];
+  }
+
+  public getOperationsForType(type: Type): OperationPair[]
+  {
+    return this.getOperations(({ op, types }) => 
+    {
+      const opTypeInput = types.params[op.params[0]];
+
+      if (opTypeInput) 
+      {
+        const opType = this.getOperationInputType(opTypeInput, {});
+
+        if (opType && type.isCompatible(opType)) 
+        {
+          return true;
+        }
+      }
+
+      return false;
+    });
+  }
+
+  public getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes: TypeMap = {}): OperationPair[]
+  {
+    const type = expr.getType(this, context);
+
+    return type ? this.getOperationsWithReturnType(type.getSimplifiedType(), paramTypes) : [];
+  }
+
+  public getOperationsWithReturnType(type: Type, paramTypes: TypeMap = {}): OperationPair[]
+  {
+    return this.getOperations(({ types }) =>
+    {
+      const returnType = this.getOperationInputType(types.returnType, paramTypes);
+
+      if (returnType && type.isCompatible(returnType))
+      {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  public getOperationsForParamExpressions(params: ExpressionMap, context: Type): OperationPair[]
+  {
+    return this.getOperationsForParamTypes(objectMap(params, expr => 
+    {
+      const type = expr.getType(this, context);
+
+      return type ? type.getSimplifiedType() : undefined;
+    }));
+  }
+
+  public getOperationsForParamTypes(paramTypes: TypeMap): OperationPair[]
+  {
+    const paramNames = Object.keys(paramTypes);
+
+    return this.getOperations(({ types }) => 
+    {
+      for (const param of paramNames)
+      {
+        const opTypeInput = types.params[param] || types.optional[param];
+
+        if (!opTypeInput)
+        {
+          return false;
+        }
+
+        const opType = this.getOperationInputType(opTypeInput, paramTypes);
+
+        if (!opType || !paramTypes[param].isCompatible(opType))
+        {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
+  public getOperations(onOperation: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean = () => true): OperationPair[]
+  {
+    const ops: OperationPair[] = [];
+
+    const iterateOperations = (operations: Operations) => 
+    {
+      const map = operations.map;
+
+      for (const id in map)
+      {
+        const op = map[id];
+        const types = operations.types[id];
+        const pair = { op, types };
+
+        if (onOperation(pair))
+        {
+          ops.push(pair);
+        }
+      }
+    };
+
+    iterateOperations(this.operations);
+
+    objectMap(this.types, t => iterateOperations(t.operations));
+
+    return ops;
   }
 
   public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null

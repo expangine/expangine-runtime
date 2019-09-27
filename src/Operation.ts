@@ -51,12 +51,23 @@ export interface OperationTypes<
   scope: Record<S, OperationTypeInput<P | O>>;
 }
 
+export type OperationGeneric = Operation<any, any, any, any, any>;
+
+export interface OperationPair<
+  P extends string = any, 
+  O extends string = any,
+  S extends string = any
+> {
+  op: Operation<P, O, S, any, any>;
+  types: OperationTypes<P, O, S>;
+}
+
 export class Operations
 {
 
   public prefix: string;
 
-  public map: Record<string, Operation<any, any, any, any, any>>;
+  public map: Record<string, OperationGeneric>;
   public types: Record<string, OperationTypes<any, any, any>>;
 
   public constructor(prefix: string)
@@ -66,7 +77,7 @@ export class Operations
     this.types = Object.create(null);
   }
 
-  public get (id: string): Operation<any, any, any, any, any>
+  public get (id: string): OperationGeneric
   {
     return this.map[id] || this.map[this.prefix + id];
   }

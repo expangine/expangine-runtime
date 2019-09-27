@@ -1,4 +1,4 @@
-import { Operation, Operations } from './Operation';
+import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
@@ -42,7 +42,7 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     options: O;
     parent?: Type;
     constructor(options: O);
-    abstract getOperations(): Record<string, Operation<any, any, any, any, any>>;
+    abstract getOperations(): Record<string, OperationGeneric>;
     abstract getId(): string;
     abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
     abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;

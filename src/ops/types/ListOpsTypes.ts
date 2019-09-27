@@ -15,10 +15,11 @@ import { ListOps } from '../ListOps';
 
 const ops = ListType.operations;
 
-const GivenList = (i: {list?: Type}) => i.list || ListType;
-const GivenValueList = (i: {value?: Type}) => i.value || ListType;
-const GivenListItem = (i: {list?: Type}) => i.list ? i.list.options.item : AnyType;
-const GivenValueListItem = (i: {value?: Type}) => i.value ? i.value.options.item : AnyType;
+const RequireList = (list?: Type) => list instanceof ListType ? list : undefined;
+const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
+const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
+const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
+const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
 const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initial || AnyType;
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
 const GivenValueListCompareScope = { list: GivenValueList, value: GivenValueListItem, test: GivenValueListItem };
