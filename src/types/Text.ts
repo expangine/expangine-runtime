@@ -160,7 +160,7 @@ export class TextType extends Type<TextOptions>
   {
     return [
       { key: 'length', value: TextType.lengthType },
-      { key: TextType.indexType, value: TextType.charType }
+      { key: TextType.indexType, value: TextType.charType },
     ];
   }
 

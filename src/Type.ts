@@ -13,7 +13,11 @@ export type TypeInputMap = Record<string, TypeInput>;
 
 export type TypeMap = Record<string, Type>;
 
-export type TypeSub = { key: string | number | Type, value: Type };
+export interface TypeSub 
+{ 
+  key: string | number | Type;
+  value: Type;
+}
 
 export type TypeResolved<T> = T extends (null | undefined)
   ? undefined

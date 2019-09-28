@@ -142,7 +142,7 @@ export class ObjectType extends Type<ObjectOptions>
           def.mergeTypes(
             objectValues(this.options.props)
           )
-        )
+        ),
       }
     ];
   }

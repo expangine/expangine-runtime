@@ -159,7 +159,7 @@ export class ListType extends Type<ListOptions>
   {
     return [
       { key: 'length', value: ListType.lengthType },
-      { key: ListType.indexType, value: this.options.item }
+      { key: ListType.indexType, value: this.options.item },
     ];
   }
 

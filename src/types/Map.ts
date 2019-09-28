@@ -126,7 +126,7 @@ export class MapType extends Type<MapOptions>
   public getSubTypes(def: Definitions): TypeSub[]
   {
     return [
-      { key: this.options.key, value: this.options.value }
+      { key: this.options.key, value: this.options.value },
     ];
   }
 
