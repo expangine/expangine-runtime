@@ -6,10 +6,10 @@ import { Traverser, Traversable } from './Traverser';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
-export declare type TypeSub = {
+export interface TypeSub {
     key: string | number | Type;
     value: Type;
-};
+}
 export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeInputMap ? Record<keyof T, Type> : {
     [K in keyof T]: TypeResolved<T[K]>;
 };

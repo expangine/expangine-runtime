@@ -47,6 +47,7 @@ export declare class Definitions {
         context: ObjectType | ManyType;
         scope: Record<string, Type<any>>;
     };
+    getContext(original: Type, scope: TypeMap): ObjectType | ManyType;
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;
     getOperationsForExpression(expr: Expression, context: Type): OperationPair[];
     getOperationsForType(type: Type): OperationPair[];

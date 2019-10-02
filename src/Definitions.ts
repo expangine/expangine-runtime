@@ -390,6 +390,11 @@ export class Definitions
     return { context, scope };
   }
 
+  public getContext(original: Type, scope: TypeMap)
+  {
+    return this.getContextWithScope(original, scope).context;
+  }
+
   public getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type
   {
     return input instanceof Type
