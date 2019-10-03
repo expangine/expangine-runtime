@@ -338,6 +338,20 @@ export class Definitions
     return this.getOperationInputType(types.returnType, paramTypes);
   }
 
+  public getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap
+  {
+    const opTypes = this.getOperationTypes(id);
+
+    if (!opTypes)
+    {
+      return {};
+    }
+
+    const paramTypes = this.getOperationParamTypes(id, params, scopeAlias, context);
+
+    return objectMap(paramTypes, (paramType, name) => this.getOperationInputType(opTypes.params[name] || opTypes.optional[name] || paramType, paramTypes));
+  }
+
   public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap
   {
     const types: TypeMap = {};
