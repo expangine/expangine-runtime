@@ -389,6 +389,22 @@ export class Definitions
       }
     }
 
+    for (const param of op.params)
+    {
+      if (!types[param])
+      {
+        types[param] = this.getOperationInputType(opTypes.params[param], types);
+      }
+    }
+
+    for (const param of op.optional)
+    {
+      if (!types[param])
+      {
+        types[param] = this.getOperationInputType(opTypes.optional[param], types);
+      }
+    }
+
     return types;
   }
 
