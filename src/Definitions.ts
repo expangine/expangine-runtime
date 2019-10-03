@@ -313,6 +313,12 @@ export class Definitions
   {
     const op = this.getOperation(id);
     const types = this.getOperationTypes(id);
+
+    if (!op || !types)
+    {
+      return null;
+    }
+
     const returnType = types.returnType;
 
     if (returnType instanceof Type)
@@ -337,6 +343,11 @@ export class Definitions
     const types: TypeMap = {};
     const op = this.getOperation(id);
     const opTypes = this.getOperationTypes(id);
+
+    if (!op || !opTypes)
+    {
+      return types;
+    }
     
     for (const param in params)
     {
