@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { objectMap, isString, toExpr } from '../fns';
+import { objectMap, isString, toExpr, objectEach } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
@@ -71,7 +71,7 @@ export class DefineExpression extends Expression
   {
     const { scope, context } = def.getContextWithScope(original);
 
-    objectMap(this.define, (value, key) => scope[key] = value.getType(def, context));
+    objectEach(this.define, (value, key) => scope[key] = value.getType(def, context));
 
     return this.body.getType(def, context);
   }
@@ -80,7 +80,7 @@ export class DefineExpression extends Expression
   {
     return traverse.enter(this, () => {
       traverse.step('define', () =>
-        objectMap(this.define, (expr, prop) => 
+        objectEach(this.define, (expr, prop) => 
           traverse.step(prop, expr)
         )
       );
@@ -92,7 +92,7 @@ export class DefineExpression extends Expression
   {
     this.parent = parent;
 
-    objectMap(this.define, e => e.setParent(this));
+    objectEach(this.define, e => e.setParent(this));
     
     this.body.setParent(this);
   }

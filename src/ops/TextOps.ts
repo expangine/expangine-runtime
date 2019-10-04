@@ -54,6 +54,10 @@ export const TextOps =
 
   compare: ops.set('cmp', {}, ['value', 'test'], ['ignoreCase']),
 
+  like: ops.set('like', {}, ['value', 'pattern'], ['ignoreCase']),
+
+  pad: ops.set('pad', {}, ['value', 'padding', 'min'], ['max', 'append']),
+
   // Other
 
   // Generators

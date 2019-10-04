@@ -1,4 +1,5 @@
 import { Expression, ExpressionValue, ExpressionMap } from './Expression';
+export declare type RecordKey = string | number | symbol;
 export declare function isNumber(value: any): value is number;
 export declare function isString(value: any): value is string;
 export declare function isArray<T = any>(value: any): value is T[];
@@ -14,8 +15,10 @@ export declare function isEmpty(value: any): boolean;
 export declare function toExpr(values: ExpressionValue[]): Expression[];
 export declare function toExpr(values: Record<string, ExpressionValue>): ExpressionMap;
 export declare function toExpr(value: ExpressionValue): Expression;
-export declare function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey?: (key: string, value: V) => string): Record<string, R>;
-export declare function objectValues<V>(map: Record<string, V>): V[];
+export declare function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(map: Record<K, V>, getValue: (value: V, key: K) => R, getKey?: (key: K, value: V) => J): Record<J, R>;
+export declare function objectEach<V, K extends RecordKey = string>(map: Record<K, V>, onEach: (value: V, key: K, map: Record<K, V>) => any): void;
+export declare function objectValues<V, M = V, K extends RecordKey = string>(map: Record<K, V>, transform?: (value: V, key: K) => M): M[];
+export declare function objectReduce<R, V, K extends RecordKey = string>(map: Record<K, V>, reduce: (value: V, key: K, reduced: R) => R, initial: R): R;
 export declare function toArray<T>(iter: IterableIterator<T>): T[];
 export declare function getCompare(less: number, more: number): number;
 export declare function coalesce<T>(x?: T, y?: T): T;

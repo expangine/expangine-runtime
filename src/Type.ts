@@ -72,6 +72,12 @@ export abstract class Type<O = any> implements Traversable<Type>
       : input.baseType.newInstance();
   }
 
+  public static simplify(type: Type): Type
+  public static simplify(type: Type | null): Type | null
+  {
+    return type ? type.getSimplifiedType() : null;
+  }
+
   public static resolve<T>(types: T): TypeResolved<T>
   {
     let result: any;

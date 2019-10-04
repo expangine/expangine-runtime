@@ -1,5 +1,5 @@
 
-import { objectMap, isString, toExpr } from '../fns';
+import { objectMap, isString, toExpr, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { TextType } from '../types/Text';
@@ -75,7 +75,7 @@ export class TemplateExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
-      objectMap(this.params, (expr, param) =>
+      objectEach(this.params, (expr, param) =>
         traverse.step(param, expr)
       )
     );
@@ -85,7 +85,7 @@ export class TemplateExpression extends Expression
   {
     this.parent = parent;
 
-    objectMap(this.params, e => e.setParent(this));
+    objectEach(this.params, e => e.setParent(this));
   }
 
   public param(name: string, value: ExpressionValue): TemplateExpression

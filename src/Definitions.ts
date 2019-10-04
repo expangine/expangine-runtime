@@ -1,8 +1,8 @@
 
-import { isArray, objectMap, isSameClass, objectValues, isFunction } from './fns';
+import { isArray, objectMap, isSameClass, objectValues, isFunction, objectEach } from './fns';
 import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
@@ -436,13 +436,92 @@ export class Definitions
     return this.getContextWithScope(original, scope).context;
   }
 
+  public getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | null
+  {
+    type ParamTuple = [string, Type, number];
+
+    const from = this.getOperation(fromId);
+    const fromTypes = this.getOperationTypes(toId);
+    const fromVars = from.params.concat(from.optional);
+    const to = this.getOperation(toId);
+    const toTypes = this.getOperationTypes(toId);
+    const mapping: Record<string, string> = Object.create(null);
+    const mapped: TypeMap = Object.create(null);
+    const getParamTypeTuple = (value: Type, key: string): ParamTuple => 
+      [key, value, fromVars.indexOf(key)];
+    const paramTypes = objectValues(fromParamTypes, getParamTypeTuple)
+      .filter(([,, index]) => index >= 0)
+      .sort(([,, a], [,, b]) => a - b);
+
+    const getParamTuple = (param: string, typeInput: OperationTypeInput<any>): ParamTuple | null => 
+    {
+      if (paramTypes.length === 0)
+      {
+        return null;
+      }
+
+      let chosenIndex = -1;
+
+      if (isFunction(typeInput))
+      {
+        chosenIndex = paramTypes.findIndex(([, type]) => 
+          type.isCompatible(Type.fromInput(typeInput({ ...mapped, [param]: type }))));
+        
+        if (chosenIndex === -1)
+        {
+          chosenIndex = paramTypes.findIndex(([, type]) =>
+            Type.fromInput(typeInput({ ...mapped, [param]: type})).isCompatible(type));
+        }
+      }
+      else
+      {
+        const paramType = Type.fromInput(typeInput);
+
+        chosenIndex = paramTypes.findIndex(([, type]) => paramType.isCompatible(type));
+      }
+
+      if (chosenIndex === -1)
+      {
+        return null;
+      }
+
+      const chosen = paramTypes[chosenIndex];
+      paramTypes.splice(chosenIndex, 1);
+      mapping[chosen[0]] = param;
+      mapped[param] = chosen[1];
+    };
+    
+    for (const param of to.params)
+    {
+      const tuple = getParamTuple(param, toTypes.params[param]);
+
+      if (tuple === null)
+      {
+        return null;
+      }
+    }
+
+    for (const optional of to.optional)
+    {
+      getParamTuple(optional, toTypes.optional[optional]);
+    }
+
+    const unmapped = paramTypes.map(([key]) => key);
+    
+    return { from, fromTypes, to, toTypes, mapping, unmapped };
+  }
+
+  public getOperationInputType(input: OperationTypeInput<any>): Type | null
   public getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type
+  public getOperationInputType(input: OperationTypeInput<any>, params?: TypeMap): Type
   {
     return input instanceof Type
       ? input
       : 'baseType' in input
         ? input.baseType.clone()
-        : Type.fromInput(input(params));
+        : params
+          ? Type.fromInput(input(params))
+          : null;
   }
 
   public getOperationsForExpression(expr: Expression, context: Type): OperationPair[]
@@ -450,6 +529,13 @@ export class Definitions
     const type = expr.getType(this, context);
 
     return type ? this.getOperationsForType(type.getSimplifiedType()) : [];
+  }
+
+  public getOperationsWithMapping(fromId: string, fromParamTypes: TypeMap): OperationMapping[]
+  {
+    return this.getOperations()
+      .map(({ op }) => this.getOperationMapping(fromId, fromParamTypes, op.id))
+      .filter((mapping) => !!mapping);
   }
 
   public getOperationsForType(type: Type): OperationPair[]
@@ -554,7 +640,7 @@ export class Definitions
 
     iterateOperations(this.operations);
 
-    objectMap(this.types, t => iterateOperations(t.operations));
+    objectEach(this.types, t => iterateOperations(t.operations));
 
     return ops;
   }
@@ -614,14 +700,14 @@ export class Definitions
   {
     if (exported.aliases) 
     {
-      objectMap(exported.aliases, (instance, alias) => 
+      objectEach(exported.aliases, (instance, alias) => 
         this.addAlias(alias, instance)
       );
     }
 
     if (exported.functions)
     {
-      objectMap(exported.functions, (func, name) => 
+      objectEach(exported.functions, (func, name) => 
         this.setFunction(name, func)
       );
     }

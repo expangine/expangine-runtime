@@ -1,6 +1,6 @@
 import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
 import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
@@ -49,8 +49,11 @@ export declare class Definitions {
         scope: Record<string, Type<any>>;
     };
     getContext(original: Type, scope: TypeMap): ObjectType | ManyType;
+    getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | null;
+    getOperationInputType(input: OperationTypeInput<any>): Type | null;
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;
     getOperationsForExpression(expr: Expression, context: Type): OperationPair[];
+    getOperationsWithMapping(fromId: string, fromParamTypes: TypeMap): OperationMapping[];
     getOperationsForType(type: Type): OperationPair[];
     getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes?: TypeMap): OperationPair[];
     getOperationsWithReturnType(type: Type, paramTypes?: TypeMap): OperationPair[];

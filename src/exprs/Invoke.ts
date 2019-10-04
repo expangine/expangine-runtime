@@ -1,7 +1,7 @@
 
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
-import { objectMap, isString, toExpr } from '../fns';
+import { objectMap, isString, toExpr, objectEach } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 
@@ -78,7 +78,7 @@ export class InvokeExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () =>
-      objectMap(this.args, (expr, arg) =>
+      objectEach(this.args, (expr, arg) =>
         traverse.step(arg, expr)
       )
     );
@@ -88,7 +88,7 @@ export class InvokeExpression extends Expression
   {
     this.parent = parent;
 
-    objectMap(this.args, e => e.setParent(this));
+    objectEach(this.args, e => e.setParent(this));
   }
 
   public named(name: string): InvokeExpression

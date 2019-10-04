@@ -21,6 +21,8 @@ export declare const TextOps: {
     distance: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     length: import("../Operation").Operation<"value", never, never, never, never>;
     compare: import("../Operation").Operation<"value" | "test", "ignoreCase", never, "value" | "test" | "ignoreCase", "value" | "test" | "ignoreCase">;
+    like: import("../Operation").Operation<"value" | "pattern", "ignoreCase", never, "value" | "ignoreCase" | "pattern", "value" | "ignoreCase" | "pattern">;
+    pad: import("../Operation").Operation<"value" | "min" | "padding", "max" | "append", never, "value" | "min" | "max" | "append" | "padding", "value" | "min" | "max" | "append" | "padding">;
     toNumber: import("../Operation").Operation<"value", "invalidValue", never, "value" | "invalidValue", "value" | "invalidValue">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEmpty: import("../Operation").Operation<"value", never, never, never, never>;

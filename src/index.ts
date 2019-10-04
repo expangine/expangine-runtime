@@ -38,12 +38,14 @@ export * from './exprs/If';
 export * from './exprs/Invoke';
 export * from './exprs/No';
 export * from './exprs/Not';
+export * from './exprs/Object';
 export * from './exprs/Operation';
 export * from './exprs/Or';
 export * from './exprs/Return';
 export * from './exprs/Set';
 export * from './exprs/Switch';
 export * from './exprs/Template';
+export * from './exprs/Tuple';
 export * from './exprs/Update';
 export * from './exprs/While';
 

@@ -1,5 +1,5 @@
 
-import { objectMap, isEmpty, isArray, toExpr } from '../fns';
+import { objectMap, isEmpty, isArray, toExpr, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Operation } from '../Operation';
@@ -93,7 +93,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () =>
-      objectMap(this.params, (expr, param) =>
+      objectEach(this.params, (expr, param) =>
         traverse.step(param, expr)
       )
     );
@@ -103,7 +103,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   {
     this.parent = parent;
 
-    objectMap(this.params, e => e.setParent(this));
+    objectEach(this.params, e => e.setParent(this));
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

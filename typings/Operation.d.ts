@@ -25,6 +25,14 @@ export interface OperationPair<P extends string = any, O extends string = any, S
     op: Operation<P, O, S, any, any>;
     types: OperationTypes<P, O, S>;
 }
+export interface OperationMapping {
+    from: Operation<any, any, any, any, any>;
+    fromTypes: OperationTypes<any, any, any>;
+    to: Operation<any, any, any, any, any>;
+    toTypes: OperationTypes<any, any, any>;
+    mapping: Record<string, string>;
+    unmapped: string[];
+}
 export declare class Operations {
     prefix: string;
     map: Record<string, OperationGeneric>;

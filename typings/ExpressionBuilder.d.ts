@@ -19,6 +19,8 @@ import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
+import { TupleExpression } from './exprs/Tuple';
+import { ObjectExpression } from './exprs/Object';
 export declare class ExpressionBuilder {
     and(...exprs: Expression[]): AndExpression;
     body(...exprs: Expression[]): ChainExpression;
@@ -31,12 +33,14 @@ export declare class ExpressionBuilder {
     invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
     noop(): NoExpression;
     not(expr: Expression): NotExpression;
+    object(props: Record<string, ExpressionValue>): ObjectExpression;
     op<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
     or(...exprs: Expression[]): OrExpression;
     return(value?: ExpressionValue): ReturnExpression;
     set(...path: ExpressionValue[]): SetExpression;
     switch<P extends string, O extends string, S extends string>(value: Expression, op: Operation<P, O, S, any, any>): SwitchExpression;
     template(template: string, params?: Record<string, ExpressionValue>): TemplateExpression;
+    tuple(...elements: ExpressionValue[]): TupleExpression;
     update(...path: ExpressionValue[]): UpdateExpression;
     while(condition: Expression, body?: Expression, breakVariable?: string, maxIterations?: number): WhileExpression;
     undefined(): ConstantExpression;

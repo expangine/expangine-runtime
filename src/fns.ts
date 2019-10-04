@@ -1,6 +1,8 @@
 import { Expression, ExpressionValue, ExpressionMap } from './Expression';
 import { ConstantExpression } from './exprs/Constant';
 
+export type RecordKey = string | number | symbol;
+
 export function isNumber(value: any): value is number 
 {
   return typeof value === 'number' && isFinite(value);
@@ -89,29 +91,46 @@ export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<strin
         : new ConstantExpression(value);
 }
 
-export function objectMap<R, V>(map: Record<string, V>, getValue: (value: V, key: string) => R, getKey: (key: string, value: V) => string = ((key) => key) ): Record<string, R> 
+
+export function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(
+  map: Record<K, V>, 
+  getValue: (value: V, key: K) => R, 
+  getKey: (key: K, value: V) => J = ((key) => key as unknown as J) ): Record<J, R> 
 {
-  const mapped: Record<string, R> = {};
-
-  for (const prop in map) 
-  {
-    const value = map[prop];
-    mapped[getKey(prop, value)] = getValue(value, prop);
-  }
-
-  return mapped;
+  return objectReduce(map, (value, key, out) => 
+    (out[getKey(key, value)] = getValue(value, key), out)
+  , Object.create(null));
 }
 
-export function objectValues<V>(map: Record<string, V>): V[]
+export function objectEach<V, K extends RecordKey = string>(
+  map: Record<K, V>, 
+  onEach: (value: V, key: K, map: Record<K, V>) => any): void
 {
-  const values: V[] = [];
+  return objectReduce(map, (value, key) => 
+    onEach(value, key, map)
+  , undefined);
+}
 
+export function objectValues<V, M = V, K extends RecordKey = string>(
+  map: Record<K, V>, 
+  transform: (value: V, key: K) => M = ((v) => v as unknown as M)): M[]
+{
+  return objectReduce(map, (value, key, out) => 
+    (out.push(transform(value, key)), out)
+  , []);
+}
+
+export function objectReduce<R, V, K extends RecordKey = string>(
+  map: Record<K, V>, 
+  reduce: (value: V, key: K, reduced: R) => R, 
+  initial: R): R
+{
   for (const key in map)
   {
-    values.push(map[key]);
+    initial = reduce(map[key], key, initial);
   }
 
-  return values;
+  return initial;
 }
 
 export function toArray<T>(iter: IterableIterator<T>): T[]

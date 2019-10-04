@@ -3,11 +3,18 @@ import { isFunction } from './fns';
 
 export type TraverseStep = string | number;
 
-export type TraverseCallback<T> = (value: T, stack: T[], path: TraverseStep[]) => any;
+export type TraverseCallback<T, R> = (value: T, stack: T[], path: TraverseStep[], traverser: Traverser<T, R>) => any;
 
 export interface Traversable<T>
 {
   traverse<R>(traverse: Traverser<T, R>): R;
+}
+
+export interface TraverseResult<T>
+{
+  value: T;
+  stack: T[];
+  path: TraverseStep[];
 }
 
 export class Traverser<T, R = any>
@@ -18,13 +25,13 @@ export class Traverser<T, R = any>
     return x && isFunction(x.traverse);
   }
 
-  public callback: TraverseCallback<T>;
+  public callback: TraverseCallback<T, R>;
   public stack: T[];
   public path: TraverseStep[];
   public result: R;
   public stopped: boolean;
 
-  public constructor(callback: TraverseCallback<T>, initialResult?: R)
+  public constructor(callback: TraverseCallback<T, R>, initialResult?: R)
   {
     this.callback = callback;
     this.stack = [];
@@ -40,7 +47,7 @@ export class Traverser<T, R = any>
       return this.result;
     }
     
-    this.callback(value, this.stack, this.path);
+    this.callback(value, this.stack, this.path, this);
 
     if (getInner && !this.stopped)
     {
@@ -108,13 +115,31 @@ export class Traverser<T, R = any>
 
   public filter(pass: (value: T, stack: T[], path: TraverseStep[]) => any, initialResult: R = this.result)
   {
-    const callback: TraverseCallback<T> = (value, stack, path) => {
+    const callback: TraverseCallback<T, R> = (value, stack, path, traverser) => {
       if (pass(value, stack, path)) {
-        this.callback(value, stack, path);
+        this.callback(value, stack, path, traverser);
       }
     };
 
     return new Traverser<T, R>(callback, initialResult);
+  }
+
+  public static list<T>(): Traverser<T, TraverseResult<T>[]>
+  {
+    const list: TraverseResult<T>[] = [];
+
+    return new Traverser((value, stack, path) => {
+      list.push({
+        value,
+        stack: stack.slice(),
+        path: path.slice(),
+      });
+    }, list);
+  }
+
+  public static count<T>(): Traverser<T, number>
+  {
+    return new Traverser((value, stack, path, traverser) => traverser.result++, 0);
   }
 
 }

@@ -63,6 +63,10 @@ export const TextOpsTypes =
 
   compare: ops.setTypes(TextOps.compare, NumberType, { value: TextType, test: TextType }, { ignoreCase: BooleanType }),
 
+  like: ops.setTypes(TextOps.like, BooleanType, { value: TextType, pattern: TextType }, { ignoreCase: BooleanType }),
+
+  pad: ops.setTypes(TextOps.pad, TextType, { value: TextType, padding: TextType, min: NumberType }, { max: NumberType, append: BooleanType }),
+
   // Other
 
   // Generators

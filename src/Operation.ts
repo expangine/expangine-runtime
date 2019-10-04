@@ -62,6 +62,16 @@ export interface OperationPair<
   types: OperationTypes<P, O, S>;
 }
 
+export interface OperationMapping
+{
+  from: Operation<any, any, any, any, any>;
+  fromTypes: OperationTypes<any, any, any>;
+  to: Operation<any, any, any, any, any>;
+  toTypes: OperationTypes<any, any, any>;
+  mapping: Record<string, string>;
+  unmapped: string[];
+}
+
 export class Operations
 {
 

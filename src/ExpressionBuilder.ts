@@ -20,7 +20,9 @@ import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
+import { TupleExpression } from './exprs/Tuple';
 import { toExpr } from './fns';
+import { ObjectExpression } from './exprs/Object';
 
 
 export class ExpressionBuilder
@@ -81,6 +83,11 @@ export class ExpressionBuilder
     return new NotExpression(expr);
   }
 
+  public object(props: Record<string, ExpressionValue>): ObjectExpression
+  {
+    return new ObjectExpression(toExpr(props));
+  }
+
   public op<P extends string, O extends string, S extends string>(
     op: Operation<P, O, S, any, any>, 
     params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>,
@@ -112,6 +119,11 @@ export class ExpressionBuilder
   public template(template: string, params: Record<string, ExpressionValue> = {}): TemplateExpression
   {
     return new TemplateExpression(template, toExpr(params));
+  }
+
+  public tuple(...elements: ExpressionValue[]): TupleExpression
+  {
+    return new TupleExpression(toExpr(elements));
   }
 
   public update(...path: ExpressionValue[]): UpdateExpression

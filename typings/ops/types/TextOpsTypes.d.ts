@@ -19,6 +19,8 @@ export declare const TextOpsTypes: {
     distance: import("../..").OperationTypes<"value" | "test", never, never>;
     length: import("../..").OperationTypes<"value", never, never>;
     compare: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
+    like: import("../..").OperationTypes<"value" | "pattern", "ignoreCase", never>;
+    pad: import("../..").OperationTypes<"value" | "min" | "padding", "max" | "append", never>;
     toNumber: import("../..").OperationTypes<"value", "invalidValue", never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"value", never, never>;
