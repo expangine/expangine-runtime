@@ -39,6 +39,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
 export declare abstract class Type<O = any> implements Traversable<Type> {
     static fromInput(input: TypeInput): Type;
     static simplify(type: Type): Type;
+    static simplify(type: Type | null): Type | null;
     static resolve<T>(types: T): TypeResolved<T>;
     options: O;
     parent?: Type;

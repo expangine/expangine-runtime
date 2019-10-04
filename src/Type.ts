@@ -74,6 +74,7 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public static simplify(type: Type): Type
   public static simplify(type: Type | null): Type | null
+  public static simplify(type: Type | null): Type | null
   {
     return type ? type.getSimplifiedType() : null;
   }
