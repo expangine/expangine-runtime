@@ -19,6 +19,12 @@ export const AnyOps =
 
   copy: ops.set('copy', ANY_COMPLEXITY, ['value']),
 
+  isDefined: ops.set('isDefined', {}, ['value']),
+
+  getDefined: ops.set('isDefined', {}, ['value', 'defined'], [], ['defined'], ['defined'], ['value']),
+
+  coalesce: ops.set('coalesce', {}, ['a', 'b'], ['c', 'd', 'e'], [], [], ['a', 'b', 'c', 'd', 'e']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),

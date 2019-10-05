@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -39,6 +39,11 @@ export class OptionalType extends Type<Type>
   public static describe(data: any, describer: TypeDescribeProvider): Type | null
   {
     return null;
+  }
+
+  public static for(type: TypeInput): OptionalType
+  {
+    return new OptionalType(Type.fromInput(type));
   }
 
   public getOperations()

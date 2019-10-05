@@ -38,7 +38,7 @@ export type OperationResolved<
   string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
 >;
 
-export type OperationTypeInput<I extends string> = TypeInput | ((inputs: Record<I, Type | undefined>) => TypeInput);
+export type OperationTypeInput<I extends string> = TypeInput | ((inputs: Partial<Record<I, Type>>) => TypeInput);
 
 export interface OperationTypes<
   P extends string = never, 

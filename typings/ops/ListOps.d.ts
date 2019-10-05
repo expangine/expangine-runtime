@@ -48,6 +48,16 @@ export declare const ListOps: {
     group: import("../Operation").Operation<"list" | "by", "getValue", "list" | "item" | "index", "by" | "getValue", "list" | "by" | "getValue">;
     toListMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getValue" | "getKey", "list" | "getValue" | "getKey">;
     toMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getValue" | "getKey", "list" | "getValue" | "getKey">;
+    min: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    max: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    sum: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    avg: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    std: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    variance: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    median: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    bitand: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    bitor: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
+    bitxor: import("../Operation").Operation<"list" | "value", never, "list" | "item" | "index", "value", never>;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEmpty: import("../Operation").Operation<"list", never, never, never, never>;
     isNotEmpty: import("../Operation").Operation<"list", never, never, never, never>;

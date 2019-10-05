@@ -110,6 +110,28 @@ export const ListOps =
 
   toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
 
+  // Aggregates
+
+  min: ops.set('min', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  max: ops.set('max', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  sum: ops.set('sum', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  avg: ops.set('avg', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  std: ops.set('std', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  variance: ops.set('variance', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  median: ops.set('median', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  bitand: ops.set('band', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  bitor: ops.set('bor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
+  bitxor: ops.set('bxor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),

@@ -11,6 +11,7 @@ import { ObjectType } from '../../types/Object';
 import { TupleType } from '../../types/Tuple';
 
 import { ListOps } from '../ListOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = ListType.operations;
@@ -19,6 +20,7 @@ const RequireList = (list?: Type) => list instanceof ListType ? list : undefined
 const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
 const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
 const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
+const GivenListItemOptional = (i: {list?: Type}) => OptionalType.for(GivenListItem(i));
 const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
 const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initial || AnyType;
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
@@ -42,12 +44,12 @@ export const ListOpsTypes =
   ),
 
   get: ops.setTypes(ListOps.get, 
-    GivenListItem, 
+    GivenListItemOptional, 
     { list: GivenList, index: NumberType }
   ),
 
   set: ops.setTypes(ListOps.set, 
-    GivenListItem, 
+    GivenListItemOptional, 
     { list: GivenList, index: NumberType, value: GivenListItem }
   ),
 
@@ -79,17 +81,17 @@ export const ListOpsTypes =
   ),
 
   removeFirst: ops.setTypes(ListOps.removeFirst,
-    GivenListItem, 
+    GivenListItemOptional, 
     { list: GivenList }
   ),
 
   removeLast: ops.setTypes(ListOps.removeLast,
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList }
   ),
 
   removeAt: ops.setTypes(ListOps.removeAt,  
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList, index: NumberType }
   ),
 
@@ -234,7 +236,7 @@ export const ListOpsTypes =
   ),
 
   random: ops.setTypes(ListOps.random,
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList }
   ),
 
@@ -317,6 +319,78 @@ export const ListOpsTypes =
     i => MapType.forItem(i.getValue || GivenListItem(i), i.getKey || AnyType),
     { list: GivenList, getKey: i => i.getKey || AnyType },
     { getValue: i => i.getValue || GivenListItem(i) },
+    GivenListIterationScope
+  ),
+
+  // Aggregates
+
+  min: ops.setTypes(ListOps.min,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  max: ops.setTypes(ListOps.max,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  sum: ops.setTypes(ListOps.sum,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  avg: ops.setTypes(ListOps.avg,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  std: ops.setTypes(ListOps.std,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  variance: ops.setTypes(ListOps.variance,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  median: ops.setTypes(ListOps.median,
+    OptionalType.for(NumberType),
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  bitand: ops.setTypes(ListOps.bitand,
+    NumberType,
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  bitor: ops.setTypes(ListOps.bitor,
+    NumberType,
+    { list: GivenList, value: NumberType },
+    {},
+    GivenListIterationScope
+  ),
+
+  bitxor: ops.setTypes(ListOps.bitxor,
+    NumberType,
+    { list: GivenList, value: NumberType },
+    {},
     GivenListIterationScope
   ),
 

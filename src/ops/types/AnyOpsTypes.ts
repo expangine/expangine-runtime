@@ -10,6 +10,10 @@ import { TextType } from '../../types/Text';
 import { TupleType } from '../../types/Tuple';
 
 import { AnyOps } from '../AnyOps';
+import { OptionalType } from '../../types/Optional';
+import { ManyType } from '../../types/Many';
+import { NullType } from '../../types/Null';
+import { Type } from '../../Type';
 
 
 const ops = AnyType.operations;
@@ -22,6 +26,59 @@ export const AnyOpsTypes =
   cmp: ops.setTypes(AnyOps.cmp, NumberType, { value: AnyType, test: AnyType }),
 
   copy: ops.setTypes(AnyOps.copy, AnyType, { value: AnyType }),
+
+  isDefined: ops.setTypes(AnyOps.isDefined, 
+    BooleanType,
+    { value: AnyType }
+  ),
+
+  getDefined: ops.setTypes(AnyOps.getDefined, 
+    BooleanType,
+    { value: AnyType, defined: AnyType },
+    {},
+    { defined: i => i.value instanceof OptionalType ? i.value.options : i.value }
+  ),
+
+  coalesce: ops.setTypes(AnyOps.coalesce, 
+    i => {
+      let optional = true;
+      const types: Type[] = [];
+      const checkType = (x?: Type) => {
+        if (!optional) return;
+        
+        if (x) {
+          const xoptional = x instanceof OptionalType;
+          const innerType = xoptional ? x.options as Type : x;
+
+          optional = optional && xoptional;
+
+          
+
+          if (!types.some(t => t.isCompatible(innerType))) {
+            types.push(innerType);
+          }
+        }
+      };
+
+      checkType(i.a);
+      checkType(i.b);
+      checkType(i.c);
+      checkType(i.d);
+      checkType(i.e);
+
+      return types.length > 1
+        ? optional
+          ? OptionalType.for(new ManyType(types))
+          : new ManyType(types)
+        : types.length === 1
+          ? optional
+            ? OptionalType.for(types[0])
+            : types[0]
+          : NullType;
+    },
+    { a: AnyType, b: AnyType },
+    { c: AnyType, d: AnyType, e: AnyType }
+  ),
 
   // Comparisons
 

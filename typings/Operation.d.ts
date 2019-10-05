@@ -13,7 +13,7 @@ export interface Operation<P extends string = never, O extends string = never, S
     resultDependency: R[];
 }
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
-export declare type OperationTypeInput<I extends string> = TypeInput | ((inputs: Record<I, Type | undefined>) => TypeInput);
+export declare type OperationTypeInput<I extends string> = TypeInput | ((inputs: Partial<Record<I, Type>>) => TypeInput);
 export interface OperationTypes<P extends string = never, O extends string = never, S extends string = never> {
     returnType: OperationTypeInput<P | O>;
     params: Record<P, OperationTypeInput<P | O>>;

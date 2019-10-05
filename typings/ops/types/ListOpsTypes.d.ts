@@ -46,6 +46,16 @@ export declare const ListOpsTypes: {
     group: import("../..").OperationTypes<"list" | "by", "getValue", "list" | "item" | "index">;
     toListMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "item" | "index">;
     toMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "item" | "index">;
+    min: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    max: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    sum: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    avg: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    std: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    variance: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    median: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    bitand: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    bitor: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
+    bitxor: import("../..").OperationTypes<"list" | "value", never, "list" | "item" | "index">;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"list", never, never>;
     isNotEmpty: import("../..").OperationTypes<"list", never, never>;

@@ -3,6 +3,9 @@ export declare const AnyOperations: Operations;
 export declare const AnyOps: {
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;
+    isDefined: import("../Operation").Operation<"value", never, never, never, never>;
+    getDefined: import("../Operation").Operation<"value" | "defined", never, "defined", "defined", "value">;
+    coalesce: import("../Operation").Operation<"a" | "b", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
