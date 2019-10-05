@@ -60,11 +60,11 @@ export const ListOps =
 
   duplicates: ops.set('dupes', { complexity: 2 }, ['list', 'isEqual'], ['once'], ['list', 'value', 'test'], ['isEqual'], ['list']),
 
-  take: ops.set('take', { mutates: ['list'] }, ['list', 'count'], [], [], [], ['list']),
+  take: ops.set('take', {}, ['list', 'count'], [], [], [], ['list']),
 
-  skip: ops.set('skip', { mutates: ['list'] }, ['list', 'count'], [], [], [], ['list']),
+  skip: ops.set('skip', {}, ['list', 'count'], [], [], [], ['list']),
 
-  drop: ops.set('drop', { mutates: ['list'] }, ['list', 'count'], [], [], [], ['list']),
+  drop: ops.set('drop', {}, ['list', 'count'], [], [], [], ['list']),
 
   append: ops.set('append', {}, ['list', 'append'], [], [], [], ['list']),
 
@@ -104,9 +104,11 @@ export const ListOps =
 
   cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
 
-  group: ops.set('group', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list']),
+  group: ops.set('group', { complexity: 1 }, ['list', 'by'], ['getValue'], ['list', 'item', 'index'], ['by', 'getValue'], ['list', 'by', 'getValue']),
 
-  toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list']),
+  toListMap: ops.set('toListMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
+
+  toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
 
   // Comparisons
 

@@ -45,8 +45,9 @@ export declare const ListOps: {
     split: import("../Operation").Operation<"list" | "pass", never, "list" | "item" | "index", "pass", "list">;
     reduce: import("../Operation").Operation<"list" | "reduce" | "initial", never, "list" | "item" | "index" | "reduced", "reduce", "reduce">;
     cmp: import("../Operation").Operation<"value" | "test" | "compare", never, "list" | "value" | "test", "compare", never>;
-    group: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getKey" | "getValue", "list">;
-    toMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getKey" | "getValue", "list">;
+    group: import("../Operation").Operation<"list" | "by", "getValue", "list" | "item" | "index", "by" | "getValue", "list" | "by" | "getValue">;
+    toListMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getValue" | "getKey", "list" | "getValue" | "getKey">;
+    toMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "item" | "index", "getValue" | "getKey", "list" | "getValue" | "getKey">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEmpty: import("../Operation").Operation<"list", never, never, never, never>;
     isNotEmpty: import("../Operation").Operation<"list", never, never, never, never>;
