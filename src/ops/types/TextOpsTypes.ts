@@ -10,6 +10,7 @@ import { ObjectType } from '../../types/Object';
 import { TupleType } from '../../types/Tuple';
 
 import { TextOps } from '../TextOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = TextType.operations;
@@ -24,6 +25,8 @@ export const TextOpsTypes =
   create: ops.setTypes(TextOps.create, TextType),
 
   // Operations
+
+  maybe: ops.setTypes(TextOps.maybe, OptionalType.for(TextType), { value: AnyType } ),
 
   append: ops.setTypes(TextOps.append, TextType, { value: TextType, append: TextType }),
 

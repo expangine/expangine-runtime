@@ -2,6 +2,7 @@ import { Operations } from '../Operation';
 export declare const TextOperations: Operations;
 export declare const TextOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     append: import("../Operation").Operation<"value" | "append", never, never, never, never>;
     prepend: import("../Operation").Operation<"value" | "prepend", never, never, never, never>;
     lower: import("../Operation").Operation<"value", never, never, never, never>;

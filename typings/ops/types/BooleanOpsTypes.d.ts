@@ -1,5 +1,6 @@
 export declare const BooleanOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     and: import("../..").OperationTypes<"a" | "b", never, never>;
     or: import("../..").OperationTypes<"a" | "b", never, never>;
     xor: import("../..").OperationTypes<"a" | "b", never, never>;

@@ -4,6 +4,7 @@ export declare const DateOpsTypes: {
     today: import("../..").OperationTypes<never, never, never>;
     tomorrow: import("../..").OperationTypes<never, never, never>;
     yesterday: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     parse: import("../..").OperationTypes<"value", "parseAsUTC", never>;
     fromText: import("../..").OperationTypes<"value", "parseAsUTC", never>;
     fromTimestamp: import("../..").OperationTypes<"value", never, never>;

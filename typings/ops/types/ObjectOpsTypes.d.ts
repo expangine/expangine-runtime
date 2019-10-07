@@ -1,5 +1,6 @@
 export declare const ObjectOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     has: import("../..").OperationTypes<"object" | "key", never, never>;
     get: import("../..").OperationTypes<"object" | "key", never, never>;
     set: import("../..").OperationTypes<"object" | "value" | "key", never, "existingValue">;

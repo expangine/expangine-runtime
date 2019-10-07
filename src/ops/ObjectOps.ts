@@ -16,6 +16,8 @@ export const ObjectOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   has: ops.set('has', {}, ['object', 'key']),
 
   get: ops.set('get', {}, ['object', 'key']),

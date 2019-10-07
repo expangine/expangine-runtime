@@ -26,6 +26,7 @@ export declare const NumberOpsTypes: {
     bitOr: import("../..").OperationTypes<"a" | "b", never, never>;
     bitXor: import("../..").OperationTypes<"a" | "b", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     sqrt: import("../..").OperationTypes<"value", never, never>;
     sq: import("../..").OperationTypes<"value", never, never>;
     cbrt: import("../..").OperationTypes<"value", never, never>;

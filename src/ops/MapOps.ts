@@ -16,6 +16,8 @@ export const MapOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   get: ops.set('get', {}, ['map', 'key'], [], [], [], ['map']),
 
   set: ops.set('set', { mutates: ['map'] }, ['map', 'key', 'value'], [], ['existingValue'], ['value'], ['map']),

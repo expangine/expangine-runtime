@@ -24,6 +24,8 @@ export const DateOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   parse: ops.set('parse', {}, ['value'], ['parseAsUTC']),
 
   fromText: ops.set('>txt', {}, ['value'], ['parseAsUTC']),

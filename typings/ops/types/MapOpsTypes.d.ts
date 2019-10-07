@@ -1,5 +1,6 @@
 export declare const MapOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     get: import("../..").OperationTypes<"map" | "key", never, never>;
     set: import("../..").OperationTypes<"map" | "value" | "key", never, "existingValue">;
     has: import("../..").OperationTypes<"map" | "key", never, never>;

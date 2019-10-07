@@ -16,6 +16,8 @@ export const ListOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   build: ops.set('new', {}, ['count', 'item'], ['sameItem'], ['list', 'index', 'last', 'count'], ['item'], ['item']),
 
   get: ops.set('get', {}, ['list', 'index'], [], [], [], ['list']),

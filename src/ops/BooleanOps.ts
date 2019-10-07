@@ -16,6 +16,8 @@ export const BooleanOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   and: ops.set('&', {}, ['a', 'b']),
 
   or: ops.set('|', {}, ['a', 'b']),

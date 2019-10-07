@@ -10,6 +10,7 @@ import { TupleType } from '../../types/Tuple';
 import { DateType } from '../../types/Date';
 
 import { NumberOps } from '../NumberOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = NumberType.operations;
@@ -77,6 +78,8 @@ export const NumberOpsTypes =
   cmp: ops.setTypes(NumberOps.cmp, NumberType, { value: NumberType, test: NumberType }),
 
   // Unary Operations
+
+  maybe: ops.setTypes(NumberOps.maybe, OptionalType.for(NumberType), { value: AnyType } ),
 
   sqrt: ops.setTypes(NumberOps.sqrt, NumberType, { value: NumberType }),
 

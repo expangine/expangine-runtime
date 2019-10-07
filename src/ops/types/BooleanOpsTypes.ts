@@ -10,6 +10,7 @@ import { TextType } from '../../types/Text';
 import { TupleType } from '../../types/Tuple';
 
 import { BooleanOps } from '../BooleanOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = BooleanType.operations;
@@ -23,6 +24,8 @@ export const BooleanOpsTypes =
   create: ops.setTypes(BooleanOps.create, BooleanType),
 
   // Operations
+
+  maybe: ops.setTypes(BooleanOps.maybe, OptionalType.for(BooleanType), { value: AnyType } ),
 
   and: ops.setTypes(BooleanOps.and, BooleanType, { a: BooleanType, b: BooleanType }),
 

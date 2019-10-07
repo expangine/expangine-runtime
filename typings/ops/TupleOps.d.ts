@@ -2,6 +2,7 @@ import { Operations } from '../Operation';
 export declare const TupleOperations: Operations;
 export declare const TupleOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;
     get: import("../Operation").Operation<"value" | "index", never, never, never, never>;

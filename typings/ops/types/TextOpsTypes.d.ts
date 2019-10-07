@@ -1,5 +1,6 @@
 export declare const TextOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     append: import("../..").OperationTypes<"value" | "append", never, never>;
     prepend: import("../..").OperationTypes<"value" | "prepend", never, never>;
     lower: import("../..").OperationTypes<"value", never, never>;

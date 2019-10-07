@@ -28,6 +28,7 @@ export declare const NumberOps: {
     bitOr: import("../Operation").Operation<"a" | "b", never, never, never, never>;
     bitXor: import("../Operation").Operation<"a" | "b", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     sqrt: import("../Operation").Operation<"value", never, never, never, never>;
     sq: import("../Operation").Operation<"value", never, never, never, never>;
     cbrt: import("../Operation").Operation<"value", never, never, never, never>;

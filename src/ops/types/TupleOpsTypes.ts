@@ -10,6 +10,7 @@ import { ListType } from '../../types/List';
 import { TextType } from '../../types/Text';
 
 import { TupleOps } from '../TupleOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = TupleType.operations;
@@ -23,6 +24,8 @@ export const TupleOpsTypes =
   create: ops.setTypes(TupleOps.create, TupleType),
 
   // Operations
+
+  maybe: ops.setTypes(TupleOps.maybe, OptionalType.for(TupleType), { value: AnyType } ),
 
   cmp: ops.setTypes(TupleOps.cmp, NumberType, { value: TupleType, test: TupleType }),
 

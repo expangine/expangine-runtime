@@ -1,5 +1,6 @@
 export declare const TupleOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
     get: import("../..").OperationTypes<"value" | "index", never, never>;

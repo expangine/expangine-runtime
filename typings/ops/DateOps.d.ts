@@ -6,6 +6,7 @@ export declare const DateOps: {
     today: import("../Operation").Operation<never, never, never, never, never>;
     tomorrow: import("../Operation").Operation<never, never, never, never, never>;
     yesterday: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     parse: import("../Operation").Operation<"value", "parseAsUTC", never, "value" | "parseAsUTC", "value" | "parseAsUTC">;
     fromText: import("../Operation").Operation<"value", "parseAsUTC", never, "value" | "parseAsUTC", "value" | "parseAsUTC">;
     fromTimestamp: import("../Operation").Operation<"value", never, never, never, never>;

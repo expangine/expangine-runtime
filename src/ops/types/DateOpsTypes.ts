@@ -11,6 +11,7 @@ import { EnumType } from '../../types/Enum';
 import { ManyType } from '../../types/Many';
 
 import { DateOps } from '../DateOps';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = DateType.operations;
@@ -99,6 +100,8 @@ export const DateOpsTypes =
   yesterday: ops.setTypes(DateOps.yesterday, DateType),
 
   // Operations
+
+  maybe: ops.setTypes(DateOps.maybe, OptionalType.for(DateType), { value: AnyType } ),
 
   parse: ops.setTypes(DateOps.parse, DateType, { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
 

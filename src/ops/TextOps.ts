@@ -16,6 +16,8 @@ export const TextOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   append: ops.set('+', {}, ['value', 'append']),
 
   prepend: ops.set('pre', {}, ['value', 'prepend']),

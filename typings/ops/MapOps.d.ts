@@ -2,6 +2,7 @@ import { Operations } from '../Operation';
 export declare const MapOperations: Operations;
 export declare const MapOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     get: import("../Operation").Operation<"map" | "key", never, never, never, "map">;
     set: import("../Operation").Operation<"map" | "value" | "key", never, "existingValue", "value", "map">;
     has: import("../Operation").Operation<"map" | "key", never, never, never, never>;

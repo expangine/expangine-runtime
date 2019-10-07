@@ -11,6 +11,7 @@ import { ListType } from '../../types/List';
 import { ObjectType } from '../../types/Object';
 import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = MapType.operations;
@@ -34,6 +35,8 @@ export const MapOpsTypes =
   create: ops.setTypes(MapOps.create, MapType),
 
   // Operations
+
+  maybe: ops.setTypes(MapOps.maybe, OptionalType.for(MapType), { value: AnyType } ),
 
   get: ops.setTypes(MapOps.get, 
     GivenMapValue,

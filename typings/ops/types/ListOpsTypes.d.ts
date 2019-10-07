@@ -1,5 +1,6 @@
 export declare const ListOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     build: import("../..").OperationTypes<"count" | "item", "sameItem", "list" | "index" | "count" | "last">;
     get: import("../..").OperationTypes<"list" | "index", never, never>;
     set: import("../..").OperationTypes<"list" | "value" | "index", never, never>;

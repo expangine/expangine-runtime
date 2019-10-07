@@ -36,6 +36,8 @@ export const ListOpsTypes =
 
   // Operations
 
+  maybe: ops.setTypes(ListOps.maybe, OptionalType.for(ListType), { value: AnyType } ),
+
   build: ops.setTypes(ListOps.build, 
     i => ListType.forItem(i.item || AnyType), 
     { count: NumberType, item: i => i.item || AnyType },

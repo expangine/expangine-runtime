@@ -16,6 +16,8 @@ export const TupleOps =
 
   // Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   cmp: ops.set('cmp', {}, ['value', 'test']),
 
   copy: ops.set('copy', {}, ['value']),

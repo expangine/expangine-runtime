@@ -70,6 +70,8 @@ export const NumberOps =
 
   // Unary Operations
 
+  maybe: ops.set('maybe', {}, ['value']),
+
   sqrt: ops.set('sqrt', {}, ['value']),
 
   sq: ops.set('^2', {}, ['value']),

@@ -11,6 +11,7 @@ import { DateType } from '../../types/Date';
 import { ListType } from '../../types/List';
 import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = ObjectType.operations;
@@ -26,6 +27,8 @@ export const ObjectOpsTypes =
   ),
 
   // Operations
+
+  maybe: ops.setTypes(ObjectOps.maybe, OptionalType.for(ObjectType), { value: AnyType } ),
 
   has: ops.setTypes(ObjectOps.has, 
     BooleanType,

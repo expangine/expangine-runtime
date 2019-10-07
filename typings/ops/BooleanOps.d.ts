@@ -2,6 +2,7 @@ import { Operations } from '../Operation';
 export declare const BooleanOperations: Operations;
 export declare const BooleanOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     and: import("../Operation").Operation<"a" | "b", never, never, never, never>;
     or: import("../Operation").Operation<"a" | "b", never, never, never, never>;
     xor: import("../Operation").Operation<"a" | "b", never, never, never, never>;
