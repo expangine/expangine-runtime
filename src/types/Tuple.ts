@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
 import { isArray, isNumber, toArray } from '../fns';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -12,6 +12,7 @@ import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { ListType } from './List';
 
 
 const INDEX_ELEMENTS = 1;
@@ -178,8 +179,18 @@ export class TupleType extends Type<Type[]>
     );
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
+    if (!options.exact && 
+      !options.strict && 
+      other instanceof ListType && 
+      !this.options.some(o => !o.isCompatible(other.options.item, options)) &&
+      isNumber(other.options.min) &&
+      other.options.min >= this.options.length)
+    {
+      return true;
+    }
+
     if (!(other instanceof TupleType))
     {
       return false;
@@ -188,14 +199,14 @@ export class TupleType extends Type<Type[]>
     const a = this.options;
     const b = other.options;
 
-    if (a.length !== b.length)
+    if (b.length < a.length || (options.exact && a.length !== b.length))
     {
       return false;
     }
 
     for (let i = 0; i < a.length; i++)
     {
-      if (!a[i].isCompatible(b[i]))
+      if (!a[i].isCompatible(b[i], options))
       {
         return false;
       }

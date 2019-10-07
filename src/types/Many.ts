@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations, OperationGeneric } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -142,9 +142,14 @@ export class ManyType extends Type<Type[]>
       : this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return this.forMany(false, many => many.isCompatible(other) ? true : undefined);
+    return this.forMany(false, many => many.isCompatible(other, options) ? true : undefined);
+  }
+
+  protected acceptsOtherTypes(): boolean
+  {
+    return true;
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R

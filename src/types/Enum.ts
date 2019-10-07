@@ -1,6 +1,6 @@
 
 import { toArray, compare } from '../fns';
-import { Type, TypeDescribeProvider, TypeProvider, TypeSub } from '../Type';
+import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -108,10 +108,24 @@ export class EnumType extends Type<EnumOptions>
     return this.options.value;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean 
   {
-    return other instanceof EnumType 
-      && this.options.value.isCompatible(other.options.value);
+    if (!(other instanceof EnumType))
+    {
+      return false;
+    }
+
+    const { key, value } = this.options;
+
+    if (options.exact)
+    {
+      if (!key.isCompatible(other.options.key, options))
+      {
+        return false;
+      }
+    }
+
+    return value.isCompatible(other.options.value);
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R

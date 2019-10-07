@@ -47,15 +47,26 @@ export const AnyOpsTypes =
         if (!optional) return;
         
         if (x) {
-          const xoptional = x instanceof OptionalType;
-          const innerType = xoptional ? x.options as Type : x;
+          let xoptional = x instanceof OptionalType;
+          const xinner = xoptional ? x.options as Type : x;
+
+          if (xinner instanceof ManyType) {
+            xinner.options.forEach((y) => {
+              const yoptional = y instanceof OptionalType;
+              const yinner = yoptional ? y.options as Type : y;
+
+              xoptional = xoptional || yoptional;
+
+              if (!types.some(t => t.exactType(yinner))) {
+                types.push(yinner);
+              }
+            });
+          }
 
           optional = optional && xoptional;
 
-          
-
-          if (!types.some(t => t.isCompatible(innerType))) {
-            types.push(innerType);
+          if (!types.some(t => t.exactType(xinner))) {
+            types.push(xinner);
           }
         }
       };

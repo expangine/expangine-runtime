@@ -1,6 +1,6 @@
 
 import { isEmpty, copy } from '../fns';
-import { Type, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -83,7 +83,7 @@ export class NullType extends Type<NullOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     return other instanceof NullType;
   }

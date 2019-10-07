@@ -1,6 +1,6 @@
 
 import { isDate, isEmpty, copy } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -130,9 +130,50 @@ export class DateType extends Type<DateOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean 
   {
-    return other instanceof DateType;
+    if (!(other instanceof DateType))
+    {
+      return false;
+    }
+
+    if (options.value)
+    {
+      if (other.options.withTime && !this.options.withTime)
+      {
+        return false;
+      }
+
+      const min = this.getMin();
+      const otherMin = other.getMin();
+
+      if (min && (!otherMin || otherMin.getTime() < min.getTime()))
+      {
+        return false;
+      }
+
+      const max = this.getMax();
+      const otherMax = other.getMax();
+
+      if (max && (!otherMax || otherMax.getTime() > max.getTime()))
+      {
+        return false;
+      }
+
+      const { forceStartOf, forceEndOf } = this.options;
+
+      if (forceStartOf && forceStartOf !== other.options.forceStartOf)
+      {
+        return false;
+      }
+
+      if (forceEndOf && forceEndOf !== other.options.forceEndOf)
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R
@@ -243,16 +284,25 @@ export class DateType extends Type<DateOptions>
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
-    const { validateMin, validateMax, forceMin, forceMax } = this.options;
     const value = new Date();
 
-    const min = validateMin || forceMin;
-    const max = validateMax || forceMax;
+    const min = this.getMin();
+    const max = this.getMax();
 
     const start = min ? min.getTime() : value.getTime();
     const end = max ? max.getTime() : value.getTime();
 
     return new Date(rnd(start, end, true));
+  }
+
+  public getMin(): Date | undefined
+  {
+    return this.options.validateMin || this.options.forceMin;
+  }
+
+  public getMax(): Date | undefined
+  {
+    return this.options.validateMax || this.options.forceMax;
   }
 
   public fromJson(json: string): Date

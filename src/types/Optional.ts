@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -81,11 +81,16 @@ export class OptionalType extends Type<Type>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     return other instanceof OptionalType
-      ? this.options.isCompatible(other.options)
-      : this.options.isCompatible(other);
+      ? this.options.isCompatible(other.options, options)
+      : this.options.isCompatible(other, options);
+  }
+
+  protected acceptsOtherTypes(): boolean
+  {
+    return true;
   }
   
   public traverse<R>(traverse: Traverser<Type, R>): R
@@ -142,7 +147,7 @@ export class OptionalType extends Type<Type>
   {
     return value === null 
       || value === undefined
-      || this.options.isCompatible(value);
+      || this.options.isValid(value);
   }
 
   public normalize(value: any): any

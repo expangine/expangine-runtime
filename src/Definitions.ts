@@ -465,19 +465,19 @@ export class Definitions
       if (isFunction(typeInput))
       {
         chosenIndex = paramTypes.findIndex(([, type]) => 
-          type.isCompatible(Type.fromInput(typeInput({ ...mapped, [param]: type }))));
+          type.acceptsType(Type.fromInput(typeInput({ ...mapped, [param]: type }))));
         
         if (chosenIndex === -1)
         {
           chosenIndex = paramTypes.findIndex(([, type]) =>
-            Type.fromInput(typeInput({ ...mapped, [param]: type})).isCompatible(type));
+            Type.fromInput(typeInput({ ...mapped, [param]: type})).acceptsType(type));
         }
       }
       else
       {
         const paramType = Type.fromInput(typeInput);
 
-        chosenIndex = paramTypes.findIndex(([, type]) => paramType.isCompatible(type));
+        chosenIndex = paramTypes.findIndex(([, type]) => paramType.acceptsType(type));
       }
 
       if (chosenIndex === -1)
@@ -548,7 +548,7 @@ export class Definitions
       {
         const opType = this.getOperationInputType(opTypeInput, {});
 
-        if (opType && type.isCompatible(opType)) 
+        if (opType && type.acceptsType(opType)) 
         {
           return true;
         }
@@ -571,7 +571,7 @@ export class Definitions
     {
       const returnType = this.getOperationInputType(types.returnType, paramTypes);
 
-      if (returnType && type.isCompatible(returnType))
+      if (returnType && type.acceptsType(returnType))
       {
         return true;
       }
@@ -607,7 +607,7 @@ export class Definitions
 
         const opType = this.getOperationInputType(opTypeInput, paramTypes);
 
-        if (!opType || !paramTypes[param].isCompatible(opType))
+        if (!opType || !paramTypes[param].acceptsType(opType))
         {
           return false;
         }

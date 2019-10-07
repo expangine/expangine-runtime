@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isArray, coalesce, toArray } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { ObjectType } from './Object';
@@ -13,6 +13,7 @@ import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { TupleType } from './Tuple';
 
 
 const INDEX_ITEM = 1;
@@ -159,7 +160,7 @@ export class ListType extends Type<ListOptions>
   {
     return [
       { key: 'length', value: ListType.lengthType },
-      { key: ListType.indexType, value: this.options.item },
+      { key: ListType.indexType, value: def.optionalType(this.options.item) },
     ];
   }
 
@@ -173,9 +174,46 @@ export class ListType extends Type<ListOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return other instanceof ListType && this.options.item.isCompatible(other.options.item);
+    const { item, min, max } = this.options;
+
+    if (!options.strict &&
+      !options.exact &&
+      other instanceof TupleType &&
+      !other.options.some(o => !item.isCompatible(o, options)))
+    {
+      return true;
+    }
+
+    if (!(other instanceof ListType))
+    {
+      return false;
+    }
+
+    if (!item.isCompatible(other.options.item, options))
+    {
+      return false;
+    }
+
+    if (options.value)
+    {
+      const otherMin = other.options.min;
+
+      if (min && (!otherMin || otherMin < min))
+      {
+        return false;
+      }
+
+      const otherMax = other.options.max;
+
+      if (max && (!otherMax || otherMax < max))
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R

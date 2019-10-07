@@ -1,7 +1,6 @@
 
 import { isBoolean, isEmpty, copy } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
-import { NumberType } from './Number';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { BooleanOps, BooleanOperations } from '../ops/BooleanOps';
@@ -82,9 +81,14 @@ export class BooleanType extends Type<BooleanOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return other instanceof BooleanType || other instanceof NumberType;
+    if (options.exact || options.strict)
+    {
+      return other instanceof BooleanType;
+    }
+
+    return true;
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R

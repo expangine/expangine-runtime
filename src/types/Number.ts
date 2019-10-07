@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
-import { Type, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberOps, NumberOperations } from '../ops/NumberOps';
@@ -99,9 +99,33 @@ export class NumberType extends Type<NumberOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return other instanceof NumberType;
+    if (!(other instanceof NumberType))
+    {
+      return false;
+    }
+
+    if (options.value)
+    {
+      const min = this.options.min;
+      const otherMin = other.options.min;
+
+      if (isNumber(min) && (!isNumber(otherMin) || otherMin < min))
+      {
+        return false;
+      }
+
+      const max = this.options.max;
+      const otherMax = other.options.max;
+
+      if (isNumber(max) && (!isNumber(otherMax) || otherMax < max))
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
   
   public traverse<R>(traverse: Traverser<Type, R>): R

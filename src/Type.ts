@@ -1,10 +1,11 @@
 
-import { objectMap, isArray, isObject } from './fns';
+import { objectMap, isArray, isObject, isSameClass } from './fns';
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable } from './Traverser';
+import { EnumType } from './types/Enum';
 
 
 export type TypeInput = TypeClass | Type;
@@ -43,6 +44,13 @@ export interface TypeDescribeProvider
   merge(type: Type, data: any): Type;
   mergeType(type: Type, other: Type): Type;
   optionalType(type: Type): Type;
+}
+
+export interface TypeCompatibleOptions
+{
+  strict?: boolean;
+  value?: boolean;
+  exact?: boolean;
 }
 
 export interface TypeParser 
@@ -128,7 +136,54 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract getSimplifiedType(): Type;
 
-  public abstract isCompatible(other: Type<O>): boolean;
+  protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+
+  public isCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean
+  {
+    if (other === this)
+    {
+      return true;
+    }
+
+    if (!options.exact && 
+      other instanceof EnumType && 
+      this.isCompatible(other.options.value, options))
+    {
+      return true;
+    }
+
+    if (options.strict && !isSameClass(this, other) && !this.acceptsOtherTypes())
+    {
+      return false;
+    }
+
+    return this.isDeepCompatible(other, options);
+  }
+
+  protected acceptsOtherTypes(): boolean
+  {
+    return false;
+  }
+
+  public acceptsType(other: Type): boolean
+  {
+    return this.isCompatible(other, { strict: true });
+  }
+
+  public acceptsData(other: Type): boolean
+  {
+    return this.isCompatible(other, { strict: true, value: true });
+  }
+
+  public exactType(other: Type): boolean
+  {
+    return this.isCompatible(other, { exact: true, strict: true });
+  }
+
+  public exactData(other: Type): boolean
+  {
+    return this.isCompatible(other, { exact: true, strict: true, value: true });
+  }
 
   public abstract traverse<R>(traverse: Traverser<Type, R>): R;
 

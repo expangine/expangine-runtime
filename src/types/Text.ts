@@ -1,6 +1,6 @@
 
 import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
-import { Type, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations } from '../ops/TextOps';
@@ -160,7 +160,7 @@ export class TextType extends Type<TextOptions>
   {
     return [
       { key: 'length', value: TextType.lengthType },
-      { key: TextType.indexType, value: TextType.charType },
+      { key: TextType.indexType, value: def.optionalType(TextType.charType) },
     ];
   }
 
@@ -174,9 +174,57 @@ export class TextType extends Type<TextOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return other instanceof TextType;
+    if (!(other instanceof TextType))
+    {
+      return false;
+    }
+
+    if (options.value)
+    {
+      const min = this.options.min;
+      const otherMin = other.options.min;
+
+      if (min && (!otherMin || otherMin < min))
+      {
+        return false;
+      }
+
+      const max = this.options.max;
+      const otherMax = other.options.max;
+
+      if (max && (!otherMax || otherMax > max))
+      {
+        return false;
+      }
+
+      const lower = this.options.forceLower || this.options.requireUpper;
+      const otherLower = other.options.forceLower || other.options.requireLower;
+
+      if (lower && !otherLower)
+      {
+        return false;
+      }
+
+      const upper = this.options.forceUpper || this.options.requireUpper;
+      const otherUpper = other.options.forceUpper || other.options.requireUpper;
+
+      if (upper && !otherUpper)
+      {
+        return false;
+      }
+
+      const matches = this.options.matches;
+      const otherMatches = other.options.matches;
+
+      if (matches && (!otherMatches || otherMatches.source !== matches.source))
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
   
   public traverse<R>(traverse: Traverser<Type, R>): R

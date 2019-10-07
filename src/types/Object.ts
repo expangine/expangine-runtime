@@ -1,6 +1,6 @@
 
 import { objectMap, isObject, objectValues, isString, toArray, objectEach } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations } from '../ops/ObjectOps';
@@ -173,7 +173,7 @@ export class ObjectType extends Type<ObjectOptions>
     objectEach(this.options.props, t => t.setParent(this));
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     if (!(other instanceof ObjectType)) 
     {
@@ -187,6 +187,22 @@ export class ObjectType extends Type<ObjectOptions>
       if (!other.options.props[prop]) 
       {
         return false;
+      }
+
+      if (!props[prop].isCompatible(other.options.props[prop], options))
+      {
+        return false;
+      }
+    }
+
+    if (options.exact)
+    {
+      for (const prop in other.options.props)
+      {
+        if (!(props[prop]))
+        {
+          return false;
+        }
       }
     }
 

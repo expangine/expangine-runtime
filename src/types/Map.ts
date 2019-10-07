@@ -1,6 +1,6 @@
 
 import { isObject, isMap, toArray, isSameClass } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
 import { ListType } from './List';
@@ -140,11 +140,11 @@ export class MapType extends Type<MapOptions>
     return this;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     return other instanceof MapType && 
-      this.options.key.isCompatible(other.options.key) && 
-      this.options.value.isCompatible(other.options.value);
+      this.options.key.isCompatible(other.options.key, options) && 
+      this.options.value.isCompatible(other.options.value, options);
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R

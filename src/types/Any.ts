@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -70,6 +70,11 @@ export class AnyType extends Type
   }
 
   public isCompatible(other: Type): boolean 
+  {
+    return true;
+  }
+
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions)
   {
     return true;
   }

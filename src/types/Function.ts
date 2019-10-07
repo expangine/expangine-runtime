@@ -1,6 +1,6 @@
 
 import { isFunction } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { ObjectType } from './Object';
 import { AnyType } from './Any';
@@ -94,11 +94,11 @@ export class FunctionType extends Type<FunctionOptions>
     return this.options.returnType;
   }
 
-  public isCompatible(other: Type): boolean 
+  protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     return other instanceof FunctionType
-      && this.options.returnType.isCompatible(other.options.returnType)
-      && this.options.params.isCompatible(other.options.params);
+      && this.options.returnType.isCompatible(other.options.returnType, options)
+      && this.options.params.isCompatible(other.options.params, options);
   }
 
   public traverse<R>(traverse: Traverser<Type, R>): R
