@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit } from '../util/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -31,7 +31,7 @@ export declare class DateType extends Type<DateOptions> {
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
@@ -44,6 +44,8 @@ export declare class DateType extends Type<DateOptions> {
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    getMin(): Date | undefined;
+    getMax(): Date | undefined;
     fromJson(json: string): Date;
     toJson(value: Date): string;
 }

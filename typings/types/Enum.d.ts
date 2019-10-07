@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeProvider, TypeSub } from '../Type';
+import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -24,7 +24,7 @@ export declare class EnumType extends Type<EnumOptions> {
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;

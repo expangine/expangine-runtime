@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -19,6 +19,7 @@ export declare class AnyType extends Type {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;

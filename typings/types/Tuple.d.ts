@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -25,7 +25,7 @@ export declare class TupleType extends Type<Type[]> {
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     isValid(value: any): boolean;

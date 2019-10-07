@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations, OperationGeneric } from '../Operation';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -21,7 +21,8 @@ export declare class ManyType extends Type<Type[]> {
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+    protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;

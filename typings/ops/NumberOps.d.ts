@@ -69,7 +69,7 @@ export declare const NumberOps: {
     isDecimal: import("../Operation").Operation<"value", "epsilon", never, "value" | "epsilon", "value" | "epsilon">;
     isPositive: import("../Operation").Operation<"value", never, never, never, never>;
     isNegative: import("../Operation").Operation<"value", never, never, never, never>;
-    isDivisible: import("../Operation").Operation<"value" | "by", "epsilon", never, "value" | "by" | "epsilon", "value" | "by" | "epsilon">;
+    isDivisible: import("../Operation").Operation<"value" | "by", "epsilon", never, "value" | "epsilon" | "by", "value" | "epsilon" | "by">;
     asAny: import("../Operation").Operation<"value", never, never, never, never>;
     asBoolean: import("../Operation").Operation<"value", never, never, never, never>;
     asDate: import("../Operation").Operation<"value", never, never, never, never>;

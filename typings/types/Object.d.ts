@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -26,7 +26,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getSimplifiedType(): Type;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

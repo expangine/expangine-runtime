@@ -23,6 +23,11 @@ export interface TypeDescribeProvider {
     mergeType(type: Type, other: Type): Type;
     optionalType(type: Type): Type;
 }
+export interface TypeCompatibleOptions {
+    strict?: boolean;
+    value?: boolean;
+    exact?: boolean;
+}
 export interface TypeParser {
     (data: any, types: TypeProvider): Type;
 }
@@ -51,7 +56,13 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract getSubTypes(def: Definitions): TypeSub[];
     abstract getExactType(value: any): Type<O>;
     abstract getSimplifiedType(): Type;
-    abstract isCompatible(other: Type<O>): boolean;
+    protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+    isCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
+    protected acceptsOtherTypes(): boolean;
+    acceptsType(other: Type): boolean;
+    acceptsData(other: Type): boolean;
+    exactType(other: Type): boolean;
+    exactData(other: Type): boolean;
     abstract traverse<R>(traverse: Traverser<Type, R>): R;
     abstract setParent(parent?: Type): void;
     abstract getCreateExpression(ex: ExpressionBuilder): Expression;

@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -28,7 +28,7 @@ export declare class ListType extends Type<ListOptions> {
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    isCompatible(other: Type): boolean;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
