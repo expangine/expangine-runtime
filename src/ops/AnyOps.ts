@@ -21,7 +21,7 @@ export const AnyOps =
 
   isDefined: ops.set('isDefined', {}, ['value']),
 
-  getDefined: ops.set('isDefined', {}, ['value', 'defined'], [], ['defined'], ['defined'], ['value']),
+  getDefined: ops.set('getDefined', {}, ['value', 'defined'], [], ['defined'], ['defined'], ['value']),
 
   coalesce: ops.set('coalesce', {}, ['a', 'b'], ['c', 'd', 'e'], [], [], ['a', 'b', 'c', 'd', 'e']),
 
