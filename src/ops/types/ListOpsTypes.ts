@@ -12,6 +12,7 @@ import { TupleType } from '../../types/Tuple';
 
 import { ListOps } from '../ListOps';
 import { OptionalType } from '../../types/Optional';
+import { ManyType } from '../../types/Many';
 
 
 const ops = ListType.operations;
@@ -36,7 +37,29 @@ export const ListOpsTypes =
 
   // Operations
 
-  maybe: ops.setTypes(ListOps.maybe, OptionalType.for(ListType), { value: AnyType } ),
+  maybe: ops.setTypes(ListOps.maybe, 
+    i => {
+      if (i.value instanceof ListType) {
+        return i.value;
+      }
+      if (i.value instanceof OptionalType && i.value.options instanceof ListType){
+        return i.value;
+      }
+      if (i.value instanceof ManyType) {
+        const oneOf = i.value.options.find(t => t instanceof ListType);
+        if (oneOf) {
+          return OptionalType.for(oneOf);
+        }
+        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof ListType);
+        if (oneOfOptional) {
+          return oneOfOptional;
+        }
+      }
+
+      return OptionalType.for(ListType);
+    }, 
+    { value: AnyType } 
+  ),
 
   build: ops.setTypes(ListOps.build, 
     i => ListType.forItem(i.item || AnyType), 

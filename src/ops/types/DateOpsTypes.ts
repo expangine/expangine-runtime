@@ -101,7 +101,29 @@ export const DateOpsTypes =
 
   // Operations
 
-  maybe: ops.setTypes(DateOps.maybe, OptionalType.for(DateType), { value: AnyType } ),
+  maybe: ops.setTypes(DateOps.maybe, 
+    i => {
+      if (i.value instanceof DateType) {
+        return i.value;
+      }
+      if (i.value instanceof OptionalType && i.value.options instanceof DateType){
+        return i.value;
+      }
+      if (i.value instanceof ManyType) {
+        const oneOf = i.value.options.find(t => t instanceof DateType);
+        if (oneOf) {
+          return OptionalType.for(oneOf);
+        }
+        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof DateType);
+        if (oneOfOptional) {
+          return oneOfOptional;
+        }
+      }
+
+      return OptionalType.for(DateType);
+    }, 
+    { value: AnyType } 
+  ),
 
   parse: ops.setTypes(DateOps.parse, DateType, { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
 

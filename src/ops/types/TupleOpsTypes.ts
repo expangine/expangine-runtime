@@ -11,6 +11,7 @@ import { TextType } from '../../types/Text';
 
 import { TupleOps } from '../TupleOps';
 import { OptionalType } from '../../types/Optional';
+import { ManyType } from '../../types/Many';
 
 
 const ops = TupleType.operations;
@@ -25,7 +26,29 @@ export const TupleOpsTypes =
 
   // Operations
 
-  maybe: ops.setTypes(TupleOps.maybe, OptionalType.for(TupleType), { value: AnyType } ),
+  maybe: ops.setTypes(TupleOps.maybe, 
+    i => {
+      if (i.value instanceof TupleType) {
+        return i.value;
+      }
+      if (i.value instanceof OptionalType && i.value.options instanceof TupleType){
+        return i.value;
+      }
+      if (i.value instanceof ManyType) {
+        const oneOf = i.value.options.find(t => t instanceof TupleType);
+        if (oneOf) {
+          return OptionalType.for(oneOf);
+        }
+        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof TupleType);
+        if (oneOfOptional) {
+          return oneOfOptional;
+        }
+      }
+
+      return OptionalType.for(TupleType);
+    }, 
+    { value: AnyType } 
+  ),
 
   cmp: ops.setTypes(TupleOps.cmp, NumberType, { value: TupleType, test: TupleType }),
 

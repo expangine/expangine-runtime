@@ -12,6 +12,7 @@ import { ListType } from '../../types/List';
 import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
+import { ManyType } from '../../types/Many';
 
 
 const ops = ObjectType.operations;
@@ -28,7 +29,29 @@ export const ObjectOpsTypes =
 
   // Operations
 
-  maybe: ops.setTypes(ObjectOps.maybe, OptionalType.for(ObjectType), { value: AnyType } ),
+  maybe: ops.setTypes(ObjectOps.maybe, 
+    i => {
+      if (i.value instanceof ObjectType) {
+        return i.value;
+      }
+      if (i.value instanceof OptionalType && i.value.options instanceof ObjectType){
+        return i.value;
+      }
+      if (i.value instanceof ManyType) {
+        const oneOf = i.value.options.find(t => t instanceof ObjectType);
+        if (oneOf) {
+          return OptionalType.for(oneOf);
+        }
+        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof ObjectType);
+        if (oneOfOptional) {
+          return oneOfOptional;
+        }
+      }
+
+      return OptionalType.for(ObjectType);
+    }, 
+    { value: AnyType } 
+  ),
 
   has: ops.setTypes(ObjectOps.has, 
     BooleanType,
