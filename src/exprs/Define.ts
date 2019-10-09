@@ -1,6 +1,6 @@
 
-import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { objectMap, isString, toExpr, objectEach } from '../fns';
+import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { isString, toExpr, objectEach } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
@@ -17,7 +17,7 @@ export class DefineExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): DefineExpression 
   {
-    const define = objectMap(data[INDEX_DEFINE], (d: any) => exprs.getExpression(d));
+    const define = data[INDEX_DEFINE].map(([name, d]: [string, any]) => [name, exprs.getExpression(d)]);
     const body = exprs.getExpression(data[INDEX_BODY]);
     
     return new DefineExpression(define, body);
@@ -25,15 +25,15 @@ export class DefineExpression extends Expression
 
   public static encode(expr: DefineExpression): any 
   {
-    const define = objectMap(expr.define, e => e.encode());
+    const define = expr.define.map(([name, defined]) => [name, defined.encode()]);
 
     return [this.id, define, expr.body.encode()];
   }
 
-  public define: ExpressionMap;
+  public define: [string, Expression][];
   public body: Expression;
 
-  public constructor(define: ExpressionMap, body: Expression) 
+  public constructor(define: [string, Expression][], body: Expression) 
   {
     super();
     this.define = define;
@@ -47,19 +47,16 @@ export class DefineExpression extends Expression
 
   public getComplexity(def: Definitions): number
   {
-    let complexity = this.body.getComplexity(def);
-
-    for (const prop in this.define)
-    {
-      complexity = Math.max(complexity, this.define[prop].getComplexity(def));
-    }
-
-    return complexity;
+    return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def)), this.body.getComplexity(def));
   }
 
   public getScope()
   {
-    return objectMap(this.define, () => AnyType.baseType);
+    const scope = {};
+
+    this.define.forEach(([name, defined]) => scope[name] = AnyType.baseType);
+
+    return scope;
   }
 
   public encode(): any 
@@ -71,7 +68,7 @@ export class DefineExpression extends Expression
   {
     const { scope, context } = def.getContextWithScope(original);
 
-    objectEach(this.define, (value, key) => scope[key] = value.getType(def, context));
+    this.define.forEach(([name, defined]) => scope[name] = defined.getType(def, context));
 
     return this.body.getType(def, context);
   }
@@ -80,8 +77,8 @@ export class DefineExpression extends Expression
   {
     return traverse.enter(this, () => {
       traverse.step('define', () =>
-        objectEach(this.define, (expr, prop) => 
-          traverse.step(prop, expr)
+        this.define.forEach(([name, defined]) => 
+          traverse.step(name, defined)
         )
       );
       traverse.step('body', this.body);
@@ -92,8 +89,7 @@ export class DefineExpression extends Expression
   {
     this.parent = parent;
 
-    objectEach(this.define, e => e.setParent(this));
-    
+    this.define.forEach(([name, defined]) => defined.setParent(this));
     this.body.setParent(this);
   }
 
@@ -101,19 +97,20 @@ export class DefineExpression extends Expression
   public with(defines: Record<string, ExpressionValue>): DefineExpression
   public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression
   {
+    const define = this.define.slice();
+
     const append = isString(nameOrDefines)
       ? { [nameOrDefines]: value }
       : nameOrDefines;
 
-    return new DefineExpression({
-      ...this.define,
-      ...toExpr(append),
-    }, this.body);
+    objectEach(append, (defined, name) => define.push([name, toExpr(defined)]));
+
+    return new DefineExpression(define, this.body);
   }
 
   public run(expr: Expression): DefineExpression
   {
-    return new DefineExpression({ ...this.define }, expr);
+    return new DefineExpression(this.define.slice(), expr);
   }
 
 }

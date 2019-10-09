@@ -45,7 +45,7 @@ export class ExpressionBuilder
 
   public define(vars: Record<string, ExpressionValue> = {}, body: Expression = NoExpression.instance): DefineExpression
   {
-    return new DefineExpression(toExpr(vars), body);
+    return new DefineExpression([], body).with(vars);
   }
 
   public do(body: Expression, condition: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): DoExpression
