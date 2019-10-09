@@ -329,19 +329,25 @@ export const ListOpsTypes =
       group: ListType.forItem(i.getValue || GivenListItem(i)),
     })),
     { list: GivenList, by: i => i.by || AnyType },
-    { getValue: i => i.getValue || AnyType },
+    { getValue: i => i.getValue || GivenListItem(i) },
     GivenListIterationScope
   ),
 
   toListMap: ops.setTypes(ListOps.toListMap, 
-    i => MapType.forItem(ListType.forItem(i.getValue || GivenListItem(i)), i.getKey || AnyType),
+    i => MapType.forItem(
+      ListType.forItem(i.getValue || GivenListItem(i)), 
+      i.getKey || AnyType
+    ),
     { list: GivenList, getKey: i => i.getKey || AnyType },
-    { getValue: i => i.getValue || AnyType },
+    { getValue: i => i.getValue || GivenListItem(i) },
     GivenListIterationScope
   ),
 
   toMap: ops.setTypes(ListOps.toMap,
-    i => MapType.forItem(i.getValue || GivenListItem(i), i.getKey || AnyType),
+    i => MapType.forItem(
+      i.getValue || GivenListItem(i), 
+      i.getKey || AnyType
+    ),
     { list: GivenList, getKey: i => i.getKey || AnyType },
     { getValue: i => i.getValue || GivenListItem(i) },
     GivenListIterationScope
