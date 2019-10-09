@@ -23,7 +23,7 @@ export type ExpressionMap = Record<string, Expression>;
 export abstract class Expression implements Traversable<Expression>
 {
 
-  public parent?: Expression;
+  public parent: Expression = null;
   
   public abstract getId(): string;
 

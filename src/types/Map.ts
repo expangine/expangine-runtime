@@ -155,7 +155,7 @@ export class MapType extends Type<MapOptions>
     });
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

@@ -109,7 +109,7 @@ export class FunctionType extends Type<FunctionOptions>
     });
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

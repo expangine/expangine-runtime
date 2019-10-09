@@ -13,7 +13,7 @@ export interface ExpressionClass<T extends Expression = any> {
 export declare type ExpressionValue = any | Expression;
 export declare type ExpressionMap = Record<string, Expression>;
 export declare abstract class Expression implements Traversable<Expression> {
-    parent?: Expression;
+    parent: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;
     abstract getComplexity(def: Definitions): number;

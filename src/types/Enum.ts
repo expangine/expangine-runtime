@@ -136,7 +136,7 @@ export class EnumType extends Type<EnumOptions>
     });
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

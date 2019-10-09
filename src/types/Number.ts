@@ -133,7 +133,7 @@ export class NumberType extends Type<NumberOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
   }

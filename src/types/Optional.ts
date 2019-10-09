@@ -98,7 +98,7 @@ export class OptionalType extends Type<Type>
     return traverse.enter(this, () => traverse.step('optional', this.options));
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

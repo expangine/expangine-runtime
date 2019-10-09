@@ -159,7 +159,7 @@ export class ManyType extends Type<Type[]>
     );
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

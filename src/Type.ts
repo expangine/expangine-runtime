@@ -115,7 +115,7 @@ export abstract class Type<O = any> implements Traversable<Type>
   }
 
   public options: O;
-  public parent?: Type;
+  public parent: Type = null;
 
   public constructor(options: O) 
   {

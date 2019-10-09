@@ -70,7 +70,7 @@ export class ReturnExpression extends Expression
     );
   }
 
-  public setParent(parent?: Expression): void
+  public setParent(parent: Expression = null): void
   {
     this.parent = parent;
 

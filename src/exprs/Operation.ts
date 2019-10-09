@@ -99,7 +99,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     );
   }
 
-  public setParent(parent?: Expression): void
+  public setParent(parent: Expression = null): void
   {
     this.parent = parent;
 

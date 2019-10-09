@@ -166,7 +166,7 @@ export class ObjectType extends Type<ObjectOptions>
     );
   }
 
-  public setParent(parent?: Type): void
+  public setParent(parent: Type = null): void
   {
     this.parent = parent;
 

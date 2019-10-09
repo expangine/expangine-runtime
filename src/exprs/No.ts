@@ -52,7 +52,7 @@ export class NoExpression extends Expression
     return traverse.enter(this);
   }
 
-  public setParent(parent?: Expression): void
+  public setParent(parent: Expression = null): void
   {
     
   }

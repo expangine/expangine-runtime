@@ -47,7 +47,7 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     static simplify(type: Type | null): Type | null;
     static resolve<T>(types: T): TypeResolved<T>;
     options: O;
-    parent?: Type;
+    parent: Type;
     constructor(options: O);
     abstract getOperations(): Record<string, OperationGeneric>;
     abstract getId(): string;
