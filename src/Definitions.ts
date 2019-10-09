@@ -542,11 +542,12 @@ export class Definitions
   {
     return this.getOperations(({ op, types }) => 
     {
-      const opTypeInput = types.params[op.params[0]];
+      const paramName = op.params[0];
+      const opTypeInput = types.params[paramName];
 
       if (opTypeInput) 
       {
-        const opType = this.getOperationInputType(opTypeInput, {});
+        const opType = this.getOperationInputType(opTypeInput, { [paramName]: type });
 
         if (opType && type.acceptsType(opType)) 
         {
