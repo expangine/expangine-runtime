@@ -88,7 +88,14 @@ export class ConstantExpression extends Expression
       });
     }
 
-    return def.describe(this.value);
+    const described = def.describe(this.value);
+
+    if (described)
+    {
+      described.removeDescribedRestrictions();
+    }
+
+    return described;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
