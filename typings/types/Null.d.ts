@@ -25,6 +25,7 @@ export declare class NullType extends Type<NullOptions> {
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
+    removeDescribedRestrictions(): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

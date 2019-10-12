@@ -117,6 +117,11 @@ export class FunctionType extends Type<FunctionOptions>
     this.options.params.setParent(this);
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.returnType.getCreateExpression(ex);

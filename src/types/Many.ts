@@ -166,6 +166,11 @@ export class ManyType extends Type<Type[]>
     this.options.forEach(t => t.setParent(this));
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    this.options.forEach(t => t.removeDescribedRestrictions());
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options[0].getCreateExpression(ex);

@@ -65,6 +65,7 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     exactData(other: Type): boolean;
     abstract traverse<R>(traverse: Traverser<Type, R>): R;
     abstract setParent(parent?: Type): void;
+    abstract removeDescribedRestrictions(): void;
     abstract getCreateExpression(ex: ExpressionBuilder): Expression;
     abstract getValidateExpression(ex: ExpressionBuilder): Expression;
     abstract getCompareExpression(ex: ExpressionBuilder): Expression;

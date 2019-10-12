@@ -36,6 +36,7 @@ export declare class TextType extends Type<TextOptions> {
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
+    removeDescribedRestrictions(): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

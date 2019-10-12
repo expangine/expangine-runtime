@@ -138,6 +138,11 @@ export class NumberType extends Type<NumberOptions>
     this.parent = parent;
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    this.options = {};
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(NumberOps.create, {});

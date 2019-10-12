@@ -98,6 +98,11 @@ export class NullType extends Type<NullOptions>
     this.parent = parent;
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.null();

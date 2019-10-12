@@ -89,6 +89,11 @@ export class AnyType extends Type
     this.parent = parent;
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.string();

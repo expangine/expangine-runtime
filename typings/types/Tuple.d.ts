@@ -28,6 +28,7 @@ export declare class TupleType extends Type<Type[]> {
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
+    removeDescribedRestrictions(): void;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): TupleType;

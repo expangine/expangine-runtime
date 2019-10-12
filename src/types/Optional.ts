@@ -105,6 +105,11 @@ export class OptionalType extends Type<Type>
     this.options.setParent(this);
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    this.options.removeDescribedRestrictions();
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.getCreateExpression(ex);

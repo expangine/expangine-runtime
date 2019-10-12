@@ -229,6 +229,11 @@ export class TupleType extends Type<Type[]>
     this.options.forEach(t => t.setParent(this));
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    this.options.forEach(t => t.removeDescribedRestrictions());
+  }
+
   public isValid(value: any): boolean 
   {
     if (!isArray(value))

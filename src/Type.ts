@@ -189,6 +189,8 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract setParent(parent?: Type): void;
 
+  public abstract removeDescribedRestrictions(): void;
+
   public abstract getCreateExpression(ex: ExpressionBuilder): Expression;
 
   public abstract getValidateExpression(ex: ExpressionBuilder): Expression;

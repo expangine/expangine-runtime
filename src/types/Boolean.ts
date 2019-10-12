@@ -101,6 +101,11 @@ export class BooleanType extends Type<BooleanOptions>
     this.parent = parent;
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(BooleanOps.create, {});

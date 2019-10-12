@@ -230,6 +230,15 @@ export class ListType extends Type<ListOptions>
     this.options.item.setParent(this);
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    const { item } = this.options;
+
+    item.removeDescribedRestrictions();
+
+    this.options = { item };
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(ListOps.create, {});

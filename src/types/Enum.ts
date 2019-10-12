@@ -144,6 +144,11 @@ export class EnumType extends Type<EnumOptions>
     this.options.value.setParent(this);
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return this.options.value.getCreateExpression(ex);

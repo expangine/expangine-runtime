@@ -186,6 +186,13 @@ export class DateType extends Type<DateOptions>
     this.parent = parent;
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    const { parseAsUTC, withTime } = this.options;
+
+    this.options = { parseAsUTC, withTime };
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(DateOps.create, {});

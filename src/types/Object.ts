@@ -173,6 +173,11 @@ export class ObjectType extends Type<ObjectOptions>
     objectEach(this.options.props, t => t.setParent(this));
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    objectEach(this.options.props, t => t.removeDescribedRestrictions());
+  }
+
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     if (!(other instanceof ObjectType)) 

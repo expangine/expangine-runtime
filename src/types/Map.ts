@@ -163,6 +163,12 @@ export class MapType extends Type<MapOptions>
     this.options.value.setParent(this);
   }
 
+  public removeDescribedRestrictions(): void
+  {
+    this.options.key.removeDescribedRestrictions();
+    this.options.value.removeDescribedRestrictions();
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.op(MapOps.create, {});
