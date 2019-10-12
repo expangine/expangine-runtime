@@ -335,6 +335,6 @@ AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
 
 AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
   if (isDate(json)) {
-    return json.toISOString();
+    return { $any: 'date', value: json.toISOString() };
   }
 });
