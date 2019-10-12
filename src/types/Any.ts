@@ -1,6 +1,7 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
+import { isObject, isString, isArray, objectMap, isDate, isMap, toArray } from '../fns';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyOps, AnyOperations } from '../ops/AnyOps';
@@ -27,11 +28,16 @@ export class AnyType extends Type
     return this.id
   }
 
-  public static describePriority: number = 0;
+  public static describePriority: number = 8;
   
   public static describe(data: any, describer: TypeDescribeProvider): Type | null
   {
-    return this.baseType;
+    if (isObject(data) && isString(data.$any))
+    {
+      return new AnyType({});
+    }
+
+    return null;
   }
 
   public getId(): string
@@ -91,7 +97,7 @@ export class AnyType extends Type
 
   public removeDescribedRestrictions(): void
   {
-    
+
   }
 
   public getCreateExpression(ex: ExpressionBuilder): Expression
@@ -147,13 +153,53 @@ export class AnyType extends Type
     return null;
   }
 
-  public fromJson(json: any): any
+  public fromJson(json: any | { $any: string, value: any }): any
   {
+    if (isString(json.$any))
+    {
+      switch (json.$any) {
+        case 'map':
+          return new Map(json.value.map(([key, value]: [any, any]) => [this.fromJson(key), this.fromJson(value)]));
+        case 'date':
+          return new Date(json.value);
+      }
+    }
+    else if (isArray(json))
+    {
+      return json.map((item) => this.fromJson(item));
+    }
+    else if (isObject(json))
+    {
+      return objectMap(json, (prop) => this.fromJson(prop));
+    }
+
     return json;
   }
 
-  public toJson(value: any): any
+  public toJson(value: any): any | { $any: string, value: any }
   {
+    if (isDate(value))
+    {
+      return { $any: 'date', value: value.toISOString() };
+    }
+    else if (isMap(value))
+    {
+      return { $any: 'map', value: toArray(value.entries())
+        .map(([k, v]: [any, any]) => [
+          this.toJson(k),
+          this.toJson(v)
+        ])
+      };
+    }
+    else if (isArray(value))
+    {
+      return value.map((item) => this.toJson(item));
+    }
+    else if (isObject(value))
+    {
+      return objectMap(value, (prop) => this.toJson(prop));
+    }
+
     return value;
   }
 

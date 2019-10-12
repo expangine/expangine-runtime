@@ -33,6 +33,12 @@ export declare class AnyType extends Type {
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any): any;
-    toJson(value: any): any;
+    fromJson(json: any | {
+        $any: string;
+        value: any;
+    }): any;
+    toJson(value: any): any | {
+        $any: string;
+        value: any;
+    };
 }
