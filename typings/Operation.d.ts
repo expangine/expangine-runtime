@@ -13,7 +13,8 @@ export interface Operation<P extends string = never, O extends string = never, S
     resultDependency: R[];
 }
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
-export declare type OperationTypeInput<I extends string> = TypeInput | ((inputs: Partial<Record<I, Type>>) => TypeInput);
+export declare type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>) => TypeInput;
+export declare type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 export interface OperationTypes<P extends string = never, O extends string = never, S extends string = never> {
     returnType: OperationTypeInput<P | O>;
     params: Record<P, OperationTypeInput<P | O>>;
@@ -33,6 +34,7 @@ export interface OperationMapping {
     mapping: Record<string, string>;
     unmapped: string[];
 }
+export declare function isOperationTypeFunction<I extends string>(x: OperationTypeInput<I>): x is OperationTypeDynamic<I>;
 export declare class Operations {
     prefix: string;
     map: Record<string, OperationGeneric>;

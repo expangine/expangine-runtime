@@ -1,5 +1,6 @@
 
 import { Type, TypeInput } from './Type';
+import { isFunction } from './fns';
 
 
 export interface OperationFlags
@@ -38,7 +39,9 @@ export type OperationResolved<
   string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
 >;
 
-export type OperationTypeInput<I extends string> = TypeInput | ((inputs: Partial<Record<I, Type>>) => TypeInput);
+export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>) => TypeInput;
+
+export type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 
 export interface OperationTypes<
   P extends string = never, 
@@ -70,6 +73,11 @@ export interface OperationMapping
   toTypes: OperationTypes<any, any, any>;
   mapping: Record<string, string>;
   unmapped: string[];
+}
+
+export function isOperationTypeFunction<I extends string>(x: OperationTypeInput<I>): x is OperationTypeDynamic<I>
+{
+  return !('baseType' in x) && isFunction(x);
 }
 
 export class Operations

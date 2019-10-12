@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { Type, TypeBuilder, NumberType, AnyOpsTypes, isFunction, NullType, ManyType, TextType } from '../src';
+import { Type, TypeBuilder, NumberType, AnyOpsTypes, NullType, ManyType, TextType, isOperationTypeFunction } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -12,7 +12,7 @@ describe('AnyOps', () => {
   it('coalesce', () =>
   {
     const coalesce = AnyOpsTypes.coalesce;
-    const getReturnType = isFunction(coalesce.returnType)
+    const getReturnType = isOperationTypeFunction(coalesce.returnType)
       ? coalesce.returnType
       : (): Type => { throw new Error('Why?') };
 

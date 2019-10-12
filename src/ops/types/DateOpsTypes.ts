@@ -46,9 +46,9 @@ const DateProperty = new EnumType({
     ['Quarter', 'quarter'],
     ['Year', 'year'],
     ['Time Identifier', 'timeIdentifier'],
-    ['DayIdentifier', 'dayIdentifier'],
-    ['WeekIdentifier', 'weekIdentifier'],
-    ['MonthIdentifier', 'monthIdentifier'],
+    ['Day Identifier', 'dayIdentifier'],
+    ['Week Identifier', 'weekIdentifier'],
+    ['Month Identifier', 'monthIdentifier'],
     ['Quarter Identifier', 'quarterIdentifier']
   ])
 });

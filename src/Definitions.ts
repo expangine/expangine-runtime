@@ -1,8 +1,8 @@
 
-import { isArray, objectMap, isSameClass, objectValues, isFunction, objectEach } from './fns';
+import { isArray, objectMap, isSameClass, objectValues, objectEach } from './fns';
 import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
 import { AnyType } from './types/Any';
 import { OptionalType } from './types/Optional';
@@ -326,7 +326,7 @@ export class Definitions
       return returnType;
     }
 
-    if (!isFunction(returnType))
+    if (!isOperationTypeFunction(returnType))
     {
       return returnType.baseType.newInstance();
     }
@@ -462,7 +462,7 @@ export class Definitions
 
       let chosenIndex = -1;
 
-      if (isFunction(typeInput))
+      if (isOperationTypeFunction(typeInput))
       {
         chosenIndex = paramTypes.findIndex(([, type]) => 
           type.acceptsType(Type.fromInput(typeInput({ ...mapped, [param]: type }))));
