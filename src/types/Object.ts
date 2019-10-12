@@ -10,6 +10,7 @@ import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { AnyType } from './Any';
 
 
 const INDEX_PROPS = 1;
@@ -335,3 +336,17 @@ export class ObjectType extends Type<ObjectOptions>
   }
 
 }
+
+const ANY_TYPE_PRIORITY = 7;
+
+AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+  if (isObject(json)) {
+    return objectMap(json, (prop) => reader(prop));
+  }
+});
+
+AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+  if (isObject(json)) {
+    return objectMap(json, (prop) => writer(prop));
+  }
+});

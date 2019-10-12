@@ -3,6 +3,8 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+export declare type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
+export declare type AnyTypeJsonWriter = (value: any, writer: (innerValue: any) => any) => any;
 export declare class AnyType extends Type {
     static id: string;
     static operations: import("..").Operations;
@@ -11,6 +13,16 @@ export declare class AnyType extends Type {
     static encode(type: AnyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static jsonReaders: Array<{
+        priority: number;
+        reader: AnyTypeJsonReader;
+    }>;
+    static jsonWriters: Array<{
+        priority: number;
+        writer: AnyTypeJsonWriter;
+    }>;
+    static addJsonReader(priority: number, reader: AnyTypeJsonReader): void;
+    static addJsonWriter(priority: number, writer: AnyTypeJsonWriter): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: AnyType, describer: TypeDescribeProvider): void;

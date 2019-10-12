@@ -1,5 +1,5 @@
 
-import { isObject, isMap, toArray, isSameClass } from '../fns';
+import { isObject, isMap, toArray, isSameClass, isString } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
@@ -385,3 +385,21 @@ export class MapType extends Type<MapOptions>
   };
 
 }
+
+const ANY_TYPE_PRIORITY = 10;
+
+AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+  if (isObject(json) && isString(json.$any) && json.$any === 'map') {
+    return new Map(json.value.map(([key, value]: [any, any]) => [reader(key), reader(value)]));
+  }
+});
+
+AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+  if (isMap(json)) {
+    return {
+      $any: 'map',
+      value: toArray(json.entries())
+        .map(([k, v]: [any, any]) => [writer(k), writer(v)])
+    };
+  }
+});

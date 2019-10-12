@@ -1,12 +1,17 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
-import { isObject, isString, isArray, objectMap, isDate, isMap, toArray } from '../fns';
+import { isObject, isString } from '../fns';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyOps, AnyOperations } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+
+
+export type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
+
+export type AnyTypeJsonWriter = (value: any, writer: (innerValue: any) => any) => any;
 
 
 export class AnyType extends Type 
@@ -39,6 +44,23 @@ export class AnyType extends Type
 
     return null;
   }
+
+  public static jsonReaders: Array<{ priority: number, reader: AnyTypeJsonReader }> = [];
+
+  public static jsonWriters: Array<{ priority: number, writer: AnyTypeJsonWriter }> = [];
+
+  public static addJsonReader(priority: number, reader: AnyTypeJsonReader)
+  {
+    this.jsonReaders.push({ priority, reader });
+    this.jsonReaders.sort((a, b) => b.priority - a.priority);
+  }
+
+  public static addJsonWriter(priority: number, writer: AnyTypeJsonWriter)
+  {
+    this.jsonWriters.push({ priority, writer });
+    this.jsonWriters.sort((a, b) => b.priority - a.priority);
+  }
+
 
   public getId(): string
   {
@@ -155,22 +177,16 @@ export class AnyType extends Type
 
   public fromJson(json: any | { $any: string, value: any }): any
   {
-    if (isString(json.$any))
+    const reader = (value: any) => this.fromJson(value);
+
+    for (const jsonReader of AnyType.jsonReaders)
     {
-      switch (json.$any) {
-        case 'map':
-          return new Map(json.value.map(([key, value]: [any, any]) => [this.fromJson(key), this.fromJson(value)]));
-        case 'date':
-          return new Date(json.value);
+      const read = jsonReader.reader(json, reader);
+
+      if (read !== undefined)
+      {
+        return read;
       }
-    }
-    else if (isArray(json))
-    {
-      return json.map((item) => this.fromJson(item));
-    }
-    else if (isObject(json))
-    {
-      return objectMap(json, (prop) => this.fromJson(prop));
     }
 
     return json;
@@ -178,26 +194,16 @@ export class AnyType extends Type
 
   public toJson(value: any): any | { $any: string, value: any }
   {
-    if (isDate(value))
+    const writer = (json: any) => this.toJson(json);
+
+    for (const jsonWriter of AnyType.jsonWriters)
     {
-      return { $any: 'date', value: value.toISOString() };
-    }
-    else if (isMap(value))
-    {
-      return { $any: 'map', value: toArray(value.entries())
-        .map(([k, v]: [any, any]) => [
-          this.toJson(k),
-          this.toJson(v)
-        ])
-      };
-    }
-    else if (isArray(value))
-    {
-      return value.map((item) => this.toJson(item));
-    }
-    else if (isObject(value))
-    {
-      return objectMap(value, (prop) => this.toJson(prop));
+      const written = jsonWriter.writer(value, writer);
+
+      if (written !== undefined)
+      {
+        return written;
+      }
     }
 
     return value;

@@ -409,3 +409,17 @@ export class ListType extends Type<ListOptions>
   };
 
 }
+
+const ANY_TYPE_PRIORITY = 8;
+
+AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+  if (isArray(json)) {
+    return json.map((item) => reader(item));
+  }
+});
+
+AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+  if (isArray(json)) {
+    return json.map((item) => writer(item));
+  }
+});

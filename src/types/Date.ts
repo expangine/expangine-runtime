@@ -1,5 +1,5 @@
 
-import { isDate, isEmpty, copy } from '../fns';
+import { isDate, isEmpty, copy, isObject, isString } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -8,6 +8,7 @@ import { DateOps, DateOperations } from '../ops/DateOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { AnyType } from './Any';
 
 
 const INDEX_OPTIONS = 1;
@@ -323,3 +324,17 @@ export class DateType extends Type<DateOptions>
   }
 
 }
+
+const ANY_TYPE_PRIORITY = 9;
+
+AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+  if (isObject(json) && isString(json.$any) && json.$any === 'date') {
+    return new Date(json.value);
+  }
+});
+
+AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+  if (isDate(json)) {
+    return json.toISOString();
+  }
+});
