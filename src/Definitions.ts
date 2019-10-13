@@ -243,6 +243,11 @@ export class Definitions
     this.aliased[alias] = type;
   }
 
+  public cloneType(type: Type)
+  {
+    return this.getType(type.encode());
+  }
+
   public getType(value: any): Type 
   {
     if (value instanceof Type)
@@ -666,6 +671,11 @@ export class Definitions
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 
   {
     this.expressions[expr.id] = expr;
+  }
+
+  public cloneExpression(expr: Expression): Expression
+  {
+    return this.getExpression(expr.encode());
   }
 
   public getExpression(value: any): Expression 

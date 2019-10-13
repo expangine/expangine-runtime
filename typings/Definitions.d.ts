@@ -35,6 +35,7 @@ export declare class Definitions {
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
     addAlias<T extends Type>(alias: string, instance: T | any): void;
+    cloneType(type: Type): Type<any>;
     getType(value: any): Type;
     addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType;
     setFunction(name: string, typeValue: any): FunctionType;
@@ -62,6 +63,7 @@ export declare class Definitions {
     getOperations(onOperation?: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean): OperationPair[];
     getPathType(path: Expression[], context: Type, stopBefore?: number): Type | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
+    cloneExpression(expr: Expression): Expression;
     getExpression(value: any): Expression;
     export(): DefinitionsImportOptions;
     import(exported: DefinitionsImportOptions): void;
