@@ -7,6 +7,7 @@ import { EnumType } from '../types/Enum';
 import { TextType } from '../types/Text';
 import { NumberType } from '../types/Number';
 import { Traverser } from '../Traverser';
+import { AnyType } from '../types/Any';
 
 
 const INDEX_CONSTANT = 1;
@@ -28,14 +29,18 @@ export class ConstantExpression extends Expression
 
   public static decode(data: any[], expr: ExpressionProvider): ConstantExpression 
   {
-    return new ConstantExpression(data[INDEX_CONSTANT]);
+    const value = AnyType.baseType.fromJson(data[INDEX_CONSTANT])
+
+    return new ConstantExpression(value);
   }
 
   public static encode(expr: ConstantExpression): any 
   {
-    return isArray(expr.value)
-      ? [this.id, expr.value]
-      : expr.value;
+    const value = AnyType.baseType.toJson(expr.value);
+
+    return isArray(value)
+      ? [this.id, value]
+      : value;
   }
 
   public value: any;
