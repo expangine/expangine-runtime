@@ -137,6 +137,18 @@ export class ObjectType extends Type<ObjectOptions>
   {
     return [
       ...objectValues(this.options.props, (value, key) => ({ key, value })),
+      {
+        key: new EnumType({
+          key: TextType.baseType,
+          value: TextType.baseType,
+          constants: new Map(
+            objectValues(this.options.props, (prop, key) => [key, key]),
+          ),
+        }),
+        value: def.mergeTypes(
+          objectValues(this.options.props)
+        ),
+      },
       { 
         key: ObjectType.propType, 
         value: def.optionalType(

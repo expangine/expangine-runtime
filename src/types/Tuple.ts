@@ -123,7 +123,22 @@ export class TupleType extends Type<Type[]>
     return [
       ...this.options.map((value, key) => ({ key, value })),
       { key: 'length', value: TupleType.lengthType },
-      { key: TupleType.indexType, value: def.mergeTypes(this.options) },
+      {
+        key: new EnumType({
+          key: NumberType.baseType,
+          value: NumberType.baseType,
+          constants: new Map(
+            this.options.map((prop, key) => [key, key]),
+          ),
+        }),
+        value: def.mergeTypes(this.options),
+      },
+      { 
+        key: TupleType.indexType, 
+        value: def.optionalType(
+          def.mergeTypes(this.options)
+        ),
+      },
     ];
   }
 

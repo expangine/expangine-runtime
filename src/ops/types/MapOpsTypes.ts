@@ -20,6 +20,7 @@ const ops = MapType.operations;
 const RequireMap = (map?: Type) => map instanceof MapType ? map : undefined;
 const GivenMap = (i: {map?: Type}) => RequireMap(i.map) || MapType;
 const GivenMapValue = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.value : AnyType;
+const GivenMapValueOptional = (i: {map?: Type}) => OptionalType.for(GivenMapValue(i));
 const GivenMapKey = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.key : TextType;
 const GivenMapIterationScope = { map: GivenMap, key: GivenMapKey, value: GivenMapValue };
 
@@ -62,12 +63,12 @@ export const MapOpsTypes =
   ),
 
   get: ops.setTypes(MapOps.get, 
-    GivenMapValue,
+    GivenMapValueOptional,
     { map: GivenMap, key: GivenMapKey }
   ),
 
   set: ops.setTypes(MapOps.set, 
-    GivenMapValue,
+    GivenMapValueOptional,
     { map: GivenMap, key: GivenMapKey, value: GivenMapValue },
     {},
     { existingValue: GivenMapValue }

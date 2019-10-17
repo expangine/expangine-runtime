@@ -135,7 +135,7 @@ export const ListOpsTypes =
   ),
 
   find: ops.setTypes(ListOps.find,
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList, where: BooleanType },
     { reverse: BooleanType, start: NumberType },
     GivenListIterationScope
@@ -241,12 +241,12 @@ export const ListOpsTypes =
   ),
 
   last: ops.setTypes(ListOps.last,
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList }
   ),
 
   first: ops.setTypes(ListOps.first,
-    GivenListItem,
+    GivenListItemOptional,
     { list: GivenList }
   ),
 

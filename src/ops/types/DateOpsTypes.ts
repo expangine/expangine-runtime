@@ -125,9 +125,9 @@ export const DateOpsTypes =
     { value: AnyType } 
   ),
 
-  parse: ops.setTypes(DateOps.parse, DateType, { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
+  parse: ops.setTypes(DateOps.parse, OptionalType.for(DateType), { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
 
-  fromText: ops.setTypes(DateOps.fromText, DateType, { value: TextType }, { parseAsUTC: BooleanType }),
+  fromText: ops.setTypes(DateOps.fromText, OptionalType.for(DateType), { value: TextType }, { parseAsUTC: BooleanType }),
 
   fromTimestamp: ops.setTypes(DateOps.fromTimestamp, DateType, { value: NumberType }),
 
