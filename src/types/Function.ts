@@ -34,7 +34,7 @@ export class FunctionType extends Type<FunctionOptions>
   public static decode(data: any[], types: TypeProvider): FunctionType
   {
     const returnType = types.getType(data[INDEX_RETURN]);
-    const params = types.getType([ObjectType.id, data[INDEX_PARAMS]]) as ObjectType;
+    const params = types.getType(data[INDEX_PARAMS]) as ObjectType;
     const expression = types.getExpression(data[INDEX_EXPRESSION]);
 
     return new FunctionType({ returnType, params, expression });
