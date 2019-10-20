@@ -1,10 +1,11 @@
 
-import { Command, CommandBuilder, OperationToCommand } from './Command';
+import { Command, CommandBuilder, OperationToCommand, CommandProvider } from './Command';
 import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
 import { Operation } from './Operation';
 import { FunctionType } from './types/Function';
+
 
 
 export class Runtime<Context = any, Result = any>
@@ -75,9 +76,9 @@ export class Runtime<Context = any, Result = any>
     return this.exprs[id];
   }
 
-  public getCommand(expr: Expression): Command<Context, Result>
+  public getCommand(expr: Expression, provider: CommandProvider<Context, Result> = this): Command<Context, Result>
   {
-    return this.exprs[expr.getId()](expr, this);
+    return this.exprs[expr.getId()](expr, provider);
   }
 
   public eval (value: any): Command<Context, Result> 

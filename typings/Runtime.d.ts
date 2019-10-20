@@ -1,4 +1,4 @@
-import { Command, CommandBuilder, OperationToCommand } from './Command';
+import { Command, CommandBuilder, OperationToCommand, CommandProvider } from './Command';
 import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { Operation } from './Operation';
@@ -17,6 +17,6 @@ export declare class Runtime<Context = any, Result = any> {
     getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
     getOperationScopeDefaults(id: string): Record<string, string>;
     getExpression(id: string): CommandBuilder<Context, Result>;
-    getCommand(expr: Expression): Command<Context, Result>;
+    getCommand(expr: Expression, provider?: CommandProvider<Context, Result>): Command<Context, Result>;
     eval(value: any): Command<Context, Result>;
 }
