@@ -84,20 +84,6 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
     };
   })
   .addFormat({
-    code: 'default',
-    name: 'Default',
-    parser: (data) => {
-      if (!isColorHSL(data)) {
-        return null;
-      }
-
-      return data;
-    },
-    formatter: (color) => {
-      return color;
-    },
-  })
-  .addFormat({
     code: 'hsl',
     name: 'HSL',
     parser: (data) => {
