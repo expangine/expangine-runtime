@@ -12,6 +12,7 @@ import { TupleType } from '../../types/Tuple';
 import { BooleanOps } from '../BooleanOps';
 import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
+import { ColorType } from '../../types/Color';
 
 
 const ops = BooleanType.operations;
@@ -73,6 +74,8 @@ export const BooleanOpsTypes =
   asAny: ops.setTypes(BooleanOps.asAny, AnyType, { value: BooleanType }),
 
   asBoolean: ops.setTypes(BooleanOps.asBoolean, i => i.value || BooleanType, { value: BooleanType }),
+
+  asColor: ops.setTypes(BooleanOps.asColor, ColorType, { value: BooleanType }),
 
   asDate: ops.setTypes(BooleanOps.asDate, DateType, { value: BooleanType }),
 

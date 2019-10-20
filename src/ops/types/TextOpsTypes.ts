@@ -12,6 +12,7 @@ import { TupleType } from '../../types/Tuple';
 import { TextOps } from '../TextOps';
 import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
+import { ColorType } from '../../types/Color';
 
 
 const ops = TextType.operations;
@@ -130,6 +131,8 @@ export const TextOpsTypes =
   asAny: ops.setTypes(TextOps.asAny, AnyType, { value: TextType }),
 
   asBoolean: ops.setTypes(TextOps.asBoolean, BooleanType, { value: TextType }),
+
+  asColor: ops.setTypes(TextOps.asColor, ColorType, { value: TextType }),
 
   asDate: ops.setTypes(TextOps.asDate, DateType, { value: TextType }),
 

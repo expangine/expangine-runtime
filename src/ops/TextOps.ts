@@ -98,6 +98,8 @@ export const TextOps =
 
   asBoolean: ops.set('~' + ID.Boolean, {}, ['value']),
 
+  asColor: ops.set('~' + ID.Color, {}, ['value']),
+
   asDate: ops.set('~' + ID.Date, {}, ['value']),
 
   asList: ops.set('~' + ID.List, {}, ['value']),

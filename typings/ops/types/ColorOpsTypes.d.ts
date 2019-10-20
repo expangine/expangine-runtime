@@ -7,6 +7,7 @@ export declare const ColorNames: EnumType;
 export declare const ColorBlendModes: EnumType;
 export declare const ColorOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    maybe: import("../..").OperationTypes<"value", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
     build: import("../..").OperationTypes<"b" | "r" | "g", "a", never>;

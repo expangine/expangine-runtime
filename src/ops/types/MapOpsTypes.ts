@@ -13,6 +13,7 @@ import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
+import { ColorType } from '../../types/Color';
 
 
 const ops = MapType.operations;
@@ -200,6 +201,8 @@ export const MapOpsTypes =
   asAny: ops.setTypes(MapOps.asAny, AnyType, { value: MapType }),
 
   asBoolean: ops.setTypes(MapOps.asBoolean, BooleanType, { value: MapType }),
+
+  asColor: ops.setTypes(MapOps.asColor, ColorType, { value: MapType }),
 
   asDate: ops.setTypes(MapOps.asDate, DateType, { value: MapType }),
 

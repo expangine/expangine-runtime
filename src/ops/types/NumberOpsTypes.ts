@@ -12,6 +12,7 @@ import { DateType } from '../../types/Date';
 import { NumberOps } from '../NumberOps';
 import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
+import { ColorType } from '../../types/Color';
 
 
 const ops = NumberType.operations;
@@ -201,6 +202,8 @@ export const NumberOpsTypes =
   asAny: ops.setTypes(NumberOps.asAny, AnyType, { value: NumberType }),
 
   asBoolean: ops.setTypes(NumberOps.asBoolean, BooleanType, { value: NumberType }),
+
+  asColor: ops.setTypes(NumberOps.asColor, ColorType, { value: NumberType }),
 
   asDate: ops.setTypes(NumberOps.asDate, DateType, { value: NumberType }),
 

@@ -11,13 +11,17 @@ const ops = ColorOperations;
 export const ColorOps = 
 {
 
+  // Static
+
+  create: ops.set('create', {}),
+
   // Operations
+
+  maybe: ops.set('maybe', {}, ['value']),
 
   cmp: ops.set('cmp', {}, ['value', 'test']),
 
   copy: ops.set('copy', {}, ['value']),
-
-  create: ops.set('create', {}),
 
   build: ops.set('build', {}, ['r', 'g', 'b'], ['a']),
 

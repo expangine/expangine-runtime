@@ -235,6 +235,30 @@ export const ColorOpsTypes =
 
   // Operations
 
+  maybe: ops.setTypes(ColorOps.maybe, 
+    i => {
+      if (i.value instanceof ColorType) {
+        return i.value;
+      }
+      if (i.value instanceof OptionalType && i.value.options instanceof ColorType){
+        return i.value;
+      }
+      if (i.value instanceof ManyType) {
+        const oneOf = i.value.options.find(t => t instanceof ColorType);
+        if (oneOf) {
+          return OptionalType.for(oneOf);
+        }
+        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof ColorType);
+        if (oneOfOptional) {
+          return oneOfOptional;
+        }
+      }
+
+      return OptionalType.for(ColorType);
+    }, 
+    { value: AnyType } 
+  ),
+
   cmp: ops.setTypes(ColorOps.cmp, 
     NumberType,
     { value: ColorType, test: ColorType }

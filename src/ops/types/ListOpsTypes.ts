@@ -13,6 +13,7 @@ import { TupleType } from '../../types/Tuple';
 import { ListOps } from '../ListOps';
 import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
+import { ColorType } from '../../types/Color';
 
 
 const ops = ListType.operations;
@@ -494,6 +495,11 @@ export const ListOpsTypes =
 
   asBoolean: ops.setTypes(ListOps.asBoolean, 
     BooleanType,
+    { value: GivenValueList }
+  ),
+
+  asColor: ops.setTypes(ListOps.asColor, 
+    ColorType, 
     { value: GivenValueList }
   ),
 

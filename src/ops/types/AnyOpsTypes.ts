@@ -14,6 +14,7 @@ import { OptionalType } from '../../types/Optional';
 import { ManyType } from '../../types/Many';
 import { NullType } from '../../types/Null';
 import { Type } from '../../Type';
+import { ColorType } from '../../types/Color';
 
 
 const ops = AnyType.operations;
@@ -112,6 +113,8 @@ export const AnyOpsTypes =
   asAny: ops.setTypes(AnyOps.asAny, i => i.value || AnyType, { value: AnyType }),
 
   asBoolean: ops.setTypes(AnyOps.asBoolean, BooleanType, { value: AnyType }),
+
+  asColor: ops.setTypes(AnyOps.asColor, ColorType, { value: AnyType }),
 
   asDate: ops.setTypes(AnyOps.asDate, DateType, { value: AnyType }),
 

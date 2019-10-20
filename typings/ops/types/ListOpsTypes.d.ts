@@ -68,6 +68,7 @@ export declare const ListOpsTypes: {
     isGreaterOrEqual: import("../..").OperationTypes<"value" | "test" | "compare", never, "list" | "value" | "test">;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
+    asColor: import("../..").OperationTypes<"value", never, never>;
     asDate: import("../..").OperationTypes<"value", never, never>;
     asList: import("../..").OperationTypes<"value", never, never>;
     asMap: import("../..").OperationTypes<"value", never, never>;

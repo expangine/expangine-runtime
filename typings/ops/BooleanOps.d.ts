@@ -13,6 +13,7 @@ export declare const BooleanOps: {
     isFalse: import("../Operation").Operation<"value", never, never, never, never>;
     asAny: import("../Operation").Operation<"value", never, never, never, never>;
     asBoolean: import("../Operation").Operation<"value", never, never, never, never>;
+    asColor: import("../Operation").Operation<"value", never, never, never, never>;
     asDate: import("../Operation").Operation<"value", never, never, never, never>;
     asList: import("../Operation").Operation<"value", never, never, never, never>;
     asMap: import("../Operation").Operation<"value", never, never, never, never>;

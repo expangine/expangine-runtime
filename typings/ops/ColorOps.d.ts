@@ -1,9 +1,10 @@
 import { Operations } from '../Operation';
 export declare const ColorOperations: Operations;
 export declare const ColorOps: {
+    create: import("../Operation").Operation<never, never, never, never, never>;
+    maybe: import("../Operation").Operation<"value", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;
-    create: import("../Operation").Operation<never, never, never, never, never>;
     build: import("../Operation").Operation<"b" | "r" | "g", "a", never, never, never>;
     map: import("../Operation").Operation<"value" | "b" | "r" | "g", "a", "value" | "component", "a" | "b" | "r" | "g", never>;
     op: import("../Operation").Operation<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
