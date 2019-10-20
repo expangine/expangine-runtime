@@ -48,9 +48,9 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
         : X;
 
     return {
-      r: clampComponent(Math.floor((r1 + m) * COMPONENT_MAX)),
-      g: clampComponent(Math.floor((g1 + m) * COMPONENT_MAX)),
-      b: clampComponent(Math.floor((b1 + m) * COMPONENT_MAX)),
+      r: clampComponent((r1 + m) * COMPONENT_MAX),
+      g: clampComponent((g1 + m) * COMPONENT_MAX),
+      b: clampComponent((b1 + m) * COMPONENT_MAX),
       a: color.a
     };
   })
@@ -77,9 +77,9 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
       : delta / (1 - Math.abs(2 * L - 1));
 
     return {
-      h: normalizeHue(h * 60),
-      s: clampPercent(s * 100),
-      l: clampPercent(L * 100),
+      h: normalizeHue(Math.round(h * 60)),
+      s: clampPercent(Math.round(s * 100)),
+      l: clampPercent(Math.round(L * 100)),
       a: color.a,
     };
   })
