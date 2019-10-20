@@ -127,6 +127,13 @@ export class ManyType extends Type<Type[]>
       });
     });
 
+    subs.sort((a, b) => {
+      const ad = a.key instanceof Type ? 1 : 0;
+      const bd = b.key instanceof Type ? 1 : 0;
+
+      return ad - bd;
+    });
+
     return subs;
   }
 

@@ -431,7 +431,7 @@ export class Definitions
   {
     const context = original instanceof ObjectType
       ? new ObjectType({ props: scope = { ...original.options.props, ...scope }})
-      : new ManyType([ original, new ObjectType({ props: scope })]);
+      : new ManyType([ new ObjectType({ props: scope }), original ]);
 
     return { context, scope };
   }
