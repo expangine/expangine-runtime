@@ -12,6 +12,7 @@ export declare function isUndefined(value: any): value is undefined;
 export declare function isSameClass(a: any, b: any): boolean;
 export declare function isWhole(x: number, epsilon?: number): boolean;
 export declare function isEmpty(value: any): boolean;
+export declare function clamp(x: number, min: number, max: number): number;
 export declare function toExpr(values: ExpressionValue[]): Expression[];
 export declare function toExpr(values: Record<string, ExpressionValue>): ExpressionMap;
 export declare function toExpr(value: ExpressionValue): Expression;

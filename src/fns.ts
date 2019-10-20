@@ -77,6 +77,11 @@ export function isEmpty(value: any): boolean
   return value === null || value === undefined;
 }
 
+export function clamp(x: number, min: number, max: number): number
+{
+  return x < min ? min : x > max ? max : x;
+}
+
 export function toExpr(values: ExpressionValue[]): Expression[]
 export function toExpr(values: Record<string, ExpressionValue>): ExpressionMap
 export function toExpr(value: ExpressionValue): Expression

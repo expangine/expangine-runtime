@@ -1,5 +1,5 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Unit } from '../util/DateFunctions';
+import { Unit } from '../util/date/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';

@@ -1,5 +1,6 @@
 import { isString } from '../fns';
 
+
 export type Formatter<T> = (item: T) => string;
 
 export interface FormatterMap<T> 

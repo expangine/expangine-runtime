@@ -14,6 +14,7 @@ export * from './Traverser';
 
 export * from './types/Any';
 export * from './types/Boolean';
+export * from './types/Color';
 export * from './types/Date';
 export * from './types/Enum';
 export * from './types/Function';
@@ -53,6 +54,7 @@ export * from './def';
 
 export * from './ops/AnyOps';
 export * from './ops/BooleanOps';
+export * from './ops/ColorOps';
 export * from './ops/DateOps';
 export * from './ops/ListOps';
 export * from './ops/MapOps';
@@ -63,6 +65,7 @@ export * from './ops/TupleOps';
 
 export * from './ops/types/AnyOpsTypes';
 export * from './ops/types/BooleanOpsTypes';
+export * from './ops/types/ColorOpsTypes';
 export * from './ops/types/DateOpsTypes';
 export * from './ops/types/ListOpsTypes';
 export * from './ops/types/MapOpsTypes';
@@ -73,7 +76,11 @@ export * from './ops/types/TupleOpsTypes';
 
 export * from './locales';
 
-export * from './util/DateConstants';
-export * from './util/DateFormat';
-export * from './util/DateFunctions';
+export * from './util/color/Color';
+export * from './util/color/ColorSpace';
+export * from './util/color/ColorSpaceHSL';
+export * from './util/color/ColorSpaceRGB';
+export * from './util/date/DateConstants';
+export * from './util/date/DateFormat';
+export * from './util/date/DateFunctions';
 export * from './util/Format';

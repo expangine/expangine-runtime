@@ -1,7 +1,7 @@
 
-import { Format } from './Format';
-import { LocaleOptions } from '../Locale';
-import { padNumber } from '../fns';
+import { Format } from '../Format';
+import { LocaleOptions } from '../../Locale';
+import { padNumber } from '../../fns';
 import { getQuarter, getDayOfYear, getDayOfWeek, getWeekOfYear, getWeekOfYearISO, getDateOffset } from './DateFunctions';
 
 

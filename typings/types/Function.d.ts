@@ -1,13 +1,13 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
-import { ObjectType } from './Object';
+import { ObjectType, ObjectOptions } from './Object';
 import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
 export interface FunctionOptions {
     returnType: Type;
-    params: ObjectType;
+    params: ObjectType<ObjectOptions>;
     expression: Expression;
 }
 export declare class FunctionType extends Type<FunctionOptions> {

@@ -1,7 +1,7 @@
-import { LocaleOptions } from '../Locale';
-import { currentLocale } from '../locales';
+import { LocaleOptions } from '../../Locale';
+import { currentLocale } from '../../locales';
 import { MILLIS_IN_SECOND, DAYS_IN_WEEK, WEEKDAY_MAX, MILLIS_IN_MINUTE, MONTHS_IN_QUARTER, DAY_MIN, MILLIS_MAX, SECOND_MAX, MINUTE_MAX, HOUR_MAX, MILLIS_IN_HOUR, MONTHS_IN_YEAR, MILLIS_IN_DAY, DAY_MAX } from './DateConstants';
-import { isDate, isNumber, isString } from '../fns';
+import { isDate, isNumber, isString } from '../../fns';
 
 
 // tslint:disable: no-magic-numbers

@@ -44,7 +44,7 @@ export declare class MapType extends Type<MapOptions> {
     toJson(map: Map<any, any>): Array<[any, any]>;
     getValuesType(): ListType;
     getKeysType(): ListType;
-    getEntriesType(): ObjectType;
+    getEntriesType(): ObjectType<import("./Object").ObjectOptions>;
     getIterationScope(): {
         map: MapType;
         key: Type<any>;

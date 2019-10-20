@@ -2,7 +2,7 @@
 import { isFunction } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
-import { ObjectType } from './Object';
+import { ObjectType, ObjectOptions } from './Object';
 import { AnyType } from './Any';
 import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -18,7 +18,7 @@ const INDEX_EXPRESSION = 3;
 export interface FunctionOptions 
 {
   returnType: Type;
-  params: ObjectType;
+  params: ObjectType<ObjectOptions>;
   expression: Expression;
 }
 

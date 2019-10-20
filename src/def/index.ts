@@ -3,6 +3,7 @@ import { Definitions } from '../Definitions';
 
 import { AnyType } from '../types/Any';
 import { BooleanType } from '../types/Boolean';
+import { ColorType } from '../types/Color';
 import { DateType } from '../types/Date';
 import { EnumType } from '../types/Enum';
 import { FunctionType } from '../types/Function';
@@ -56,6 +57,7 @@ export const defs = new Definitions({
     DateType,
     NullType,
     TupleType,
+    ColorType,
   ],
   expressions: [
     ConstantExpression,

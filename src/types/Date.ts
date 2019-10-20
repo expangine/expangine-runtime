@@ -1,7 +1,7 @@
 
 import { isDate, isEmpty, copy, isObject, isString } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Unit, parse, startOf, endOf } from '../util/DateFunctions';
+import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { DateOps, DateOperations } from '../ops/DateOps';

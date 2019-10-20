@@ -1,6 +1,7 @@
 export declare const ID: {
     Any: string;
     Boolean: string;
+    Color: string;
     Date: string;
     Enum: string;
     Function: string;

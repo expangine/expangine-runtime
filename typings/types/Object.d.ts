@@ -7,11 +7,11 @@ import { Traverser } from '../Traverser';
 export interface ObjectOptions {
     props: TypeMap;
 }
-export declare class ObjectType extends Type<ObjectOptions> {
+export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> {
     static propType: TextType;
     static id: string;
     static operations: import("..").Operations;
-    static baseType: ObjectType;
+    static baseType: ObjectType<ObjectOptions>;
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
     static describePriority: number;
@@ -19,7 +19,7 @@ export declare class ObjectType extends Type<ObjectOptions> {
     static from(types?: TypeInputMap): ObjectType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: ObjectType, describer: TypeDescribeProvider): void;
+    merge(type: Type<O>, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
@@ -33,8 +33,8 @@ export declare class ObjectType extends Type<ObjectOptions> {
     getCompareExpression(ex: ExpressionBuilder): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
-    newInstance(): ObjectType;
-    clone(): ObjectType;
+    newInstance(): ObjectType<O>;
+    clone(): ObjectType<O>;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

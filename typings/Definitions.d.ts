@@ -46,10 +46,14 @@ export declare class Definitions {
     getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
     getContextWithScope(original: Type, scope?: TypeMap): {
-        context: ObjectType | ManyType;
+        context: ManyType | ObjectType<{
+            props: any;
+        }>;
         scope: Record<string, Type<any>>;
     };
-    getContext(original: Type, scope: TypeMap): ObjectType | ManyType;
+    getContext(original: Type, scope: TypeMap): ManyType | ObjectType<{
+        props: any;
+    }>;
     getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | null;
     getOperationInputType(input: OperationTypeInput<any>): Type | null;
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;

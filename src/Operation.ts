@@ -105,7 +105,7 @@ export class Operations
     return this.types[id] || this.types[this.prefix + id];
   }
 
-  public set<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)>(
+  public set<P extends string, O extends string, S extends string, H extends (P | O) = never, R extends (P | O) = never>(
     localId: string, 
     flags: Partial<OperationFlags> = {},
     params: P[] = [], 

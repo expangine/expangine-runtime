@@ -32,13 +32,13 @@ export declare const ListOps: {
     prepend: import("../Operation").Operation<"list" | "prepend", never, never, never, "list">;
     indexOf: import("../Operation").Operation<"list" | "item" | "isEqual", "start", "list" | "value" | "test", "isEqual", "list">;
     lastIndexOf: import("../Operation").Operation<"list" | "item" | "isEqual", "start", "list" | "value" | "test", "isEqual", "list">;
-    findIndex: import("../Operation").Operation<"list" | "where", "start" | "reverse", "list" | "index" | "item", "where", "list" | "start" | "where" | "reverse">;
+    findIndex: import("../Operation").Operation<"list" | "where", "start" | "reverse", "list" | "index" | "item", "where", never>;
     last: import("../Operation").Operation<"list", never, never, never, "list">;
     first: import("../Operation").Operation<"list", never, never, never, "list">;
     count: import("../Operation").Operation<"list", never, never, never, never>;
     randomList: import("../Operation").Operation<"list" | "count", never, never, never, "list">;
     random: import("../Operation").Operation<"list", never, never, never, "list">;
-    join: import("../Operation").Operation<"list", "toText" | "prefix" | "suffix" | "delimiter", "list" | "index" | "item", "toText", "list" | "toText" | "prefix" | "suffix" | "delimiter">;
+    join: import("../Operation").Operation<"list", "toText" | "prefix" | "suffix" | "delimiter", "list" | "index" | "item", "toText", never>;
     each: import("../Operation").Operation<"list" | "each", "reverse", "list" | "index" | "item", "each", "list">;
     filter: import("../Operation").Operation<"list" | "filter", never, "list" | "index" | "item", "filter", "list">;
     not: import("../Operation").Operation<"list" | "not", never, "list" | "index" | "item", "not", "list">;

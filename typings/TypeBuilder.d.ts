@@ -28,7 +28,7 @@ export declare class TypeBuilder {
     null(): NullType;
     number(min?: number, max?: number, whole?: boolean): NumberType;
     int(min?: number, max?: number): NumberType;
-    object(props?: TypeInputMap): ObjectType;
+    object(props?: TypeInputMap): ObjectType<import("./types/Object").ObjectOptions>;
     optional(type: TypeInput): OptionalType;
     text(options?: TextOptions): TextType;
     tuple(types: TypeInput[]): TupleType;

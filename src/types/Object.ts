@@ -20,7 +20,7 @@ export interface ObjectOptions
   props: TypeMap;
 }
 
-export class ObjectType extends Type<ObjectOptions> 
+export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> 
 {
 
   public static propType = new TextType({});
@@ -74,7 +74,7 @@ export class ObjectType extends Type<ObjectOptions>
     return ObjectType.operations.map;
   }
 
-  public merge(type: ObjectType, describer: TypeDescribeProvider): void
+  public merge(type: Type<O>, describer: TypeDescribeProvider): void
   {
     const p1 = this.options.props;
     const p2 = type.options.props;
@@ -294,16 +294,16 @@ export class ObjectType extends Type<ObjectOptions>
     return value;
   }
 
-  public newInstance(): ObjectType
+  public newInstance(): ObjectType<O>
   {
-    return new ObjectType({ props: {} });
+    return new ObjectType({ props: {} } as O);
   }
 
-  public clone(): ObjectType
+  public clone(): ObjectType<O>
   {
-    return new ObjectType({
+    return new ObjectType<O>({
       props: objectMap(this.options.props, p => p.clone()),
-    });
+    } as O);
   }
 
   public encode(): any 

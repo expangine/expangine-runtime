@@ -1,4 +1,4 @@
-import { LocaleOptions } from '../Locale';
+import { LocaleOptions } from '../../Locale';
 export declare type Unit = 'millis' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
 export declare type UnitRecord<T> = Record<Unit, T>;
 export declare type Adjuster = (value: number) => number;

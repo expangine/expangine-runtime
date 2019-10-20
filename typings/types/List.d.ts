@@ -44,7 +44,7 @@ export declare class ListType extends Type<ListOptions> {
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: any[]): any[];
     toJson(value: any[]): any[];
-    getSplitResultType(): ObjectType;
+    getSplitResultType(): ObjectType<import("./Object").ObjectOptions>;
     getIterationScope(): {
         list: ListType;
         item: Type<any>;

@@ -2,6 +2,7 @@
 export const ID = {
   Any: 'any',
   Boolean: 'bool',
+  Color: 'color',
   Date: 'date',
   Enum: 'enum',
   Function: 'func',
