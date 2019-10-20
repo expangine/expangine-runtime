@@ -111,9 +111,9 @@ export class Definitions
       return AnyType.baseType;
     }
 
-    const cloned = readonlyTypes.map(t => t.clone());
+    const cloned = readonlyTypes.map(t => t ? t.clone() : null);
 
-    return cloned.reduce((a, b) => this.mergeType(a, b));
+    return cloned.reduce((a, b) => a && b ? this.mergeType(a, b) : a || b);
   }
 
   public merge(type: Type, data: any): Type
