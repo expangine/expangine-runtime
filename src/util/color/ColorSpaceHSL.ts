@@ -26,8 +26,8 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
   }))
   .setToColor((color) => {
     const H = normalizeHue(color.h);
-    const L = clampPercent(color.l);
-    const S = clampPercent(color.s);
+    const L = clampPercent(color.l) / 100;
+    const S = clampPercent(color.s) / 100;
     const C = (1 - Math.abs(2 * L - 1)) * S;
     const X = C * (1 - Math.abs(((H / 60) % 2) - 1));
     const m = L - C / 2;
@@ -48,9 +48,9 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
         : X;
 
     return {
-      r: (r1 + m) * COMPONENT_MAX,
-      g: (g1 + m) * COMPONENT_MAX,
-      b: (b1 + m) * COMPONENT_MAX,
+      r: clampComponent(Math.floor((r1 + m) * COMPONENT_MAX)),
+      g: clampComponent(Math.floor((g1 + m) * COMPONENT_MAX)),
+      b: clampComponent(Math.floor((b1 + m) * COMPONENT_MAX)),
       a: color.a
     };
   })
@@ -65,19 +65,21 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
     const Cmin = Math.min(r1, g1, b1);
     const delta = Cmax - Cmin;
     const L = (Cmax + Cmin) / 2;
+    const h = delta === 0
+      ? 0
+      : Cmax === r1
+        ? ((g1 - b1) / delta) % 6
+        : Cmax === g1
+          ? ((b1 - r1) / delta) + 2
+          : ((r1 - g1) / delta) + 4;
+    const s = delta === 0
+      ? 0
+      : delta / (1 - Math.abs(2 * L - 1));
 
     return {
-      h: delta === 0
-        ? 0
-        : Cmax === r1
-          ? (60 * ((g1 - b1) / delta) % 6)
-          : Cmax === g1
-            ? (60 * ((b1 - r1) / delta) + 2)
-            : (60 * ((r1 - g1) / delta) + 4),
-      s: delta === 0
-        ? 0
-        : delta / (1 - Math.abs(2 * L - 1)),
-      l: L,
+      h: normalizeHue(h * 60),
+      s: clampPercent(s * 100),
+      l: clampPercent(L * 100),
       a: color.a,
     };
   })
@@ -118,9 +120,9 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
       };
     },
     formatter: (color) => {
-      const h = normalizeHue(color.h);
-      const s = clampPercent(color.s);
-      const l = clampPercent(color.l);
+      const h = normalizeHue(Math.round(color.h));
+      const s = clampPercent(Math.round(color.s));
+      const l = clampPercent(Math.round(color.l));
 
       return 'hsl(' + h + ',' + s + '%,' + l + '%)';
     },
@@ -148,9 +150,9 @@ export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
       };
     },
     formatter: (color) => {
-      const h = normalizeHue(color.h);
-      const s = clampPercent(color.s);
-      const l = clampPercent(color.l);
+      const h = normalizeHue(Math.round(color.h));
+      const s = clampPercent(Math.round(color.s));
+      const l = clampPercent(Math.round(color.l));
       const a = clampComponent(color.a) / COMPONENT_MAX;
 
       return 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')';

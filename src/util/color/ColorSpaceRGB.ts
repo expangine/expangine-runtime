@@ -204,7 +204,7 @@ function parseComponent(x: string): number
 {
   return x.indexOf('%') === -1
     ? clampComponent(parseInt(x, 10))
-    : clampComponent(Math.floor(parseInt(x.substring(0, x.length - 1), 10) * 2.55));
+    : clampComponent(parseInt(x.substring(0, x.length - 1), 10) * 2.55);
 }
 
 function formatHex(x: number)

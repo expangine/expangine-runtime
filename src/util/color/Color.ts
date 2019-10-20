@@ -20,5 +20,5 @@ export function isColor(x: any): x is Color
 
 export function clampComponent(x: number): number
 {
-  return clamp(x, COMPONENT_MIN, COMPONENT_MAX);
+  return clamp(Math.round(x), COMPONENT_MIN, COMPONENT_MAX);
 }
