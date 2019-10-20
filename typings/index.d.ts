@@ -40,6 +40,7 @@ export * from './exprs/Operation';
 export * from './exprs/Or';
 export * from './exprs/Return';
 export * from './exprs/Set';
+export * from './exprs/Sub';
 export * from './exprs/Switch';
 export * from './exprs/Template';
 export * from './exprs/Tuple';

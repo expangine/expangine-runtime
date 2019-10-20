@@ -15,6 +15,7 @@ import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
 import { ReturnExpression } from './exprs/Return';
 import { SetExpression } from './exprs/Set';
+import { SubExpression } from './exprs/Sub';
 import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
@@ -29,6 +30,7 @@ export declare class ExpressionBuilder {
     do(body: Expression, condition?: Expression, breakVariable?: string, maxIterations?: number): DoExpression;
     for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
     get(...path: ExpressionValue[]): GetExpression;
+    sub(value: ExpressionValue, ...path: ExpressionValue[]): SubExpression;
     if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;
     invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
     noop(): NoExpression;

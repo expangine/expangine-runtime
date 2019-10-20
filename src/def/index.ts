@@ -33,6 +33,7 @@ import { OperationExpression } from '../exprs/Operation';
 import { OrExpression } from '../exprs/Or';
 import { ReturnExpression } from '../exprs/Return';
 import { SetExpression } from '../exprs/Set';
+import { SubExpression } from '../exprs/Sub';
 import { SwitchExpression } from '../exprs/Switch';
 import { TemplateExpression } from '../exprs/Template';
 import { TupleExpression } from '../exprs/Tuple';
@@ -63,6 +64,7 @@ export const defs = new Definitions({
     ConstantExpression,
     GetExpression,
     SetExpression,
+    SubExpression,
     OperationExpression,
     ChainExpression,
     IfExpression,

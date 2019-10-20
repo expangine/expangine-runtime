@@ -16,6 +16,7 @@ import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
 import { ReturnExpression } from './exprs/Return';
 import { SetExpression } from './exprs/Set';
+import { SubExpression } from './exprs/Sub';
 import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
@@ -61,6 +62,11 @@ export class ExpressionBuilder
   public get(...path: ExpressionValue[]): GetExpression
   {
     return new GetExpression(toExpr(path));
+  }
+
+  public sub(value: ExpressionValue, ...path: ExpressionValue[]): SubExpression
+  {
+    return new SubExpression(toExpr(value), toExpr(path));
   }
 
   public if(condition: Expression, body: Expression = NoExpression.instance, otherwise: Expression = NoExpression.instance): IfExpression
