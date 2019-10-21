@@ -22,7 +22,7 @@ export const TupleOps =
 
   copy: ops.set('copy', {}, ['value']),
 
-  build: ops.set('build', {}, ['a', 'b'], ['c', 'd', 'e']),
+  build: ops.set('build', {}, ['a', 'b'], ['c', 'd', 'e'], [], [], ['a', 'b', 'c', 'd', 'e']),
 
   get: ops.set('get', {}, ['value', 'index']),
 
