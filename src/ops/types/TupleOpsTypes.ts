@@ -39,6 +39,7 @@ export const TupleOpsTypes =
     (i, defs) => {
       const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
       let elements: Type[] = [];
+      let list = false;
       
       for (const param of params) 
       {
@@ -52,7 +53,8 @@ export const TupleOpsTypes =
           }
           else if (paramType instanceof ListType)
           {
-            return AnyType;
+            list = true;
+            elements.push(paramType.options.item);
           }
           else 
           {
@@ -61,7 +63,9 @@ export const TupleOpsTypes =
         }
       }
 
-      return new TupleType(elements);
+      return list
+        ? ListType.forItem(defs.mergeTypes(elements))
+        : new TupleType(elements);
     },
     { a: AnyType, b: AnyType },
     { c: AnyType, d: AnyType, e: AnyType }
