@@ -12,7 +12,6 @@ import { ObjectType } from '../../types/Object';
 import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
 import { ColorType } from '../../types/Color';
 
 
@@ -40,26 +39,7 @@ export const MapOpsTypes =
   // Operations
 
   maybe: ops.setTypes(MapOps.maybe, 
-    i => {
-      if (i.value instanceof MapType) {
-        return i.value;
-      }
-      if (i.value instanceof OptionalType && i.value.options instanceof MapType){
-        return i.value;
-      }
-      if (i.value instanceof ManyType) {
-        const oneOf = i.value.options.find(t => t instanceof MapType);
-        if (oneOf) {
-          return OptionalType.for(oneOf);
-        }
-        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof MapType);
-        if (oneOfOptional) {
-          return oneOfOptional;
-        }
-      }
-
-      return OptionalType.for(MapType);
-    }, 
+    (i, defs) => defs.maybeType(i.value, MapType),
     { value: AnyType } 
   ),
 

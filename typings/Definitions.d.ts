@@ -25,6 +25,7 @@ export declare class Definitions {
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     add(options: DefinitionsOptions): void;
     describe(data: any): Type;
+    maybeType<M extends Type>(type: Type, maybe: TypeClass<M>): Type<any>;
     mergeTypes(readonlyTypes: Type[]): Type | null;
     merge(type: Type, data: any): Type;
     mergeType(a: Type, b: Type): Type;

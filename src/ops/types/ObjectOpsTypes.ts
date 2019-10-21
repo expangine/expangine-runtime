@@ -1,5 +1,5 @@
 
-import { Type } from '../../Type';
+import { Type, TypeMap } from '../../Type';
 import { ObjectType } from '../../types/Object';
 import { NumberType } from '../../types/Number';
 import { BooleanType } from '../../types/Boolean';
@@ -12,7 +12,6 @@ import { ListType } from '../../types/List';
 import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
 import { ColorType } from '../../types/Color';
 
 
@@ -31,26 +30,7 @@ export const ObjectOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ObjectOps.maybe, 
-    i => {
-      if (i.value instanceof ObjectType) {
-        return i.value;
-      }
-      if (i.value instanceof OptionalType && i.value.options instanceof ObjectType){
-        return i.value;
-      }
-      if (i.value instanceof ManyType) {
-        const oneOf = i.value.options.find(t => t instanceof ObjectType);
-        if (oneOf) {
-          return OptionalType.for(oneOf);
-        }
-        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof ObjectType);
-        if (oneOfOptional) {
-          return oneOfOptional;
-        }
-      }
-
-      return OptionalType.for(ObjectType);
-    }, 
+    (i, defs) => defs.maybeType(i.value, ObjectType),
     { value: AnyType } 
   ),
 
@@ -84,6 +64,39 @@ export const ObjectOpsTypes =
   copy: ops.setTypes(ObjectOps.copy, 
     GivenObject,
     { object: GivenObject }
+  ),
+
+  merge: ops.setTypes(ObjectOps.merge, 
+    (i, defs) => {
+      const props: TypeMap = {};
+      const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
+
+      for (const param of params) 
+      {
+        if (i[param] instanceof ObjectType) 
+        {
+          const paramProps = i[param].options.props;
+
+          for (const prop in paramProps) 
+          {
+            const paramProp = paramProps[prop];
+
+            if (prop in props && paramProp instanceof OptionalType) 
+            {
+              props[prop] = defs.mergeTypes([paramProp, props[prop]]);
+            } 
+            else 
+            {
+              props[prop] = paramProp;
+            }
+          }
+        }
+      }
+
+      return new ObjectType({ props });
+    },
+    { a: ObjectType, b: ObjectType },
+    { c: ObjectType, d: ObjectType, e: ObjectType }
   ),
 
   // Comparisons

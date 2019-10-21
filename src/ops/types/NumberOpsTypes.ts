@@ -10,8 +10,6 @@ import { TupleType } from '../../types/Tuple';
 import { DateType } from '../../types/Date';
 
 import { NumberOps } from '../NumberOps';
-import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
 import { ColorType } from '../../types/Color';
 
 
@@ -82,26 +80,7 @@ export const NumberOpsTypes =
   // Unary Operations
 
   maybe: ops.setTypes(NumberOps.maybe, 
-    i => {
-      if (i.value instanceof NumberType) {
-        return i.value;
-      }
-      if (i.value instanceof OptionalType && i.value.options instanceof NumberType){
-        return i.value;
-      }
-      if (i.value instanceof ManyType) {
-        const oneOf = i.value.options.find(t => t instanceof NumberType);
-        if (oneOf) {
-          return OptionalType.for(oneOf);
-        }
-        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof NumberType);
-        if (oneOfOptional) {
-          return oneOfOptional;
-        }
-      }
-
-      return OptionalType.for(NumberType);
-    }, 
+    (i, defs) => defs.maybeType(i.value, NumberType),
     { value: AnyType } 
   ),
   

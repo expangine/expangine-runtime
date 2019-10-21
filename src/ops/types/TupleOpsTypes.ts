@@ -10,9 +10,8 @@ import { ListType } from '../../types/List';
 import { TextType } from '../../types/Text';
 
 import { TupleOps } from '../TupleOps';
-import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
 import { ColorType } from '../../types/Color';
+import { Type } from '../../Type';
 
 
 const ops = TupleType.operations;
@@ -28,32 +27,41 @@ export const TupleOpsTypes =
   // Operations
 
   maybe: ops.setTypes(TupleOps.maybe, 
-    i => {
-      if (i.value instanceof TupleType) {
-        return i.value;
-      }
-      if (i.value instanceof OptionalType && i.value.options instanceof TupleType){
-        return i.value;
-      }
-      if (i.value instanceof ManyType) {
-        const oneOf = i.value.options.find(t => t instanceof TupleType);
-        if (oneOf) {
-          return OptionalType.for(oneOf);
-        }
-        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof TupleType);
-        if (oneOfOptional) {
-          return oneOfOptional;
-        }
-      }
-
-      return OptionalType.for(TupleType);
-    }, 
+    (i, defs) => defs.maybeType(i.value, TupleType),
     { value: AnyType } 
   ),
 
   cmp: ops.setTypes(TupleOps.cmp, NumberType, { value: TupleType, test: TupleType }),
 
   copy: ops.setTypes(TupleOps.copy, TupleType, { value: TupleType }),
+
+  build: ops.setTypes(TupleOps.build, 
+    (i, defs) => {
+      const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
+      let elements: Type[] = [];
+      
+      for (const param of params) 
+      {
+        const paramType = i[param];
+
+        if (paramType) 
+        {
+          if (paramType instanceof TupleType) 
+          {
+            elements = elements.concat(paramType.options);
+          }
+          else 
+          {
+            elements.push(paramType);
+          }
+        }
+      }
+
+      return new TupleType(elements);
+    },
+    { a: AnyType, b: AnyType },
+    { c: AnyType, d: AnyType, e: AnyType }
+  ),
 
   get: ops.setTypes(TupleOps.get, AnyType, { value: TupleType, index: NumberType }),
 

@@ -1,4 +1,5 @@
 import { Type, TypeInput } from './Type';
+import { Definitions } from './Definitions';
 export interface OperationFlags {
     complexity: number;
     mutates: string[];
@@ -13,7 +14,7 @@ export interface Operation<P extends string = never, O extends string = never, S
     resultDependency: R[];
 }
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
-export declare type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>) => TypeInput;
+export declare type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, defs: Definitions) => TypeInput;
 export declare type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 export interface OperationTypes<P extends string = never, O extends string = never, S extends string = never> {
     returnType: OperationTypeInput<P | O>;

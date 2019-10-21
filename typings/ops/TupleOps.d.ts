@@ -5,6 +5,7 @@ export declare const TupleOps: {
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;
+    build: import("../Operation").Operation<"a" | "b", "c" | "d" | "e", never, never, never>;
     get: import("../Operation").Operation<"value" | "index", never, never, never, never>;
     set: import("../Operation").Operation<"value" | "index" | "element", never, never, never, never>;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;

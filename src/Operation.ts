@@ -1,6 +1,7 @@
 
 import { Type, TypeInput } from './Type';
 import { isFunction } from './fns';
+import { Definitions } from './Definitions';
 
 
 export interface OperationFlags
@@ -39,7 +40,7 @@ export type OperationResolved<
   string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
 >;
 
-export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>) => TypeInput;
+export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, defs: Definitions) => TypeInput;
 
 export type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 

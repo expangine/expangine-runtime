@@ -99,6 +99,38 @@ export class Definitions
     return AnyType.baseType;
   }
 
+  public maybeType<M extends Type>(type: Type, maybe: TypeClass<M>)
+  {
+    if (type instanceof maybe)
+    {
+      return type;
+    }
+
+    if (type instanceof OptionalType && type.options instanceof maybe)
+    {
+      return type;
+    }
+
+    if (type instanceof ManyType) 
+    {
+      const oneOf = type.options.find((t) => t instanceof maybe);
+
+      if (oneOf) 
+      {
+        return this.optionalType(oneOf);
+      }
+
+      const oneOfOptional = type.options.find((t) => t instanceof OptionalType && t.options instanceof maybe);
+
+      if (oneOfOptional) 
+      {
+        return oneOfOptional;
+      }
+    }
+
+    return OptionalType.for(maybe);
+  }
+
   public mergeTypes(readonlyTypes: Type[]): Type | null
   {
     if (readonlyTypes.length === 0)
@@ -470,12 +502,12 @@ export class Definitions
       if (isOperationTypeFunction(typeInput))
       {
         chosenIndex = paramTypes.findIndex(([, type]) => 
-          type.acceptsType(Type.fromInput(typeInput({ ...mapped, [param]: type }))));
+          type.acceptsType(Type.fromInput(typeInput({ ...mapped, [param]: type }, this))));
         
         if (chosenIndex === -1)
         {
           chosenIndex = paramTypes.findIndex(([, type]) =>
-            Type.fromInput(typeInput({ ...mapped, [param]: type})).acceptsType(type));
+            Type.fromInput(typeInput({ ...mapped, [param]: type}, this)).acceptsType(type));
         }
       }
       else
@@ -525,7 +557,7 @@ export class Definitions
       : 'baseType' in input
         ? input.baseType.clone()
         : params
-          ? Type.fromInput(input(params))
+          ? Type.fromInput(input(params, this))
           : null;
   }
 

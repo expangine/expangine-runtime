@@ -30,6 +30,8 @@ export const ObjectOps =
 
   copy: ops.set('copy', {}, ['object'], [], [], [], ['object']),
 
+  merge: ops.set('merge', {}, ['a', 'b'], ['c', 'd', 'e']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),

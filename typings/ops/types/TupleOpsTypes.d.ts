@@ -3,6 +3,7 @@ export declare const TupleOpsTypes: {
     maybe: import("../..").OperationTypes<"value", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
+    build: import("../..").OperationTypes<"a" | "b", "c" | "d" | "e", never>;
     get: import("../..").OperationTypes<"value" | "index", never, never>;
     set: import("../..").OperationTypes<"value" | "index" | "element", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;

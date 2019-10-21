@@ -10,8 +10,6 @@ import { TextType } from '../../types/Text';
 import { TupleType } from '../../types/Tuple';
 
 import { BooleanOps } from '../BooleanOps';
-import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
 import { ColorType } from '../../types/Color';
 
 
@@ -28,26 +26,7 @@ export const BooleanOpsTypes =
   // Operations
 
   maybe: ops.setTypes(BooleanOps.maybe, 
-    i => {
-      if (i.value instanceof BooleanType) {
-        return i.value;
-      }
-      if (i.value instanceof OptionalType && i.value.options instanceof BooleanType){
-        return i.value;
-      }
-      if (i.value instanceof ManyType) {
-        const oneOf = i.value.options.find(t => t instanceof BooleanType);
-        if (oneOf) {
-          return OptionalType.for(oneOf);
-        }
-        const oneOfOptional = i.value.options.find(t => t instanceof OptionalType && t.options instanceof BooleanType);
-        if (oneOfOptional) {
-          return oneOfOptional;
-        }
-      }
-
-      return OptionalType.for(BooleanType);
-    }, 
+    (i, defs) => defs.maybeType(i.value, BooleanType),
     { value: AnyType } 
   ),
 
