@@ -50,6 +50,10 @@ export const TupleOpsTypes =
           {
             elements = elements.concat(paramType.options);
           }
+          else if (paramType instanceof ListType)
+          {
+            return AnyType;
+          }
           else 
           {
             elements.push(paramType);
