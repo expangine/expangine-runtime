@@ -3,7 +3,6 @@ import { isNumber, isEmpty, isArray, coalesce, toArray } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
-import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ListOps, ListOperations } from '../ops/ListOps';
@@ -372,41 +371,6 @@ export class ListType extends Type<ListOptions>
   {
     return value.map((e: any) => this.options.item.toJson(e));
   }
-
-  public getSplitResultType()
-  {
-    return ObjectType.from({ pass: this, fail: this });
-  }
-
-  public getIterationScope()
-  {
-    return { 
-      list: this as ListType,
-      item: this.options.item,
-      index: ListType.lengthType
-    };
-  }
-
-  public static readonly IterationScopeDefaults = {
-    list: 'list',
-    item: 'item',
-    index: 'index'
-  };
-
-  public getCompareScope()
-  {
-    return {
-      list: this as ListType,
-      value: this.options.item,
-      test: this.options.item
-    };
-  }
-
-  public static readonly CompareScopeDefaults = {
-    list: 'list',
-    value: 'value',
-    test: 'test'
-  };
 
 }
 

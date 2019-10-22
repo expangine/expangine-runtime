@@ -210,14 +210,24 @@ export class ColorType extends ObjectType<ColorOptions>
     };
   }
 
-  public fromJson(json: number): number
+  public fromJson(json: Color): Color
   {
-    return json;
+    return {
+      r: json.r,
+      g: json.g,
+      b: json.b,
+      a: json.a,
+    };
   }
 
-  public toJson(value: number): number
+  public toJson(value: Color): Color
   {
-    return value;
+    return {
+      r: value.r,
+      g: value.g,
+      b: value.b,
+      a: value.a,
+    };
   }
 
 }

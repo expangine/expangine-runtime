@@ -1,6 +1,5 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
-import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -44,25 +43,4 @@ export declare class ListType extends Type<ListOptions> {
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: any[]): any[];
     toJson(value: any[]): any[];
-    getSplitResultType(): ObjectType<import("./Object").ObjectOptions>;
-    getIterationScope(): {
-        list: ListType;
-        item: Type<any>;
-        index: NumberType;
-    };
-    static readonly IterationScopeDefaults: {
-        list: string;
-        item: string;
-        index: string;
-    };
-    getCompareScope(): {
-        list: ListType;
-        value: Type<any>;
-        test: Type<any>;
-    };
-    static readonly CompareScopeDefaults: {
-        list: string;
-        value: string;
-        test: string;
-    };
 }

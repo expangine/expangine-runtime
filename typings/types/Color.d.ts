@@ -43,6 +43,6 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     encode(): any;
     create(): Color;
     random(rnd: (a: number, b: number, whole: boolean) => number): Color;
-    fromJson(json: number): number;
-    toJson(value: number): number;
+    fromJson(json: Color): Color;
+    toJson(value: Color): Color;
 }

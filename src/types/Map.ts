@@ -3,8 +3,6 @@ import { isObject, isMap, toArray, isSameClass, isString } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
-import { ListType } from './List';
-import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { MapOps, MapOperations } from '../ops/MapOps';
@@ -335,54 +333,6 @@ export class MapType extends Type<MapOptions>
       value.toJson(v)
     ]);
   }
-
-  public getValuesType()
-  {
-    return ListType.forItem(this.options.value);
-  }
-
-  public getKeysType()
-  {
-    return ListType.forItem(this.options.key);
-  }
-
-  public getEntriesType()
-  {
-    return ObjectType.from({ 
-      keys: this.getKeysType(),
-      values: this.getValuesType()
-    });
-  }
-
-  public getIterationScope()
-  {
-    return { 
-      map: this as MapType,
-      key: this.options.key,
-      value: this.options.value
-    };
-  }
-
-  public static readonly IterationScopeDefaults = { 
-    map: 'map',
-    key: 'key',
-    value: 'value'
-  };
-
-  public getCompareScope()
-  {
-    return { 
-      key: this.options.key, 
-      value: this.options.value, 
-      test: this.options.value 
-    };
-  }
-
-  public static readonly CompareScopeDefaults = { 
-    key: 'key', 
-    value: 'value', 
-    test: 'test'
-  };
 
 }
 

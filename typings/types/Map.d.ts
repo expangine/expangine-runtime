@@ -1,6 +1,4 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ListType } from './List';
-import { ObjectType } from './Object';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -42,27 +40,4 @@ export declare class MapType extends Type<MapOptions> {
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: Array<[any, any]>): Map<any, any>;
     toJson(map: Map<any, any>): Array<[any, any]>;
-    getValuesType(): ListType;
-    getKeysType(): ListType;
-    getEntriesType(): ObjectType<import("./Object").ObjectOptions>;
-    getIterationScope(): {
-        map: MapType;
-        key: Type<any>;
-        value: Type<any>;
-    };
-    static readonly IterationScopeDefaults: {
-        map: string;
-        key: string;
-        value: string;
-    };
-    getCompareScope(): {
-        key: Type<any>;
-        value: Type<any>;
-        test: Type<any>;
-    };
-    static readonly CompareScopeDefaults: {
-        key: string;
-        value: string;
-        test: string;
-    };
 }
