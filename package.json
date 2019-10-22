@@ -1,5 +1,6 @@
 {
   "name": "expangine-runtime",
+  "license": "GPL-3.0-or-later",
   "version": "0.0.2",
   "description": "A TypeScript/JS library for visual programming tools",
   "main": "dist/expangine-runtime.js",
@@ -12,7 +13,6 @@
   "authors": [
     "Philip Diffenderfer <pdiffenderfer@gmail.com>"
   ],
-  "license": "MIT",
   "engines": {
     "node": ">=6.9"
   },
