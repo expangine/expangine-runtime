@@ -23,6 +23,8 @@ export interface ObjectOptions
 export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> 
 {
 
+  public static wilcardProperty = '*';
+
   public static propType = new TextType({});
 
   public static id = ID.Object;
@@ -130,7 +132,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       }
     }
 
-    return null;
+    return this.getWildcardType();
   }
 
   public getSubTypes(def: Definitions): TypeSub[]
@@ -202,6 +204,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
     for (const prop in props) 
     {
+      if (prop === ObjectType.wilcardProperty)
+      {
+        continue;
+      }
+
       if (!other.options.props[prop]) 
       {
         return false;
@@ -213,11 +220,23 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       }
     }
 
+    const wildcard = this.getWildcardType();
+
     if (options.exact)
     {
       for (const prop in other.options.props)
       {
-        if (!(props[prop]))
+        if (!props[prop])
+        {
+          return false;
+        }
+      }
+    }
+    else if (wildcard)
+    {
+      for (const prop in other.options.props)
+      {
+        if (!props[prop] && !wildcard.isCompatible(other.options.props[prop], options))
         {
           return false;
         }
@@ -280,9 +299,27 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
     for (const prop in props) 
     {
+      if (prop === ObjectType.wilcardProperty)
+      {
+        continue;
+      }
+
       if (!props[prop].isValid(value[prop])) 
       {
         return false;
+      }
+    }
+
+    const wildcard = this.getWildcardType();
+
+    if (wildcard)
+    {
+      for (const prop in value)
+      {
+        if (!props[prop] && !wildcard.isValid(value[prop]))
+        {
+          return false;
+        }
       }
     }
 
@@ -345,6 +382,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       
       return propType ? propType.toJson(subvalue) : subvalue;
     });
+  }
+
+  public getWildcardType(): Type | null
+  {
+    return this.options.props[ObjectType.wilcardProperty] || null;
   }
 
 }

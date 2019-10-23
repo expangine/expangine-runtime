@@ -8,6 +8,7 @@ export interface ObjectOptions {
     props: TypeMap;
 }
 export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> {
+    static wilcardProperty: string;
     static propType: TextType;
     static id: string;
     static operations: import("..").Operations;
@@ -40,4 +41,5 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
     fromJson(json: any): any;
     toJson(value: any): any;
+    getWildcardType(): Type | null;
 }
