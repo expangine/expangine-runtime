@@ -96,7 +96,9 @@ export class ForExpression extends Expression
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
-    return def.optionalType(this.body.getType(def, context));
+    const body = this.body.getType(def, context);
+
+    return body ? def.optionalType(body) : null;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
