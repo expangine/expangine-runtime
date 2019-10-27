@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { Type, TypeBuilder, NumberType, AnyOpsTypes, NullType, ManyType, TextType, isOperationTypeFunction } from '../src';
+import { Type, TypeBuilder, NumberType, AnyOpsTypes, NullType, ManyType, TextType, isOperationTypeFunction, defs } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -19,38 +19,38 @@ describe('AnyOps', () => {
     const r0 = Type.fromInput(getReturnType({
       a: tp.optional(tp.number()),
       b: tp.number(),
-    }));
+    }, defs));
 
     expect(r0).toBeInstanceOf(NumberType);
 
-    const r1 = Type.fromInput(getReturnType({}));
+    const r1 = Type.fromInput(getReturnType({}, defs));
 
     expect(r1).toBeInstanceOf(NullType);
 
     const r2 = Type.fromInput(getReturnType({
       a: tp.number(),
-    }));
+    }, defs));
 
     expect(r2).toBeInstanceOf(NumberType);
 
     const r3 = Type.fromInput(getReturnType({
       a: tp.number(),
       b: tp.number(),
-    }));
+    }, defs));
 
     expect(r3).toBeInstanceOf(NumberType);
 
     const r4 = Type.fromInput(getReturnType({
       a: tp.number(),
       b: tp.text(),
-    }));
+    }, defs));
 
     expect(r4).toBeInstanceOf(NumberType);
 
     const r5 = Type.fromInput(getReturnType({
       a: tp.optional(tp.number()),
       b: tp.text(),
-    }));
+    }, defs));
 
     expect(r5).toBeInstanceOf(ManyType);
     expect(r5.options[0]).toBeInstanceOf(NumberType);

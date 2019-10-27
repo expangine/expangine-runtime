@@ -59,6 +59,13 @@ export class FunctionType extends Type<FunctionOptions>
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+  
   public getId(): string
   {
     return FunctionType.id;

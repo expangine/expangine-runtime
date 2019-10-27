@@ -263,6 +263,12 @@ export class Definitions
     {
       this.sortDescribers();
     }
+
+    if (!type.registered)
+    {
+      type.registered = true;
+      type.register();
+    }
   }
 
   public addAlias<T extends Type>(alias: string, instance: T | any) 

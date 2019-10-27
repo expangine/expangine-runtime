@@ -12,6 +12,8 @@ export declare class OptionalType extends Type<Type> {
     static encode(type: OptionalType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     static for(type: TypeInput): OptionalType;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     getId(): string;

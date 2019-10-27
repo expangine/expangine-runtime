@@ -15,6 +15,8 @@ export declare class MapType extends Type<MapOptions> {
     static encode(type: MapType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;

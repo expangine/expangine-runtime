@@ -91,6 +91,13 @@ export class TextType extends Type<TextOptions>
     });
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public getId(): string
   {
     return TextType.id;

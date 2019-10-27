@@ -26,6 +26,8 @@ export declare class TextType extends Type<TextOptions> {
     private static encodeOptions;
     static describePriority: number;
     static describe(data: any): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TextType, describer: TypeDescribeProvider): void;

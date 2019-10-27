@@ -46,6 +46,13 @@ export class BooleanType extends Type<BooleanOptions>
     return isBoolean(data) ? this.baseType : null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public getId(): string
   {
     return BooleanType.id;

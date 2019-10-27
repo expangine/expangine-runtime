@@ -45,6 +45,13 @@ export class NullType extends Type<NullOptions>
     return data === null ? this.baseType : null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public getId(): string
   {
     return NullType.id;

@@ -24,6 +24,8 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     static encode(type: ColorType): any;
     static describePriority: number;
     static describe(data: any): Type | null;
+    static registered: boolean;
+    static register(): void;
     static getFormat(id: string): ColorFormat<any> | undefined;
     constructor(colorOptions?: {
         hasAlpha?: boolean;

@@ -14,6 +14,8 @@ export declare class TupleType extends Type<Type[]> {
     static encode(type: TupleType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     static forItem(types: TypeInput[]): TupleType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;

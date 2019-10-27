@@ -41,6 +41,13 @@ export class OptionalType extends Type<Type>
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public static for(type: TypeInput): OptionalType
   {
     return new OptionalType(Type.fromInput(type));

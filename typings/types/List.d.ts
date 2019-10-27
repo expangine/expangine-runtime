@@ -19,6 +19,8 @@ export declare class ListType extends Type<ListOptions> {
     static encode(type: ListType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     static forItem(itemOrClass: TypeInput): ListType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;

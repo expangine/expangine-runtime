@@ -18,6 +18,8 @@ export declare class FunctionType extends Type<FunctionOptions> {
     static encode(type: FunctionType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: FunctionType, describer: TypeDescribeProvider): void;

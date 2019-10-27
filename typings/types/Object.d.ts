@@ -18,6 +18,8 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static from(types?: TypeInputMap): ObjectType;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: Type<O>, describer: TypeDescribeProvider): void;

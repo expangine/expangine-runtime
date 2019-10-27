@@ -51,6 +51,13 @@ export class TupleType extends Type<Type[]>
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public static forItem(types: TypeInput[])
   {
     return new TupleType(types.map((t) => Type.fromInput(t)));

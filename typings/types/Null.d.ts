@@ -15,6 +15,8 @@ export declare class NullType extends Type<NullOptions> {
     static encode(type: NullType): any;
     static describePriority: number;
     static describe(data: any): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: NullType, describer: TypeDescribeProvider): void;

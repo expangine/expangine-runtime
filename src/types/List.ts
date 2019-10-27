@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, isArray, coalesce, toArray } from '../fns';
+import { isNumber, isEmpty, isArray, coalesce, toArray, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
@@ -79,6 +79,38 @@ export class ListType extends Type<ListOptions>
       item,
       min: data.length,
       max: data.length
+    });
+  }
+
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+    const ANY_TYPE_PRIORITY = 8;
+
+    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+      if (isArray(json)) {
+        return json.map((item) => reader(item));
+      }
+    });
+
+    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+      if (isArray(json)) {
+        return json.map((item) => writer(item));
+      }
+    });
+
+    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
+      if (isArray(x)) {
+        const newArray: any[] = [];
+        copied.set(x, newArray);
+
+        for (const item of x) {
+          newArray.push(copyAny(item, copied));
+        }
+
+        return newArray;
+      }
     });
   }
 
@@ -373,17 +405,3 @@ export class ListType extends Type<ListOptions>
   }
 
 }
-
-const ANY_TYPE_PRIORITY = 8;
-
-AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-  if (isArray(json)) {
-    return json.map((item) => reader(item));
-  }
-});
-
-AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-  if (isArray(json)) {
-    return json.map((item) => writer(item));
-  }
-});

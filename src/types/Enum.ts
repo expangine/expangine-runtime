@@ -64,6 +64,13 @@ export class EnumType extends Type<EnumOptions>
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public getId(): string
   {
     return EnumType.id;

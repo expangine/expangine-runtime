@@ -1,5 +1,5 @@
 
-import { isDate, isEmpty, copy, isObject, isString } from '../fns';
+import { isDate, isEmpty, copy, isObject, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
@@ -80,6 +80,34 @@ export class DateType extends Type<DateOptions>
     return new DateType({
       validateMin: new Date(data.getTime()),
       validateMax: new Date(data.getTime())
+    });
+  }
+
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+    const ANY_TYPE_PRIORITY = 9;
+
+    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+      if (isObject(json) && isString(json.$any) && json.$any === 'date') {
+        return new Date(json.value);
+      }
+    });
+
+    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+      if (isDate(json)) {
+        return { $any: 'date', value: json.toISOString() };
+      }
+    });
+
+    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
+      if (isDate(x)) {
+        const newDate = new Date(x.getTime());
+        copied.set(x, newDate);
+
+        return newDate;
+      }
     });
   }
 
@@ -324,17 +352,3 @@ export class DateType extends Type<DateOptions>
   }
 
 }
-
-const ANY_TYPE_PRIORITY = 9;
-
-AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-  if (isObject(json) && isString(json.$any) && json.$any === 'date') {
-    return new Date(json.value);
-  }
-});
-
-AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-  if (isDate(json)) {
-    return { $any: 'date', value: json.toISOString() };
-  }
-});

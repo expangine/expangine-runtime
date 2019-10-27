@@ -67,6 +67,8 @@ export interface TypeClass<T extends Type<O> = any, O = any>
   encode(this: TypeClass<T>, type: T): any;
   describePriority: number;
   describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
+  register(this: TypeClass<T>): void;
+  registered: boolean;
   new(options: O): T;
 }
 

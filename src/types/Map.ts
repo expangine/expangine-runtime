@@ -1,5 +1,5 @@
 
-import { isObject, isMap, toArray, isSameClass, isString } from '../fns';
+import { isObject, isMap, toArray, isSameClass, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
@@ -69,6 +69,42 @@ export class MapType extends Type<MapOptions>
     }
 
     return new MapType({ key, value });
+  }
+
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+    const ANY_TYPE_PRIORITY = 10;
+
+    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+      if (isObject(json) && isString(json.$any) && json.$any === 'map') {
+        return new Map(json.value.map(([key, value]: [any, any]) => [reader(key), reader(value)]));
+      }
+    });
+
+    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+      if (isMap(json)) {
+        return {
+          $any: 'map',
+          value: toArray(json.entries())
+            .map(([k, v]: [any, any]) => [writer(k), writer(v)])
+        };
+      }
+    });
+
+    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
+      if (isMap(x)) {
+        const newMap = new Map();
+        copied.set(x, newMap);
+
+        for (const [key, value] of x.entries()) {
+          newMap.set(copyAny(key, copied), copyAny(value, copied));
+        }
+
+        return newMap;
+      }
+    });
   }
 
   public static forItem(valueOrClass: TypeInput, keyOrClass: TypeInput = TextType)
@@ -335,21 +371,3 @@ export class MapType extends Type<MapOptions>
   }
 
 }
-
-const ANY_TYPE_PRIORITY = 10;
-
-AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-  if (isObject(json) && isString(json.$any) && json.$any === 'map') {
-    return new Map(json.value.map(([key, value]: [any, any]) => [reader(key), reader(value)]));
-  }
-});
-
-AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-  if (isMap(json)) {
-    return {
-      $any: 'map',
-      value: toArray(json.entries())
-        .map(([k, v]: [any, any]) => [writer(k), writer(v)])
-    };
-  }
-});

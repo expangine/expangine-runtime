@@ -76,6 +76,13 @@ export class ColorType extends ObjectType<ColorOptions>
     });
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public static getFormat(id: string): ColorFormat<any> | undefined
   {
     const [spaceId, formatId] = id.split(':');

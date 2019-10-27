@@ -261,50 +261,42 @@ export function compare (a: any, b: any): number
   return 0;
 }
 
-export function copy(x: any, originals: any[] = [], clones: any[] = []): any
+export interface Copier 
+{
+  priority: number;
+  tryCopy (x: any, copyAny: (x: any, copied: Map<any, any>) => any, copied: Map<any, any>): any;
+}
+
+export const copiers: Copier[] = [];
+
+export function addCopier(priority: number, tryCopy: Copier['tryCopy'])
+{
+  copiers.push({ priority, tryCopy });
+  copiers.sort((a, b) => b.priority - a.priority);
+}
+
+export function copy(x: any, copied: Map<any, any> = new Map()): any
 {
   if (!x) return x; // null, undefined, 0, '', NaN, false
 
-  if (isDate(x))
-  {
-    return new Date(x.getTime());
-  }
-
   if (typeof x === 'object')
   {
-    const i = originals.indexOf(x);
-
-    if (i !== -1)
+    const existing = copied.get(x);
+    
+    if (existing !== undefined)
     {
-      return clones[i];
+      return existing;
     }
 
-    if (isArray(x))
+    for (const copier of copiers)
     {
-      const arr: any[] = [];
+      const copierCopy = copier.tryCopy(x, copy, copied);
 
-      originals.push(x);
-      clones.push(arr);
-
-      for (const item of x)
+      if (copierCopy !== undefined)
       {
-        arr.push(copy(item, originals, clones));
+        return copierCopy;
       }
-
-      return arr;
     }
-
-    const obj: any = {};
-
-    originals.push(x);
-    clones.push(obj);
-
-    for (const prop in x) 
-    {
-      obj[prop] = copy(x[prop], originals, clones);
-    }
-
-    return obj;
   }
 
   return x;

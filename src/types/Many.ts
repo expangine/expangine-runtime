@@ -43,6 +43,13 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public operations?: Record<string, OperationGeneric>;
 
   public getOperations()

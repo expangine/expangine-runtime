@@ -1,5 +1,5 @@
 
-import { objectMap, isObject, objectValues, isString, toArray, objectEach } from '../fns';
+import { objectMap, isObject, objectValues, isString, toArray, objectEach, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -63,6 +63,38 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   {
     return new ObjectType({
       props: types ? Type.resolve(types) : {}
+    });
+  }
+
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+    const ANY_TYPE_PRIORITY = 7;
+
+    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
+      if (isObject(json)) {
+        return objectMap(json, (prop) => reader(prop));
+      }
+    });
+
+    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
+      if (isObject(json)) {
+        return objectMap(json, (prop) => writer(prop));
+      }
+    });
+
+    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
+      if (isObject(x)) {
+        const newObject: any = {};
+        copied.set(x, newObject);
+
+        for (const prop in x) {
+          newObject[copyAny(prop, copied)] = copyAny(x[prop], copied);
+        }
+
+        return newObject;
+      }
     });
   }
 
@@ -390,17 +422,3 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   }
 
 }
-
-const ANY_TYPE_PRIORITY = 7;
-
-AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-  if (isObject(json)) {
-    return objectMap(json, (prop) => reader(prop));
-  }
-});
-
-AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-  if (isObject(json)) {
-    return objectMap(json, (prop) => writer(prop));
-  }
-});

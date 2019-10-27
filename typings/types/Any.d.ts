@@ -13,6 +13,8 @@ export declare class AnyType extends Type {
     static encode(type: AnyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     static jsonReaders: Array<{
         priority: number;
         reader: AnyTypeJsonReader;

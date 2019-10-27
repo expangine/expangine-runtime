@@ -17,6 +17,8 @@ export declare class EnumType extends Type<EnumOptions> {
     static encode(type: EnumType): any;
     static describePriority: number;
     static describe(): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: EnumType, describer: TypeDescribeProvider): void;

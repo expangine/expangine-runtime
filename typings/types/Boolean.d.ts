@@ -15,6 +15,8 @@ export declare class BooleanType extends Type<BooleanOptions> {
     static encode(type: BooleanType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: BooleanType, describer: TypeDescribeProvider): void;

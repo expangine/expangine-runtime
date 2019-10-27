@@ -17,6 +17,8 @@ export declare class NumberType extends Type<NumberOptions> {
     static encode(type: NumberType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: NumberType, describer: TypeDescribeProvider): void;

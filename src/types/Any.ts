@@ -45,6 +45,13 @@ export class AnyType extends Type
     return null;
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public static jsonReaders: Array<{ priority: number, reader: AnyTypeJsonReader }> = [];
 
   public static jsonWriters: Array<{ priority: number, writer: AnyTypeJsonWriter }> = [];

@@ -12,6 +12,8 @@ export declare class ManyType extends Type<Type[]> {
     static encode(type: ManyType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
     operations?: Record<string, OperationGeneric>;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     private forMany;

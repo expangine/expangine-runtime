@@ -59,6 +59,13 @@ export class NumberType extends Type<NumberOptions>
     });
   }
 
+  public static registered: boolean = false;
+
+  public static register(): void
+  {
+
+  }
+
   public getId(): string
   {
     return NumberType.id;
