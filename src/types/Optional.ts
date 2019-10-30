@@ -95,6 +95,11 @@ export class OptionalType extends Type<Type>
       : this.options.isCompatible(other, options);
   }
 
+  public isOptional(): boolean
+  {
+    return true;
+  }
+
   protected acceptsOtherTypes(): boolean
   {
     return true;

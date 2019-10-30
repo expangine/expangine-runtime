@@ -233,6 +233,11 @@ export class TextType extends Type<TextOptions>
 
     return true;
   }
+
+  public isOptional(): boolean
+  {
+    return false;
+  }
   
   public traverse<R>(traverse: Traverser<Type, R>): R
   {

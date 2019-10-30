@@ -108,6 +108,11 @@ export class FunctionType extends Type<FunctionOptions>
       && this.options.params.isCompatible(other.options.params, options);
   }
 
+  public isOptional(): boolean
+  {
+    return this.options.returnType.isOptional();
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

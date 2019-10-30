@@ -34,6 +34,7 @@ export declare class AnyType extends Type {
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+    isOptional(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;

@@ -136,6 +136,11 @@ export class ColorType extends ObjectType<ColorOptions>
 
     return false;
   }
+
+  public isOptional(): boolean
+  {
+    return false;
+  }
   
   public removeDescribedRestrictions(): void
   {

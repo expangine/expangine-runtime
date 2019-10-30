@@ -187,6 +187,8 @@ export abstract class Type<O = any> implements Traversable<Type>
     return this.isCompatible(other, { exact: true, strict: true, value: true });
   }
 
+  public abstract isOptional(): boolean;
+
   public abstract traverse<R>(traverse: Traverser<Type, R>): R;
 
   public abstract setParent(parent?: Type): void;

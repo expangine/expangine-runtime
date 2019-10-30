@@ -237,6 +237,11 @@ export class TupleType extends Type<Type[]>
     return true;
   }
 
+  public isOptional(): boolean
+  {
+    return false;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () =>

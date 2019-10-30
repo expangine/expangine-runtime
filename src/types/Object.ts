@@ -278,6 +278,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return true;
   }
 
+  public isOptional(): boolean
+  {
+    return false;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.define({

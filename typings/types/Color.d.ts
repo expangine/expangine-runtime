@@ -34,6 +34,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ColorType, describer: TypeDescribeProvider): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+    isOptional(): boolean;
     removeDescribedRestrictions(): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

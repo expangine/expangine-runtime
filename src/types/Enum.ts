@@ -135,6 +135,11 @@ export class EnumType extends Type<EnumOptions>
     return value.isCompatible(other.options.value);
   }
 
+  public isOptional(): boolean
+  {
+    return this.options.value.isOptional();
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

@@ -181,6 +181,11 @@ export class MapType extends Type<MapOptions>
       this.options.value.isCompatible(other.options.value, options);
   }
 
+  public isOptional(): boolean
+  {
+    return false;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

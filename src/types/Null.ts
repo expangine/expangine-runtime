@@ -95,6 +95,11 @@ export class NullType extends Type<NullOptions>
     return other instanceof NullType;
   }
 
+  public isOptional(): boolean
+  {
+    return true;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this);

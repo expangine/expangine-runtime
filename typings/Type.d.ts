@@ -65,6 +65,7 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     acceptsData(other: Type): boolean;
     exactType(other: Type): boolean;
     exactData(other: Type): boolean;
+    abstract isOptional(): boolean;
     abstract traverse<R>(traverse: Traverser<Type, R>): R;
     abstract setParent(parent?: Type): void;
     abstract removeDescribedRestrictions(): void;

@@ -114,6 +114,11 @@ export class AnyType extends Type
     return true;
   }
 
+  public isOptional(): boolean
+  {
+    return true;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this);
