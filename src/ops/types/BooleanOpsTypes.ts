@@ -42,7 +42,7 @@ export const BooleanOpsTypes =
 
   // Comparisons
 
-  isValid: ops.setTypes(BooleanOps.isValid, BooleanType, { value: BooleanType }),
+  isValid: ops.setTypes(BooleanOps.isValid, BooleanType, { value: AnyType }),
 
   isTrue: ops.setTypes(BooleanOps.isTrue, BooleanType, { value: BooleanType }),
 

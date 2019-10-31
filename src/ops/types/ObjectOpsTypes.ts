@@ -103,7 +103,7 @@ export const ObjectOpsTypes =
 
   isValid: ops.setTypes(ObjectOps.isValid, 
     BooleanType, 
-    { value: ObjectType }
+    { value: AnyType }
   ),
 
   isEqual: ops.setTypes(ObjectOps.isEqual, 

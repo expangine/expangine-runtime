@@ -153,7 +153,7 @@ export const DateOpsTypes =
 
   // Comparisons
 
-  isValid: ops.setTypes(DateOps.isValid, BooleanType, { value: DateType }),
+  isValid: ops.setTypes(DateOps.isValid, BooleanType, { value: AnyType }),
  
   isEqual: ops.setTypes(DateOps.isEqual, BooleanType, { value: DateType, test: DateType }, { unit: DateUnits }),
 

@@ -392,7 +392,7 @@ export const ColorOpsTypes =
 
   isValid: ops.setTypes(ColorOps.isValid, 
     BooleanType, 
-    { value: ColorType }
+    { value: AnyType }
   ),
 
   isEqual: ops.setTypes(ColorOps.isEqual, 

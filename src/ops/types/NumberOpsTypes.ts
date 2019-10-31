@@ -148,7 +148,7 @@ export const NumberOpsTypes =
 
   // Comparisons
 
-  isValid: ops.setTypes(NumberOps.isValid, BooleanType, { value: NumberType }),
+  isValid: ops.setTypes(NumberOps.isValid, BooleanType, { value: AnyType }),
 
   isZero: ops.setTypes(NumberOps.isZero, BooleanType, { value: NumberType }, { epsilon: NumberType }),
 

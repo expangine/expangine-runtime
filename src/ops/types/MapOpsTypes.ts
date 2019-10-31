@@ -131,7 +131,7 @@ export const MapOpsTypes =
 
   isValid: ops.setTypes(MapOps.isValid, 
     BooleanType, 
-    { value: GivenValueMap }
+    { value: AnyType }
   ),
 
   isEqual: ops.setTypes(MapOps.isEqual, 

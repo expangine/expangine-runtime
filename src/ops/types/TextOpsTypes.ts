@@ -83,7 +83,7 @@ export const TextOpsTypes =
   
   // Comparisons
 
-  isValid: ops.setTypes(TextOps.isValid, BooleanType, { value: TextType }),
+  isValid: ops.setTypes(TextOps.isValid, BooleanType, { value: AnyType }),
 
   isEmpty: ops.setTypes(TextOps.isEmpty, BooleanType, { value: TextType }),
 

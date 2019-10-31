@@ -410,7 +410,7 @@ export const ListOpsTypes =
 
   isValid: ops.setTypes(ListOps.isValid, 
     BooleanType, 
-    { value: GivenValueList }
+    { value: AnyType }
   ),
 
   isEmpty: ops.setTypes(ListOps.isEmpty,
