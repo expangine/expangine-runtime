@@ -28,8 +28,8 @@ export declare const TextOps: {
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEmpty: import("../Operation").Operation<"value", never, never, never, never>;
     isNotEmpty: import("../Operation").Operation<"value", never, never, never, never>;
-    isEqual: import("../Operation").Operation<"a" | "b", "ignoreCase", never, never, never>;
-    isNotEqual: import("../Operation").Operation<"a" | "b", "ignoreCase", never, never, never>;
+    isEqual: import("../Operation").Operation<"b" | "a", "ignoreCase", never, never, never>;
+    isNotEqual: import("../Operation").Operation<"b" | "a", "ignoreCase", never, never, never>;
     isLess: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;
     isLessOrEqual: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;
     isGreater: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;

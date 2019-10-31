@@ -3,9 +3,9 @@ export declare const BooleanOperations: Operations;
 export declare const BooleanOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
-    and: import("../Operation").Operation<"a" | "b", never, never, never, never>;
-    or: import("../Operation").Operation<"a" | "b", never, never, never, never>;
-    xor: import("../Operation").Operation<"a" | "b", never, never, never, never>;
+    and: import("../Operation").Operation<"b" | "a", never, never, never, never>;
+    or: import("../Operation").Operation<"b" | "a", never, never, never, never>;
+    xor: import("../Operation").Operation<"b" | "a", never, never, never, never>;
     not: import("../Operation").Operation<"a", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;

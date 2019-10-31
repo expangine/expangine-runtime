@@ -18,5 +18,6 @@ export declare class Runtime<Context = any, Result = any> {
     getOperationScopeDefaults(id: string): Record<string, string>;
     getExpression(id: string): CommandBuilder<Context, Result>;
     getCommand(expr: Expression, provider?: CommandProvider<Context, Result>): Command<Context, Result>;
-    eval(value: any): Command<Context, Result>;
+    run(expr: any, context: Context, provider?: CommandProvider<Context, Result>): Result;
+    eval(value: any, provider?: CommandProvider<Context, Result>): Command<Context, Result>;
 }

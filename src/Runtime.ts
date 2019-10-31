@@ -81,10 +81,15 @@ export class Runtime<Context = any, Result = any>
     return this.exprs[expr.getId()](expr, provider);
   }
 
-  public eval (value: any): Command<Context, Result> 
+  public run(expr: any, context: Context, provider: CommandProvider<Context, Result> = this): Result
+  {
+    return this.eval(expr, provider)(context);
+  }
+
+  public eval (value: any, p  rovider: CommandProvider<Context, Result> = this): Command<Context, Result> 
   {
     return isArray(value)
-      ? this.getCommand(this.defs.getExpression(value))
+      ? this.getCommand(this.defs.getExpression(value), provider)
       : () => value;
   }
 
