@@ -86,7 +86,7 @@ export class Runtime<Context = any, Result = any>
     return this.eval(expr, provider)(context);
   }
 
-  public eval (value: any, p  rovider: CommandProvider<Context, Result> = this): Command<Context, Result> 
+  public eval (value: any, provider: CommandProvider<Context, Result> = this): Command<Context, Result> 
   {
     return isArray(value)
       ? this.getCommand(this.defs.getExpression(value), provider)
