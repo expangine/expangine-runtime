@@ -15,6 +15,12 @@ import { ColorType } from '../../types/Color';
 
 const ops = TextType.operations;
 const TextListType = ListType.forItem(TextType);
+const RegexMatchType = ObjectType.from({
+  index: NumberType,
+  lastIndex: NumberType,
+  input: TextType,
+  groups: TextListType,
+});
 
 
 export const TextOpsTypes = 
@@ -77,7 +83,11 @@ export const TextOpsTypes =
 
   regexMatch: ops.setTypes(TextOps.regexMatch, TextListType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
 
-  regexMatchAll: ops.setTypes(TextOps.regexMatchAll, ListType.forItem(TextListType), { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
+  regexMatchAll: ops.setTypes(TextOps.regexMatchAll, 
+    ListType.forItem(RegexMatchType), 
+    { value: TextType, regex: TextType }, 
+    { ignoreCase: BooleanType, multiline: BooleanType }
+  ),
 
   regexReplace: ops.setTypes(TextOps.regexReplace, 
     TextType, 
@@ -89,7 +99,7 @@ export const TextOpsTypes =
     TextType, 
     { value: TextType, regex: TextType, replace: TextType },
     { all: BooleanType, ignoreCase: BooleanType, multiline: BooleanType },
-    { match: TextListType }
+    { match: RegexMatchType }
   ),
 
   regexIndexOf: ops.setTypes(TextOps.regexIndexOf, NumberType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
