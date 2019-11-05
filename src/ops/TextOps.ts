@@ -60,6 +60,18 @@ export const TextOps =
 
   pad: ops.set('pad', {}, ['value', 'padding', 'min'], ['max', 'append']),
 
+  regexSplit: ops.set('regexSplit', {}, ['value', 'regex'], ['limit', 'ignoreCase', 'multiline']),
+
+  regexMatch: ops.set('regexMatch', {}, ['value', 'regex'], ['ignoreCase', 'multiline']),
+
+  regexMatchAll: ops.set('regexMatchAll', {}, ['value', 'regex'], ['ignoreCase', 'multiline']),
+
+  regexReplace: ops.set('regexReplace', {}, ['value', 'regex', 'replacement'], ['all', 'ignoreCase', 'multiline']),
+
+  regexReplaceDynamic: ops.set('regexReplaceDynamic', {}, ['value', 'regex', 'replace'], ['all', 'ignoreCase', 'multiline'], ['match'], ['replace']),
+
+  regexIndexOf: ops.set('regexIndexOf', {}, ['value', 'regex'], ['ignoreCase', 'multiline']),
+
   // Other
 
   // Generators

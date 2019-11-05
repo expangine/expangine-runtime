@@ -73,6 +73,27 @@ export const TextOpsTypes =
 
   pad: ops.setTypes(TextOps.pad, TextType, { value: TextType, padding: TextType, min: NumberType }, { max: NumberType, append: BooleanType }),
 
+  regexSplit: ops.setTypes(TextOps.regexSplit, TextListType, { value: TextType, regex: TextType }, { limit: NumberType, ignoreCase: BooleanType, multiline: BooleanType }),
+
+  regexMatch: ops.setTypes(TextOps.regexMatch, TextListType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
+
+  regexMatchAll: ops.setTypes(TextOps.regexMatchAll, ListType.forItem(TextListType), { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
+
+  regexReplace: ops.setTypes(TextOps.regexReplace, 
+    TextType, 
+    { value: TextType, regex: TextType, replacement: TextType },
+    { all: BooleanType, ignoreCase: BooleanType, multiline: BooleanType },
+  ),
+
+  regexReplaceDynamic: ops.setTypes(TextOps.regexReplaceDynamic, 
+    TextType, 
+    { value: TextType, regex: TextType, replace: TextType },
+    { all: BooleanType, ignoreCase: BooleanType, multiline: BooleanType },
+    { match: TextListType }
+  ),
+
+  regexIndexOf: ops.setTypes(TextOps.regexIndexOf, NumberType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
+
   // Other
 
   // Generators
