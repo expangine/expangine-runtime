@@ -60,6 +60,8 @@ export const TextOps =
 
   pad: ops.set('pad', {}, ['value', 'padding', 'min'], ['max', 'append']),
 
+  regexTest: ops.set('regexTest', {}, ['value', 'regex'], ['ignoreCase', 'multiline']),
+
   regexSplit: ops.set('regexSplit', {}, ['value', 'regex'], ['limit', 'ignoreCase', 'multiline']),
 
   regexMatch: ops.set('regexMatch', {}, ['value', 'regex'], ['ignoreCase', 'multiline']),

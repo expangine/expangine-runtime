@@ -24,6 +24,7 @@ export declare const TextOps: {
     compare: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;
     like: import("../Operation").Operation<"value" | "pattern", "ignoreCase", never, never, never>;
     pad: import("../Operation").Operation<"value" | "min" | "padding", "max" | "append", never, never, never>;
+    regexTest: import("../Operation").Operation<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;
     regexSplit: import("../Operation").Operation<"value" | "regex", "limit" | "ignoreCase" | "multiline", never, never, never>;
     regexMatch: import("../Operation").Operation<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;
     regexMatchAll: import("../Operation").Operation<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;

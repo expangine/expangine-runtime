@@ -79,6 +79,8 @@ export const TextOpsTypes =
 
   pad: ops.setTypes(TextOps.pad, TextType, { value: TextType, padding: TextType, min: NumberType }, { max: NumberType, append: BooleanType }),
 
+  regexTest: ops.setTypes(TextOps.regexTest, BooleanType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),
+
   regexSplit: ops.setTypes(TextOps.regexSplit, TextListType, { value: TextType, regex: TextType }, { limit: NumberType, ignoreCase: BooleanType, multiline: BooleanType }),
 
   regexMatch: ops.setTypes(TextOps.regexMatch, TextListType, { value: TextType, regex: TextType }, { ignoreCase: BooleanType, multiline: BooleanType }),

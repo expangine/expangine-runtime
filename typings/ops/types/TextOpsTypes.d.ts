@@ -22,6 +22,7 @@ export declare const TextOpsTypes: {
     compare: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     like: import("../..").OperationTypes<"value" | "pattern", "ignoreCase", never>;
     pad: import("../..").OperationTypes<"value" | "min" | "padding", "max" | "append", never>;
+    regexTest: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
     regexSplit: import("../..").OperationTypes<"value" | "regex", "limit" | "ignoreCase" | "multiline", never>;
     regexMatch: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
     regexMatchAll: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
