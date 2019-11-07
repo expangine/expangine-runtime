@@ -19,6 +19,7 @@ export declare const TextOps: {
     startsWith: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     endsWith: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     soundex: import("../Operation").Operation<"value", "min" | "max", never, never, never>;
+    metaphone: import("../Operation").Operation<"value", never, never, never, never>;
     distance: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     length: import("../Operation").Operation<"value", never, never, never, never>;
     compare: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;

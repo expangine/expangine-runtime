@@ -50,6 +50,8 @@ export const TextOps =
 
   soundex: ops.set('soundex', { complexity: 1 }, ['value'], ['max', 'min']),
 
+  metaphone: ops.set('metaphone', { complexity: 1 }, ['value']),
+
   distance: ops.set('dist', { complexity: 1 }, ['value', 'test']),
 
   length: ops.set('len', {}, ['value']),

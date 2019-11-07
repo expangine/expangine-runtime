@@ -69,6 +69,8 @@ export const TextOpsTypes =
 
   soundex: ops.setTypes(TextOps.soundex, TextType, { value: TextType }, { max: NumberType, min: NumberType }),
 
+  metaphone: ops.setTypes(TextOps.metaphone, TextType, { value: TextType }),
+
   distance: ops.setTypes(TextOps.distance, NumberType, { value: TextType, test: TextType }),
 
   length: ops.setTypes(TextOps.length, NumberType, { value: TextType }),

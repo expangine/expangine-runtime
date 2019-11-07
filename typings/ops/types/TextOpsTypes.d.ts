@@ -17,6 +17,7 @@ export declare const TextOpsTypes: {
     startsWith: import("../..").OperationTypes<"value" | "test", never, never>;
     endsWith: import("../..").OperationTypes<"value" | "test", never, never>;
     soundex: import("../..").OperationTypes<"value", "min" | "max", never>;
+    metaphone: import("../..").OperationTypes<"value", never, never>;
     distance: import("../..").OperationTypes<"value" | "test", never, never>;
     length: import("../..").OperationTypes<"value", never, never>;
     compare: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
