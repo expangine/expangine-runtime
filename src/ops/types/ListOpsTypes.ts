@@ -339,35 +339,35 @@ export const ListOpsTypes =
 
   joinInner: ops.setTypes(ListOps.joinInner, 
     i => ListType.forItem(i.join || AnyType),
-    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { a: i => i.a || ListType, b: i => i.b || ListType, on: BooleanType, join: AnyType },
     { },
     { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => ListItem(i.b, AnyType) }
   ),
 
   joinLeft: ops.setTypes(ListOps.joinLeft, 
     i => ListType.forItem(i.join || AnyType),
-    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { a: i => i.a || ListType, b: i => i.b || ListType, on: BooleanType, join: AnyType },
     { },
     { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
   ),
 
   joinRight: ops.setTypes(ListOps.joinRight, 
     i => ListType.forItem(i.join || AnyType),
-    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { a: i => i.a || ListType, b: i => i.b || ListType, on: BooleanType, join: AnyType },
     { },
     { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => ListItem(i.b, AnyType) }
   ),
 
   joinFull: ops.setTypes(ListOps.joinFull, 
     i => ListType.forItem(i.join || AnyType),
-    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { a: i => i.a || ListType, b: i => i.b || ListType, on: BooleanType, join: AnyType },
     { },
     { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
   ),
 
   joinCross: ops.setTypes(ListOps.joinCross, 
     i => ListType.forItem(i.join || AnyType),
-    { a: ListType, b: ListType, join: AnyType },
+    { a: i => i.a || ListType, b: i => i.b || ListType, join: AnyType },
     { },
     { joinA: i => ListItem(i.a, AnyType), joinB: i => ListItem(i.b, AnyType) }
   ),
