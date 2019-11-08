@@ -112,6 +112,18 @@ export const ListOps =
 
   toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
 
+  // Joins
+
+  joinInner: ops.set('joinInner', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+
+  joinLeft: ops.set('joinLeft', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+
+  joinRight: ops.set('joinRight', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+
+  joinFull: ops.set('joinFull', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+
+  joinCross: ops.set('joinCross', { complexity: 2 }, ['a', 'b', 'join'], [], ['joinA', 'joinB'], ['join'], ['join']),
+
   // Aggregates
 
   min: ops.set('min', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),

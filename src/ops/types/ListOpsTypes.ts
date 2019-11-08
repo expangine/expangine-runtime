@@ -1,5 +1,5 @@
 
-import { Type } from '../../Type';
+import { Type, TypeInput } from '../../Type';
 import { ListType } from '../../types/List';
 import { BooleanType } from '../../types/Boolean';
 import { NumberType } from '../../types/Number';
@@ -18,6 +18,7 @@ import { ColorType } from '../../types/Color';
 const ops = ListType.operations;
 
 const RequireList = (list?: Type) => list instanceof ListType ? list : undefined;
+const ListItem = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list.options.item : otherwise;
 const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
 const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
 const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
@@ -332,6 +333,43 @@ export const ListOpsTypes =
     { list: GivenList, getKey: i => i.getKey || AnyType },
     { getValue: i => i.getValue || GivenListItem(i) },
     GivenListIterationScope
+  ),
+
+  // Joins
+
+  joinInner: ops.setTypes(ListOps.joinInner, 
+    i => ListType.forItem(i.join || AnyType),
+    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { },
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => ListItem(i.b, AnyType) }
+  ),
+
+  joinLeft: ops.setTypes(ListOps.joinLeft, 
+    i => ListType.forItem(i.join || AnyType),
+    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { },
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
+  ),
+
+  joinRight: ops.setTypes(ListOps.joinRight, 
+    i => ListType.forItem(i.join || AnyType),
+    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { },
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => ListItem(i.b, AnyType) }
+  ),
+
+  joinFull: ops.setTypes(ListOps.joinFull, 
+    i => ListType.forItem(i.join || AnyType),
+    { a: ListType, b: ListType, on: BooleanType, join: AnyType },
+    { },
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
+  ),
+
+  joinCross: ops.setTypes(ListOps.joinCross, 
+    i => ListType.forItem(i.join || AnyType),
+    { a: ListType, b: ListType, join: AnyType },
+    { },
+    { joinA: i => ListItem(i.a, AnyType), joinB: i => ListItem(i.b, AnyType) }
   ),
 
   // Aggregates

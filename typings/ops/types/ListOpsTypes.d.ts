@@ -8,12 +8,12 @@ export declare const ListOpsTypes: {
     addFirst: import("../..").OperationTypes<"list" | "item", never, never>;
     addLast: import("../..").OperationTypes<"list" | "item", never, never>;
     insert: import("../..").OperationTypes<"list" | "index" | "item", never, never>;
-    remove: import("../..").OperationTypes<"list" | "item" | "isEqual", never, "list" | "value" | "test">;
+    remove: import("../..").OperationTypes<"list" | "isEqual" | "item", never, "list" | "value" | "test">;
     removeFirst: import("../..").OperationTypes<"list", never, never>;
     removeLast: import("../..").OperationTypes<"list", never, never>;
     removeAt: import("../..").OperationTypes<"list" | "index", never, never>;
     removeWhere: import("../..").OperationTypes<"list" | "where", never, "list" | "index" | "item">;
-    contains: import("../..").OperationTypes<"list" | "item" | "isEqual", never, "list" | "value" | "test">;
+    contains: import("../..").OperationTypes<"list" | "isEqual" | "item", never, "list" | "value" | "test">;
     find: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "index" | "item">;
     copy: import("../..").OperationTypes<"list", "deepCopy", "copy">;
     reverse: import("../..").OperationTypes<"list", never, never>;
@@ -28,8 +28,8 @@ export declare const ListOpsTypes: {
     drop: import("../..").OperationTypes<"list" | "count", never, never>;
     append: import("../..").OperationTypes<"list" | "append", never, never>;
     prepend: import("../..").OperationTypes<"list" | "prepend", never, never>;
-    indexOf: import("../..").OperationTypes<"list" | "item" | "isEqual", "start", "list" | "value" | "test">;
-    lastIndexOf: import("../..").OperationTypes<"list" | "item" | "isEqual", "start", "list" | "value" | "test">;
+    indexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
+    lastIndexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
     findIndex: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "index" | "item">;
     last: import("../..").OperationTypes<"list", never, never>;
     first: import("../..").OperationTypes<"list", never, never>;
@@ -47,6 +47,11 @@ export declare const ListOpsTypes: {
     group: import("../..").OperationTypes<"list" | "by", "getValue", "list" | "index" | "item">;
     toListMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
     toMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
+    joinInner: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinLeft: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinRight: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinFull: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinCross: import("../..").OperationTypes<"a" | "b" | "join", never, "joinA" | "joinB">;
     min: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     max: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     sum: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
