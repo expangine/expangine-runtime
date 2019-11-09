@@ -15,6 +15,8 @@ import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
+import { NotType } from './types/Not';
+import { ColorType } from './types/Color';
 export declare class TypeBuilder {
     any(): AnyType;
     bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
@@ -24,12 +26,17 @@ export declare class TypeBuilder {
     list(item: TypeInput, min?: number, max?: number): ListType;
     many(types: TypeInput[]): ManyType;
     many(...types: TypeInput[]): ManyType;
+    not(types: TypeInput[]): NotType;
+    not(...types: TypeInput[]): NotType;
     map(value: TypeInput, key?: TypeInput): MapType;
     null(): NullType;
     number(min?: number, max?: number, whole?: boolean): NumberType;
     int(min?: number, max?: number): NumberType;
     object(props?: TypeInputMap): ObjectType<import("./types/Object").ObjectOptions>;
     optional(type: TypeInput): OptionalType;
+    color(options?: {
+        hasAlpha?: boolean;
+    }): ColorType;
     text(options?: TextOptions): TextType;
     tuple(types: TypeInput[]): TupleType;
     tuple(...types: TypeInput[]): TupleType;

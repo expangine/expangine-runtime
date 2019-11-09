@@ -5,7 +5,7 @@ export declare const AnyOps: {
     copy: import("../Operation").Operation<"value", never, never, never, never>;
     isDefined: import("../Operation").Operation<"value", never, never, never, never>;
     getDefined: import("../Operation").Operation<"value" | "defined", never, "defined", "defined", "value">;
-    coalesce: import("../Operation").Operation<"a" | "b", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
+    coalesce: import("../Operation").Operation<"b" | "a", "c" | "d" | "e", never, never, "b" | "a" | "c" | "d" | "e">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;

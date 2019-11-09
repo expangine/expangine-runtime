@@ -9,7 +9,7 @@ export declare const ObjectOps: {
     delete: import("../Operation").Operation<"object" | "key", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"object", never, never, never, "object">;
-    merge: import("../Operation").Operation<"a" | "b", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
+    merge: import("../Operation").Operation<"b" | "a", "c" | "d" | "e", never, never, "b" | "a" | "c" | "d" | "e">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;

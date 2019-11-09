@@ -17,6 +17,8 @@ import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
+import { NotType } from './types/Not';
+import { ColorType } from './types/Color';
 
 
 export class TypeBuilder
@@ -75,6 +77,17 @@ export class TypeBuilder
     );
   }
 
+  public not(types: TypeInput[]): NotType
+  public not(...types: TypeInput[]): NotType
+  public not(...types: TypeInput[] | [TypeInput[]]): NotType
+  {
+    return new NotType(
+      isArray(types[0])
+        ? types[0].map(Type.fromInput)
+        : (types as TypeInput[]).map(Type.fromInput)
+    );
+  }
+
   public map(value: TypeInput, key: TypeInput = TextType)
   {
     return new MapType({ 
@@ -106,6 +119,11 @@ export class TypeBuilder
   public optional(type: TypeInput)
   {
     return new OptionalType(Type.fromInput(type));
+  }
+
+  public color(options: { hasAlpha?: boolean } = {})
+  {
+    return new ColorType(options);
   }
 
   public text(options: TextOptions = {})

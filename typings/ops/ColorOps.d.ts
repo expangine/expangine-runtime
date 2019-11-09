@@ -5,9 +5,9 @@ export declare const ColorOps: {
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;
-    build: import("../Operation").Operation<"b" | "r" | "g", "a", never, never, never>;
-    map: import("../Operation").Operation<"value" | "b" | "r" | "g", "a", "value" | "component", "a" | "b" | "r" | "g", never>;
-    op: import("../Operation").Operation<"value" | "b" | "test" | "r" | "g", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
+    build: import("../Operation").Operation<"r" | "g" | "b", "a", never, never, never>;
+    map: import("../Operation").Operation<"value" | "r" | "g" | "b", "a", "value" | "component", "r" | "g" | "b" | "a", never>;
+    op: import("../Operation").Operation<"value" | "test" | "r" | "g" | "b", "a", "value" | "test" | "component", "r" | "g" | "b" | "a", never>;
     clamp: import("../Operation").Operation<"value", never, never, never, never>;
     add: import("../Operation").Operation<"value" | "addend", "alpha", never, never, never>;
     adds: import("../Operation").Operation<"value" | "addend" | "addendScale", "alpha", never, never, never>;

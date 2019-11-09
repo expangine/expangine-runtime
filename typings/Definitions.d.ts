@@ -15,6 +15,7 @@ export interface DefinitionsOptions extends DefinitionsImportOptions {
 }
 export declare class Definitions {
     types: Record<string, TypeClass>;
+    typeList: TypeClass[];
     describers: TypeClass[];
     parsers: Record<string, TypeParser>;
     expressions: Record<string, ExpressionClass>;
@@ -38,6 +39,11 @@ export declare class Definitions {
     addAlias<T extends Type>(alias: string, instance: T | any): void;
     cloneType(type: Type): Type<any>;
     getType(value: any): Type;
+    getBaseTypes(): Type[];
+    getSimpleTypes(): Type[];
+    getComplexTypes(): Type[];
+    getSimpleTypeClasses(): TypeClass[];
+    getComplexTypeClasses(): TypeClass[];
     addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType;
     setFunction(name: string, typeValue: any): FunctionType;
     getFunction(name: string): FunctionType;

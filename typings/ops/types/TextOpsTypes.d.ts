@@ -34,8 +34,8 @@ export declare const TextOpsTypes: {
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"value", never, never>;
     isNotEmpty: import("../..").OperationTypes<"value", never, never>;
-    isEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
-    isNotEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
+    isEqual: import("../..").OperationTypes<"b" | "a", "ignoreCase", never>;
+    isNotEqual: import("../..").OperationTypes<"b" | "a", "ignoreCase", never>;
     isLess: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     isLessOrEqual: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     isGreater: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;

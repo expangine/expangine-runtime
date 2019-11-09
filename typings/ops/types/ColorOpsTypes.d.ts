@@ -10,9 +10,9 @@ export declare const ColorOpsTypes: {
     maybe: import("../..").OperationTypes<"value", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
-    build: import("../..").OperationTypes<"b" | "r" | "g", "a", never>;
-    map: import("../..").OperationTypes<"value" | "b" | "r" | "g", "a", "value" | "component">;
-    op: import("../..").OperationTypes<"value" | "b" | "test" | "r" | "g", "a", "value" | "test" | "component">;
+    build: import("../..").OperationTypes<"r" | "g" | "b", "a", never>;
+    map: import("../..").OperationTypes<"value" | "r" | "g" | "b", "a", "value" | "component">;
+    op: import("../..").OperationTypes<"value" | "test" | "r" | "g" | "b", "a", "value" | "test" | "component">;
     clamp: import("../..").OperationTypes<"value", never, never>;
     add: import("../..").OperationTypes<"value" | "addend", "alpha", never>;
     adds: import("../..").OperationTypes<"value" | "addend" | "addendScale", "alpha", never>;

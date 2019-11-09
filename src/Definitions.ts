@@ -29,6 +29,7 @@ export class Definitions
 {
 
   public types: Record<string, TypeClass>;
+  public typeList: TypeClass[];
   public describers: TypeClass[];
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
@@ -39,6 +40,7 @@ export class Definitions
   public constructor(initial?: DefinitionsOptions)
   { 
     this.types = Object.create(null);
+    this.typeList = [];
     this.expressions = Object.create(null);
     this.parsers = Object.create(null);
     this.functions = Object.create(null);
@@ -257,6 +259,7 @@ export class Definitions
   public addType<T extends Type>(type: TypeClass<T>, delaySort: boolean = false) 
   {
     this.types[type.id] = type;
+    this.typeList.push(type);
     this.parsers[type.id] = (data, types) => type.decode(data, types);
     this.describers.push(type);
 
@@ -298,6 +301,31 @@ export class Definitions
     const data = isArray(value) ? value : [];
 
     return this.parsers[id](data, this);
+  }
+
+  public getBaseTypes(): Type[]
+  {
+    return this.typeList.map((t) => t.baseType);
+  }
+
+  public getSimpleTypes(): Type[]
+  {
+    return this.getBaseTypes().filter((t) => t.isSimple());
+  }
+
+  public getComplexTypes(): Type[]
+  {
+    return this.getBaseTypes().filter((t) => !t.isSimple());
+  }
+
+  public getSimpleTypeClasses(): TypeClass[]
+  {
+    return this.typeList.filter((t) => t.baseType.isSimple());
+  }
+
+  public getComplexTypeClasses(): TypeClass[]
+  {
+    return this.typeList.filter((t) => !t.baseType.isSimple());
   }
 
   public addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType
