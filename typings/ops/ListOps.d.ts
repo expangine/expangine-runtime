@@ -49,11 +49,11 @@ export declare const ListOps: {
     group: import("../Operation").Operation<"list" | "by", "getValue", "list" | "index" | "item", "by" | "getValue", "list" | "by" | "getValue">;
     toListMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "index" | "item", "getValue" | "getKey", "list" | "getValue" | "getKey">;
     toMap: import("../Operation").Operation<"list" | "getKey", "getValue", "list" | "index" | "item", "getValue" | "getKey", "list" | "getValue" | "getKey">;
-    joinInner: import("../Operation").Operation<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinLeft: import("../Operation").Operation<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinRight: import("../Operation").Operation<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinFull: import("../Operation").Operation<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinCross: import("../Operation").Operation<"b" | "a" | "join", never, "joinA" | "joinB", "join", "join">;
+    joinInner: import("../Operation").Operation<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinLeft: import("../Operation").Operation<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinRight: import("../Operation").Operation<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinFull: import("../Operation").Operation<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinCross: import("../Operation").Operation<"a" | "b" | "join", never, "joinA" | "joinB", "join", "join">;
     min: import("../Operation").Operation<"list" | "value", never, "list" | "index" | "item", "value", never>;
     max: import("../Operation").Operation<"list" | "value", never, "list" | "index" | "item", "value", never>;
     sum: import("../Operation").Operation<"list" | "value", never, "list" | "index" | "item", "value", never>;

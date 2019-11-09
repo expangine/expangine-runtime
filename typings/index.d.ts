@@ -18,6 +18,7 @@ export * from './types/Function';
 export * from './types/List';
 export * from './types/Many';
 export * from './types/Map';
+export * from './types/Not';
 export * from './types/Null';
 export * from './types/Number';
 export * from './types/Object';

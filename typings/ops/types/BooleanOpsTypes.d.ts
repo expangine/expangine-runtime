@@ -1,9 +1,9 @@
 export declare const BooleanOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
     maybe: import("../..").OperationTypes<"value", never, never>;
-    and: import("../..").OperationTypes<"b" | "a", never, never>;
-    or: import("../..").OperationTypes<"b" | "a", never, never>;
-    xor: import("../..").OperationTypes<"b" | "a", never, never>;
+    and: import("../..").OperationTypes<"a" | "b", never, never>;
+    or: import("../..").OperationTypes<"a" | "b", never, never>;
+    xor: import("../..").OperationTypes<"a" | "b", never, never>;
     not: import("../..").OperationTypes<"a", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;

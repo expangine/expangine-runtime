@@ -47,11 +47,11 @@ export declare const ListOpsTypes: {
     group: import("../..").OperationTypes<"list" | "by", "getValue", "list" | "index" | "item">;
     toListMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
     toMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
-    joinInner: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinLeft: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinRight: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinFull: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinCross: import("../..").OperationTypes<"b" | "a" | "join", never, "joinA" | "joinB">;
+    joinInner: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinLeft: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinRight: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinFull: import("../..").OperationTypes<"a" | "b" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinCross: import("../..").OperationTypes<"a" | "b" | "join", never, "joinA" | "joinB">;
     min: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     max: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     sum: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
