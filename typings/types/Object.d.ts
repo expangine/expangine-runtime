@@ -32,6 +32,7 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     removeDescribedRestrictions(): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
+    isSimple(): boolean;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;
     getCompareExpression(ex: ExpressionBuilder): Expression;

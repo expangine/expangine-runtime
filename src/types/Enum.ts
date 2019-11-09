@@ -140,6 +140,11 @@ export class EnumType extends Type<EnumOptions>
     return this.options.value.isOptional();
   }
 
+  public isSimple(): boolean
+  {
+    return this.options.value.isSimple();
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

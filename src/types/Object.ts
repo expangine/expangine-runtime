@@ -283,6 +283,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return false;
   }
 
+  public isSimple(): boolean
+  {
+    return false;
+  }
+
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
     return ex.define({

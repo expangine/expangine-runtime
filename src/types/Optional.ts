@@ -100,6 +100,11 @@ export class OptionalType extends Type<Type>
     return true;
   }
 
+  public isSimple(): boolean
+  {
+    return this.options.isSimple();
+  }
+
   protected acceptsOtherTypes(): boolean
   {
     return true;

@@ -8,6 +8,7 @@ export const ID = {
   Function: 'func',
   List: 'list',
   Many: 'many',
+  Not: 'not',
   Map: 'map',
   Null: 'null',
   Number: 'num',

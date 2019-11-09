@@ -186,6 +186,11 @@ export class MapType extends Type<MapOptions>
     return false;
   }
 
+  public isSimple(): boolean
+  {
+    return false;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

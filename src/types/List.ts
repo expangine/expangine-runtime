@@ -252,6 +252,11 @@ export class ListType extends Type<ListOptions>
     return false;
   }
 
+  public isSimple(): boolean
+  {
+    return false;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => 

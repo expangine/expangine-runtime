@@ -7,6 +7,7 @@ export declare const ID: {
     Function: string;
     List: string;
     Many: string;
+    Not: string;
     Map: string;
     Null: string;
     Number: string;

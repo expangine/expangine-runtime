@@ -26,6 +26,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
+    isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;

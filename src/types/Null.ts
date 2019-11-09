@@ -100,6 +100,11 @@ export class NullType extends Type<NullOptions>
     return true;
   }
 
+  public isSimple(): boolean
+  {
+    return true;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this);

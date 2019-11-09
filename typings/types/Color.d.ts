@@ -35,6 +35,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     merge(type: ColorType, describer: TypeDescribeProvider): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
+    isSimple(): boolean;
     removeDescribedRestrictions(): void;
     getCreateExpression(ex: ExpressionBuilder): Expression;
     getValidateExpression(ex: ExpressionBuilder): Expression;

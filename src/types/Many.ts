@@ -166,6 +166,11 @@ export class ManyType extends Type<Type[]>
     return this.forMany(true, many => !many.isOptional() ? false : undefined);
   }
 
+  public isSimple(): boolean
+  {
+    return this.forMany(true, many => !many.isSimple() ? false : undefined);
+  }
+
   protected acceptsOtherTypes(): boolean
   {
     return true;

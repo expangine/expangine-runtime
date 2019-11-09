@@ -103,6 +103,11 @@ export class BooleanType extends Type<BooleanOptions>
     return false;
   }
 
+  public isSimple(): boolean
+  {
+    return true;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this);

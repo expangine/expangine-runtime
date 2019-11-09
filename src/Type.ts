@@ -189,6 +189,8 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract isOptional(): boolean;
 
+  public abstract isSimple(): boolean;
+
   public abstract traverse<R>(traverse: Traverser<Type, R>): R;
 
   public abstract setParent(parent?: Type): void;

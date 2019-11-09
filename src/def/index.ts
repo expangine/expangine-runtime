@@ -10,6 +10,7 @@ import { FunctionType } from '../types/Function';
 import { ListType } from '../types/List';
 import { ManyType } from '../types/Many';
 import { MapType } from '../types/Map';
+import { NotType } from '../types/Not';
 import { NullType } from '../types/Null';
 import { NumberType } from '../types/Number';
 import { ObjectType } from '../types/Object';
@@ -56,6 +57,7 @@ export const defs = new Definitions({
     MapType,
     EnumType,
     DateType,
+    NotType,
     NullType,
     TupleType,
     ColorType,

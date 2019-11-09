@@ -210,6 +210,11 @@ export class DateType extends Type<DateOptions>
     return false;
   }
 
+  public isSimple(): boolean
+  {
+    return true;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this);

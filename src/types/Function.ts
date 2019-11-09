@@ -113,6 +113,11 @@ export class FunctionType extends Type<FunctionOptions>
     return this.options.returnType.isOptional();
   }
 
+  public isSimple(): boolean
+  {
+    return false;
+  }
+
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {

@@ -139,6 +139,11 @@ export class NumberType extends Type<NumberOptions>
   {
     return false;
   }
+
+  public isSimple(): boolean
+  {
+    return true;
+  }
   
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
