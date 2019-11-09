@@ -61,8 +61,8 @@ export declare class Definitions {
     getOperationsForExpression(expr: Expression, context: Type): OperationPair[];
     getOperationsWithMapping(fromId: string, fromParamTypes: TypeMap): OperationMapping[];
     getOperationsForType(type: Type): OperationPair[];
-    getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes?: TypeMap): OperationPair[];
-    getOperationsWithReturnType(type: Type, paramTypes?: TypeMap): OperationPair[];
+    getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes?: TypeMap, acceptsDynamic?: boolean): OperationPair[];
+    getOperationsWithReturnType(type: Type, paramTypes?: TypeMap, acceptsDynamic?: boolean): OperationPair[];
     getOperationsForParamExpressions(params: ExpressionMap, context: Type): OperationPair[];
     getOperationsForParamTypes(paramTypes: TypeMap): OperationPair[];
     getOperations(onOperation?: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean): OperationPair[];

@@ -9,6 +9,7 @@ import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
+import { NullType } from './types/Null';
 
 
 
@@ -602,23 +603,34 @@ export class Definitions
     });
   }
 
-  public getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes: TypeMap = {}): OperationPair[]
+  public getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes: TypeMap = {}, acceptsDynamic: boolean = false): OperationPair[]
   {
     const type = expr.getType(this, context);
 
-    return type ? this.getOperationsWithReturnType(type.getSimplifiedType(), paramTypes) : [];
+    return type ? this.getOperationsWithReturnType(type.getSimplifiedType(), paramTypes, acceptsDynamic) : [];
   }
 
-  public getOperationsWithReturnType(type: Type, paramTypes: TypeMap = {}): OperationPair[]
+  public getOperationsWithReturnType(type: Type, paramTypes: TypeMap = {}, acceptsDynamic: boolean = false): OperationPair[]
   {
-    return this.getOperations(({ types }) =>
+    return this.getOperations(({ op, types }) =>
     {
       const returnType = this.getOperationInputType(types.returnType, paramTypes);
 
-      if (returnType && type.acceptsType(returnType))
+      if (returnType)
       {
-        return true;
-      }
+        if (type.acceptsType(returnType))
+        {
+          return true;
+        }
+
+        if (acceptsDynamic && 
+          op.resultDependency.length > 0 && 
+          isOperationTypeFunction(types.returnType) && 
+          (returnType instanceof AnyType || returnType instanceof NullType))
+        {
+          return true;
+        }
+      }      
 
       return false;
     });
