@@ -17,6 +17,11 @@ export declare type Differ = (a: Date, b: Date) => number;
 export declare const diff: UnitRecord<Differ>;
 export declare function mutate(a: Date, mutator: (a: Date, options?: LocaleOptions) => void, options?: LocaleOptions): Date;
 export declare function compareDates(a: Date, b: Date, precision?: Unit, options?: LocaleOptions): number;
+export declare type DateParserGroup = [number, number, number, number, number, number, number];
+export declare const DateParsers: Array<{
+    pattern: RegExp;
+    groups: DateParserGroup;
+}>;
 export declare function parse(value: any, parseAsUTC?: boolean): Date | null;
 export declare function getTimeIdentifier(x: Date): number;
 export declare function getDayIdentifier(x: Date): number;

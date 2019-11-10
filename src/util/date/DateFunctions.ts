@@ -178,6 +178,22 @@ export function compareDates(a: Date, b: Date, precision: Unit = 'millis', optio
   return x.getTime() - y.getTime();
 }
 
+export type DateParserGroup = [number, number, number, number, number, number, number];
+
+export const DateParsers: Array<{
+  pattern: RegExp;
+  groups: DateParserGroup;
+}> = [
+  { 
+    pattern: /^(\d{4})[-/](\d{1,22})[-/](\d{1,2})(|[T ](\d{1,2})((|:(\d{1,2})(|:(\d{1,2})(|\.(\d+)Z?)))))$/, 
+    groups: [1, 2, 3, 5, 8, 10, 12 ],
+  },
+  { 
+    pattern: /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(|[T ](\d{1,2})((|:(\d{1,2})(|:(\d{1,2})(|\.(\d+)Z?)))))$/, 
+    groups: [3, 1, 2, 5, 8, 10, 12 ],
+  }
+];
+
 export function parse(value: any, parseAsUTC: boolean = false): Date | null
 {
   if (isDate(value))
@@ -192,6 +208,28 @@ export function parse(value: any, parseAsUTC: boolean = false): Date | null
 
   if (isString(value))
   {
+    for (const parser of DateParsers)
+    {
+      const { pattern, groups } = parser;
+      const match = pattern.exec(value);
+
+      if (match) 
+      {
+        const times: DateParserGroup = [0, 0, 1, 0, 0, 0, 0];
+
+        for (let i = 0; i < times.length; i++) {
+          const x = parseInt(match[groups[i]]);
+          if (isFinite(x)) {
+            times[i] = i === 1 ? x - 1 : x;
+          }
+        }
+
+        return parseAsUTC
+          ? new Date(Date.UTC(...times))
+          : new Date(...times);
+      }
+    }
+
     if (parseAsUTC)
     {
       const withUTC = value + ' UTC';
