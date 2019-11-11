@@ -66,7 +66,7 @@ export declare class Definitions {
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;
     getOperationsForExpression(expr: Expression, context: Type): OperationPair[];
     getOperationsWithMapping(fromId: string, fromParamTypes: TypeMap): OperationMapping[];
-    getOperationsForType(type: Type): OperationPair[];
+    getOperationsForType(type: Type, acceptsDynamic?: boolean): OperationPair[];
     getOperationsWithReturnExpression(expr: Expression, context: Type, paramTypes?: TypeMap, acceptsDynamic?: boolean): OperationPair[];
     getOperationsWithReturnType(type: Type, paramTypes?: TypeMap, acceptsDynamic?: boolean): OperationPair[];
     getOperationsForParamExpressions(params: ExpressionMap, context: Type): OperationPair[];

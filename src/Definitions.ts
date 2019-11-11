@@ -610,7 +610,7 @@ export class Definitions
       .filter((mapping) => !!mapping);
   }
 
-  public getOperationsForType(type: Type): OperationPair[]
+  public getOperationsForType(type: Type, acceptsDynamic: boolean = false): OperationPair[]
   {
     return this.getOperations(({ op, types }) => 
     {
@@ -621,9 +621,20 @@ export class Definitions
       {
         const opType = this.getOperationInputType(opTypeInput, { [paramName]: type });
 
-        if (opType && type.acceptsType(opType)) 
+        if (opType)
         {
-          return true;
+          if (type.acceptsType(opType))
+          {
+            return true;
+          }
+
+          if (acceptsDynamic && 
+            op.resultDependency.length > 0 && 
+            isOperationTypeFunction(types.returnType) && 
+            (opType instanceof AnyType || opType instanceof NullType))
+          {
+            return true;
+          }
         }
       }
 
