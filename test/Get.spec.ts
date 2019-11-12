@@ -62,7 +62,7 @@ describe('Get', () => {
   {
     const get = ex.get(
       ex.if(ex.get(true))
-        .then(ex.const('num'))
+        .than(ex.const('num'))
         .else(ex.const('num2'))
     );
     const getType = get.getType(defs, context0);
@@ -74,7 +74,7 @@ describe('Get', () => {
   {
     const get = ex.get(
       ex.if(ex.get(true))
-        .then(ex.const('num'))
+        .than(ex.const('num'))
         .else(ex.const('obj'))
     );
     const getType = get.getType(defs, context0);
@@ -142,7 +142,7 @@ describe('Get', () => {
   {
     const get = ex.get('list', 
       ex.if(ex.const(true))
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.const(1))
     );
     const getType = get.getType(defs, context0);
@@ -154,7 +154,7 @@ describe('Get', () => {
   {
     const get = ex.get('list', 
       ex.if(ex.const(true))
-        .then(ex.const('length'))
+        .than(ex.const('length'))
         .else(ex.const('length'))
     );
     const getType = get.getType(defs, context0);
@@ -244,7 +244,7 @@ describe('Get', () => {
   {
     const get = ex.get('obj', 'txt', 
       ex.if(ex.const(true))
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.const(1))
     );
     const getType = get.getType(defs, context0);
@@ -282,7 +282,7 @@ describe('Get', () => {
   {
     const get = ex.get('tuple', 
       ex.if(ex.const(true))
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.const(2))
     );
     const getType = get.getType(defs, context0);
@@ -294,7 +294,7 @@ describe('Get', () => {
   {
     const get = ex.get('tuple', 
       ex.if(ex.const(true))
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.const(1))
     );
     const getType = get.getType(defs, context0);

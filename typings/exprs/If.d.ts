@@ -17,7 +17,7 @@ export declare class IfExpression extends Expression {
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
     if(condition: Expression, body?: Expression): IfExpression;
-    then(body: Expression): IfExpression;
+    than(body: Expression): IfExpression;
     elseif(condition: Expression, body?: Expression): IfExpression;
     else(body: Expression): IfExpression;
 }

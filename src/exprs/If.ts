@@ -119,7 +119,7 @@ export class IfExpression extends Expression
     return new IfExpression(cases, this.otherwise);
   }
 
-  public then(body: Expression)
+  public than(body: Expression)
   {
     const cases = this.cases.slice();
     cases[cases.length - 1][1] = body;

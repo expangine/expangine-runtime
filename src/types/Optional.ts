@@ -156,11 +156,11 @@ export class OptionalType extends Type<Type>
       }),
     }, ex
       .if(ex.and(ex.get('valueMissing'), ex.get('testMissing')))
-      .then(ex.compareEqual())
+      .than(ex.compareEqual())
       .if(ex.get('valueMissing'))
-      .then(ex.compareLess())
+      .than(ex.compareLess())
       .if(ex.get('testMissing'))
-      .then(ex.compareGreater())
+      .than(ex.compareGreater())
       .else(this.options.getCompareExpression(ex)),
     );
   }

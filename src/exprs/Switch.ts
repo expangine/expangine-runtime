@@ -163,7 +163,7 @@ export class SwitchExpression extends Expression
     return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
   }
 
-  public then(body: ExpressionValue): SwitchExpression
+  public than(body: ExpressionValue): SwitchExpression
   {
     const cases = this.copyCases();
     cases[cases.length - 1][1] = toExpr(body);

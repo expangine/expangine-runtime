@@ -22,6 +22,6 @@ export declare class SwitchExpression extends Expression {
     private copyCases;
     val(value: ExpressionValue, op?: Operation): SwitchExpression;
     case(test: ExpressionValue): SwitchExpression;
-    then(body: ExpressionValue): SwitchExpression;
+    than(body: ExpressionValue): SwitchExpression;
     default(body: ExpressionValue): SwitchExpression;
 }

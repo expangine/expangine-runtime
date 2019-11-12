@@ -37,7 +37,7 @@ describe('Definitions', () => {
   {
     const ops = defs.getOperationsForExpression(
       ex.if(ex.true())
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.get('x')),
       tp.object({
         x: tp.number()
@@ -62,7 +62,7 @@ describe('Definitions', () => {
   {
     const ops = defs.getOperationsWithReturnExpression(
       ex.if(ex.true())
-        .then(ex.const(0))
+        .than(ex.const(0))
         .else(ex.get('x')),
       tp.object({
         x: tp.number()

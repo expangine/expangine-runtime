@@ -22,9 +22,9 @@ describe('If', () => {
       .case(ex.get(0))
       .case(ex.get(1))
       .case(ex.get(2))
-      .then(ex.const('a'))
+      .than(ex.const('a'))
       .case(ex.get(3))
-      .then(ex.const('b'))
+      .than(ex.const('b'))
       .default(ex.const('c'))
     ;
     const switchsType = switchs.getType(defs, context);
@@ -47,9 +47,9 @@ describe('If', () => {
       .case(ex.get(0))
       .case(ex.get(1))
       .case(ex.get(2))
-      .then(ex.const('a'))
+      .than(ex.const('a'))
       .case(ex.get(3))
-      .then(ex.const('b'))
+      .than(ex.const('b'))
       .default(ex.const(0))
     ;
     const switchsType = switchs.getType(defs, context);
@@ -75,9 +75,9 @@ describe('If', () => {
       .case(ex.get(0))
       .case(ex.get(1))
       .case(ex.get(2))
-      .then(ex.op(NumberOps.rnd, {}))
+      .than(ex.op(NumberOps.rnd, {}))
       .case(ex.get(3))
-      .then(ex.op(NumberOps.pi, {}))
+      .than(ex.op(NumberOps.pi, {}))
       .default(ex.op(NumberOps.create, {}))
     ;
     const switchsType = switchs.getType(defs, context);

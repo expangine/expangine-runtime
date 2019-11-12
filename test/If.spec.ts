@@ -19,7 +19,7 @@ describe('If', () => {
   {
     const iif = ex
       .if(ex.const(true))
-      .then(ex.get('a'))
+      .than(ex.get('a'))
       .else(ex.get('b'))
     ;
     const iffType = iif.getType(defs, context);
@@ -33,7 +33,7 @@ describe('If', () => {
   {
     const iif = ex
       .if(ex.const(true))
-      .then(ex.const(0))
+      .than(ex.const(0))
       .else(ex.const(1))
     ;
     const iffType = iif.getType(defs, context).getSimplifiedType();
