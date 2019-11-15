@@ -1,0 +1,57 @@
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
+import { Operations } from '../Operation';
+import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Expression } from '../Expression';
+import { Definitions } from '../Definitions';
+import { Traverser } from '../Traverser';
+export interface RelationOptions {
+    related?: string;
+    relatedType: Type;
+    relatedKey?: string[];
+    localKey?: string[];
+    multiple?: boolean;
+    required?: boolean;
+    owns?: boolean;
+    morphKey?: string;
+    morph?: Record<any, string>;
+}
+export declare class RelationType extends Type<RelationOptions> {
+    static id: string;
+    static operations: Operations;
+    static baseType: RelationType;
+    static decode(data: any[], types: TypeProvider): RelationType;
+    static encode(type: RelationType): any;
+    static describePriority: number;
+    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static registered: boolean;
+    static register(): void;
+    static for(relatedType: TypeInput, related?: string): RelationType;
+    cachedType: Type | null;
+    getResolvedType(): Type;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
+    getId(): string;
+    merge(type: RelationType, describer: TypeDescribeProvider): void;
+    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
+    getSubTypes(def: Definitions): TypeSub[];
+    getExactType(value: any): Type;
+    getSimplifiedType(): Type;
+    protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
+    isOptional(): boolean;
+    isSimple(): boolean;
+    protected acceptsOtherTypes(): boolean;
+    traverse<R>(traverse: Traverser<Type, R>): R;
+    setParent(parent?: Type): void;
+    removeDescribedRestrictions(): void;
+    getCreateExpression(ex: ExpressionBuilder): Expression;
+    getValidateExpression(ex: ExpressionBuilder): Expression;
+    getCompareExpression(ex: ExpressionBuilder): Expression;
+    isValid(value: any): boolean;
+    normalize(value: any): any;
+    newInstance(): RelationType;
+    clone(): RelationType;
+    encode(): any;
+    create(): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    fromJson(json: any): any;
+    toJson(value: any): any;
+}

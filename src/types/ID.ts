@@ -14,6 +14,7 @@ export const ID = {
   Number: 'num',
   Object: 'obj',
   Optional: '?',
+  Relation: 'rel',
   Text: 'text',
   Tuple: 'tuple',
 };

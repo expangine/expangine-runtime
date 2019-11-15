@@ -13,6 +13,7 @@ export declare const ID: {
     Number: string;
     Object: string;
     Optional: string;
+    Relation: string;
     Text: string;
     Tuple: string;
 };

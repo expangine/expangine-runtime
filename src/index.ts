@@ -26,6 +26,7 @@ export * from './types/Null';
 export * from './types/Number';
 export * from './types/Object';
 export * from './types/Optional';
+export * from './types/Relation';
 export * from './types/Text';
 export * from './types/Tuple';
 

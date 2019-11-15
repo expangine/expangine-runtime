@@ -19,6 +19,7 @@ import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
+import { RelationOptions, RelationType } from './types/Relation';
 
 
 export class TypeBuilder
@@ -140,6 +141,15 @@ export class TypeBuilder
         ? types[0].map(Type.fromInput)
         : (types as TypeInput[]).map(Type.fromInput)
     );
+  }
+
+  public relation(relatedType: Type, related?: string, options: Partial<RelationOptions> = {}) 
+  {
+    return new RelationType({
+      ...options,
+      relatedType, 
+      related,
+    });
   }
 
 }
