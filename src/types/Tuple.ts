@@ -161,14 +161,9 @@ export class TupleType extends Type<Type[]>
 
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
-    return ex.define({
-      value: ex.op(TupleOps.create, {}),
-    }, ex.body(
-      ...this.options.map((t, i) => 
-        ex.set('value', i).to(t.getCreateExpression(ex))
-      ),
-      ex.get('value')
-    ));
+    return ex.tuple(
+      ...this.options.map((t) => t.getCreateExpression(ex))
+    );
   }
 
   public getValidateExpression(ex: ExpressionBuilder): Expression

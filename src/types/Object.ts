@@ -290,14 +290,9 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public getCreateExpression(ex: ExpressionBuilder): Expression
   {
-    return ex.define({
-      value: ex.op(ObjectOps.create, {})
-    }, ex.body(
-      ...objectValues(this.options.props, (t, prop) => 
-        ex.set('value', prop).to(t.getCreateExpression(ex)),
-      ),
-      ex.get('value'),
-    ));
+    return ex.object(
+      objectMap(this.options.props, (t) => t.getCreateExpression(ex))
+    );
   }
 
   public getValidateExpression(ex: ExpressionBuilder): Expression
