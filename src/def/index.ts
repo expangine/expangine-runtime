@@ -15,7 +15,6 @@ import { NullType } from '../types/Null';
 import { NumberType } from '../types/Number';
 import { ObjectType } from '../types/Object';
 import { OptionalType } from '../types/Optional';
-import { RelationType } from '../types/Relation';
 import { TextType } from '../types/Text';
 import { TupleType } from '../types/Tuple';
 
@@ -60,7 +59,6 @@ export const defs = new Definitions({
     NumberType, 
     ObjectType, 
     OptionalType,
-    RelationType,
     TextType,
     TupleType,
   ],

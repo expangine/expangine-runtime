@@ -1,4 +1,4 @@
-import { Type, TypeInput, TypeInputMap } from './Type';
+import { TypeInput, TypeInputMap } from './Type';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Expression } from './Expression';
 import { NumberType } from './types/Number';
@@ -17,7 +17,6 @@ import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
-import { RelationOptions, RelationType } from './types/Relation';
 export declare class TypeBuilder {
     any(): AnyType;
     bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
@@ -41,5 +40,4 @@ export declare class TypeBuilder {
     text(options?: TextOptions): TextType;
     tuple(types: TypeInput[]): TupleType;
     tuple(...types: TypeInput[]): TupleType;
-    relation(relatedType: Type, related?: string, options?: Partial<RelationOptions>): RelationType;
 }
