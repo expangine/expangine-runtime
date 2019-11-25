@@ -19,6 +19,7 @@ const INDEX_ITEM = 1;
 const INDEX_OPTIONS = 2;
 const RANDOM_MIN = 2;
 const RANDOM_MAX = 5;
+const REQUIRED_SUB_MIN = 10;
 
 export interface ListOptions 
 {
@@ -152,7 +153,9 @@ export class ListType extends Type<ListOptions>
 
       if (isNumber(expr.value))
       {
-        return this.options.item;
+        return isNumber(this.options.min) && expr.value < this.options.min
+          ? this.options.item
+          : def.optionalType(this.options.item);
       }
     }
 
@@ -162,20 +165,25 @@ export class ListType extends Type<ListOptions>
     {
       if (exprType instanceof NumberType)
       {
-        return this.options.item;
+        return def.optionalType(this.options.item);
       }
 
       if (exprType instanceof EnumType)
       {
+        const values = toArray(exprType.options.constants.values());
+
         if (exprType.options.value instanceof NumberType)
         {
-          return this.options.item;
+          if (isNumber(this.options.min) && !values.some((x) => x >= this.options.min))
+          {
+            return this.options.item;
+          }
+
+          return def.optionalType(this.options.item);
         }
 
         if (exprType.options.value instanceof TextType)
         {
-          const values = toArray(exprType.options.constants.values());
-
           if (values.length === 1 && values[0] === 'length')
           {
             return ListType.lengthType;
@@ -189,9 +197,18 @@ export class ListType extends Type<ListOptions>
 
   public getSubTypes(def: Definitions): TypeSub[]
   {
+    const { min, item } = this.options;
+    const requiredMin = isNumber(min) && min > 0 && min <= REQUIRED_SUB_MIN ? min : 0;
+    const required: TypeSub[] = [];
+
+    for (let i = 0; i < requiredMin; i++) {
+      required.push({ key: i, value: item });
+    }
+
     return [
+      ...required,
       { key: 'length', value: ListType.lengthType },
-      { key: ListType.indexType, value: def.optionalType(this.options.item) },
+      { key: ListType.indexType, value: def.optionalType(item) },
     ];
   }
 

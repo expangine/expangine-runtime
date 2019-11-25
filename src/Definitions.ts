@@ -742,6 +742,7 @@ export class Definitions
 
   public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null
   {
+    let optional = false;
     let node = context;
 
     for (let i = 0; i < stopBefore; i++)
@@ -752,9 +753,11 @@ export class Definitions
       {
         return null;
       }
+
+      optional = optional || node.isOptional();
     }
 
-    return node;
+    return optional && !node.isOptional() ? this.optionalType(node) : node;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 

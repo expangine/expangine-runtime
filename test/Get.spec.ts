@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { defs, ObjectType, NumberType, TextType, ExpressionBuilder, DateType, ManyType, TextOps, BooleanType, NumberOps, TypeBuilder } from '../src';
+import { defs, ObjectType, NumberType, TextType, ExpressionBuilder, DateType, ManyType, TextOps, BooleanType, NumberOps, TypeBuilder, OptionalType } from '../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -14,6 +14,7 @@ describe('Get', () => {
     num: tp.number(),
     num2: tp.number(),
     list: tp.list(tp.date()),
+    list2: tp.list(tp.text(), 2),
     obj: tp.object({
       txt: tp.text()
     }),
@@ -127,7 +128,16 @@ describe('Get', () => {
     const get = ex.get('list', 0);
     const getType = get.getType(defs, context0);
 
-    expect(getType).toBeInstanceOf(DateType);
+    expect(getType).toBeInstanceOf(OptionalType);
+    expect(getType.options).toBeInstanceOf(DateType);
+  });
+
+  it('list item at constant with min', () =>
+  {
+    const get = ex.get('list2', 0);
+    const getType = get.getType(defs, context0);
+
+    expect(getType).toBeInstanceOf(TextType);
   });
 
   it('list item at dynamic', () =>
@@ -135,7 +145,17 @@ describe('Get', () => {
     const get = ex.get('list', ex.get('num'));
     const getType = get.getType(defs, context0);
 
-    expect(getType).toBeInstanceOf(DateType);
+    expect(getType).toBeInstanceOf(OptionalType);
+    expect(getType.options).toBeInstanceOf(DateType);
+  });
+
+  it('list item at dynamic with min', () =>
+  {
+    const get = ex.get('list2', ex.get('num'));
+    const getType = get.getType(defs, context0);
+
+    expect(getType).toBeInstanceOf(OptionalType);
+    expect(getType.options).toBeInstanceOf(TextType);
   });
 
   it('list item at one of', () =>
@@ -147,7 +167,20 @@ describe('Get', () => {
     );
     const getType = get.getType(defs, context0);
 
-    expect(getType).toBeInstanceOf(DateType);
+    expect(getType).toBeInstanceOf(OptionalType);
+    expect(getType.options).toBeInstanceOf(DateType);
+  });
+
+  it('list item at one of with min', () =>
+  {
+    const get = ex.get('list2', 
+      ex.if(ex.const(true))
+        .than(ex.const(0))
+        .else(ex.const(1))
+    );
+    const getType = get.getType(defs, context0);
+
+    expect(getType).toBeInstanceOf(TextType);
   });
 
   it('list item at one of', () =>
@@ -175,7 +208,8 @@ describe('Get', () => {
     const get1 = ex.get(0);
     const getType1 = get1.getType(defs, context2);
 
-    expect(getType1).toBeInstanceOf(TextType);
+    expect(getType1).toBeInstanceOf(OptionalType);
+    expect(getType1.options).toBeInstanceOf(TextType);
 
     const get2 = ex.get('length');
     const getType2 = get2.getType(defs, context2);
