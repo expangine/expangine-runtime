@@ -34,7 +34,7 @@ export class Computeds
       params: params || {},
     };
 
-    this.map[id] = comp;
+    this.map[this.prefix + id] = comp;
     this.list.push(comp);
 
     return comp;
