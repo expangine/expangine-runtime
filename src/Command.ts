@@ -1,6 +1,7 @@
 
 import { Expression } from './Expression';
 import { FunctionType } from './types/Function';
+import { Computed } from './Computed';
 
 
 export interface Command<Context, Result> 
@@ -45,4 +46,5 @@ export interface CommandProvider<Context, Result>
   getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
   getOperationScopeDefaults(id: string): Record<string, string>;
   getFunction(name: string): FunctionType;
+  getComputed(id: string): Computed | null;
 }

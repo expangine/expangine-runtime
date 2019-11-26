@@ -5,6 +5,7 @@ import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
 import { Operation } from './Operation';
 import { FunctionType } from './types/Function';
+import { Computed } from './Computed';
 
 
 
@@ -62,6 +63,11 @@ export class Runtime<Context = any, Result = any>
   public getOperation (id: string): OperationToCommand<Context, Result, any, any, any> 
   {
     return this.ops[id];
+  }
+
+  public getComputed (id: string): Computed | null 
+  {
+    return this.defs.getComputed(id);
   }
   
   public getOperationScopeDefaults (id: string): Record<string, string>

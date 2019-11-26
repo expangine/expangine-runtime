@@ -3,6 +3,7 @@ import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { Operation } from './Operation';
 import { FunctionType } from './types/Function';
+import { Computed } from './Computed';
 export declare class Runtime<Context = any, Result = any> {
     static DEFAULT_RETURN_PROPERTY: string;
     defs: Definitions;
@@ -15,6 +16,7 @@ export declare class Runtime<Context = any, Result = any> {
     setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<Context, Result, T>): this;
     getFunction(name: string): FunctionType;
     getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
+    getComputed(id: string): Computed | null;
     getOperationScopeDefaults(id: string): Record<string, string>;
     getExpression(id: string): CommandBuilder<Context, Result>;
     getCommand(expr: Expression, provider?: CommandProvider<Context, Result>): Command<Context, Result>;
