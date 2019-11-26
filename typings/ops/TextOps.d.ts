@@ -34,6 +34,15 @@ export declare const TextOps: {
     regexReplace: import("../Operation").Operation<"value" | "regex" | "replacement", "ignoreCase" | "multiline" | "all", never, never, never>;
     regexReplaceDynamic: import("../Operation").Operation<"replace" | "value" | "regex", "ignoreCase" | "multiline" | "all", "match", "replace", never>;
     regexIndexOf: import("../Operation").Operation<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;
+    base64: import("../Operation").Operation<"value", never, never, never, never>;
+    unbase64: import("../Operation").Operation<"value", never, never, never, never>;
+    encodeURI: import("../Operation").Operation<"value", never, never, never, never>;
+    decodeURI: import("../Operation").Operation<"value", never, never, never, never>;
+    encodeURIComponent: import("../Operation").Operation<"value", never, never, never, never>;
+    decodeURIComponent: import("../Operation").Operation<"value", never, never, never, never>;
+    md5: import("../Operation").Operation<"value", never, never, never, never>;
+    encrypt: import("../Operation").Operation<"value" | "secret", never, never, never, never>;
+    decrypt: import("../Operation").Operation<"value" | "secret", never, never, never, never>;
     toNumber: import("../Operation").Operation<"value", "invalidValue", never, never, never>;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEmpty: import("../Operation").Operation<"value", never, never, never, never>;

@@ -30,6 +30,15 @@ export declare const TextOpsTypes: {
     regexReplace: import("../..").OperationTypes<"value" | "regex" | "replacement", "ignoreCase" | "multiline" | "all", never>;
     regexReplaceDynamic: import("../..").OperationTypes<"replace" | "value" | "regex", "ignoreCase" | "multiline" | "all", "match">;
     regexIndexOf: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
+    base64: import("../..").OperationTypes<"value", never, never>;
+    unbase64: import("../..").OperationTypes<"value", never, never>;
+    encodeURI: import("../..").OperationTypes<"value", never, never>;
+    decodeURI: import("../..").OperationTypes<"value", never, never>;
+    encodeURIComponent: import("../..").OperationTypes<"value", never, never>;
+    decodeURIComponent: import("../..").OperationTypes<"value", never, never>;
+    md5: import("../..").OperationTypes<"value", never, never>;
+    encrypt: import("../..").OperationTypes<"value" | "secret", never, never>;
+    decrypt: import("../..").OperationTypes<"value" | "secret", never, never>;
     toNumber: import("../..").OperationTypes<"value", "invalidValue", never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"value", never, never>;

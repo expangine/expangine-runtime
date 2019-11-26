@@ -85,6 +85,24 @@ export const TextOps =
 
   // Formatters
 
+  base64: ops.set('base64', {}, ['value']),
+
+  unbase64: ops.set('unbase64', {}, ['value']),
+
+  encodeURI: ops.set('encodeURI', {}, ['value']),
+
+  decodeURI: ops.set('decodeURI', {}, ['value']),
+
+  encodeURIComponent: ops.set('encodeURIComponent', {}, ['value']),
+
+  decodeURIComponent: ops.set('decodeURIComponent', {}, ['value']),
+
+  md5: ops.set('md5', {}, ['value']),
+
+  encrypt: ops.set('encrypt', {}, ['value', 'secret']),
+
+  decrypt: ops.set('decrypt', {}, ['value', 'secret']),
+
   toNumber: ops.set('toNumber', {}, ['value'], ['invalidValue']),
   
   // Comparisons

@@ -114,6 +114,24 @@ export const TextOpsTypes =
 
   // Formatters
 
+  base64: ops.setTypes(TextOps.base64, TextType, { value: TextType }),
+
+  unbase64: ops.setTypes(TextOps.unbase64, TextType, { value: TextType }),
+
+  encodeURI: ops.setTypes(TextOps.encodeURI, TextType, { value: TextType }),
+
+  decodeURI: ops.setTypes(TextOps.decodeURI, TextType, { value: TextType }),
+
+  encodeURIComponent: ops.setTypes(TextOps.encodeURIComponent, TextType, { value: TextType }),
+
+  decodeURIComponent: ops.setTypes(TextOps.decodeURIComponent, TextType, { value: TextType }),
+
+  md5: ops.setTypes(TextOps.md5, TextType, { value: TextType }),
+
+  encrypt: ops.setTypes(TextOps.encrypt, TextType, { value: TextType, secret: TextType }),
+
+  decrypt: ops.setTypes(TextOps.decrypt, TextType, { value: TextType, secret: TextType }),
+
   toNumber: ops.setTypes(TextOps.toNumber, NumberType, { value: TextType }, { invalidValue: NumberType }),
   
   // Comparisons
