@@ -10,6 +10,6 @@ export declare class Computeds {
     map: Record<string, Computed>;
     list: Computed[];
     constructor(prefix: string);
-    set<P extends string = never, O extends string = never, V extends P = never>(id: string, op: Operation<P, O, any, any, any>, value?: V, params?: Partial<Record<P | O, any>>): Computed;
+    set<P extends string = never, O extends string = never, V extends P = never>(localId: string, op: Operation<P, O, any, any, any>, value?: V, params?: Partial<Record<P | O, any>>): Computed;
     get(id: string): Computed;
 }

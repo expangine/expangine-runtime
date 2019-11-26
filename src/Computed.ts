@@ -25,8 +25,9 @@ export class Computeds
     this.list = [];
   }
 
-  public set<P extends string = never, O extends string = never, V extends P = never>(id: string, op: Operation<P, O, any, any, any>, value?: V, params?: Partial<Record<P | O, any>>): Computed 
+  public set<P extends string = never, O extends string = never, V extends P = never>(localId: string, op: Operation<P, O, any, any, any>, value?: V, params?: Partial<Record<P | O, any>>): Computed 
   {
+    const id = this.prefix + localId;
     const comp: Computed = {
       id,
       op: op.id,
@@ -34,7 +35,7 @@ export class Computeds
       params: params || {},
     };
 
-    this.map[this.prefix + id] = comp;
+    this.map[id] = comp;
     this.list.push(comp);
 
     return comp;
