@@ -12,6 +12,7 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static propType: TextType;
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: ObjectType<ObjectOptions>;
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;

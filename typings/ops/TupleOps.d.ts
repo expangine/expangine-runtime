@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const TupleOperations: Operations;
+export declare const TupleComputeds: Computeds;
 export declare const TupleOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;

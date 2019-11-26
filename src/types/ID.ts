@@ -17,5 +17,5 @@ export const ID = {
   Relation: 'rel',
   Text: 'text',
   Tuple: 'tuple',
+  Delimiter: ':',
 };
-

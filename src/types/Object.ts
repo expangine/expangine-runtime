@@ -3,7 +3,7 @@ import { objectMap, isObject, objectValues, isString, toArray, objectEach, addCo
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { ObjectOps, ObjectOperations } from '../ops/ObjectOps';
+import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
@@ -30,6 +30,8 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   public static id = ID.Object;
 
   public static operations = ObjectOperations;
+
+  public static computeds = ObjectComputeds;
 
   public static baseType = ObjectType.from();
 

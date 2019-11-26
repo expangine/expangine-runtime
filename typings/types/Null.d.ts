@@ -4,12 +4,14 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 export interface NullOptions {
     includeUndefined?: boolean;
 }
 export declare class NullType extends Type<NullOptions> {
     static id: string;
     static operations: Operations;
+    static computeds: Computeds;
     static baseType: NullType;
     static decode(data: any[]): NullType;
     static encode(type: NullType): any;

@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const NumberOperations: Operations;
+export declare const NumberComputeds: Computeds;
 export declare const NumberOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     pi: import("../Operation").Operation<never, never, never, never, never>;

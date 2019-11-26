@@ -5,7 +5,7 @@ import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { ListOps, ListOperations } from '../ops/ListOps';
+import { ListOps, ListOperations, ListComputeds } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
@@ -38,6 +38,8 @@ export class ListType extends Type<ListOptions>
   public static id = ID.List;
 
   public static operations = ListOperations;
+
+  public static computeds = ListComputeds;
 
   public static baseType = new ListType({ item: AnyType.baseType });
 

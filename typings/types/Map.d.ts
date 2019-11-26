@@ -10,6 +10,7 @@ export interface MapOptions {
 export declare class MapType extends Type<MapOptions> {
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: MapType;
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;

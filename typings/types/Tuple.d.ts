@@ -9,6 +9,7 @@ export declare class TupleType extends Type<Type[]> {
     static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: TupleType;
     static decode(data: any[], types: TypeProvider): TupleType;
     static encode(type: TupleType): any;

@@ -6,6 +6,7 @@ import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable } from './Traverser';
 import { EnumType } from './types/Enum';
+import { Computeds } from './Computed';
 
 
 export type TypeInput = TypeClass | Type;
@@ -62,6 +63,7 @@ export interface TypeClass<T extends Type<O> = any, O = any>
 {
   id: string;
   operations: Operations;
+  computeds: Computeds;
   baseType: T;
   decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
   encode(this: TypeClass<T>, type: T): any;

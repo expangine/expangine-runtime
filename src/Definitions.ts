@@ -10,6 +10,8 @@ import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
 import { NullType } from './types/Null';
+import { ID } from './types/ID';
+import { Computeds, Computed } from './Computed';
 
 
 
@@ -34,6 +36,7 @@ export class Definitions
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
   public operations: Operations;
+  public computeds: Computeds;
   public aliased: TypeMap;
   public functions: Record<string, FunctionType>;
 
@@ -46,6 +49,7 @@ export class Definitions
     this.functions = Object.create(null);
     this.describers = [];
     this.operations = new Operations('');
+    this.computeds = new Computeds('');
 
     if (initial) 
     {
@@ -351,6 +355,46 @@ export class Definitions
     return this.functions[name];
   }
 
+  public getComputed(id: string): Computed | null
+  {
+    const comp = this.computeds.get(id);
+
+    if (comp)
+    {
+      return comp;
+    }
+
+    const [typeName] = id.split(ID.Delimiter);
+    const type = this.types[typeName];
+
+    return type ? type.computeds.get(id) : null;
+  }
+
+  public getComputedReturnType(id: string, valueType: Type | null = null): Type | null
+  {
+    const comp = this.getComputed(id);
+
+    if (!comp)
+    {
+      return null;
+    }
+
+    const op = this.getOperation(comp.op);
+    const types = this.getOperationTypes(comp.op);
+
+    if (!op || !types)
+    {
+      return null;
+    }
+
+    return this.getOperationInputType(types.returnType, { [comp.value]: valueType });
+  }
+
+  public getComputedsFor(valueType: Type): Computed[]
+  {
+    return this.types[valueType.getId()].computeds.list;
+  }
+
   public getOperation(id: string): OperationGeneric | null
   {
     const op = this.operations.get(id);
@@ -360,7 +404,7 @@ export class Definitions
       return op;
     }
 
-    const [typeName] = id.split(':');
+    const [typeName] = id.split(ID.Delimiter);
     const type = this.types[typeName];
 
     return type ? type.operations.get(id) : null;
@@ -375,7 +419,7 @@ export class Definitions
       return op;
     }
 
-    const [typeName] = id.split(':');
+    const [typeName] = id.split(ID.Delimiter);
     const type = this.types[typeName];
 
     return type ? type.operations.getTypes(id) : null;

@@ -3,7 +3,7 @@ import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { TextOps, TextOperations } from '../ops/TextOps';
+import { TextOps, TextOperations, TextComputeds } from '../ops/TextOps';
 import { ConstantExpression } from '../exprs/Constant';
 import { NumberType } from './Number';
 import { Definitions } from '../Definitions';
@@ -40,6 +40,8 @@ export class TextType extends Type<TextOptions>
   public static id = ID.Text;
 
   public static operations = TextOperations;
+
+  public static computeds = TextComputeds;
   
   public static baseType = new TextType({});
 

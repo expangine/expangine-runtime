@@ -16,4 +16,5 @@ export declare const ID: {
     Relation: string;
     Text: string;
     Tuple: string;
+    Delimiter: string;
 };

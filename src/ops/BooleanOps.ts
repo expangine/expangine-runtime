@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
 import { ID } from '../types/ID';
+import { Computeds } from '../Computed';
 
 
-export const BooleanOperations = new Operations(ID.Boolean + ':');
+export const BooleanOperations = new Operations(ID.Boolean + ID.Delimiter);
+
+export const BooleanComputeds = new Computeds(ID.Boolean + ID.Delimiter);
 
 const ops = BooleanOperations;
 

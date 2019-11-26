@@ -3,7 +3,7 @@ import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { BooleanOps, BooleanOperations } from '../ops/BooleanOps';
+import { BooleanOps, BooleanOperations, BooleanComputeds } from '../ops/BooleanOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -24,6 +24,8 @@ export class BooleanType extends Type<BooleanOptions>
   public static id = ID.Boolean;
 
   public static operations = BooleanOperations;
+
+  public static computeds = BooleanComputeds;
 
   public static baseType = new BooleanType({});
 

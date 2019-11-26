@@ -3,7 +3,7 @@ import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { NumberOps, NumberOperations } from '../ops/NumberOps';
+import { NumberOps, NumberOperations, NumberComputeds } from '../ops/NumberOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -28,6 +28,8 @@ export class NumberType extends Type<NumberOptions>
   public static id = ID.Number;
 
   public static operations = NumberOperations;
+
+  public static computeds = NumberComputeds;
 
   public static baseType = new NumberType({});
 

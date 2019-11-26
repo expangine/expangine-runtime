@@ -4,7 +4,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { DateOps, DateOperations } from '../ops/DateOps';
+import { DateOps, DateOperations, DateComputeds } from '../ops/DateOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -31,6 +31,8 @@ export class DateType extends Type<DateOptions>
   public static id = ID.Date;
 
   public static operations = DateOperations;
+
+  public static computeds = DateComputeds;
 
   public static baseType = new DateType({});
 

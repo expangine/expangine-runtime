@@ -8,6 +8,7 @@ export declare type AnyTypeJsonWriter = (value: any, writer: (innerValue: any) =
 export declare class AnyType extends Type {
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: AnyType;
     static decode(data: any[], types: TypeProvider): AnyType;
     static encode(type: AnyType): any;

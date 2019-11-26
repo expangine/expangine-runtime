@@ -9,6 +9,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 
 
 const INDEX_RETURN = 1;
@@ -27,7 +28,9 @@ export class FunctionType extends Type<FunctionOptions>
 
   public static id = ID.Function;
 
-  public static operations = new Operations(ID.Function + ':');
+  public static operations = new Operations(ID.Function + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Function + ID.Delimiter);
 
   public static baseType = new FunctionType({ returnType: AnyType.baseType, params: ObjectType.baseType, expression: null });
 

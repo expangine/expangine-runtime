@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 import { ID } from '../types/ID';
 
 
-export const ListOperations = new Operations(ID.List + ':');
+export const ListOperations = new Operations(ID.List + ID.Delimiter);
+
+export const ListComputeds = new Computeds(ID.List + ID.Delimiter);
 
 const ops = ListOperations;
 
@@ -189,3 +192,12 @@ export const ListOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
   
 };
+
+ListComputeds.set('copy', ListOps.copy);
+ListComputeds.set('reversed', ListOps.reverse);
+ListComputeds.set('shuffled', ListOps.shuffle);
+ListComputeds.set('first', ListOps.first);
+ListComputeds.set('last', ListOps.last);
+ListComputeds.set('random', ListOps.random);
+ListComputeds.set('isEmpty', ListOps.isEmpty);
+ListComputeds.set('isNotEmpty', ListOps.isNotEmpty);

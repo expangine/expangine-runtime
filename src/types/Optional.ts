@@ -8,6 +8,7 @@ import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 
 
 const INDEX_TYPE = 1;
@@ -18,7 +19,9 @@ export class OptionalType extends Type<Type>
 
   public static id = ID.Optional;
 
-  public static operations = new Operations(ID.Optional + ':');
+  public static operations = new Operations(ID.Optional + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Optional + ID.Delimiter);
 
   public static baseType = new OptionalType(AnyType.baseType);
 

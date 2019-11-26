@@ -8,6 +8,7 @@ import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { NoExpression } from '../exprs/No';
+import { Computeds } from '../Computed';
 
 
 const INDEX_NOT = 1;
@@ -17,7 +18,9 @@ export class NotType extends Type<Type[]>
 
   public static id = ID.Not;
 
-  public static operations = new Operations(ID.Not + ':');
+  public static operations = new Operations(ID.Not + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Not + ID.Delimiter);
 
   public static baseType = new NotType([AnyType.baseType]);
 

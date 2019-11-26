@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
 import { ID } from '../types/ID';
+import { Computeds } from '../Computed';
 
 
-export const NumberOperations = new Operations(ID.Number + ':');
+export const NumberOperations = new Operations(ID.Number + ID.Delimiter);
+
+export const NumberComputeds = new Computeds(ID.Number + ID.Delimiter);
 
 const ops = NumberOperations;
 
@@ -187,3 +190,18 @@ export const NumberOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };
+
+NumberComputeds.set('floor', NumberOps.floor);
+NumberComputeds.set('ceil', NumberOps.ceil);
+NumberComputeds.set('up', NumberOps.up);
+NumberComputeds.set('down', NumberOps.down);
+NumberComputeds.set('round', NumberOps.round);
+NumberComputeds.set('abs', NumberOps.abs);
+NumberComputeds.set('negate', NumberOps.neg);
+NumberComputeds.set('sign', NumberOps.sign);
+NumberComputeds.set('isZero', NumberOps.isZero);
+NumberComputeds.set('isWhole', NumberOps.isWhole);
+NumberComputeds.set('isDecimal', NumberOps.isDecimal);
+NumberComputeds.set('isPositive', NumberOps.isPositive);
+NumberComputeds.set('isNegative', NumberOps.isNegative);
+NumberComputeds.set('toText', NumberOps.toText);

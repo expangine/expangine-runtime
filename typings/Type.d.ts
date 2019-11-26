@@ -3,6 +3,7 @@ import { Expression } from './Expression';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable } from './Traverser';
+import { Computeds } from './Computed';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
@@ -34,6 +35,7 @@ export interface TypeParser {
 export interface TypeClass<T extends Type<O> = any, O = any> {
     id: string;
     operations: Operations;
+    computeds: Computeds;
     baseType: T;
     decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
     encode(this: TypeClass<T>, type: T): any;

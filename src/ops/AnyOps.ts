@@ -1,9 +1,12 @@
 
 import { ID } from '../types/ID';
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 
 
-export const AnyOperations = new Operations(ID.Any + ':');
+export const AnyOperations = new Operations(ID.Any + ID.Delimiter);
+
+export const AnyComputeds = new Computeds(ID.Any + ID.Delimiter);
 
 const ops = AnyOperations;
 const ANY_COMPLEXITY = {

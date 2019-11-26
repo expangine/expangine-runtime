@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
 import { ID } from '../types/ID';
+import { Computeds } from '../Computed';
 
 
-export const MapOperations = new Operations(ID.Map + ':');
+export const MapOperations = new Operations(ID.Map + ID.Delimiter);
+
+export const MapComputeds = new Computeds(ID.Map + ID.Delimiter);
 
 const ops = MapOperations;
 
@@ -85,3 +88,9 @@ export const MapOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };
+
+MapComputeds.set('keys', MapOps.keys);
+MapComputeds.set('values', MapOps.values);
+MapComputeds.set('entries', MapOps.entries);
+MapComputeds.set('pairs', MapOps.pairs);
+MapComputeds.set('count', MapOps.count);

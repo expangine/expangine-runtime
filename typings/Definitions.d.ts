@@ -5,6 +5,7 @@ import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
+import { Computeds, Computed } from './Computed';
 export interface DefinitionsImportOptions {
     aliases?: Record<string, Type | any>;
     functions?: Record<string, FunctionType | any>;
@@ -20,6 +21,7 @@ export declare class Definitions {
     parsers: Record<string, TypeParser>;
     expressions: Record<string, ExpressionClass>;
     operations: Operations;
+    computeds: Computeds;
     aliased: TypeMap;
     functions: Record<string, FunctionType>;
     constructor(initial?: DefinitionsOptions);
@@ -47,6 +49,9 @@ export declare class Definitions {
     addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType;
     setFunction(name: string, typeValue: any): FunctionType;
     getFunction(name: string): FunctionType;
+    getComputed(id: string): Computed | null;
+    getComputedReturnType(id: string, valueType?: Type | null): Type | null;
+    getComputedsFor(valueType: Type): Computed[];
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;

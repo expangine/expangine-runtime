@@ -4,7 +4,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { isObject, isString } from '../fns';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { AnyOps, AnyOperations } from '../ops/AnyOps';
+import { AnyOps, AnyOperations, AnyComputeds } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 
@@ -20,6 +20,8 @@ export class AnyType extends Type
   public static id = ID.Any;
 
   public static operations = AnyOperations;
+
+  public static computeds = AnyComputeds;
 
   public static baseType = new AnyType({});
 

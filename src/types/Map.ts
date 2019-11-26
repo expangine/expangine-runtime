@@ -5,7 +5,7 @@ import { AnyType } from './Any';
 import { TextType } from './Text';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { MapOps, MapOperations } from '../ops/MapOps';
+import { MapOps, MapOperations, MapComputeds } from '../ops/MapOps';
 import { ListOps } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
@@ -30,6 +30,8 @@ export class MapType extends Type<MapOptions>
   public static id = ID.Map;
 
   public static operations = MapOperations;
+
+  public static computeds = MapComputeds;
 
   public static baseType = new MapType({ key: TextType.baseType, value: AnyType.baseType });
 

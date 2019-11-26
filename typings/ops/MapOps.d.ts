@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const MapOperations: Operations;
+export declare const MapComputeds: Computeds;
 export declare const MapOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;

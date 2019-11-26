@@ -4,6 +4,7 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 export interface EnumOptions {
     key: Type;
     value: Type;
@@ -12,6 +13,7 @@ export interface EnumOptions {
 export declare class EnumType extends Type<EnumOptions> {
     static id: string;
     static operations: Operations;
+    static computeds: Computeds;
     static baseType: EnumType;
     static decode(data: any[], types: TypeProvider): EnumType;
     static encode(type: EnumType): any;

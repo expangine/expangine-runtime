@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const TextOperations: Operations;
+export declare const TextComputeds: Computeds;
 export declare const TextOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;

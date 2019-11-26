@@ -14,6 +14,7 @@ export declare class ListType extends Type<ListOptions> {
     static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: ListType;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;

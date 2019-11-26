@@ -8,6 +8,7 @@ import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 
 
 const INDEX_KEY = 1;
@@ -26,7 +27,9 @@ export class EnumType extends Type<EnumOptions>
 
   public static id = ID.Enum;
 
-  public static operations = new Operations(ID.Enum + ':');
+  public static operations = new Operations(ID.Enum + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Enum + ID.Delimiter);
   
   public static baseType = new EnumType({ key: TextType.baseType, value: TextType.baseType, constants: new Map() });
 

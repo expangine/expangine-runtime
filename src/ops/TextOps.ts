@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
 import { ID } from '../types/ID';
+import { Computeds } from '../Computed';
 
 
-export const TextOperations = new Operations(ID.Text + ':');
+export const TextOperations = new Operations(ID.Text + ID.Delimiter);
+
+export const TextComputeds = new Computeds(ID.Text + ID.Delimiter);
 
 const ops = TextOperations;
 
@@ -131,3 +134,15 @@ export const TextOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };
+
+TextComputeds.set('toUpper', TextOps.upper);
+TextComputeds.set('toLower', TextOps.lower);
+TextComputeds.set('chars', TextOps.chars);
+TextComputeds.set('trim', TextOps.trim);
+TextComputeds.set('soundex', TextOps.soundex);
+TextComputeds.set('metaphone', TextOps.metaphone);
+TextComputeds.set('toNumber', TextOps.toNumber);
+TextComputeds.set('isEmpty', TextOps.isEmpty);
+TextComputeds.set('isNotEmpty', TextOps.isNotEmpty);
+TextComputeds.set('isLower', TextOps.isLower);
+TextComputeds.set('isUpper', TextOps.isUpper);

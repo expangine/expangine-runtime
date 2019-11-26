@@ -1,9 +1,12 @@
 
 import { ID } from '../types/ID';
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 
 
-export const ColorOperations = new Operations(ID.Color + ':');
+export const ColorOperations = new Operations(ID.Color + ID.Delimiter);
+
+export const ColorComputeds = new Computeds(ID.Color + ID.Delimiter);
 
 const ops = ColorOperations;
 
@@ -63,7 +66,7 @@ export const ColorOps =
 
   invert: ops.set('invert', {}, ['value'], ['alpha']),
 
-  opaque: ops.set('invert', {}, ['value']),
+  opaque: ops.set('opaque', {}, ['value']),
 
   alpha: ops.set('alpha', {}, ['value', 'alpha']),
 
@@ -114,3 +117,9 @@ export const ColorOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };
+
+ColorComputeds.set('toHSL', ColorOps.toHSL);
+ColorComputeds.set('luminance', ColorOps.luminance);
+ColorComputeds.set('inverted', ColorOps.invert);
+ColorComputeds.set('opaque', ColorOps.opaque);
+ColorComputeds.set('name', ColorOps.getName);

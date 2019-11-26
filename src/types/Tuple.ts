@@ -3,7 +3,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompa
 import { isArray, isNumber, toArray } from '../fns';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { TupleOps, TupleOperations } from '../ops/TupleOps';
+import { TupleOps, TupleOperations, TupleComputeds } from '../ops/TupleOps';
 import { NumberOps } from '../ops/NumberOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
@@ -27,6 +27,8 @@ export class TupleType extends Type<Type[]>
   public static id = ID.Tuple;
 
   public static operations = TupleOperations;
+
+  public static computeds = TupleComputeds;
 
   public static baseType = new TupleType([]);
 

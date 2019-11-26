@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const ColorOperations: Operations;
+export declare const ColorComputeds: Computeds;
 export declare const ColorOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;

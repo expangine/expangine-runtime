@@ -2,7 +2,7 @@
 import { Type, TypeDescribeProvider, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
-import { ColorOps, ColorOperations } from '../ops/ColorOps';
+import { ColorOps, ColorOperations, ColorComputeds } from '../ops/ColorOps';
 import { ID } from './ID';
 import { NumberType } from './Number';
 import { Color, COMPONENT_MIN, COMPONENT_MAX } from '../util/color/Color';
@@ -45,6 +45,8 @@ export class ColorType extends ObjectType<ColorOptions>
   public static id = ID.Color;
 
   public static operations = ColorOperations;
+
+  public static computeds = ColorComputeds;
 
   public static baseType = new ColorType({ hasAlpha: true });
 

@@ -8,6 +8,7 @@ import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 
 
 const INDEX_OPTIONS = 1;
@@ -22,7 +23,9 @@ export class NullType extends Type<NullOptions>
 
   public static id = ID.Null;
 
-  public static operations = new Operations(ID.Null + ':');
+  public static operations = new Operations(ID.Null + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Null + ID.Delimiter);
 
   public static baseType = new NullType({});
 

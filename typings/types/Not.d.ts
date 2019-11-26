@@ -4,9 +4,11 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 export declare class NotType extends Type<Type[]> {
     static id: string;
     static operations: Operations;
+    static computeds: Computeds;
     static baseType: NotType;
     static decode(data: any[], types: TypeProvider): NotType;
     static encode(type: NotType): any;

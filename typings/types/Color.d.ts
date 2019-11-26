@@ -19,6 +19,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     static spaces: ColorSpace<any>[];
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: ColorType;
     static decode(data: any[]): ColorType;
     static encode(type: ColorType): any;

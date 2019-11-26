@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const DateOperations: Operations;
+export declare const DateComputeds: Computeds;
 export declare const DateOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
     now: import("../Operation").Operation<never, never, never, never, never>;

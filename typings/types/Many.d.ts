@@ -4,9 +4,11 @@ import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 export declare class ManyType extends Type<Type[]> {
     static id: string;
     static operations: Operations;
+    static computeds: Computeds;
     static baseType: ManyType;
     static decode(data: any[], types: TypeProvider): ManyType;
     static encode(type: ManyType): any;

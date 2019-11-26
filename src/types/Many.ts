@@ -9,6 +9,7 @@ import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { isSameClass } from '../fns';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 
 
 const INDEX_MANY = 1;
@@ -18,7 +19,9 @@ export class ManyType extends Type<Type[]>
 
   public static id = ID.Many;
 
-  public static operations = new Operations(ID.Many + ':');
+  public static operations = new Operations(ID.Many + ID.Delimiter);
+
+  public static computeds = new Computeds(ID.Many + ID.Delimiter);
 
   public static baseType = new ManyType([AnyType.baseType]);
 

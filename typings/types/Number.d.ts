@@ -12,6 +12,7 @@ export declare class NumberType extends Type<NumberOptions> {
     static WHOLE_EPSILON: number;
     static id: string;
     static operations: import("..").Operations;
+    static computeds: import("../Computed").Computeds;
     static baseType: NumberType;
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;

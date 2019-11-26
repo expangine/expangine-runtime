@@ -1,9 +1,12 @@
 
 import { Operations } from '../Operation';
 import { ID } from '../types/ID';
+import { Computeds } from '../Computed';
 
 
-export const TupleOperations = new Operations(ID.Tuple + ':');
+export const TupleOperations = new Operations(ID.Tuple + ID.Delimiter);
+
+export const TupleComputeds = new Computeds(ID.Tuple + ID.Delimiter);
 
 const ops = TupleOperations;
 
@@ -67,3 +70,5 @@ export const TupleOps =
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
 };
+
+TupleComputeds.set('copy', TupleOps.copy);

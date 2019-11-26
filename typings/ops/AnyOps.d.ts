@@ -1,5 +1,7 @@
 import { Operations } from '../Operation';
+import { Computeds } from '../Computed';
 export declare const AnyOperations: Operations;
+export declare const AnyComputeds: Computeds;
 export declare const AnyOps: {
     cmp: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     copy: import("../Operation").Operation<"value", never, never, never, never>;

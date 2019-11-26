@@ -5,6 +5,7 @@ import { Expression } from '../Expression';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
+import { Computeds } from '../Computed';
 export interface FunctionOptions {
     returnType: Type;
     params: ObjectType<ObjectOptions>;
@@ -13,6 +14,7 @@ export interface FunctionOptions {
 export declare class FunctionType extends Type<FunctionOptions> {
     static id: string;
     static operations: Operations;
+    static computeds: Computeds;
     static baseType: FunctionType;
     static decode(data: any[], types: TypeProvider): FunctionType;
     static encode(type: FunctionType): any;
