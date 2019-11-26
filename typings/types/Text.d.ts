@@ -19,7 +19,7 @@ export declare class TextType extends Type<TextOptions> {
     static charType: TextType;
     static id: string;
     static operations: import("..").Operations;
-    static computeds: import("../Computed").Computeds;
+    static computeds: import("..").Computeds;
     static baseType: TextType;
     static decode(data: any[]): TextType;
     static encode(type: TextType): any;

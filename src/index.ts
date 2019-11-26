@@ -7,6 +7,7 @@ export * from './Expression';
 export * from './ExpressionBuilder';
 export * from './Locale';
 export * from './Operation';
+export * from './Computed';
 export * from './Runtime';
 export * from './Type';
 export * from './TypeBuilder';
@@ -31,6 +32,7 @@ export * from './types/Tuple';
 
 export * from './exprs/And';
 export * from './exprs/Chain';
+export * from './exprs/Computed';
 export * from './exprs/Constant';
 export * from './exprs/Define';
 export * from './exprs/Do';

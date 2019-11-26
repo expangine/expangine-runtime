@@ -10,7 +10,7 @@ export interface BooleanOptions {
 export declare class BooleanType extends Type<BooleanOptions> {
     static id: string;
     static operations: import("..").Operations;
-    static computeds: import("../Computed").Computeds;
+    static computeds: import("..").Computeds;
     static baseType: BooleanType;
     static decode(data: any[], types: TypeProvider): BooleanType;
     static encode(type: BooleanType): any;

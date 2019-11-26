@@ -17,7 +17,7 @@ export interface DateOptions {
 export declare class DateType extends Type<DateOptions> {
     static id: string;
     static operations: import("..").Operations;
-    static computeds: import("../Computed").Computeds;
+    static computeds: import("..").Computeds;
     static baseType: DateType;
     static decode(data: any[], types: TypeProvider): DateType;
     static encode(type: DateType): any;
