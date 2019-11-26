@@ -22,6 +22,7 @@ import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
+import { ComputedExpression } from './exprs/Computed';
 export declare class ExpressionBuilder {
     and(...exprs: Expression[]): AndExpression;
     body(...exprs: Expression[]): ChainExpression;
@@ -31,6 +32,7 @@ export declare class ExpressionBuilder {
     for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
     get(...path: ExpressionValue[]): GetExpression;
     sub(value: ExpressionValue, ...path: ExpressionValue[]): SubExpression;
+    computed(name: string, value: ExpressionValue): ComputedExpression;
     if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;
     invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
     noop(): NoExpression;

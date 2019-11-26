@@ -22,8 +22,9 @@ import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
-import { toExpr } from './fns';
 import { ObjectExpression } from './exprs/Object';
+import { ComputedExpression } from './exprs/Computed';
+import { toExpr } from './fns';
 
 
 export class ExpressionBuilder
@@ -67,6 +68,11 @@ export class ExpressionBuilder
   public sub(value: ExpressionValue, ...path: ExpressionValue[]): SubExpression
   {
     return new SubExpression(toExpr(value), toExpr(path));
+  }
+
+  public computed(name: string, value: ExpressionValue): ComputedExpression
+  {
+    return new ComputedExpression(toExpr(value), name);
   }
 
   public if(condition: Expression, body: Expression = NoExpression.instance, otherwise: Expression = NoExpression.instance): IfExpression
