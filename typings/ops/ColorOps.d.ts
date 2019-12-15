@@ -9,7 +9,7 @@ export declare const ColorOps: {
     copy: import("../Operation").Operation<"value", never, never, never, never>;
     build: import("../Operation").Operation<"b" | "r" | "g", "a", never, never, never>;
     map: import("../Operation").Operation<"value" | "b" | "r" | "g", "a", "value" | "component", "a" | "b" | "r" | "g", never>;
-    op: import("../Operation").Operation<"value" | "b" | "test" | "r" | "g", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
+    op: import("../Operation").Operation<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
     clamp: import("../Operation").Operation<"value", never, never, never, never>;
     add: import("../Operation").Operation<"value" | "addend", "alpha", never, never, never>;
     adds: import("../Operation").Operation<"value" | "addend" | "addendScale", "alpha", never, never, never>;

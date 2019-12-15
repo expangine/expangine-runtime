@@ -1,5 +1,6 @@
 export declare const TextOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    uuid: import("../..").OperationTypes<never, never, never>;
     maybe: import("../..").OperationTypes<"value", never, never>;
     append: import("../..").OperationTypes<"value" | "append", never, never>;
     prepend: import("../..").OperationTypes<"value" | "prepend", never, never>;
@@ -51,6 +52,7 @@ export declare const TextOpsTypes: {
     isGreaterOrEqual: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     isLower: import("../..").OperationTypes<"value", never, never>;
     isUpper: import("../..").OperationTypes<"value", never, never>;
+    isUuid: import("../..").OperationTypes<"value", never, never>;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
     asColor: import("../..").OperationTypes<"value", never, never>;

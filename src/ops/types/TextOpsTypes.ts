@@ -30,6 +30,8 @@ export const TextOpsTypes =
 
   create: ops.setTypes(TextOps.create, TextType),
 
+  uuid: ops.setTypes(TextOps.uuid, TextType),
+
   // Operations
 
   maybe: ops.setTypes(TextOps.maybe, 
@@ -157,6 +159,8 @@ export const TextOpsTypes =
   isLower: ops.setTypes(TextOps.isLower, BooleanType, { value: TextType }),
 
   isUpper: ops.setTypes(TextOps.isUpper, BooleanType, { value: TextType }),
+
+  isUuid: ops.setTypes(TextOps.isUuid, BooleanType, { value: TextType }),
 
   // Casts
 

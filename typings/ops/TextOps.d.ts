@@ -4,6 +4,7 @@ export declare const TextOperations: Operations;
 export declare const TextComputeds: Computeds;
 export declare const TextOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    uuid: import("../Operation").Operation<never, never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     append: import("../Operation").Operation<"value" | "append", never, never, never, never>;
     prepend: import("../Operation").Operation<"value" | "prepend", never, never, never, never>;
@@ -55,6 +56,7 @@ export declare const TextOps: {
     isGreaterOrEqual: import("../Operation").Operation<"value" | "test", "ignoreCase", never, never, never>;
     isLower: import("../Operation").Operation<"value", never, never, never, never>;
     isUpper: import("../Operation").Operation<"value", never, never, never, never>;
+    isUuid: import("../Operation").Operation<"value", never, never, never, never>;
     asAny: import("../Operation").Operation<"value", never, never, never, never>;
     asBoolean: import("../Operation").Operation<"value", never, never, never, never>;
     asColor: import("../Operation").Operation<"value", never, never, never, never>;

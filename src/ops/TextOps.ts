@@ -17,6 +17,8 @@ export const TextOps =
 
   create: ops.set('create'),
 
+  uuid: ops.set('uuid'),
+
   // Operations
 
   maybe: ops.set('maybe', {}, ['value']),
@@ -128,6 +130,8 @@ export const TextOps =
   isLower: ops.set('lo?', {}, ['value']),
 
   isUpper: ops.set('up?', {}, ['value']),
+
+  isUuid: ops.set('uuid?', {}, ['value']),
 
   // Casts
   
