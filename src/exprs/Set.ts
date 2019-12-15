@@ -5,6 +5,7 @@ import { toExpr, isArray } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_PATH = 1;
@@ -88,6 +89,18 @@ export class SetExpression extends Expression
 
     this.path.forEach(e => e.setParent(this));
     this.value.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.validatePath(def, context, context, this.path, handler);
+
+    const expectedType = def.getPathType(this.path, context);
+
+    if (expectedType)
+    {
+      this.validateType(def, context, expectedType, this.value, handler);
+    }
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): SetExpression

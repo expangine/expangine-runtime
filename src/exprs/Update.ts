@@ -6,6 +6,7 @@ import { toExpr, isArray } from '../fns';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -99,6 +100,20 @@ export class UpdateExpression extends Expression
 
     this.path.forEach(e => e.setParent(this));
     this.value.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.validatePath(def, context, context, this.path, handler);
+
+    const expectedType = def.getPathType(this.path, context);
+
+    if (expectedType)
+    {
+      const valueContext = def.getContext(context, this.getScope());
+
+      this.validateType(def, valueContext, expectedType, this.value, handler);
+    }
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression

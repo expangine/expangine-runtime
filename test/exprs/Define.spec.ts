@@ -1,4 +1,4 @@
-import { ExpressionBuilder, defs, TextType, NumberType, EnumType, TypeBuilder } from '../src';
+import { ExpressionBuilder, defs, TextType, NumberType, EnumType, TypeBuilder } from '../../src';
 
 // import { describe, it, expect } from 'jest';
 

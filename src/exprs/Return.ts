@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_VALUE = 1;
@@ -75,6 +76,11 @@ export class ReturnExpression extends Expression
     this.parent = parent;
 
     this.value.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.value.validate(def, context, handler);
   }
 
 }

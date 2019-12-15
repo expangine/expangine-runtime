@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 export declare class TemplateExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): TemplateExpression;
@@ -16,6 +17,7 @@ export declare class TemplateExpression extends Expression {
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
+    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     param(name: string, value: ExpressionValue): TemplateExpression;
     param(params: Record<string, ExpressionValue>): TemplateExpression;
 }

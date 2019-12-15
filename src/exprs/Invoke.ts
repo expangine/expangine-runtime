@@ -2,8 +2,10 @@
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { objectMap, isString, toExpr, objectEach } from '../fns';
-import { Type } from '../Type';
+import { Type, TypeMap } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
+import { ObjectType } from '../types/Object';
 
 
 const INDEX_NAME = 1;
@@ -89,6 +91,39 @@ export class InvokeExpression extends Expression
     this.parent = parent;
 
     objectEach(this.args, e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const func = def.getFunction(this.name);
+    
+    if (!func) 
+    {
+      handler({
+        type: ValidationType.MISSING_FUNCTION,
+        severity: ValidationSeverity.HIGH,
+        context,
+        subject: this,
+      });
+    }
+    else
+    {
+      const params: TypeMap = {};
+
+      objectEach(func.options.params.options.props, (param, paramName) =>
+      {
+        const arg = this.args[paramName];
+
+        this.validateType(def, context, param, arg, handler);
+
+        if (arg)
+        {
+          params[paramName] = arg.getType(def, context);
+        }
+      });
+
+      func.options.expression.validate(def, ObjectType.from(params), handler);
+    }
   }
 
   public named(name: string): InvokeExpression

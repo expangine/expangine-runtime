@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 export declare class SubExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): SubExpression;
@@ -17,6 +18,7 @@ export declare class SubExpression extends Expression {
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
+    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     with(expr: ExpressionValue): SubExpression;
     sub(expr: ExpressionValue | ExpressionValue[]): SubExpression;
 }

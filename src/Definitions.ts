@@ -392,7 +392,16 @@ export class Definitions
 
   public getComputedsFor(valueType: Type): Computed[]
   {
-    return this.types[valueType.getId()].computeds.list;
+    const typeClass = this.types[valueType.getId()];
+
+    return typeClass ? typeClass.computeds.list : [];
+  }
+
+  public hasComputed(valueType: Type, id: string): boolean
+  {
+    const typeClass = this.types[valueType.getId()];
+
+    return typeClass ? !!typeClass.computeds.get(id) : false;
   }
 
   public getOperation(id: string): OperationGeneric | null

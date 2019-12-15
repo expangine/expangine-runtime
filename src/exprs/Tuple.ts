@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { TupleType } from '../types/Tuple';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -74,6 +75,14 @@ export class TupleExpression extends Expression
     this.parent = parent;
 
     this.expressions.forEach(e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.expressions.forEach(subject =>
+    {
+      subject.validate(def, context, handler);
+    });
   }
 
 }

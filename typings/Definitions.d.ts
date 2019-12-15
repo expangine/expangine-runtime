@@ -52,6 +52,7 @@ export declare class Definitions {
     getComputed(id: string): Computed | null;
     getComputedReturnType(id: string, valueType?: Type | null): Type | null;
     getComputedsFor(valueType: Type): Computed[];
+    hasComputed(valueType: Type, id: string): boolean;
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;

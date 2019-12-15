@@ -6,6 +6,7 @@ import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 export declare class OperationExpression<P extends string = never, O extends string = never, S extends string = never> extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): OperationExpression;
@@ -22,6 +23,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
+    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>;
     alias(scoped: S, alias: string): OperationExpression<P, O, S>;
     and(exprs: Expression | Expression[]): AndExpression;

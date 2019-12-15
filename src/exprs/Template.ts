@@ -5,6 +5,7 @@ import { Definitions } from '../Definitions';
 import { TextType } from '../types/Text';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_TEMPLATE = 1;
@@ -86,6 +87,14 @@ export class TemplateExpression extends Expression
     this.parent = parent;
 
     objectEach(this.params, e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    objectEach(this.params, subject =>
+    {
+      this.validateType(def, context, TextType.baseType, subject, handler);
+    });
   }
 
   public param(name: string, value: ExpressionValue): TemplateExpression

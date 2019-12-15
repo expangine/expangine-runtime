@@ -5,6 +5,8 @@ import { ConstantExpression } from './Constant';
 import { NoExpression } from './No';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
+import { BooleanType } from '../types/Boolean';
 
 
 const INDEX_CASES = 1;
@@ -109,6 +111,20 @@ export class IfExpression extends Expression
     });
 
     this.otherwise.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const expectedType = BooleanType.baseType;
+
+    this.cases.forEach(([condition, result]) => 
+    {
+      this.validateType(def, context, expectedType, condition, handler);
+      
+      result.validate(def, context, handler);
+    });
+
+    this.otherwise.validate(def, context, handler);
   }
 
   public if(condition: Expression, body?: Expression)

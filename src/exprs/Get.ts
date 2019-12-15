@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_PATH = 1;
@@ -79,6 +80,11 @@ export class GetExpression extends Expression
     this.parent = parent;
 
     this.path.forEach(e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.validatePath(def, context, context, this.path, handler);
   }
 
   public add(expr: ExpressionValue | ExpressionValue[]): GetExpression

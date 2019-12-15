@@ -8,6 +8,7 @@ import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 
 
 const INDEX_NAME = 1;
@@ -104,6 +105,40 @@ export class OperationExpression<P extends string = never, O extends string = ne
     this.parent = parent;
 
     objectEach(this.params, e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const { name, params, scopeAlias } = this;
+    const expectedTypes = def.getOperationExpectedTypes(name, params, scopeAlias, context);
+    const operationTypes = def.getOperationTypes(name);
+
+    for (const paramName in expectedTypes)
+    {
+      const expected = expectedTypes[paramName];
+      const subject = params[paramName];
+      
+      this.validateType(def, context, expected, subject, handler);
+    }
+
+    for (const paramName in params)
+    {
+      const subject = params[paramName];
+      const operationType = operationTypes.params[paramName] || operationTypes.optional[paramName];
+
+      if (!(paramName in expectedTypes) && operationType)
+      {
+        handler({
+          type: ValidationType.MISSING_EXPRESSION,
+          severity: ValidationSeverity.HIGH,
+          context,
+          subject,
+          parent: this,
+        });
+
+        params[paramName].validate(def, context, handler);
+      }
+    }
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

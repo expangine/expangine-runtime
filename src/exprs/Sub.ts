@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { toExpr, isArray } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_VALUE = 1;
@@ -94,6 +95,14 @@ export class SubExpression extends Expression
     this.path.forEach(e => e.setParent(this));
   }
 
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const type = this.value.getType(def, context);
+
+    this.validatePath(def, context, type, this.path, handler);
+
+    this.value.validate(def, context, handler);
+  }
 
   public with(expr: ExpressionValue): SubExpression
   {

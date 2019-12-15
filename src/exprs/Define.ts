@@ -5,6 +5,7 @@ import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_DEFINE = 1;
@@ -91,6 +92,20 @@ export class DefineExpression extends Expression
 
     this.define.forEach(([name, defined]) => defined.setParent(this));
     this.body.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const defineContext = def.getContextWithScope(context);
+
+    this.define.forEach(([name, defined]) => 
+    {
+      defined.validate(def, defineContext.context, handler);
+
+      defineContext.scope[name] = defined.getType(def, defineContext.context);
+    });
+    
+    this.body.validate(def, defineContext.context, handler);
   }
 
   public with(name: string, value: ExpressionValue): DefineExpression

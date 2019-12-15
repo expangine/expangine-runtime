@@ -5,6 +5,7 @@ import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ObjectType } from '../types/Object';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_PROPS = 1;
@@ -75,6 +76,11 @@ export class ObjectExpression extends Expression
     this.parent = parent;
 
     objectEach(this.props, e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    objectEach(this.props, e => e.validate(def, context, handler));
   }
 
 }

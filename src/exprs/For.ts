@@ -6,6 +6,7 @@ import { Definitions } from '../Definitions';
 import { toExpr } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -117,6 +118,16 @@ export class ForExpression extends Expression
     this.start.setParent(this);
     this.end.setParent(this);
     this.body.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.validateType(def, context, NumberType.baseType, this.start, handler);
+    this.validateType(def, context, NumberType.baseType, this.end, handler);
+
+    const bodyContext = def.getContext(context, this.getScope());
+
+    this.body.validate(def, bodyContext, handler);
   }
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression

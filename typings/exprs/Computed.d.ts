@@ -2,6 +2,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 export declare class ComputedExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): ComputedExpression;
@@ -16,4 +17,5 @@ export declare class ComputedExpression extends Expression {
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
+    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
 }

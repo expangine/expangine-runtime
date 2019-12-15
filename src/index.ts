@@ -12,6 +12,7 @@ export * from './Runtime';
 export * from './Type';
 export * from './TypeBuilder';
 export * from './Traverser';
+export * from './Validate';
 
 export * from './types/Any';
 export * from './types/Boolean';

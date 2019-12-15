@@ -6,6 +6,7 @@ import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -76,6 +77,16 @@ export class AndExpression extends Expression
     this.parent = parent;
 
     this.expressions.forEach(e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const expectedType = BooleanType.baseType;
+
+    this.expressions.forEach(subject => 
+    {
+      this.validateType(def, context, expectedType, subject, handler);
+    });
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

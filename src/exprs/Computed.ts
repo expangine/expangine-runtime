@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 
 
 const INDEX_NAME = 1;
@@ -81,6 +82,24 @@ export class ComputedExpression extends Expression
   {
     this.parent = parent;
     this.expression.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    const baseType = this.expression.getType(def, context);
+
+    if (!baseType || !def.hasComputed(baseType, this.name))
+    {
+      handler({
+        type: ValidationType.INVALID_EXPRESSION,
+        severity: ValidationSeverity.HIGH,
+        context,
+        subject: this.expression,
+        parent: this,
+      })
+    }
+
+    this.expression.validate(def, context, handler);
   }
 
 }

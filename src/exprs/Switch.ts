@@ -7,6 +7,7 @@ import { NoExpression } from './No';
 import { toExpr } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_VALUE = 1;
@@ -134,6 +135,20 @@ export class SwitchExpression extends Expression
       result.setParent(this);
     });
     this.defaultCase.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.value.validate(def, context, handler);
+
+    this.cases.forEach(([tests, result]) => 
+    {
+      tests.forEach(e => e.validate(def, context, handler));
+
+      result.validate(def, context, handler);
+    });
+
+    this.defaultCase.validate(def, context, handler);
   }
 
   private copyCases(): Array<[Expression[], Expression]>

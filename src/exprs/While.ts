@@ -4,6 +4,7 @@ import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -104,6 +105,15 @@ export class WhileExpression extends Expression
 
     this.condition.setParent(this);
     this.body.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.validateType(def, context, BooleanType.baseType, this.condition, handler);
+
+    const bodyContext = def.getContext(context, this.getScope());
+
+    this.body.validate(def, bodyContext, handler);
   }
 
   public while(condition: Expression): WhileExpression

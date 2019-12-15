@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { isArray } from '../fns';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_CHAIN = 1;
@@ -74,6 +75,14 @@ export class ChainExpression extends Expression
     this.parent = parent;
 
     this.chain.forEach(e => e.setParent(this));
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.chain.forEach(subject => 
+    {
+      subject.validate(def, context, handler);
+    });
   }
 
   public add(exprs: Expression | Expression[]): ChainExpression

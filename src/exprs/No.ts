@@ -3,6 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 export class NoExpression extends Expression 
@@ -53,6 +54,11 @@ export class NoExpression extends Expression
   }
 
   public setParent(parent: Expression = null): void
+  {
+    
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
   {
     
   }

@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { defs, ExpressionBuilder, NumberType, TextType, TypeBuilder } from '../src';
+import { defs, ExpressionBuilder, NumberType, TextType, TypeBuilder } from '../../src';
 
 
 // tslint:disable: no-magic-numbers

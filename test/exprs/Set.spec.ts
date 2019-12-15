@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, defs, TypeBuilder, BooleanType } from '../src';
+import { ExpressionBuilder, defs, TypeBuilder, BooleanType } from '../../src';
 
 
 // tslint:disable: no-magic-numbers

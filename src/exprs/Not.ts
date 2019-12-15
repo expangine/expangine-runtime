@@ -7,6 +7,7 @@ import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 
 
 const INDEX_EXPR = 1;
@@ -75,6 +76,11 @@ export class NotExpression extends Expression
     this.parent = parent;
 
     this.expression.setParent(this);
+  }
+
+  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  {
+    this.expression.validate(def, context, handler);
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

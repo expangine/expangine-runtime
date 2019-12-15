@@ -4,6 +4,7 @@ import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
+import { ValidationHandler } from '../Validate';
 export declare class ForExpression extends Expression {
     static MAX_ITERATIONS: number;
     static id: string;
@@ -25,6 +26,7 @@ export declare class ForExpression extends Expression {
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
+    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
     startAt(start: ExpressionValue): ForExpression;
     endAt(end: ExpressionValue): ForExpression;

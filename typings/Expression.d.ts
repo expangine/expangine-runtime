@@ -1,6 +1,7 @@
 import { Type, TypeMap } from './Type';
 import { Definitions } from './Definitions';
 import { Traversable, Traverser } from './Traverser';
+import { ValidationHandler, Validation } from './Validate';
 export interface ExpressionProvider {
     getExpression(value: any): Expression;
 }
@@ -21,4 +22,8 @@ export declare abstract class Expression implements Traversable<Expression> {
     abstract getType(def: Definitions, context: Type): Type | null;
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
     abstract setParent(parent?: Expression): void;
+    abstract validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+    validations(def: Definitions, context: Type): Validation[];
+    protected validateType(def: Definitions, context: Type, expectedType: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
+    protected validatePath(def: Definitions, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent?: Expression): void;
 }
