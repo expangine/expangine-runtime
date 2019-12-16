@@ -97,7 +97,10 @@ export abstract class Expression implements Traversable<Expression>
       }
     }
 
-    subject.validate(def, context, handler);
+    if (subject)
+    {
+      subject.validate(def, context, handler);
+    }
   }
 
   protected validatePath(def: Definitions, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent: Expression = this): void
