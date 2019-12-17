@@ -51,6 +51,7 @@ describe('And', () => {
       context: c0,
       subject: a0,
       parent: b0,
+      expected: BooleanType.baseType,
     }, {
       type: ValidationType.INVALID_EXPRESSION,
       severity: ValidationSeverity.HIGH,

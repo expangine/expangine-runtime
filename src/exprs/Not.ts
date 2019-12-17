@@ -80,7 +80,7 @@ export class NotExpression extends Expression
 
   public validate(def: Definitions, context: Type, handler: ValidationHandler): void
   {
-    this.expression.validate(def, context, handler);
+    this.validateType(def, context, BooleanType.baseType, this.expression, handler);
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

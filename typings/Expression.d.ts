@@ -24,6 +24,6 @@ export declare abstract class Expression implements Traversable<Expression> {
     abstract setParent(parent?: Expression): void;
     abstract validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     validations(def: Definitions, context: Type): Validation[];
-    protected validateType(def: Definitions, context: Type, expectedType: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
+    protected validateType(def: Definitions, context: Type, expected: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
     protected validatePath(def: Definitions, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent?: Expression): void;
 }

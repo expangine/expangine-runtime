@@ -51,12 +51,12 @@ export abstract class Expression implements Traversable<Expression>
     return validations;
   }
 
-  protected validateType(def: Definitions, context: Type, expectedType: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
+  protected validateType(def: Definitions, context: Type, expected: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
   {
-    const actualType = subject ? subject.getType(def, context) : null;
-    let testType = actualType;
+    const actual = subject ? subject.getType(def, context) : null;
+    let test = actual;
 
-    if (!actualType)
+    if (!actual)
     {
       handler({
         type: ValidationType.INCOMPATIBLE_TYPES,
@@ -64,28 +64,31 @@ export abstract class Expression implements Traversable<Expression>
         context,
         subject,
         parent,
+        expected,
       });
     }
     else
     {
-      if (actualType.isOptional() && !expectedType.isOptional())
+      if (actual.isOptional() && !expected.isOptional())
       {
-        testType = def.requiredType(testType);
+        test = def.requiredType(test);
       }
 
-      if (!expectedType.acceptsType(testType))
+      if (!expected.acceptsType(test))
       {
         handler({
           type: ValidationType.INCOMPATIBLE_TYPES,
-          severity: expectedType.isCompatible(actualType)
+          severity: expected.isCompatible(actual)
             ? ValidationSeverity.MEDIUM
             : ValidationSeverity.HIGH,
           context,
           subject,
           parent,
+          expected,
+          actual,
         });
       }
-      else if (testType !== actualType)
+      else if (test !== actual)
       {
         handler({
           type: ValidationType.POSSIBLY_NULL,
@@ -93,6 +96,8 @@ export abstract class Expression implements Traversable<Expression>
           context,
           subject,
           parent,
+          expected,
+          actual,
         });
       }
     }

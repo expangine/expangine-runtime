@@ -547,6 +547,27 @@ export class Definitions
     return types;
   }
 
+  public getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type
+  {
+    const op = this.getOperation(id);
+    const opTypes = this.getOperationTypes(id);
+    const { context: scopedContext, scope: scopeTarget } = this.getContextWithScope(context);
+    
+    for (const scopeParam of op.scope)
+    {
+      const scopeType = this.getOperationInputType(opTypes.scope[scopeParam], types);
+
+      if (scopeType)
+      {
+        const alias = scopeAlias[scopeParam] || scopeParam;
+
+        scopeTarget[alias] = scopeType.getSimplifiedType();
+      }
+    }
+
+    return scopedContext;
+  }
+
   public getContextWithScope(original: Type, scope: TypeMap = {})
   {
     const context = original instanceof ObjectType

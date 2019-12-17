@@ -5,7 +5,6 @@ import { objectMap, isString, toExpr, objectEach } from '../fns';
 import { Type, TypeMap } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
-import { ObjectType } from '../types/Object';
 
 
 const INDEX_NAME = 1;
@@ -122,7 +121,7 @@ export class InvokeExpression extends Expression
         }
       });
 
-      func.options.expression.validate(def, ObjectType.from(params), handler);
+      // func.options.expression.validate(def, ObjectType.from(params), handler);
     }
   }
 

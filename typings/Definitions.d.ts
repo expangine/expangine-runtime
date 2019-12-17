@@ -58,6 +58,7 @@ export declare class Definitions {
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
     getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
+    getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type;
     getContextWithScope(original: Type, scope?: TypeMap): {
         context: ManyType | ObjectType<{
             props: any;

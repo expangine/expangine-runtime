@@ -110,7 +110,9 @@ export class UpdateExpression extends Expression
 
     if (expectedType)
     {
-      const valueContext = def.getContext(context, this.getScope());
+      const valueContext = def.getContext(context, {
+        [this.currentVariable]: expectedType,
+      });
 
       this.validateType(def, valueContext, expectedType, this.value, handler);
     }

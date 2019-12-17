@@ -111,14 +111,17 @@ export class OperationExpression<P extends string = never, O extends string = ne
   {
     const { name, params, scopeAlias } = this;
     const expectedTypes = def.getOperationExpectedTypes(name, params, scopeAlias, context);
+    const operation = def.getOperation(name);
     const operationTypes = def.getOperationTypes(name);
 
     for (const paramName in expectedTypes)
     {
       const expected = expectedTypes[paramName];
       const subject = params[paramName];
+      const hasScope = operation.hasScope.indexOf(paramName) !== -1;
+      const paramContext = hasScope ? def.getOperationScopeContext(name, expectedTypes, scopeAlias, context) : context;
       
-      this.validateType(def, context, expected, subject, handler);
+      this.validateType(def, paramContext, expected, subject, handler);
     }
 
     for (const paramName in params)
@@ -128,15 +131,18 @@ export class OperationExpression<P extends string = never, O extends string = ne
 
       if (!(paramName in expectedTypes) && operationType)
       {
+        const hasScope = operation.hasScope.indexOf(paramName) !== -1;
+        const paramContext = hasScope ? def.getOperationScopeContext(name, expectedTypes, scopeAlias, context) : context;
+
         handler({
           type: ValidationType.MISSING_EXPRESSION,
           severity: ValidationSeverity.HIGH,
-          context,
+          context: paramContext,
           subject,
           parent: this,
         });
 
-        params[paramName].validate(def, context, handler);
+        params[paramName].validate(def, paramContext, handler);
       }
     }
   }

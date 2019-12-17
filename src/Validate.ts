@@ -24,9 +24,11 @@ export interface Validation
 {
   type: ValidationType;
   severity: ValidationSeverity;
-  subject: Expression;
   context: Type;
+  subject?: Expression;
   parent?: Expression;
+  expected?: Type;
+  actual?: Type;
 }
 
 export type ValidationHandler = (validation: Validation) => void;
