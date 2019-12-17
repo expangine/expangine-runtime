@@ -51,9 +51,11 @@ export abstract class Expression implements Traversable<Expression>
     return validations;
   }
 
-  protected validateType(def: Definitions, context: Type, expected: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
+  protected validateType(def: Definitions, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
   {
-    const actual = subject ? subject.getType(def, context) : null;
+    const expected = expectedComplex ? expectedComplex.getSimplifiedType() : null;
+    const actualComplete = subject ? subject.getType(def, context) : null;
+    const actual = actualComplete ? actualComplete.getSimplifiedType() : null;
     let test = actual;
 
     if (!actual)
