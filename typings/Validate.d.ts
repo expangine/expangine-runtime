@@ -11,7 +11,8 @@ export declare enum ValidationType {
     INCOMPATIBLE_TYPES = 3,
     INVALID_EXPRESSION = 4,
     MISSING_FUNCTION = 5,
-    MISSING_EXPRESSION = 6
+    MISSING_EXPRESSION = 6,
+    MISSING_OPERATION = 7
 }
 export interface Validation {
     type: ValidationType;

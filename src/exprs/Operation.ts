@@ -110,9 +110,22 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public validate(def: Definitions, context: Type, handler: ValidationHandler): void
   {
     const { name, params, scopeAlias } = this;
-    const expectedTypes = def.getOperationExpectedTypes(name, params, scopeAlias, context);
     const operation = def.getOperation(name);
     const operationTypes = def.getOperationTypes(name);
+
+    if (!operation)
+    {
+      handler({
+        type: ValidationType.MISSING_OPERATION,
+        severity: ValidationSeverity.HIGH,
+        context,
+        subject: this,
+      });
+
+      return;
+    }
+
+    const expectedTypes = def.getOperationExpectedTypes(name, params, scopeAlias, context);
     const scopeContext = operation.hasScope.length > 0
       ? def.getOperationScopeContext(name, expectedTypes, scopeAlias, context)
       : context;

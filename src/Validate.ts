@@ -18,6 +18,7 @@ export enum ValidationType
   INVALID_EXPRESSION = 4,   // HIGH
   MISSING_FUNCTION = 5,     // HiGH
   MISSING_EXPRESSION = 6,   // HiGH
+  MISSING_OPERATION = 7,    // HiGH
 }
 
 export interface Validation 
