@@ -60,14 +60,17 @@ export abstract class Expression implements Traversable<Expression>
 
     if (!actual)
     {
-      handler({
-        type: ValidationType.INCOMPATIBLE_TYPES,
-        severity: ValidationSeverity.HIGH,
-        context,
-        subject,
-        parent,
-        expected,
-      });
+      if (expected && !expected.isOptional())
+      {
+        handler({
+          type: ValidationType.INCOMPATIBLE_TYPES,
+          severity: ValidationSeverity.HIGH,
+          context,
+          subject,
+          parent,
+          expected,
+        });
+      }
     }
     else
     {
