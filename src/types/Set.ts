@@ -206,7 +206,6 @@ export class SetType extends Type<SetOptions>
     return ex.op(SetOps.cmp, {
       value: ex.get('value'),
       test: ex.get('test'),
-      compare: this.options.value.getValidateExpression(ex),
     });
   }
 

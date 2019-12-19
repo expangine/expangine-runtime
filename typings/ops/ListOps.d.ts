@@ -12,12 +12,12 @@ export declare const ListOps: {
     addFirst: import("../Operation").Operation<"list" | "item", never, never, never, "list">;
     addLast: import("../Operation").Operation<"list" | "item", never, never, never, "list">;
     insert: import("../Operation").Operation<"list" | "item" | "index", never, never, never, "list">;
-    remove: import("../Operation").Operation<"list" | "isEqual" | "item", never, "list" | "value" | "test", "isEqual", "list">;
+    remove: import("../Operation").Operation<"list" | "item" | "isEqual", never, "list" | "value" | "test", "isEqual", "list">;
     removeFirst: import("../Operation").Operation<"list", never, never, never, "list">;
     removeLast: import("../Operation").Operation<"list", never, never, never, "list">;
     removeAt: import("../Operation").Operation<"list" | "index", never, never, never, "list">;
     removeWhere: import("../Operation").Operation<"list" | "where", never, "list" | "item" | "index", "where", "list">;
-    contains: import("../Operation").Operation<"list" | "isEqual" | "item", never, "list" | "value" | "test", "isEqual", never>;
+    contains: import("../Operation").Operation<"list" | "item" | "isEqual", never, "list" | "value" | "test", "isEqual", never>;
     find: import("../Operation").Operation<"list" | "where", "start" | "reverse", "list" | "item" | "index", "where", "list">;
     copy: import("../Operation").Operation<"list", "deepCopy", "copy", "deepCopy", "list">;
     reverse: import("../Operation").Operation<"list", never, never, never, "list">;
@@ -32,8 +32,8 @@ export declare const ListOps: {
     drop: import("../Operation").Operation<"list" | "count", never, never, never, "list">;
     append: import("../Operation").Operation<"list" | "append", never, never, never, "list">;
     prepend: import("../Operation").Operation<"list" | "prepend", never, never, never, "list">;
-    indexOf: import("../Operation").Operation<"list" | "isEqual" | "item", "start", "list" | "value" | "test", "isEqual", "list">;
-    lastIndexOf: import("../Operation").Operation<"list" | "isEqual" | "item", "start", "list" | "value" | "test", "isEqual", "list">;
+    indexOf: import("../Operation").Operation<"list" | "item" | "isEqual", "start", "list" | "value" | "test", "isEqual", "list">;
+    lastIndexOf: import("../Operation").Operation<"list" | "item" | "isEqual", "start", "list" | "value" | "test", "isEqual", "list">;
     findIndex: import("../Operation").Operation<"list" | "where", "start" | "reverse", "list" | "item" | "index", "where", never>;
     last: import("../Operation").Operation<"list", never, never, never, "list">;
     first: import("../Operation").Operation<"list", never, never, never, "list">;

@@ -24,7 +24,6 @@ const GivenSetIterationScope = { set: GivenSet, value: GivenSetValue };
 
 const GivenValueSet = (i: {value?: Type}) => RequireSet(i.value) || SetType;
 const GivenValueSetValue = (i: {value?: Type}) => RequireSet(i.value) ? i.value.options.value : AnyType;
-const GivenValueCompareScope = { value: GivenValueSetValue, test: GivenValueSetValue };
 
 export const SetOpsTypes = 
 {
@@ -72,9 +71,7 @@ export const SetOpsTypes =
 
   cmp: ops.setTypes(SetOps.cmp, 
     NumberType,
-    { value: GivenValueSet, test: GivenValueSet, compare: NumberType },
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet },
   ),
 
   copy: ops.setTypes(SetOps.copy, 
@@ -100,44 +97,32 @@ export const SetOpsTypes =
 
   isEqual: ops.setTypes(SetOps.isEqual, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, isEqual: BooleanType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet }, 
   ),
 
   isNotEqual: ops.setTypes(SetOps.isNotEqual, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, isEqual: BooleanType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet }, 
   ),
 
   isLess: ops.setTypes(SetOps.isLess, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, compare: NumberType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet },
   ),
 
   isLessOrEqual: ops.setTypes(SetOps.isLessOrEqual, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, compare: NumberType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet },
   ),
 
   isGreater: ops.setTypes(SetOps.isGreater, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, compare: NumberType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet },
   ),
 
   isGreaterOrEqual: ops.setTypes(SetOps.isGreaterOrEqual, 
     BooleanType,
-    { value: GivenValueSet, test: GivenValueSet, compare: NumberType }, 
-    {},
-    GivenValueCompareScope
+    { value: GivenValueSet, test: GivenValueSet },
   ),
 
   // Casts

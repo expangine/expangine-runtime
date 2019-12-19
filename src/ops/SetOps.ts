@@ -33,7 +33,7 @@ export const SetOps =
 
   count: ops.set('count', { }, ['set']),
 
-  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['value', 'test'], ['compare']),
+  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test']),
 
   copy: ops.set('copy', { complexity: 1 }, ['set'], ['deepCopy'], ['set', 'value'], ['deepCopy'], ['set']),
 
@@ -43,17 +43,17 @@ export const SetOps =
 
   isValid: ops.set('?', {}, ['value']),
 
-  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['value', 'test'], ['isEqual']),
+  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test']),
 
-  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['value', 'test'], ['isEqual']),
+  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test']),
 
-  isLess: ops.set('<', { complexity: 1 }, ['value', 'test', 'compare'], [], ['value', 'test'], ['compare']),
+  isLess: ops.set('<', { complexity: 1 }, ['value', 'test']),
 
-  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['value', 'test'], ['compare']),
+  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test']),
 
-  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test', 'compare'], [], ['value', 'test'], ['compare']),
+  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test']),
 
-  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['value', 'test'], ['compare']),
+  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test']),
 
   // Casts
   

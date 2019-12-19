@@ -8,12 +8,12 @@ export declare const ListOpsTypes: {
     addFirst: import("../..").OperationTypes<"list" | "item", never, never>;
     addLast: import("../..").OperationTypes<"list" | "item", never, never>;
     insert: import("../..").OperationTypes<"list" | "item" | "index", never, never>;
-    remove: import("../..").OperationTypes<"list" | "isEqual" | "item", never, "list" | "value" | "test">;
+    remove: import("../..").OperationTypes<"list" | "item" | "isEqual", never, "list" | "value" | "test">;
     removeFirst: import("../..").OperationTypes<"list", never, never>;
     removeLast: import("../..").OperationTypes<"list", never, never>;
     removeAt: import("../..").OperationTypes<"list" | "index", never, never>;
     removeWhere: import("../..").OperationTypes<"list" | "where", never, "list" | "item" | "index">;
-    contains: import("../..").OperationTypes<"list" | "isEqual" | "item", never, "list" | "value" | "test">;
+    contains: import("../..").OperationTypes<"list" | "item" | "isEqual", never, "list" | "value" | "test">;
     find: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "item" | "index">;
     copy: import("../..").OperationTypes<"list", "deepCopy", "copy">;
     reverse: import("../..").OperationTypes<"list", never, never>;
@@ -28,8 +28,8 @@ export declare const ListOpsTypes: {
     drop: import("../..").OperationTypes<"list" | "count", never, never>;
     append: import("../..").OperationTypes<"list" | "append", never, never>;
     prepend: import("../..").OperationTypes<"list" | "prepend", never, never>;
-    indexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
-    lastIndexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
+    indexOf: import("../..").OperationTypes<"list" | "item" | "isEqual", "start", "list" | "value" | "test">;
+    lastIndexOf: import("../..").OperationTypes<"list" | "item" | "isEqual", "start", "list" | "value" | "test">;
     findIndex: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "item" | "index">;
     last: import("../..").OperationTypes<"list", never, never>;
     first: import("../..").OperationTypes<"list", never, never>;
