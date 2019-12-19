@@ -15,6 +15,7 @@ import { ManyType } from '../../types/Many';
 import { NullType } from '../../types/Null';
 import { Type } from '../../Type';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = AnyType.operations;
@@ -129,5 +130,7 @@ export const AnyOpsTypes =
   asText: ops.setTypes(AnyOps.asText, TextType, { value: AnyType }),
 
   asTuple: ops.setTypes(AnyOps.asTuple, i => TupleType.forItem([i.value || AnyType]), { value: AnyType }),
+
+  asSet: ops.setTypes(AnyOps.asSet, i => SetType.forItem(i.value || AnyType), { value: AnyType }),
 
 };

@@ -13,6 +13,7 @@ import { TupleType } from '../../types/Tuple';
 import { ListOps } from '../ListOps';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = ListType.operations;
@@ -553,6 +554,11 @@ export const ListOpsTypes =
 
   asTuple: ops.setTypes(ListOps.asTuple, 
     TupleType,
+    { value: GivenValueList }
+  ),
+
+  asSet: ops.setTypes(ListOps.asSet, 
+    i => SetType.forItem(GivenValueListItem(i)), 
     { value: GivenValueList }
   ),
   

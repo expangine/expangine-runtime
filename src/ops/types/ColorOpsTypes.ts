@@ -15,6 +15,7 @@ import { ManyType } from '../../types/Many';
 import { OptionalType } from '../../types/Optional';
 import { ColorSpaceHSL } from '../../util/color/ColorSpaceHSL';
 import { Color } from '../../util/color/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = ColorType.operations;
@@ -448,5 +449,7 @@ export const ColorOpsTypes =
   asText: ops.setTypes(ColorOps.asText, TextType, { value: ColorType }),
 
   asTuple: ops.setTypes(ColorOps.asTuple, i => TupleType.forItem([i.value || ColorType]), { value: ColorType }),
+
+  asSet: ops.setTypes(ColorOps.asSet, i => SetType.forItem(i.value || AnyType), { value: ColorType }),
 
 };

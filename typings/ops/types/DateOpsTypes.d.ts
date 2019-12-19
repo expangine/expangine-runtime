@@ -12,7 +12,7 @@ export declare const DateOpsTypes: {
     min: import("../..").OperationTypes<"value" | "test", never, never>;
     max: import("../..").OperationTypes<"value" | "test", never, never>;
     get: import("../..").OperationTypes<"value" | "property", never, never>;
-    set: import("../..").OperationTypes<"value" | "property" | "set", never, never>;
+    set: import("../..").OperationTypes<"set" | "value" | "property", never, never>;
     add: import("../..").OperationTypes<"value" | "unit", "amount", never>;
     sub: import("../..").OperationTypes<"value" | "unit", "amount", never>;
     startOf: import("../..").OperationTypes<"value" | "unit", never, never>;
@@ -47,4 +47,5 @@ export declare const DateOpsTypes: {
     asObject: import("../..").OperationTypes<"value", never, never>;
     asText: import("../..").OperationTypes<"value", never, never>;
     asTuple: import("../..").OperationTypes<"value", never, never>;
+    asSet: import("../..").OperationTypes<"value", never, never>;
 };

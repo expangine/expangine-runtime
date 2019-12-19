@@ -1,6 +1,6 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
-import { isArray, isNumber, toArray } from '../fns';
+import { isArray, isNumber } from '../fns';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TupleOps, TupleOperations, TupleComputeds } from '../ops/TupleOps';
@@ -108,7 +108,7 @@ export class TupleType extends Type<Type[]>
       {
         if (exprType.options.value instanceof NumberType)
         {
-          const values = toArray(exprType.options.constants.values());
+          const values = Array.from(exprType.options.constants.values());
           const types = values.map((i: number) => this.options[i]).filter(t => !!t);
           
           return def.mergeTypes(types);
@@ -116,7 +116,7 @@ export class TupleType extends Type<Type[]>
 
         if (exprType.options.value instanceof TextType)
         {
-          const values = toArray(exprType.options.constants.values());
+          const values = Array.from(exprType.options.constants.values());
 
           if (values.length === 1 && values[0] === 'length')
           {

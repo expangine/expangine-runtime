@@ -1,5 +1,5 @@
 
-import { isObject, isMap, toArray, isSameClass, isString, addCopier } from '../fns';
+import { isObject, isMap, isSameClass, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
@@ -89,7 +89,7 @@ export class MapType extends Type<MapOptions>
       if (isMap(json)) {
         return {
           $any: 'map',
-          value: toArray(json.entries())
+          value: Array.from(json.entries())
             .map(([k, v]: [any, any]) => [writer(k), writer(v)])
         };
       }
@@ -256,7 +256,7 @@ export class MapType extends Type<MapOptions>
 
   public isValid(test: any): boolean 
   {
-    if (test instanceof Map && isObject(test))
+    if (test instanceof Map || isObject(test))
     {
       const { key, value } = this.options;
 
@@ -376,7 +376,7 @@ export class MapType extends Type<MapOptions>
   {
     const { key, value } = this.options;
 
-    return toArray(map.entries()).map(([k, v]) => [
+    return Array.from(map.entries()).map(([k, v]) => [
       key.toJson(k),
       value.toJson(v)
     ]);

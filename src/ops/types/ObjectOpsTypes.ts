@@ -13,6 +13,7 @@ import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = ObjectType.operations;
@@ -157,5 +158,7 @@ export const ObjectOpsTypes =
   asText: ops.setTypes(ObjectOps.asText, TextType, { value: ObjectType }),
 
   asTuple: ops.setTypes(ObjectOps.asTuple, i => TupleType.forItem([i.value || ObjectType]), { value: ObjectType }),
+
+  asSet: ops.setTypes(ObjectOps.asSet, i => SetType.forItem(i.value || ObjectType), { value: ObjectType }),
 
 };

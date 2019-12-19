@@ -1,5 +1,5 @@
 
-import { objectMap, isObject, objectValues, isString, toArray, objectEach, addCopier } from '../fns';
+import { objectMap, isObject, objectValues, isString, objectEach, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -159,8 +159,8 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
       if (exprType instanceof EnumType)
       {
-        const values = toArray(exprType.options.constants.values());
-        const types = values.map(p => this.options.props[p]).filter(t => !!t);
+        const values = Array.from(exprType.options.constants.values());
+        const types = values.map((p) => this.options.props[p]).filter(t => !!t);
 
         return def.mergeTypes(types);
       }

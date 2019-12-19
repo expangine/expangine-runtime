@@ -13,6 +13,7 @@ import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = MapType.operations;
@@ -197,5 +198,7 @@ export const MapOpsTypes =
   asText: ops.setTypes(MapOps.asText, TextType, { value: MapType }),
 
   asTuple: ops.setTypes(MapOps.asTuple, i => TupleType.forItem([i.value || MapType]), { value: MapType }),
+
+  asSet: ops.setTypes(MapOps.asSet, i => SetType.forItem(GivenValueMapValue(i)), { value: MapType }),
 
 };

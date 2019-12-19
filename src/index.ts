@@ -28,6 +28,7 @@ export * from './types/Null';
 export * from './types/Number';
 export * from './types/Object';
 export * from './types/Optional';
+export * from './types/Set';
 export * from './types/Text';
 export * from './types/Tuple';
 
@@ -65,6 +66,7 @@ export * from './ops/ListOps';
 export * from './ops/MapOps';
 export * from './ops/NumberOps';
 export * from './ops/ObjectOps';
+export * from './ops/SetOps';
 export * from './ops/TextOps';
 export * from './ops/TupleOps';
 
@@ -76,6 +78,7 @@ export * from './ops/types/ListOpsTypes';
 export * from './ops/types/MapOpsTypes';
 export * from './ops/types/NumberOpsTypes';
 export * from './ops/types/ObjectOpsTypes';
+export * from './ops/types/SetOpsTypes';
 export * from './ops/types/TextOpsTypes';
 export * from './ops/types/TupleOpsTypes';
 

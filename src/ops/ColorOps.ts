@@ -116,6 +116,8 @@ export const ColorOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
 ColorComputeds.set('toHSL', ColorOps.toHSL);

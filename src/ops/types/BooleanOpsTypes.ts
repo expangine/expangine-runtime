@@ -11,6 +11,7 @@ import { TupleType } from '../../types/Tuple';
 
 import { BooleanOps } from '../BooleanOps';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = BooleanType.operations;
@@ -69,5 +70,7 @@ export const BooleanOpsTypes =
   asText: ops.setTypes(BooleanOps.asText, TextType, { value: BooleanType }),
 
   asTuple: ops.setTypes(BooleanOps.asTuple, i => TupleType.forItem([i.value || BooleanType]), { value: BooleanType }),
+
+  asSet: ops.setTypes(BooleanOps.asSet, i => SetType.forItem(i.value || AnyType), { value: BooleanType }),
 
 };

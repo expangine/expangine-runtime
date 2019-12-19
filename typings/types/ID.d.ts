@@ -14,6 +14,7 @@ export declare const ID: {
     Object: string;
     Optional: string;
     Relation: string;
+    Set: string;
     Text: string;
     Tuple: string;
     Delimiter: string;

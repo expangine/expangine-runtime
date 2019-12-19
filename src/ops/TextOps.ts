@@ -155,6 +155,8 @@ export const TextOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
 TextComputeds.set('toUpper', TextOps.upper);

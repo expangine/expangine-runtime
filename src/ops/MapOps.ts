@@ -87,8 +87,11 @@ export const MapOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
+MapComputeds.set('copy', MapOps.copy);
 MapComputeds.set('keys', MapOps.keys);
 MapComputeds.set('values', MapOps.values);
 MapComputeds.set('entries', MapOps.entries);

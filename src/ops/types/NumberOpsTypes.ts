@@ -11,6 +11,7 @@ import { DateType } from '../../types/Date';
 
 import { NumberOps } from '../NumberOps';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = NumberType.operations;
@@ -197,5 +198,7 @@ export const NumberOpsTypes =
   asText: ops.setTypes(NumberOps.asText, TextType, { value: NumberType }),
 
   asTuple: ops.setTypes(NumberOps.asTuple, i => TupleType.forItem([i.value || NumberType]), { value: NumberType }),
+
+  asSet: ops.setTypes(NumberOps.asSet, i => SetType.forItem(i.value || NumberType), { value: NumberType }),
 
 };

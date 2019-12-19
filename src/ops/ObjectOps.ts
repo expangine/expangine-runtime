@@ -73,6 +73,8 @@ export const ObjectOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
 ObjectComputeds.set('copy', ObjectOps.copy);

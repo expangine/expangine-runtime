@@ -67,4 +67,5 @@ export declare const TextOps: {
     asObject: import("../Operation").Operation<"value", never, never, never, never>;
     asText: import("../Operation").Operation<"value", never, never, never, never>;
     asTuple: import("../Operation").Operation<"value", never, never, never, never>;
+    asSet: import("../Operation").Operation<"value", never, never, never, never>;
 };

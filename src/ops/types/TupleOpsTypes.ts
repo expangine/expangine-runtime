@@ -12,6 +12,7 @@ import { TextType } from '../../types/Text';
 import { TupleOps } from '../TupleOps';
 import { ColorType } from '../../types/Color';
 import { Type } from '../../Type';
+import { SetType } from '../../types/Set';
 
 
 const ops = TupleType.operations;
@@ -112,5 +113,7 @@ export const TupleOpsTypes =
   asText: ops.setTypes(TupleOps.asText, TextType, { value: TupleType }),
 
   asTuple: ops.setTypes(TupleOps.asTuple, i => i.value || TupleType, { value: TupleType }),
+
+  asSet: ops.setTypes(TupleOps.asSet, i => SetType.forItem(i.value || TupleType), { value: TupleType }),
 
 };

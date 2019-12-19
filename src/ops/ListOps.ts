@@ -190,6 +190,8 @@ export const ListOps =
   asText: ops.set('~' + ID.Text, {}, ['value']),
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
+
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
   
 };
 

@@ -5,6 +5,7 @@ export declare function isString(value: any): value is string;
 export declare function isArray<T = any>(value: any): value is T[];
 export declare function isDate(value: any): value is Date;
 export declare function isMap<K, V>(value: any): value is Map<K, V>;
+export declare function isSet<V>(value: any): value is Set<V>;
 export declare function isBoolean(value: any): value is boolean;
 export declare function isFunction(value: any): value is ((...args: any[]) => any);
 export declare function isObject(value: any): value is any;
@@ -20,7 +21,6 @@ export declare function objectMap<R, V, K extends RecordKey = string, J extends 
 export declare function objectEach<V, K extends RecordKey = string>(map: Record<K, V>, onEach: (value: V, key: K, map: Record<K, V>) => any): void;
 export declare function objectValues<V, M = V, K extends RecordKey = string>(map: Record<K, V>, transform?: (value: V, key: K) => M): M[];
 export declare function objectReduce<R, V, K extends RecordKey = string>(map: Record<K, V>, reduce: (value: V, key: K, reduced: R) => R, initial: R): R;
-export declare function toArray<T>(iter: IterableIterator<T>): T[];
 export declare function getCompare(less: number, more: number): number;
 export declare function coalesce<T>(x?: T, y?: T): T;
 export declare const COMPARE_TYPE_ORDER: {

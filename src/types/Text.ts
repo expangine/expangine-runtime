@@ -1,5 +1,5 @@
 
-import { isString, isNumber, isEmpty, coalesce, copy, toArray } from '../fns';
+import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
@@ -154,7 +154,7 @@ export class TextType extends Type<TextOptions>
 
         if (exprType.options.value instanceof TextType)
         {
-          const values = toArray(exprType.options.constants.values());
+          const values = Array.from(exprType.options.constants.values());
 
           if (values.length === 1 && values[0] === 'length')
           {

@@ -20,7 +20,13 @@ describe('Definitions', () => {
     ops.forEach(({ op, types }) => 
     {
       expect(op).toBeDefined();
-      expect(types).toBeDefined();
+
+      if (!types) 
+      {
+        console.log(`types missing for ${op.id}`);
+        
+        expect(types).toBeDefined();
+      }
     });
   });
 

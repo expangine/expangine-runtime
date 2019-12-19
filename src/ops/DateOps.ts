@@ -119,6 +119,8 @@ export const DateOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
 DateComputeds.set('timestamp', DateOps.get, 'value', { property: 'timestamp' });

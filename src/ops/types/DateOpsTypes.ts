@@ -13,6 +13,7 @@ import { ManyType } from '../../types/Many';
 import { DateOps } from '../DateOps';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
+import { SetType } from '../../types/Set';
 
 
 const ops = DateType.operations;
@@ -196,5 +197,7 @@ export const DateOpsTypes =
   asText: ops.setTypes(DateOps.asText, TextType, { value: DateType }),
 
   asTuple: ops.setTypes(DateOps.asTuple, i => TupleType.forItem([i.value || DateType]), { value: DateType }),
+
+  asSet: ops.setTypes(DateOps.asSet, i => SetType.forItem(i.value || AnyType), { value: DateType }),
 
 };

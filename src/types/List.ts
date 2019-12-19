@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, isArray, coalesce, toArray, addCopier } from '../fns';
+import { isNumber, isEmpty, isArray, coalesce, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
@@ -172,7 +172,7 @@ export class ListType extends Type<ListOptions>
 
       if (exprType instanceof EnumType)
       {
-        const values = toArray(exprType.options.constants.values());
+        const values = Array.from(exprType.options.constants.values());
 
         if (exprType.options.value instanceof NumberType)
         {

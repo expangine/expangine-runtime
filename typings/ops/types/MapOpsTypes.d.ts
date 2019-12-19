@@ -32,4 +32,5 @@ export declare const MapOpsTypes: {
     asObject: import("../..").OperationTypes<"value", never, never>;
     asText: import("../..").OperationTypes<"value", never, never>;
     asTuple: import("../..").OperationTypes<"value", never, never>;
+    asSet: import("../..").OperationTypes<"value", never, never>;
 };

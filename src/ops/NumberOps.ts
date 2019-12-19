@@ -189,6 +189,8 @@ export const NumberOps =
 
   asTuple: ops.set('~' + ID.Tuple, {}, ['value']),
 
+  asSet: ops.set('~' + ID.Set, {}, ['value']),
+
 };
 
 NumberComputeds.set('floor', NumberOps.floor);

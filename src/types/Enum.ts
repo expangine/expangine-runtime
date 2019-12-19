@@ -1,5 +1,5 @@
 
-import { toArray, compare } from '../fns';
+import { compare } from '../fns';
 import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
@@ -53,7 +53,7 @@ export class EnumType extends Type<EnumOptions>
       this.id,
       key.encode(),
       value.encode(),
-      toArray(constants.entries()).map(([k, v]) => [
+      Array.from(constants.entries()).map(([k, v]) => [
         key.toJson(k),
         value.toJson(v)
       ])
@@ -246,7 +246,7 @@ export class EnumType extends Type<EnumOptions>
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
   {
-    const values = toArray(this.options.constants.values());
+    const values = Array.from(this.options.constants.values());
 
     return values[rnd(0, values.length, true)];
   }

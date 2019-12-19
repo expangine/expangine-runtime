@@ -28,6 +28,11 @@ export function isMap<K, V>(value: any): value is Map<K, V>
   return value instanceof Map;
 }
 
+export function isSet<V>(value: any): value is Set<V>
+{
+  return value instanceof Set;
+}
+
 export function isBoolean(value: any): value is boolean 
 {
   return typeof value === 'boolean';
@@ -136,18 +141,6 @@ export function objectReduce<R, V, K extends RecordKey = string>(
   }
 
   return initial;
-}
-
-export function toArray<T>(iter: IterableIterator<T>): T[]
-{
-  const out: T[] = [];
-
-  for (const item of iter) 
-  { 
-    out.push(item);
-  }
-
-  return out;
 }
 
 export function getCompare(less: number, more: number): number

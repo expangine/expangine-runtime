@@ -15,6 +15,7 @@ export const ID = {
   Object: 'obj',
   Optional: '?',
   Relation: 'rel',
+  Set: 'set',
   Text: 'text',
   Tuple: 'tuple',
   Delimiter: ':',
