@@ -2,13 +2,13 @@
 import { isDate, isEmpty, copy, isObject, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { DateOps, DateOperations, DateComputeds } from '../ops/DateOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { AnyType } from './Any';
+import { Exprs } from '../ExpressionBuilder';
 
 
 const INDEX_OPTIONS = 1;
@@ -234,23 +234,23 @@ export class DateType extends Type<DateOptions>
     this.options = { parseAsUTC, withTime };
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(DateOps.create, {});
+    return Exprs.op(DateOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(DateOps.isValid, {
-      value: ex.get('value'),
+    return Exprs.op(DateOps.isValid, {
+      value: Exprs.get('value'),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(DateOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(DateOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

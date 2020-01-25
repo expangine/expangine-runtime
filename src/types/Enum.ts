@@ -3,7 +3,6 @@ import { compare } from '../fns';
 import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
@@ -169,19 +168,19 @@ export class EnumType extends Type<EnumOptions>
     
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return this.options.value.getCreateExpression(ex);
+    return this.options.value.getCreateExpression();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return this.options.value.getValidateExpression(ex);
+    return this.options.value.getValidateExpression();
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return this.options.value.getCompareExpression(ex);
+    return this.options.value.getCompareExpression();
   }
 
   public isValid(test: any): boolean 

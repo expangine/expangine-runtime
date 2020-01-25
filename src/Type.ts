@@ -2,11 +2,11 @@
 import { objectMap, isArray, isObject, isSameClass } from './fns';
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
-import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable } from './Traverser';
 import { EnumType } from './types/Enum';
 import { Computeds } from './Computed';
+import { Relation } from './Relation';
 
 
 export type TypeInput = TypeClass | Type;
@@ -32,6 +32,22 @@ export type TypeResolved<T> = T extends (null | undefined)
         : {
           [K in keyof T]: TypeResolved<T[K]>
         };
+
+export enum TypeKeyType
+{
+  PRIMARY,
+  FOREIGN,
+  NONE
+}
+
+export type TypePropPair = [string, Type];
+
+export interface TypeProps
+{
+  type: TypeKeyType;
+  props: TypePropPair[];
+  relation?: Relation;
+}
 
 export interface TypeProvider 
 {
@@ -71,7 +87,7 @@ export interface TypeClass<T extends Type<O> = any, O = any>
   describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
   register(this: TypeClass<T>): void;
   registered: boolean;
-  new(options: O): T;
+  new(options: O, ...args: any[]): T;
 }
 
 export abstract class Type<O = any> implements Traversable<Type>
@@ -199,11 +215,11 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract removeDescribedRestrictions(): void;
 
-  public abstract getCreateExpression(ex: ExpressionBuilder): Expression;
+  public abstract getCreateExpression(): Expression;
 
-  public abstract getValidateExpression(ex: ExpressionBuilder): Expression;
+  public abstract getValidateExpression(): Expression;
 
-  public abstract getCompareExpression(ex: ExpressionBuilder): Expression;
+  public abstract getCompareExpression(): Expression;
 
   public abstract isValid(value: any): boolean;
 

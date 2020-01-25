@@ -37,6 +37,16 @@ export const ListOpsTypes =
 
   create: ops.setTypes(ListOps.create, ListType),
 
+  createLike: ops.setTypes(ListOps.createLike, 
+    GivenList,
+    { list: GivenList },
+  ),
+
+  createFor: ops.setTypes(ListOps.createFor, 
+    i => ListType.forItem(i.item || AnyType),
+    { item: i => i.item || AnyType }
+  ),
+
   // Operations
 
   maybe: ops.setTypes(ListOps.maybe, 
@@ -108,6 +118,11 @@ export const ListOpsTypes =
     { list: GivenList, where: BooleanType },
     {},
     GivenListIterationScope
+  ),
+
+  clear: ops.setTypes(ListOps.clear, 
+    GivenList,
+    { list: GivenList }
   ),
 
   contains: ops.setTypes(ListOps.contains,

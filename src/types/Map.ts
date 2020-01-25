@@ -3,7 +3,7 @@ import { isObject, isMap, isSameClass, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { MapOps, MapOperations, MapComputeds } from '../ops/MapOps';
 import { ListOps } from '../ops/ListOps';
@@ -215,29 +215,29 @@ export class MapType extends Type<MapOptions>
     this.options.value.removeDescribedRestrictions();
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(MapOps.create, {});
+    return Exprs.op(MapOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.and(
-      ex.op(MapOps.isValid, {
-        value: ex.get('value'),
+    return Exprs.and(
+      Exprs.op(MapOps.isValid, {
+        value: Exprs.get('value'),
       }),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.op(MapOps.values, { map: ex.get('value') }),
-        item: ex.null(),
-        isEqual: ex.not(this.options.value.getValidateExpression(ex)),
+      Exprs.not(Exprs.op(ListOps.contains, {
+        list: Exprs.op(MapOps.values, { map: Exprs.get('value') }),
+        item: Exprs.null(),
+        isEqual: Exprs.not(this.options.value.getValidateExpression()),
       }, {
         value: 'ignore',
         test: 'value',
       })),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.op(MapOps.keys, { map: ex.get('value') }),
-        item: ex.null(),
-        isEqual: ex.not(this.options.key.getValidateExpression(ex)),
+      Exprs.not(Exprs.op(ListOps.contains, {
+        list: Exprs.op(MapOps.keys, { map: Exprs.get('value') }),
+        item: Exprs.null(),
+        isEqual: Exprs.not(this.options.key.getValidateExpression()),
       }, {
         value: 'ignore',
         test: 'value',
@@ -245,12 +245,12 @@ export class MapType extends Type<MapOptions>
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(MapOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-      compare: this.options.value.getValidateExpression(ex),
+    return Exprs.op(MapOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
+      compare: this.options.value.getValidateExpression(),
     });
   }
 

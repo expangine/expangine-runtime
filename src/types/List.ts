@@ -3,7 +3,7 @@ import { isNumber, isEmpty, isArray, coalesce, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ListOps, ListOperations, ListComputeds } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
@@ -299,21 +299,21 @@ export class ListType extends Type<ListOptions>
     this.options = { item };
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(ListOps.create, {});
+    return Exprs.op(ListOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.and(
-      ex.op(ListOps.isValid, {
-        value: ex.get('value'),
+    return Exprs.and(
+      Exprs.op(ListOps.isValid, {
+        value: Exprs.get('value'),
       }),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.get('value'),
-        item: ex.null(),
-        isEqual: ex.not(this.options.item.getValidateExpression(ex)),
+      Exprs.not(Exprs.op(ListOps.contains, {
+        list: Exprs.get('value'),
+        item: Exprs.null(),
+        isEqual: Exprs.not(this.options.item.getValidateExpression()),
       }, {
         value: 'ignore',
         test: 'value',
@@ -321,12 +321,12 @@ export class ListType extends Type<ListOptions>
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(ListOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-      compare: this.options.item.getCompareExpression(ex),
+    return Exprs.op(ListOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
+      compare: this.options.item.getCompareExpression(),
     });
   }
 

@@ -49,6 +49,10 @@ export const BooleanOpsTypes =
 
   isFalse: ops.setTypes(BooleanOps.isFalse, BooleanType, { value: BooleanType }),
 
+  isEqual: ops.setTypes(BooleanOps.isEqual, BooleanType, { value: BooleanType, test: BooleanType }),
+
+  isNotEqual: ops.setTypes(BooleanOps.isNotEqual, BooleanType, { value: BooleanType, test: BooleanType }),
+
   // Casts
 
   asAny: ops.setTypes(BooleanOps.asAny, AnyType, { value: BooleanType }),

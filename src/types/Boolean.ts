@@ -1,12 +1,12 @@
 
 import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { BooleanOps, BooleanOperations, BooleanComputeds } from '../ops/BooleanOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Exprs } from '../ExpressionBuilder';
 
 
 const INDEX_OPTIONS = 1;
@@ -125,23 +125,23 @@ export class BooleanType extends Type<BooleanOptions>
     
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(BooleanOps.create, {});
+    return Exprs.op(BooleanOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(BooleanOps.isValid, {
-      value: ex.get('value'),
+    return Exprs.op(BooleanOps.isValid, {
+      value: Exprs.get('value'),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(BooleanOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(BooleanOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

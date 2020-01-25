@@ -8,12 +8,15 @@ export * from './ExpressionBuilder';
 export * from './Locale';
 export * from './Operation';
 export * from './Computed';
+export * from './Relation';
 export * from './Runtime';
 export * from './Type';
 export * from './TypeBuilder';
+export * from './TypeStorage';
 export * from './Traverser';
 export * from './Validate';
 
+export * from './types/Aliased';
 export * from './types/Any';
 export * from './types/Boolean';
 export * from './types/Color';

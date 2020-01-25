@@ -1,7 +1,7 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
 import { isArray, isNumber } from '../fns';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TupleOps, TupleOperations, TupleComputeds } from '../ops/TupleOps';
 import { NumberOps } from '../ops/NumberOps';
@@ -161,39 +161,39 @@ export class TupleType extends Type<Type[]>
     return this;
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.tuple(
-      ...this.options.map((t) => t.getCreateExpression(ex))
+    return Exprs.tuple(
+      ...this.options.map((t) => t.getCreateExpression())
     );
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex
+    return Exprs
       .op(TupleOps.isValid, {
-        value: ex.get('value'),
+        value: Exprs.get('value'),
       })
-      .and(this.options.map((t, i) => ex
-        .define({ value: ex.get('value', i) })
-        .run(t.getValidateExpression(ex)),
+      .and(this.options.map((t, i) => Exprs
+        .define({ value: Exprs.get('value', i) })
+        .run(t.getValidateExpression()),
       ),
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.or(
-      ex.op(NumberOps.cmp, {
-        value: ex.get('value', 'length'),
-        test: ex.get('test', 'length'),
+    return Exprs.or(
+      Exprs.op(NumberOps.cmp, {
+        value: Exprs.get('value', 'length'),
+        test: Exprs.get('test', 'length'),
       }),
-      ...this.options.map((t, i) => ex
+      ...this.options.map((t, i) => Exprs
         .define({
-          value: ex.get('value', i),
-          test: ex.get('test', i),
+          value: Exprs.get('value', i),
+          test: Exprs.get('test', i),
         })
-        .run(t.getCompareExpression(ex)),
+        .run(t.getCompareExpression()),
       ),
     );
   }

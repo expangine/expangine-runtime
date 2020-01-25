@@ -39,6 +39,10 @@ export const BooleanOps =
 
   isFalse: ops.set('f?', {}, ['value']),
 
+  isEqual: ops.set('=', {}, ['value', 'test']),
+
+  isNotEqual: ops.set('!=', {}, ['value', 'test']),
+
   // Casts
 
   asAny: ops.set('~' + ID.Any, {}, ['value']),

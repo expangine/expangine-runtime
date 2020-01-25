@@ -32,6 +32,16 @@ export const SetOpsTypes =
 
   create: ops.setTypes(SetOps.create, SetType),
 
+  createLike: ops.setTypes(SetOps.createLike, 
+    GivenSet,
+    { set: GivenSet },
+  ),
+
+  createFor: ops.setTypes(SetOps.createFor, 
+    i => ListType.forItem(i.value || AnyType),
+    { value: i => i.value || AnyType }
+  ),
+
   // Operations
 
   maybe: ops.setTypes(SetOps.maybe, 

@@ -1,7 +1,7 @@
 
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberOps, NumberOperations, NumberComputeds } from '../ops/NumberOps';
 import { Definitions } from '../Definitions';
@@ -162,23 +162,23 @@ export class NumberType extends Type<NumberOptions>
     this.options = {};
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(NumberOps.create, {});
+    return Exprs.op(NumberOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(NumberOps.isValid, {
-      value: ex.get('value'),
+    return Exprs.op(NumberOps.isValid, {
+      value: Exprs.get('value'),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(NumberOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(NumberOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

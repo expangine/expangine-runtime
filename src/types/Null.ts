@@ -3,7 +3,7 @@ import { isEmpty, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
@@ -123,24 +123,24 @@ export class NullType extends Type<NullOptions>
     
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.null();
+    return Exprs.null();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(AnyOps.isEqual, {
-      value: ex.get('value'),
-      test: ex.null(),
+    return Exprs.op(AnyOps.isEqual, {
+      value: Exprs.get('value'),
+      test: Exprs.null(),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(AnyOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(AnyOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

@@ -5,7 +5,6 @@ import { Operations } from '../Operation';
 import { ObjectType, ObjectOptions } from './Object';
 import { AnyType } from './Any';
 import { Expression } from '../Expression';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -142,19 +141,19 @@ export class FunctionType extends Type<FunctionOptions>
     
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return this.options.returnType.getCreateExpression(ex);
+    return this.options.returnType.getCreateExpression();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return this.options.returnType.getValidateExpression(ex);
+    return this.options.returnType.getValidateExpression();
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return this.options.returnType.getCompareExpression(ex);
+    return this.options.returnType.getCompareExpression();
   }
 
   public isValid(value: any): boolean 

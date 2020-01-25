@@ -2,7 +2,6 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
@@ -143,17 +142,17 @@ export class NotType extends Type<Type[]>
     this.options.forEach(t => t.removeDescribedRestrictions());
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
     return NoExpression.instance;
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
     return NoExpression.instance;
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
     return NoExpression.instance;
   }

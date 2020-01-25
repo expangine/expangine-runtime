@@ -1,7 +1,7 @@
 
 import { objectMap, isObject, objectValues, isString, objectEach, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
 import { Definitions } from '../Definitions';
@@ -24,8 +24,6 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 {
 
   public static wilcardProperty = '*';
-
-  public static propType = new TextType({});
 
   public static id = ID.Object;
 
@@ -186,7 +184,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         ),
       },
       { 
-        key: ObjectType.propType, 
+        key: TextType.baseType, 
         value: def.optionalType(
           def.mergeTypes(
             objectValues(this.options.props)
@@ -290,38 +288,38 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return false;
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.object(
-      objectMap(this.options.props, (t) => t.getCreateExpression(ex))
+    return Exprs.object(
+      objectMap(this.options.props, (t) => t.getCreateExpression())
     );
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.and(
-      ex.op(ObjectOps.isValid, {
-        value: ex.get('value'),
+    return Exprs.and(
+      Exprs.op(ObjectOps.isValid, {
+        value: Exprs.get('value'),
       }),
       ...objectValues(this.options.props, (t, prop) =>
-        ex.define({ 
-          value: ex.get('value', prop) 
+        Exprs.define({ 
+          value: Exprs.get('value', prop) 
         }).run(
-          t.getValidateExpression(ex),
+          t.getValidateExpression(),
         ),
       ),
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.or(
+    return Exprs.or(
       ...objectValues(this.options.props, (t, prop) =>
-        ex.define({ 
-          value: ex.get('value', prop),
-          test: ex.get('test', prop) 
+        Exprs.define({ 
+          value: Exprs.get('value', prop),
+          test: Exprs.get('test', prop) 
         }).run(
-          t.getCompareExpression(ex),
+          t.getCompareExpression(),
         ),
       ),
     );

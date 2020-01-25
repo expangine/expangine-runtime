@@ -1,6 +1,6 @@
 
 import { Type, TypeInput, TypeInputMap } from './Type';
-import { ExpressionBuilder } from './ExpressionBuilder';
+import { ExpressionBuilder, Exprs } from './ExpressionBuilder';
 import { Expression } from './Expression';
 import { NumberType } from './types/Number'
 import { AnyType } from './types/Any';
@@ -12,13 +12,14 @@ import { ObjectType } from './types/Object';
 import { FunctionType } from './types/Function';
 import { ListType } from './types/List';
 import { ManyType } from './types/Many';
-import { isArray } from './fns';
+import { isArray, isMap } from './fns';
 import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
+import { SetType } from './types/Set';
 
 
 export class TypeBuilder
@@ -48,12 +49,25 @@ export class TypeBuilder
     });
   }
 
+  public enumForText(constants: string[] | Array<[string, string]> | Map<string, string>)
+  {
+    return new EnumType({
+      value: this.text(),
+      key: this.text(),
+      constants: isMap(constants)
+        ? constants
+        : isArray(constants[0])
+          ? new Map(constants as Array<[string, string]>)
+          : new Map((constants as string[]).map((c) => [c, c]))
+    });
+  }
+
   public func(returnType: TypeInput, params: TypeInputMap, getExpression: (ex: ExpressionBuilder) => Expression)
   {
     return new FunctionType({
       returnType: Type.fromInput(returnType),
       params: ObjectType.from(params),
-      expression: getExpression(new ExpressionBuilder()),
+      expression: getExpression(Exprs),
     });
   }
 
@@ -126,6 +140,13 @@ export class TypeBuilder
     return new ColorType(options);
   }
 
+  public set(value: TypeInput)
+  {
+    return new SetType({
+      value: Type.fromInput(value),
+    });
+  }
+
   public text(options: TextOptions = {})
   {
     return new TextType(options);
@@ -143,3 +164,5 @@ export class TypeBuilder
   }
 
 }
+
+export const Types = new TypeBuilder();

@@ -1,6 +1,5 @@
 
 import { Type, TypeDescribeProvider, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { ColorOps, ColorOperations, ColorComputeds } from '../ops/ColorOps';
 import { ID } from './ID';
@@ -10,6 +9,7 @@ import { ColorSpaceRGB } from '../util/color/ColorSpaceRGB';
 import { ColorSpace, ColorFormat } from '../util/color/ColorSpace';
 import { ColorSpaceHSL } from '../util/color/ColorSpaceHSL';
 import { ObjectType, ObjectOptions } from './Object';
+import { Exprs } from '../ExpressionBuilder';
 
 
 const INDEX_OPTIONS = 1;
@@ -156,23 +156,23 @@ export class ColorType extends ObjectType<ColorOptions>
     delete this.options.hasAlpha;
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(ColorOps.create, {});
+    return Exprs.op(ColorOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(ColorOps.isValid, {
-      value: ex.get('value'),
+    return Exprs.op(ColorOps.isValid, {
+      value: Exprs.get('value'),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(ColorOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(ColorOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

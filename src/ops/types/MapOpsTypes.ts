@@ -37,6 +37,17 @@ export const MapOpsTypes =
 
   create: ops.setTypes(MapOps.create, MapType),
 
+  createLike: ops.setTypes(MapOps.createLike, 
+    GivenMap,
+    { map: GivenMap },
+  ),
+
+  createFor: ops.setTypes(MapOps.createFor, 
+    i => MapType.forItem(i.value || AnyType, i.key || TextType),
+    { value: i => i.value || AnyType },
+    { key: i => i.key || TextType }
+  ),
+
   // Operations
 
   maybe: ops.setTypes(MapOps.maybe, 

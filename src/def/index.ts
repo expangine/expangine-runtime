@@ -1,6 +1,7 @@
 
 import { Definitions } from '../Definitions';
 
+import { AliasedType } from '../types/Aliased';
 import { AnyType } from '../types/Any';
 import { BooleanType } from '../types/Boolean';
 import { ColorType } from '../types/Color';
@@ -47,6 +48,7 @@ import { WhileExpression } from '../exprs/While';
 
 export const defs = new Definitions({
   types: [
+    AliasedType,
     AnyType,
     BooleanType, 
     ColorType,

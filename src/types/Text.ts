@@ -1,7 +1,7 @@
 
 import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations, TextComputeds } from '../ops/TextOps';
 import { ConstantExpression } from '../exprs/Constant';
@@ -261,24 +261,24 @@ export class TextType extends Type<TextOptions>
     this.options = {};
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(TextOps.create, {});
+    return Exprs.op(TextOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.op(TextOps.isValid, {
-      value: ex.get('value'),
+    return Exprs.op(TextOps.isValid, {
+      value: Exprs.get('value'),
     });
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(TextOps.compare, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-      ignoreCase: ex.get(true),
+    return Exprs.op(TextOps.compare, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
+      ignoreCase: Exprs.true(),
     });
   }
 

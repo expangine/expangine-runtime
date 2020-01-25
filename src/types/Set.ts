@@ -2,7 +2,7 @@
 import { isObject, isArray, isSet, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { SetOps, SetOperations, SetComputeds } from '../ops/SetOps';
 import { ListOps } from '../ops/ListOps';
@@ -179,21 +179,21 @@ export class SetType extends Type<SetOptions>
     this.options.value.removeDescribedRestrictions();
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.op(SetOps.create, {});
+    return Exprs.op(SetOps.create, {});
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.and(
-      ex.op(SetOps.isValid, {
-        value: ex.get('value'),
+    return Exprs.and(
+      Exprs.op(SetOps.isValid, {
+        value: Exprs.get('value'),
       }),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.op(SetOps.values, { set: ex.get('value') }),
-        item: ex.null(),
-        isEqual: ex.not(this.options.value.getValidateExpression(ex)),
+      Exprs.not(Exprs.op(ListOps.contains, {
+        list: Exprs.op(SetOps.values, { set: Exprs.get('value') }),
+        item: Exprs.null(),
+        isEqual: Exprs.not(this.options.value.getValidateExpression()),
       }, {
         value: 'ignore',
         test: 'value',
@@ -201,11 +201,11 @@ export class SetType extends Type<SetOptions>
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(SetOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(SetOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

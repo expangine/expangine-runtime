@@ -199,3 +199,5 @@ export class ExpressionBuilder
   }
 
 }
+
+export const Exprs = new ExpressionBuilder();

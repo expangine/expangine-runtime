@@ -2,7 +2,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations, OperationGeneric } from '../Operation';
 import { AnyType } from './Any';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
@@ -198,23 +198,23 @@ export class ManyType extends Type<Type[]>
     this.options.forEach(t => t.removeDescribedRestrictions());
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return this.options[0].getCreateExpression(ex);
+    return this.options[0].getCreateExpression();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.or(
-      ...this.options.map((t) => t.getValidateExpression(ex))
+    return Exprs.or(
+      ...this.options.map((t) => t.getValidateExpression())
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(AnyOps.cmp, {
-      value: ex.get('value'), 
-      test: ex.get('test'),
+    return Exprs.op(AnyOps.cmp, {
+      value: Exprs.get('value'), 
+      test: Exprs.get('test'),
     });
   }
 

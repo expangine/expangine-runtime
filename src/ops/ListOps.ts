@@ -17,6 +17,10 @@ export const ListOps =
 
   create: ops.set('create'),
 
+  createLike: ops.set('createLike', {}, ['list']),
+  
+  createFor: ops.set('createFor', {}, ['item']),
+
   // Operations
 
   maybe: ops.set('maybe', {}, ['value']),
@@ -44,6 +48,8 @@ export const ListOps =
   removeAt: ops.set('-@', { mutates: ['list'] }, ['list', 'index'], [], [], [], ['list']),
 
   removeWhere: ops.set('-?', { mutates: ['list'] }, ['list', 'where'], [], ['list', 'item', 'index'], ['where'], ['list']),
+
+  clear: ops.set('clear', { mutates: ['list'] }, ['list'] ),
 
   contains: ops.set('contains', { complexity: 1 }, ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual']),
 

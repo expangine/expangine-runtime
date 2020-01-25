@@ -1,6 +1,6 @@
 
 import { isArray, objectMap, isSameClass, objectValues, objectEach } from './fns';
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
+import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
@@ -12,13 +12,17 @@ import { ObjectType } from './types/Object';
 import { NullType } from './types/Null';
 import { ID } from './types/ID';
 import { Computeds, Computed } from './Computed';
+import { TypeStorageOptions, TypeStorage } from './TypeStorage';
+import { Relation, RelationOptions, TypeRelation } from './Relation';
 
 
 
 export interface DefinitionsImportOptions
 {
-  aliases?: Record<string, Type | any>;
+  aliases?: Record<string, ObjectType | any>;
   functions?: Record<string, FunctionType | any>;
+  storage?: Record<string, TypeStorageOptions>;
+  relations?: Record<string, RelationOptions>;
 }
 
 export interface DefinitionsOptions extends DefinitionsImportOptions
@@ -37,8 +41,10 @@ export class Definitions
   public expressions: Record<string, ExpressionClass>;
   public operations: Operations;
   public computeds: Computeds;
-  public aliased: TypeMap;
+  public aliased: Record<string, ObjectType>;
   public functions: Record<string, FunctionType>;
+  public storage: Record<string, TypeStorage>;
+  public relations: Record<string, Relation>;
 
   public constructor(initial?: DefinitionsOptions)
   { 
@@ -46,10 +52,13 @@ export class Definitions
     this.typeList = [];
     this.expressions = Object.create(null);
     this.parsers = Object.create(null);
+    this.aliased = Object.create(null);
     this.functions = Object.create(null);
     this.describers = [];
     this.operations = new Operations('');
     this.computeds = new Computeds('');
+    this.storage = Object.create(null);
+    this.relations = Object.create(null);
 
     if (initial) 
     {
@@ -63,7 +72,9 @@ export class Definitions
       types: objectValues(this.types),
       expressions: objectValues(this.expressions),
       aliases: objectMap(this.aliased, a => deepCopy ? a.encode() : a),
-      functions: objectMap(this.functions, f => deepCopy ? f.encode() : f)
+      functions: objectMap(this.functions, f => deepCopy ? f.encode() : f),
+      storage: objectMap(this.storage, s => s.encode()),
+      relations: objectMap(this.relations, r => r.encode()),
     });
 
     if (initial)
@@ -279,16 +290,153 @@ export class Definitions
     }
   }
 
-  public addAlias<T extends Type>(alias: string, instance: T | any) 
+  public addAlias(alias: string, instance: ObjectType | any): this
   {
-    const type = instance instanceof Type
+    const type = instance instanceof ObjectType
       ? instance
-      : this.getType(instance);
+      : this.getType(instance) as ObjectType;
 
     this.parsers[alias] = () => type;
     this.aliased[alias] = type;
+
+    return this;
   }
 
+  public addStorage(storage: TypeStorage | TypeStorageOptions): this
+  {
+    this.storage[storage.name] = storage instanceof TypeStorage
+      ? storage
+      : new TypeStorage(storage, this);
+
+    return this;
+  }
+
+  public addRelation(relation: Relation | RelationOptions): this
+  {
+    this.relations[relation.name] = relation instanceof Relation
+      ? relation
+      : new Relation(this, relation);
+
+    return this;
+  }
+
+  public getRelations(name: string): TypeRelation[]
+  {
+    const relations: TypeRelation[] = [];
+
+    objectEach(this.relations, (relation) =>
+    {
+      const subjectRelation = relation.getSubjectRelation(name);
+
+      if (subjectRelation)
+      {
+        relations.push(subjectRelation);
+      }
+
+      const relatedRelation = relation.getRelatedRelation(name);
+
+      if (relatedRelation)
+      {
+        relations.push(relatedRelation);
+      }
+    });
+
+    return relations;
+  }
+
+  public getTypeProps(name: string): TypeProps[]
+  {
+    const keys: TypeProps[] = [];
+    const storage = this.storage[name];
+
+    if (storage)
+    {
+      keys.push(storage.getTypeProps());
+    }
+
+    objectEach(this.relations, (relation) =>
+    {
+      keys.push(...relation.getTypeProps(name));
+    });
+
+    return keys;
+  }
+
+  public renameProp(name: string, prop: string, newProp: string)
+  {
+    const storage = this.storage[name];
+
+    if (storage)
+    {
+      storage.renameProp(prop, newProp);
+    }
+
+    objectEach(this.relations, (relation) =>
+    {
+      relation.renameProp(name, prop, newProp);
+    });
+  }
+
+  public rename(name: string, newName: string)
+  {
+    if (name === newName || !newName)
+    {
+      return false;
+    }
+
+    this.parsers[newName] = this.parsers[name];
+    this.aliased[newName] = this.aliased[name];
+    this.storage[newName] = this.storage[name];
+
+    delete this.parsers[name];
+    delete this.aliased[name];
+    delete this.storage[name];
+
+    objectEach(this.relations, (relation) => 
+    {
+      relation.rename(name, newName);
+    });
+
+    return true;
+  }
+
+  public removeProp(name: string, prop: string)
+  {
+    const storage = this.storage[name];
+
+    if (storage)
+    {
+      storage.removeProp(prop);
+    }
+
+    objectEach(this.relations, (relation, relationName) =>
+    {
+      relation.removeProp(name, prop);
+
+      if (relation.isEmpty())
+      {
+        delete this.relations[relationName];
+      }
+    });
+  }
+
+  public removeType(name: string)
+  {
+    delete this.parsers[name];
+    delete this.aliased[name];
+    delete this.storage[name];
+
+    objectEach(this.relations, (relation, relationName) =>
+    {
+      relation.remove(name);
+
+      if (relation.isEmpty())
+      {
+        delete this.relations[relationName];
+      }
+    });
+  }
+  
   public cloneType(type: Type)
   {
     return this.getType(type.encode());
@@ -869,7 +1017,9 @@ export class Definitions
   {
     return {
       aliases: objectMap(this.aliased, a => a.encode()),
-      functions: objectMap(this.functions, f => f.encode())
+      functions: objectMap(this.functions, f => f.encode()),
+      storage: objectMap(this.storage, s => s.encode()),
+      relations: objectMap(this.relations, r => r.encode()),
     };
   }
 
@@ -886,6 +1036,20 @@ export class Definitions
     {
       objectEach(exported.functions, (func, name) => 
         this.setFunction(name, func)
+      );
+    }
+
+    if (exported.storage)
+    {
+      objectEach(exported.storage, (options) => 
+        this.addStorage(options)
+      );
+    }
+
+    if (exported.relations)
+    {
+      objectEach(exported.relations, (options) => 
+        this.addRelation(options)
       );
     }
   }

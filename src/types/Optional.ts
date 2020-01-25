@@ -2,7 +2,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
-import { ExpressionBuilder } from '../ExpressionBuilder';
+import { Exprs } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
@@ -130,41 +130,41 @@ export class OptionalType extends Type<Type>
     this.options.removeDescribedRestrictions();
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return this.options.getCreateExpression(ex);
+    return this.options.getCreateExpression();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.or(
-      ex.op(AnyOps.isEqual, {
-        value: ex.get('value'),
-        test: ex.undefined(),
+    return Exprs.or(
+      Exprs.op(AnyOps.isEqual, {
+        value: Exprs.get('value'),
+        test: Exprs.undefined(),
       }),
-      this.options.getValidateExpression(ex),
+      this.options.getValidateExpression(),
     );
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.define({
-      valueMissing: ex.op(AnyOps.isEqual, {
-        value: ex.get('value'), 
-        test: ex.undefined(),
+    return Exprs.define({
+      valueMissing: Exprs.op(AnyOps.isEqual, {
+        value: Exprs.get('value'), 
+        test: Exprs.undefined(),
       }),
-      testMissing: ex.op(AnyOps.isEqual, {
-        value: ex.get('test'), 
-        test: ex.undefined(),
+      testMissing: Exprs.op(AnyOps.isEqual, {
+        value: Exprs.get('test'), 
+        test: Exprs.undefined(),
       }),
-    }, ex
-      .if(ex.and(ex.get('valueMissing'), ex.get('testMissing')))
-      .than(ex.compareEqual())
-      .if(ex.get('valueMissing'))
-      .than(ex.compareLess())
-      .if(ex.get('testMissing'))
-      .than(ex.compareGreater())
-      .else(this.options.getCompareExpression(ex)),
+    }, Exprs
+      .if(Exprs.and(Exprs.get('valueMissing'), Exprs.get('testMissing')))
+      .than(Exprs.compareEqual())
+      .if(Exprs.get('valueMissing'))
+      .than(Exprs.compareLess())
+      .if(Exprs.get('testMissing'))
+      .than(Exprs.compareGreater())
+      .else(this.options.getCompareExpression()),
     );
   }
 

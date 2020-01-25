@@ -17,6 +17,10 @@ export const MapOps =
 
   create: ops.set('create'),
 
+  createLike: ops.set('createLike', {}, ['map']),
+  
+  createFor: ops.set('createFor', {}, ['value'], ['key']),
+
   // Operations
 
   maybe: ops.set('maybe', {}, ['value']),

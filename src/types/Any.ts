@@ -1,12 +1,12 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { isObject, isString } from '../fns';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyOps, AnyOperations, AnyComputeds } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Exprs } from '../ExpressionBuilder';
 
 
 export type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
@@ -141,21 +141,21 @@ export class AnyType extends Type
 
   }
 
-  public getCreateExpression(ex: ExpressionBuilder): Expression
+  public getCreateExpression(): Expression
   {
-    return ex.string();
+    return Exprs.string();
   }
 
-  public getValidateExpression(ex: ExpressionBuilder): Expression
+  public getValidateExpression(): Expression
   {
-    return ex.true();
+    return Exprs.true();
   }
 
-  public getCompareExpression(ex: ExpressionBuilder): Expression
+  public getCompareExpression(): Expression
   {
-    return ex.op(AnyOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
+    return Exprs.op(AnyOps.cmp, {
+      value: Exprs.get('value'),
+      test: Exprs.get('test'),
     });
   }
 

@@ -3,6 +3,11 @@ import { ConstantExpression } from './exprs/Constant';
 
 export type RecordKey = string | number | symbol;
 
+export type MapInput<K = any, V = any> = 
+  Map<K, V> | 
+  Array<[K, V]> | 
+  (K extends string | number | symbol ? Record<K, V> : never);
+
 export function isNumber(value: any): value is number 
 {
   return typeof value === 'number' && isFinite(value);
@@ -101,6 +106,28 @@ export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<strin
         : new ConstantExpression(value);
 }
 
+export function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, V>
+{
+  if (isArray(input))
+  {
+    return new Map(input);
+  }
+  else if (isMap(input))
+  {
+    return input;
+  }
+  else if (isObject(input))
+  {
+    return new Map(objectToArray(input, (v, k) => [k, v]));
+  }
+  
+  return new Map();
+}
+
+export function reverseMap<K, V>(map: Map<K, V>): Map<V, K>
+{
+  return new Map(Array.from(map.entries()).map(([k, v]) => [v, k]));
+}
 
 export function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(
   map: Record<K, V>, 
@@ -141,6 +168,32 @@ export function objectReduce<R, V, K extends RecordKey = string>(
   }
 
   return initial;
+}
+
+export function objectFromProps<P extends string, V>(props: P[], getValue: (prop: P, index: number) => V): Record<P, V>
+{
+  const out = Object.create(null) as Record<P, V>;
+
+  for (let i = 0; i < props.length; i++)
+  {
+    const prop = props[i];
+
+    out[prop] = getValue(prop, i);
+  }
+
+  return out;
+}
+
+export function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getItem: (value: V, key: K) => T): T[]
+{
+  const arr: T[] = [];
+
+  for (const key in map)
+  {
+    arr.push(getItem(map[key], key));
+  }
+
+  return arr;
 }
 
 export function getCompare(less: number, more: number): number
