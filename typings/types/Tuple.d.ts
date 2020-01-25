@@ -1,5 +1,4 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { NumberType } from './Number';
@@ -25,9 +24,9 @@ export declare class TupleType extends Type<Type[]> {
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;

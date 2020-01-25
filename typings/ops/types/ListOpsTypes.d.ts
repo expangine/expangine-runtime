@@ -1,5 +1,7 @@
 export declare const ListOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    createLike: import("../..").OperationTypes<"list", never, never>;
+    createFor: import("../..").OperationTypes<"item", never, never>;
     maybe: import("../..").OperationTypes<"value", never, never>;
     build: import("../..").OperationTypes<"count" | "item", "sameItem", "list" | "count" | "index" | "last">;
     get: import("../..").OperationTypes<"list" | "index", never, never>;
@@ -13,6 +15,7 @@ export declare const ListOpsTypes: {
     removeLast: import("../..").OperationTypes<"list", never, never>;
     removeAt: import("../..").OperationTypes<"list" | "index", never, never>;
     removeWhere: import("../..").OperationTypes<"list" | "where", never, "list" | "item" | "index">;
+    clear: import("../..").OperationTypes<"list", never, never>;
     contains: import("../..").OperationTypes<"list" | "item" | "isEqual", never, "list" | "value" | "test">;
     find: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "item" | "index">;
     copy: import("../..").OperationTypes<"list", "deepCopy", "copy">;

@@ -1,5 +1,4 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
@@ -31,9 +30,9 @@ export declare class BooleanType extends Type<BooleanOptions> {
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): BooleanType;

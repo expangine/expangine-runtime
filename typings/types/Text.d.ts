@@ -1,5 +1,4 @@
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
 import { Definitions } from '../Definitions';
@@ -42,9 +41,9 @@ export declare class TextType extends Type<TextOptions> {
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): TextType;

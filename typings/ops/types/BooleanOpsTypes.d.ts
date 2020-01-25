@@ -9,6 +9,8 @@ export declare const BooleanOpsTypes: {
     isValid: import("../..").OperationTypes<"value", never, never>;
     isTrue: import("../..").OperationTypes<"value", never, never>;
     isFalse: import("../..").OperationTypes<"value", never, never>;
+    isEqual: import("../..").OperationTypes<"value" | "test", never, never>;
+    isNotEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
     asColor: import("../..").OperationTypes<"value", never, never>;

@@ -2,7 +2,6 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Operations } from '../Operation';
 import { ObjectType, ObjectOptions } from './Object';
 import { Expression } from '../Expression';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
@@ -35,9 +34,9 @@ export declare class FunctionType extends Type<FunctionOptions> {
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): FunctionType;

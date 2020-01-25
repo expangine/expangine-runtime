@@ -1,4 +1,4 @@
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap } from './Type';
+import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
 import { OptionalType } from './types/Optional';
@@ -6,9 +6,13 @@ import { ManyType } from './types/Many';
 import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
 import { Computeds, Computed } from './Computed';
+import { TypeStorageOptions, TypeStorage } from './TypeStorage';
+import { Relation, RelationOptions, TypeRelation } from './Relation';
 export interface DefinitionsImportOptions {
-    aliases?: Record<string, Type | any>;
+    aliases?: Record<string, ObjectType | any>;
     functions?: Record<string, FunctionType | any>;
+    storage?: Record<string, TypeStorageOptions>;
+    relations?: Record<string, RelationOptions>;
 }
 export interface DefinitionsOptions extends DefinitionsImportOptions {
     types?: TypeClass[];
@@ -22,8 +26,10 @@ export declare class Definitions {
     expressions: Record<string, ExpressionClass>;
     operations: Operations;
     computeds: Computeds;
-    aliased: TypeMap;
+    aliased: Record<string, ObjectType>;
     functions: Record<string, FunctionType>;
+    storage: Record<string, TypeStorage>;
+    relations: Record<string, Relation>;
     constructor(initial?: DefinitionsOptions);
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     add(options: DefinitionsOptions): void;
@@ -38,7 +44,15 @@ export declare class Definitions {
     getReducedType(type: Type[]): Type;
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
-    addAlias<T extends Type>(alias: string, instance: T | any): void;
+    addAlias(alias: string, instance: ObjectType | any): this;
+    addStorage(storage: TypeStorage | TypeStorageOptions): this;
+    addRelation(relation: Relation | RelationOptions): this;
+    getRelations(name: string): TypeRelation[];
+    getTypeProps(name: string): TypeProps[];
+    renameProp(name: string, prop: string, newProp: string): void;
+    rename(name: string, newName: string): boolean;
+    removeProp(name: string, prop: string): void;
+    removeType(name: string): void;
     cloneType(type: Type): Type<any>;
     getType(value: any): Type;
     getBaseTypes(): Type[];

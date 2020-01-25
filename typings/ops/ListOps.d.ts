@@ -4,6 +4,8 @@ export declare const ListOperations: Operations;
 export declare const ListComputeds: Computeds;
 export declare const ListOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    createLike: import("../Operation").Operation<"list", never, never, never, never>;
+    createFor: import("../Operation").Operation<"item", never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     build: import("../Operation").Operation<"count" | "item", "sameItem", "list" | "count" | "index" | "last", "item", "item">;
     get: import("../Operation").Operation<"list" | "index", never, never, never, "list">;
@@ -17,6 +19,7 @@ export declare const ListOps: {
     removeLast: import("../Operation").Operation<"list", never, never, never, "list">;
     removeAt: import("../Operation").Operation<"list" | "index", never, never, never, "list">;
     removeWhere: import("../Operation").Operation<"list" | "where", never, "list" | "item" | "index", "where", "list">;
+    clear: import("../Operation").Operation<"list", never, never, never, never>;
     contains: import("../Operation").Operation<"list" | "item" | "isEqual", never, "list" | "value" | "test", "isEqual", never>;
     find: import("../Operation").Operation<"list" | "where", "start" | "reverse", "list" | "item" | "index", "where", "list">;
     copy: import("../Operation").Operation<"list", "deepCopy", "copy", "deepCopy", "list">;

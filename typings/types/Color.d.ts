@@ -1,5 +1,4 @@
 import { Type, TypeDescribeProvider, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
 import { Color } from '../util/color/Color';
@@ -38,9 +37,9 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     isOptional(): boolean;
     isSimple(): boolean;
     removeDescribedRestrictions(): void;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): ColorType;

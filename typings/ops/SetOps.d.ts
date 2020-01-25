@@ -4,6 +4,8 @@ export declare const SetOperations: Operations;
 export declare const SetComputeds: Computeds;
 export declare const SetOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
+    createLike: import("../Operation").Operation<"set", never, never, never, never>;
+    createFor: import("../Operation").Operation<"value", never, never, never, never>;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     add: import("../Operation").Operation<"set" | "value", never, never, never, "set">;
     has: import("../Operation").Operation<"set" | "value", never, never, never, never>;

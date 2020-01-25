@@ -1,27 +1,27 @@
-import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
-export interface NumberOptions {
-    min?: number;
-    max?: number;
-    whole?: boolean;
-}
-export declare class NumberType extends Type<NumberOptions> {
-    static WHOLE_EPSILON: number;
+import { Computeds } from '../Computed';
+export declare class AliasedType extends Type<string> {
     static id: string;
-    static operations: import("..").Operations;
-    static computeds: import("..").Computeds;
-    static baseType: NumberType;
-    static decode(data: any[]): NumberType;
-    static encode(type: NumberType): any;
+    static operations: Operations;
+    static computeds: Computeds;
+    static baseType: AliasedType;
+    static decode(data: any[], types: TypeProvider): AliasedType;
+    static encode(type: AliasedType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static registered: boolean;
     static register(): void;
+    static for(name: string, provider: TypeProvider): AliasedType;
+    protected provider: TypeProvider;
+    constructor(name: string, provider: TypeProvider);
+    getType(): Type<any>;
+    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: NumberType, describer: TypeDescribeProvider): void;
+    merge(type: AliasedType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
@@ -29,6 +29,7 @@ export declare class NumberType extends Type<NumberOptions> {
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
+    protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
@@ -37,11 +38,11 @@ export declare class NumberType extends Type<NumberOptions> {
     getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
-    newInstance(): NumberType;
-    clone(): NumberType;
+    newInstance(): AliasedType;
+    clone(): AliasedType;
     encode(): any;
-    create(): number;
+    create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: number): number;
-    toJson(value: number): number;
+    fromJson(json: any): any;
+    toJson(value: any): any;
 }

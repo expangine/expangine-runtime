@@ -1,4 +1,5 @@
 export declare const ID: {
+    Aliased: string;
     Any: string;
     Boolean: string;
     Color: string;

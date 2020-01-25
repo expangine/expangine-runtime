@@ -58,3 +58,4 @@ export declare class ExpressionBuilder {
     compareGreater(): ConstantExpression;
     string(): ConstantExpression;
 }
+export declare const Exprs: ExpressionBuilder;

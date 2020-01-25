@@ -1,5 +1,7 @@
 export declare const SetOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
+    createLike: import("../..").OperationTypes<"set", never, never>;
+    createFor: import("../..").OperationTypes<"value", never, never>;
     maybe: import("../..").OperationTypes<"value", never, never>;
     add: import("../..").OperationTypes<"set" | "value", never, never>;
     has: import("../..").OperationTypes<"set" | "value", never, never>;

@@ -1,15 +1,12 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
-import { ExpressionBuilder } from '../ExpressionBuilder';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { TextType } from './Text';
 import { Traverser } from '../Traverser';
 export interface ObjectOptions {
     props: TypeMap;
 }
 export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> {
     static wilcardProperty: string;
-    static propType: TextType;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -34,9 +31,9 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
-    getCreateExpression(ex: ExpressionBuilder): Expression;
-    getValidateExpression(ex: ExpressionBuilder): Expression;
-    getCompareExpression(ex: ExpressionBuilder): Expression;
+    getCreateExpression(): Expression;
+    getValidateExpression(): Expression;
+    getCompareExpression(): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): ObjectType<O>;

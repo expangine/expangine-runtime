@@ -13,6 +13,8 @@ export declare const BooleanOps: {
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isTrue: import("../Operation").Operation<"value", never, never, never, never>;
     isFalse: import("../Operation").Operation<"value", never, never, never, never>;
+    isEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
+    isNotEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     asAny: import("../Operation").Operation<"value", never, never, never, never>;
     asBoolean: import("../Operation").Operation<"value", never, never, never, never>;
     asColor: import("../Operation").Operation<"value", never, never, never, never>;

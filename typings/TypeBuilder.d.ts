@@ -17,11 +17,13 @@ import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
+import { SetType } from './types/Set';
 export declare class TypeBuilder {
     any(): AnyType;
     bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
     date(options?: DateOptions): DateType;
     enum(value: TypeInput, key?: TypeInput, constants?: Map<any, any>): EnumType;
+    enumForText(constants: string[] | Array<[string, string]> | Map<string, string>): EnumType;
     func(returnType: TypeInput, params: TypeInputMap, getExpression: (ex: ExpressionBuilder) => Expression): FunctionType;
     list(item: TypeInput, min?: number, max?: number): ListType;
     many(types: TypeInput[]): ManyType;
@@ -37,7 +39,9 @@ export declare class TypeBuilder {
     color(options?: {
         hasAlpha?: boolean;
     }): ColorType;
+    set(value: TypeInput): SetType;
     text(options?: TextOptions): TextType;
     tuple(types: TypeInput[]): TupleType;
     tuple(...types: TypeInput[]): TupleType;
 }
+export declare const Types: TypeBuilder;

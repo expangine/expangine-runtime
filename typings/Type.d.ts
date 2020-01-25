@@ -1,9 +1,9 @@
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
-import { ExpressionBuilder } from './ExpressionBuilder';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable } from './Traverser';
 import { Computeds } from './Computed';
+import { Relation } from './Relation';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
@@ -14,6 +14,17 @@ export interface TypeSub {
 export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeInputMap ? Record<keyof T, Type> : {
     [K in keyof T]: TypeResolved<T[K]>;
 };
+export declare enum TypeKeyType {
+    PRIMARY = 0,
+    FOREIGN = 1,
+    NONE = 2
+}
+export declare type TypePropPair = [string, Type];
+export interface TypeProps {
+    type: TypeKeyType;
+    props: TypePropPair[];
+    relation?: Relation;
+}
 export interface TypeProvider {
     getType(data: any): Type;
     getExpression(data: any): Expression;
@@ -43,7 +54,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
     describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
     register(this: TypeClass<T>): void;
     registered: boolean;
-    new (options: O): T;
+    new (options: O, ...args: any[]): T;
 }
 export declare abstract class Type<O = any> implements Traversable<Type> {
     static fromInput(input: TypeInput): Type;
@@ -72,9 +83,9 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract traverse<R>(traverse: Traverser<Type, R>): R;
     abstract setParent(parent?: Type): void;
     abstract removeDescribedRestrictions(): void;
-    abstract getCreateExpression(ex: ExpressionBuilder): Expression;
-    abstract getValidateExpression(ex: ExpressionBuilder): Expression;
-    abstract getCompareExpression(ex: ExpressionBuilder): Expression;
+    abstract getCreateExpression(): Expression;
+    abstract getValidateExpression(): Expression;
+    abstract getCompareExpression(): Expression;
     abstract isValid(value: any): boolean;
     abstract normalize(value: any): any;
     abstract newInstance(): Type<O>;
