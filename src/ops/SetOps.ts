@@ -17,9 +17,9 @@ export const SetOps =
 
   create: ops.set('create'),
 
-  createLike: ops.set('createLike', {}, ['set']),
+  createLike: ops.set('createLike', {}, ['set'], [], [], [], ['set']),
   
-  createFor: ops.set('createFor', {}, ['value']),
+  createFor: ops.set('createFor', {}, ['value'], [], [], [], ['value']),
 
   // Operations
 

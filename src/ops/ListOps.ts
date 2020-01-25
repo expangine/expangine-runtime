@@ -17,9 +17,9 @@ export const ListOps =
 
   create: ops.set('create'),
 
-  createLike: ops.set('createLike', {}, ['list']),
+  createLike: ops.set('createLike', {}, ['list'], [], [], [], ['list']),
   
-  createFor: ops.set('createFor', {}, ['item']),
+  createFor: ops.set('createFor', {}, ['item'], [], [], [], ['item']),
 
   // Operations
 
@@ -49,7 +49,7 @@ export const ListOps =
 
   removeWhere: ops.set('-?', { mutates: ['list'] }, ['list', 'where'], [], ['list', 'item', 'index'], ['where'], ['list']),
 
-  clear: ops.set('clear', { mutates: ['list'] }, ['list'] ),
+  clear: ops.set('clear', { mutates: ['list'] }, ['list'], [], [], [], ['list'] ),
 
   contains: ops.set('contains', { complexity: 1 }, ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual']),
 

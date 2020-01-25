@@ -17,9 +17,9 @@ export const MapOps =
 
   create: ops.set('create'),
 
-  createLike: ops.set('createLike', {}, ['map']),
+  createLike: ops.set('createLike', {}, ['map'], [], [], [], ['map']),
   
-  createFor: ops.set('createFor', {}, ['value'], ['key']),
+  createFor: ops.set('createFor', {}, ['value'], ['key'],  [], [], ['value', 'key']),
 
   // Operations
 

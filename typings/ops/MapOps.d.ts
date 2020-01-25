@@ -4,8 +4,8 @@ export declare const MapOperations: Operations;
 export declare const MapComputeds: Computeds;
 export declare const MapOps: {
     create: import("../Operation").Operation<never, never, never, never, never>;
-    createLike: import("../Operation").Operation<"map", never, never, never, never>;
-    createFor: import("../Operation").Operation<"value", "key", never, never, never>;
+    createLike: import("../Operation").Operation<"map", never, never, never, "map">;
+    createFor: import("../Operation").Operation<"value", "key", never, never, "value" | "key">;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     get: import("../Operation").Operation<"map" | "key", never, never, never, "map">;
     set: import("../Operation").Operation<"map" | "key" | "value", never, "existingValue", "value", "map">;
