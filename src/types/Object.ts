@@ -115,11 +115,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
     for (const prop in p1)
     {
-      if (prop in p2)
+      if (prop in p2 && p2[prop])
       {
         p1[prop] = describer.mergeType(p1[prop], p2[prop]);
       }
-      else
+      else if (p1[prop])
       {
         p1[prop] = describer.optionalType(p1[prop]);
       }
@@ -127,7 +127,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
     for (const prop in p2)
     {
-      if (!(prop in p1))
+      if (!(prop in p1) && p2[prop])
       {
         p1[prop] = describer.optionalType(p2[prop]);
       }
@@ -217,12 +217,12 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   {
     this.parent = parent;
 
-    objectEach(this.options.props, t => t.setParent(this));
+    objectEach(this.options.props, t => t ? t.setParent(this) : 0);
   }
 
   public removeDescribedRestrictions(): void
   {
-    objectEach(this.options.props, t => t.removeDescribedRestrictions());
+    objectEach(this.options.props, t => t ? t.removeDescribedRestrictions() : 0);
   }
 
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
@@ -237,6 +237,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     for (const prop in props) 
     {
       if (prop === ObjectType.wilcardProperty)
+      {
+        continue;
+      }
+
+      if (!props[prop])
       {
         continue;
       }
@@ -258,7 +263,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     {
       for (const prop in other.options.props)
       {
-        if (!props[prop])
+        if (!props[prop] && other.options.props[prop])
         {
           return false;
         }
@@ -268,7 +273,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     {
       for (const prop in other.options.props)
       {
-        if (!props[prop] && !wildcard.isCompatible(other.options.props[prop], options))
+        if (!props[prop] && other.options.props[prop] && !wildcard.isCompatible(other.options.props[prop], options))
         {
           return false;
         }
@@ -291,7 +296,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   public getCreateExpression(): Expression
   {
     return Exprs.object(
-      objectMap(this.options.props, (t) => t.getCreateExpression())
+      objectMap(this.options.props, (t) => t ? t.getCreateExpression() : Exprs.noop())
     );
   }
 
@@ -305,7 +310,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         Exprs.define({ 
           value: Exprs.get('value', prop) 
         }).run(
-          t.getValidateExpression(),
+          t ? t.getValidateExpression() : Exprs.true(),
         ),
       ),
     );
@@ -319,7 +324,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
           value: Exprs.get('value', prop),
           test: Exprs.get('test', prop) 
         }).run(
-          t.getCompareExpression(),
+          t ? t.getCompareExpression() : Exprs.true(),
         ),
       ),
     );
@@ -337,6 +342,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     for (const prop in props) 
     {
       if (prop === ObjectType.wilcardProperty)
+      {
+        continue;
+      }
+
+      if (!props[prop])
       {
         continue;
       }
@@ -376,7 +386,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   public clone(): ObjectType<O>
   {
     return new ObjectType<O>({
-      props: objectMap(this.options.props, p => p.clone()),
+      props: objectMap(this.options.props, p => p ? p.clone() : p),
     } as O);
   }
 
@@ -397,7 +407,10 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
     for (const prop in props)
     {
-      out[prop] = props[prop].random(rnd);
+      if (props[prop])
+      {
+        out[prop] = props[prop].random(rnd);
+      }
     }
 
     return out;
