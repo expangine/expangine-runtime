@@ -1,6 +1,6 @@
 // import { describe, it, expect } from 'jest';
 
-import { ExpressionBuilder, defs, NumberType, TypeBuilder } from '../../src';
+import { ExpressionBuilder, defs, NumberType, TypeBuilder, NullType } from '../../src';
 
 
 // tslint:disable: no-magic-numbers
@@ -16,7 +16,7 @@ describe('Return', () => {
     const ret = ex.return();
     const retType = ret.getType(defs, context);
 
-    expect(retType).toBeNull();
+    expect(retType).toEqual(NullType.baseType);
   });
 
   it('type value', () =>

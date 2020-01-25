@@ -64,7 +64,9 @@ export class AliasedType extends Type<string>
 
   public getType()
   {
-    return this.provider.getType(this.options) || NullType.baseType;
+    return this.provider
+      ? this.provider.getType(this.options) || NullType.baseType
+      : NullType.baseType;
   }
 
   public getOperations()

@@ -4,6 +4,7 @@ import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { NullType } from '../types/Null';
 
 
 export class NoExpression extends Expression 
@@ -45,7 +46,7 @@ export class NoExpression extends Expression
 
   public getType(def: Definitions, context: Type): Type | null
   {
-    return null;
+    return NullType.baseType;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
