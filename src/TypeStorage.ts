@@ -77,7 +77,7 @@ export class TypeStorage
     this.type = defs.getType(options.name) as ObjectType;
     this.key = options.key 
       ? defs.getExpression(options.key)
-      : Exprs.get(this.getDynamicPrimaryKey());
+      : Exprs.get('instance', this.getDynamicPrimaryKey());
     this.transcoders = this.decodeTranscoders(defs, options.transcoders);
     this.indexes = this.decodeIndexes(defs, options.indexes);
     this.primaryType = TypeStoragePrimaryType.AUTO_INCREMENT;

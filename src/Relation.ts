@@ -13,6 +13,7 @@ export interface RelationTypeKey
 export interface RelationOptions
 {
   name: string;
+  kind: RelationKind;
   subject: RelationTypeKey;
   subjectRelationName?: string;
   morphs?: [string, any];
@@ -27,8 +28,9 @@ export interface RelationOptions
 
 export interface TypeRelation
 {
-  relationName: string;
+  relation: Relation;
   name: string;
+  kind: RelationKind;
   related: RelationTypeKey[];
   morphs?: TypePropPair;
   morphsToRelated?: Map<any, string>;
@@ -38,6 +40,16 @@ export interface TypeRelation
   relationType: Type;
   cascade: RelationCascade;
   local: string[];
+}
+
+export enum RelationKind
+{
+  HAS_MANY,
+  BELONGS_TO,
+  HAS_ONE,
+  ONE,
+  HAS_ONE_POLYMORPHIC,
+  ONE_POLYMORPHIC,
 }
 
 export enum RelationCascade
@@ -96,6 +108,11 @@ export class Relation
   public relatedToMorphs: Map<string, any>;
 
   /**
+   * The kind of relation created.
+   */
+  public kind: RelationKind;
+
+  /**
    * List or single related instance?
    */
   public multiple: boolean;
@@ -127,6 +144,7 @@ export class Relation
   {
     this.defs = defs;
     this.name = options.name;
+    this.kind = options.kind;
     this.subject = options.subject;
     this.subjectRelationName = options.subjectRelationName || options.related[0].name;
     this.morphs = options.morphs
@@ -157,14 +175,15 @@ export class Relation
   public encode(): RelationOptions
   {
     const { 
-      name, subject, subjectRelationName, 
+      name, kind, subject, subjectRelationName, 
       morphs, morphsToRelated, 
       related, relatedRelationName, 
       multiple, required, owns, extension 
     } = this;
 
     return {
-      name, 
+      name,
+      kind,
       subject,
       subjectRelationName,
       morphs: this.encodeTypePair(morphs),
@@ -310,7 +329,6 @@ export class Relation
       return null;
     }
 
-    const relationName = this.name;
     const name = this.subjectRelationName;
     const local = this.subject.props;
     const related = this.related;
@@ -323,10 +341,14 @@ export class Relation
     const relationType = this.required
       ? itemType
       : Types.optional(itemType);
+    const kind = this.kind === RelationKind.HAS_MANY
+      ? RelationKind.BELONGS_TO
+      : this.kind; 
 
     const relation: TypeRelation = {
-      relationName,
+      relation: this,
       name,
+      kind,
       local,
       cascade,
       related,
@@ -352,7 +374,6 @@ export class Relation
       return null;
     }
 
-    const relationName = this.name;
     const name = this.relatedRelationName;
     const local = withName.props;
     const related = [this.subject];
@@ -363,10 +384,16 @@ export class Relation
       : this.required
         ? itemType
         : Types.optional(itemType);
+    const kind = this.kind === RelationKind.HAS_MANY
+      ? RelationKind.HAS_MANY
+      : this.morphs
+        ? RelationKind.ONE_POLYMORPHIC
+        : RelationKind.ONE;
 
     const relation: TypeRelation = {
-      relationName,
+      relation: this,
       name,
+      kind,
       local,
       cascade,
       related,
@@ -432,6 +459,7 @@ export class Relation
 
     return new Relation(defs, {
       name,
+      kind: RelationKind.HAS_MANY,
       subject: { 
         name: options.many,
         props: subjectProps,
@@ -491,6 +519,7 @@ export class Relation
 
     return new Relation(defs, {
       name,
+      kind: RelationKind.HAS_ONE,
       subject: {
         name: options.hasOne,
         props: subjectProps,
@@ -556,6 +585,7 @@ export class Relation
 
     return new Relation(defs, {
       name,
+      kind: RelationKind.HAS_ONE_POLYMORPHIC,
       subject: {
         name: options.hasOne,
         props: subjectProps,

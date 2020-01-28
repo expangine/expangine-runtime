@@ -7,6 +7,7 @@ export interface RelationTypeKey {
 }
 export interface RelationOptions {
     name: string;
+    kind: RelationKind;
     subject: RelationTypeKey;
     subjectRelationName?: string;
     morphs?: [string, any];
@@ -19,8 +20,9 @@ export interface RelationOptions {
     extension?: boolean;
 }
 export interface TypeRelation {
-    relationName: string;
+    relation: Relation;
     name: string;
+    kind: RelationKind;
     related: RelationTypeKey[];
     morphs?: TypePropPair;
     morphsToRelated?: Map<any, string>;
@@ -30,6 +32,14 @@ export interface TypeRelation {
     relationType: Type;
     cascade: RelationCascade;
     local: string[];
+}
+export declare enum RelationKind {
+    HAS_MANY = 0,
+    BELONGS_TO = 1,
+    HAS_ONE = 2,
+    ONE = 3,
+    HAS_ONE_POLYMORPHIC = 4,
+    ONE_POLYMORPHIC = 5
 }
 export declare enum RelationCascade {
     NONE = 0,
@@ -74,6 +84,10 @@ export declare class Relation {
      * A map from related type names to the morph value.
      */
     relatedToMorphs: Map<string, any>;
+    /**
+     * The kind of relation created.
+     */
+    kind: RelationKind;
     /**
      * List or single related instance?
      */
