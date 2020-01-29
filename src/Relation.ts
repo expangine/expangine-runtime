@@ -333,7 +333,7 @@ export class Relation
     const local = this.subject.props;
     const related = this.related;
     const itemType = this.getItemType(related);
-    const cascade = this.owns
+    const cascade = this.owns && this.multiple
       ? RelationCascade.CASCADE
       : this.required
         ? RelationCascade.RESTRICT
@@ -531,7 +531,7 @@ export class Relation
       }],
       relatedRelationName,
       required: options.required,
-      owns: options.required,
+      owns: options.owns,
     });
   }
 
@@ -575,7 +575,7 @@ export class Relation
   {
     const subjectRelationName = options.hasOneRelationName;
     const relatedRelationName = options.polyRelationName || options.hasOne;
-    const name = options.name || (subjectRelationName + '_hasOnePolymorphic_' + subjectRelationName);
+    const name = options.name || (subjectRelationName + '_hasOnePolymorphic_' + relatedRelationName);
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const related = options.poly.map((polyName) => ({
       name: polyName, 
@@ -596,7 +596,7 @@ export class Relation
       morphs: options.morphs,
       morphsToRelated: options.morphsToRelated,
       required: options.required,
-      owns: options.required,
+      owns: options.owns,
     });
   }
 
