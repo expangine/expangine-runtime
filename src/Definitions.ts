@@ -451,8 +451,14 @@ export class Definitions
 
     const id = isArray(value) ? value[0] : value;
     const data = isArray(value) ? value : [];
+    const parser = this.parsers[id];
 
-    return this.parsers[id](data, this);
+    if (!parser)
+    {
+      throw new Error(`No parser found for ${id} with payload ${JSON.stringify(data)}`);
+    }
+    
+    return parser(data, this);
   }
 
   public getBaseTypes(): Type[]
