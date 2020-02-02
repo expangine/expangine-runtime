@@ -59,6 +59,8 @@ export declare const NumberOps: {
     rnd: import("../Operation").Operation<never, "min" | "max" | "whole" | "includeMax", never, never, never>;
     toBaseText: import("../Operation").Operation<"value", "base" | "minDigits", never, never, never>;
     toText: import("../Operation").Operation<"value", "prefix" | "suffix" | "minPlaces" | "maxPlaces" | "useExponent" | "thousandSeparator", never, never, never>;
+    toPercent: import("../Operation").Operation<"value", never, never, never, never>;
+    fromPercent: import("../Operation").Operation<"value", never, never, never, never>;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isZero: import("../Operation").Operation<"value", "epsilon", never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test", "epsilon", never, never, never>;

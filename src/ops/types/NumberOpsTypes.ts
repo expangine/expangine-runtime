@@ -147,6 +147,10 @@ export const NumberOpsTypes =
 
   toText: ops.setTypes(NumberOps.toText, TextType, { value: NumberType }, { prefix: TextType, suffix: TextType, minPlaces: NumberType, maxPlaces: NumberType, useExponent: BooleanType, thousandSeparator: TextType }),
 
+  toPercent: ops.setTypes(NumberOps.toPercent, TextType, { value: NumberType }),
+
+  fromPercent: ops.setTypes(NumberOps.fromPercent, NumberType, { value: TextType }),
+
   // Comparisons
 
   isValid: ops.setTypes(NumberOps.isValid, BooleanType, { value: AnyType }),

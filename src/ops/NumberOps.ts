@@ -137,6 +137,10 @@ export const NumberOps =
 
   toText: ops.set('toText', {}, ['value'], ['prefix', 'suffix', 'minPlaces', 'maxPlaces', 'useExponent', 'thousandSeparator']),
 
+  toPercent: ops.set('toPercent', {}, ['value']),
+
+  fromPercent: ops.set('fromPercent', {}, ['value']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),
