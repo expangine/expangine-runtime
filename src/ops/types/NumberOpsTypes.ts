@@ -12,6 +12,7 @@ import { DateType } from '../../types/Date';
 import { NumberOps } from '../NumberOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { OptionalType } from '../../types/Optional';
 
 
 const ops = NumberType.operations;
@@ -149,7 +150,7 @@ export const NumberOpsTypes =
 
   toPercent: ops.setTypes(NumberOps.toPercent, TextType, { value: NumberType }, { minPlaces: NumberType, maxPlaces: NumberType, thousandSeparator: TextType }),
 
-  fromPercent: ops.setTypes(NumberOps.fromPercent, NumberType, { value: TextType }),
+  fromPercent: ops.setTypes(NumberOps.fromPercent, OptionalType.for(NumberType), { value: TextType }),
 
   // Comparisons
 
