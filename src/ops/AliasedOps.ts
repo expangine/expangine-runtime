@@ -13,7 +13,7 @@ const ops = AliasedOperations;
 export const AliasedOps = 
 {
 
-  newInstance: ops.set('newInstance', {}, ['name']),
+  newInstance: ops.set('newInstance', {}, ['name'], [], [], [], ['name']),
 
   // save: ops.set('create', {}, ['name', 'instance']),
 

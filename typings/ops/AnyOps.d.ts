@@ -8,7 +8,7 @@ export declare const AnyOps: {
     isDefined: import("../Operation").Operation<"value", never, never, never, never>;
     getDefined: import("../Operation").Operation<"value" | "defined", never, "defined", "defined", "value">;
     coalesce: import("../Operation").Operation<"a" | "b", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
-    require: import("../Operation").Operation<"value", never, never, never, never>;
+    require: import("../Operation").Operation<"value", never, never, never, "value">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").Operation<"value" | "test", never, never, never, never>;

@@ -28,7 +28,7 @@ export const AnyOps =
 
   coalesce: ops.set('coalesce', {}, ['a', 'b'], ['c', 'd', 'e'], [], [], ['a', 'b', 'c', 'd', 'e']),
 
-  require: ops.set('require', {}, ['value']),
+  require: ops.set('require', {}, ['value'], [], [], [], ['value']),
 
   // Comparisons
 
