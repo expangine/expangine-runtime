@@ -141,9 +141,17 @@ export const MapOpsTypes =
   ),
 
   fromPlainObject: ops.setTypes(MapOps.fromPlainObject, 
-    (i, defs) => i.object instanceof ObjectType
-      ? MapType.forItem(defs.mergeTypes(objectValues(i.object.options.props)))
-      : MapType,
+    (i, defs) => {
+      if (!(i.object instanceof ObjectType)) {
+        return MapType;
+      }
+
+      const propTypes = objectValues((i.object as ObjectType).options.props);
+      
+      return propTypes.length > 0
+        ? MapType.forItem(defs.mergeTypes(propTypes))
+        : MapType; 
+    },
     { object: i => i.object || ObjectType }
   ),
 
