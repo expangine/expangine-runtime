@@ -14,6 +14,7 @@ import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { objectValues } from '../../fns';
 
 
 const ops = MapType.operations;
@@ -137,6 +138,13 @@ export const MapOpsTypes =
   toPlainObject: ops.setTypes(MapOps.toPlainObject,
     AnyType,
     { map: GivenMap }
+  ),
+
+  fromPlainObject: ops.setTypes(MapOps.fromPlainObject, 
+    (i, defs) => i.object instanceof ObjectType
+      ? MapType.forItem(defs.mergeTypes(objectValues(i.object.options.props)))
+      : MapType,
+    { object: i => i.object || ObjectType }
   ),
 
   // Comparisons

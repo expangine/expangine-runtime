@@ -21,6 +21,7 @@ export declare const MapOps: {
     copy: import("../Operation").Operation<"map", "deepCopy" | "deepCopyKey", "map" | "key" | "value", "deepCopy" | "deepCopyKey", "map">;
     map: import("../Operation").Operation<"map", "transform" | "transformKey", "map" | "key" | "value", "transform" | "transformKey", "map">;
     toPlainObject: import("../Operation").Operation<"map", never, never, never, never>;
+    fromPlainObject: import("../Operation").Operation<"object", never, never, never, "object">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;
     isEqual: import("../Operation").Operation<"value" | "test" | "isEqual", never, "key" | "value" | "test", "isEqual", never>;
     isNotEqual: import("../Operation").Operation<"value" | "test" | "isEqual", never, "key" | "value" | "test", "isEqual", never>;

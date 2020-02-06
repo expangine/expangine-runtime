@@ -17,6 +17,7 @@ export declare const MapOpsTypes: {
     copy: import("../..").OperationTypes<"map", "deepCopy" | "deepCopyKey", "map" | "key" | "value">;
     map: import("../..").OperationTypes<"map", "transform" | "transformKey", "map" | "key" | "value">;
     toPlainObject: import("../..").OperationTypes<"map", never, never>;
+    fromPlainObject: import("../..").OperationTypes<"object", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", never, "key" | "value" | "test">;
     isNotEqual: import("../..").OperationTypes<"value" | "test" | "isEqual", never, "key" | "value" | "test">;

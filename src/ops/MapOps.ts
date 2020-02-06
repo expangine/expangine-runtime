@@ -53,6 +53,8 @@ export const MapOps =
 
   toPlainObject: ops.set('plain', { complexity: 1 }, ['map']),
 
+  fromPlainObject: ops.set('fromPlain', { complexity: 1 }, ['object'], [], [], [], ['object']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),
