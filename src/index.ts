@@ -61,6 +61,7 @@ export * from './exprs/While';
 
 export * from './def';
 
+export * from './ops/AliasedOps';
 export * from './ops/AnyOps';
 export * from './ops/BooleanOps';
 export * from './ops/ColorOps';
@@ -73,6 +74,7 @@ export * from './ops/SetOps';
 export * from './ops/TextOps';
 export * from './ops/TupleOps';
 
+export * from './ops/types/AliasedOpsTypes';
 export * from './ops/types/AnyOpsTypes';
 export * from './ops/types/BooleanOpsTypes';
 export * from './ops/types/ColorOpsTypes';

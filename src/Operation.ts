@@ -53,6 +53,7 @@ export interface OperationTypes<
   params: Record<P, OperationTypeInput<P | O>>;
   optional: Record<O, OperationTypeInput<P | O>>;
   scope: Record<S, OperationTypeInput<P | O>>;
+  rawTypes?: boolean;
 }
 
 export type OperationGeneric = Operation<any, any, any, any, any>;

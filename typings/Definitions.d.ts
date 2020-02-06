@@ -1,4 +1,4 @@
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps } from './Type';
+import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
 import { OptionalType } from './types/Optional';
@@ -44,6 +44,7 @@ export declare class Definitions {
     getReducedType(type: Type[]): Type;
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
+    findAliased(type: Type, options?: TypeCompatibleOptions): string | false;
     addAlias(alias: string, instance: ObjectType | any): this;
     addStorage(storage: TypeStorage | TypeStorageOptions): this;
     addRelation(relation: Relation | RelationOptions): this;
@@ -70,8 +71,8 @@ export declare class Definitions {
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
-    getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
-    getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap;
+    getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes?: boolean): TypeMap;
+    getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes?: boolean): TypeMap;
     getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type;
     getContextWithScope(original: Type, scope?: TypeMap): {
         context: ManyType | ObjectType<{

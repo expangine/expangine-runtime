@@ -14,6 +14,7 @@ import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { AliasedType } from '../../types/Aliased';
 
 
 const ops = ObjectType.operations;
@@ -74,9 +75,16 @@ export const ObjectOpsTypes =
 
       for (const param of params) 
       {
-        if (i[param] instanceof ObjectType) 
+        let paramType = i[param];
+
+        if (paramType instanceof AliasedType)
         {
-          const paramProps = i[param].options.props;
+          paramType = paramType.getType();
+        }
+
+        if (paramType instanceof ObjectType) 
+        {
+          const paramProps = paramType.options.props;
 
           for (const prop in paramProps) 
           {

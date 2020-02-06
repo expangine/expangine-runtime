@@ -51,7 +51,7 @@ export class InvokeExpression extends Expression
 
     if (!func)
     {
-      throw new Error(`Function ${this.name} has not been defined.`);
+      return 0;
     }
 
     return func.options.expression.getComplexity(def);

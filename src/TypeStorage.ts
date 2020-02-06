@@ -30,6 +30,7 @@ export interface TypeStorageOptions
 {
   name: string;
   key?: any;
+  describe?: any;
   transcoders?: Record<string, TypeStorageTranscoderOptions>;
   indexes?: Record<string, TypeIndexOptions>;
 }
@@ -67,6 +68,7 @@ export class TypeStorage
   public name: string;
   public type: ObjectType;
   public key: Expression;
+  public describe: Expression;
   public transcoders: Record<string, TypeStorageTranscoder>;
   public indexes: Record<string, TypeIndex>;
   public primaryType: TypeStoragePrimaryType;
@@ -78,6 +80,9 @@ export class TypeStorage
     this.key = options.key 
       ? defs.getExpression(options.key)
       : Exprs.get('instance', this.getDynamicPrimaryKey());
+    this.describe = options.describe
+      ? defs.getExpression(options.describe)
+      : Exprs.noop();
     this.transcoders = this.decodeTranscoders(defs, options.transcoders);
     this.indexes = this.decodeIndexes(defs, options.indexes);
     this.primaryType = TypeStoragePrimaryType.AUTO_INCREMENT;
@@ -108,11 +113,12 @@ export class TypeStorage
 
   public encode(): TypeStorageOptions
   {
-    const { name, key, transcoders, indexes } = this;
+    const { name, key, describe, transcoders, indexes } = this;
 
     const options: TypeStorageOptions = {
       name,
       key: key.encode(),
+      describe: describe.encode(),
     };
 
     if (!isEmpty(transcoders)) 
@@ -199,6 +205,13 @@ export class TypeStorage
     return run.run(key, { instance, type });
   }
 
+  public getDescribe(run: Runtime, instance: any): any
+  {
+    const { type, describe } = this;
+
+    return run.run(describe, { instance, type });
+  }
+
   public getDecodedPropertyTypes(): TypeMap
   {
     return this.type.options.props;
@@ -241,6 +254,14 @@ export class TypeStorage
   }
 
   public getKeyContext(): Type
+  {
+    return Types.object({
+      instance: this.type,
+      type: Types.text(),
+    });
+  }
+
+  public getDescribeContext(): Type
   {
     return Types.object({
       instance: this.type,

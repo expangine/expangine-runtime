@@ -21,6 +21,7 @@ export interface OperationTypes<P extends string = never, O extends string = nev
     params: Record<P, OperationTypeInput<P | O>>;
     optional: Record<O, OperationTypeInput<P | O>>;
     scope: Record<S, OperationTypeInput<P | O>>;
+    rawTypes?: boolean;
 }
 export declare type OperationGeneric = Operation<any, any, any, any, any>;
 export interface OperationPair<P extends string = any, O extends string = any, S extends string = any> {

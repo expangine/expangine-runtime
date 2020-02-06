@@ -1,13 +1,11 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
-import { Computeds } from '../Computed';
 export declare class AliasedType extends Type<string> {
     static id: string;
-    static operations: Operations;
-    static computeds: Computeds;
+    static operations: import("..").Operations;
+    static computeds: import("..").Computeds;
     static baseType: AliasedType;
     static decode(data: any[], types: TypeProvider): AliasedType;
     static encode(type: AliasedType): any;
@@ -19,7 +17,7 @@ export declare class AliasedType extends Type<string> {
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
     getType(): Type<any>;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     getId(): string;
     merge(type: AliasedType, describer: TypeDescribeProvider): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;

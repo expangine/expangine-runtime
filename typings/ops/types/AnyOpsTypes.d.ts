@@ -4,6 +4,7 @@ export declare const AnyOpsTypes: {
     isDefined: import("../..").OperationTypes<"value", never, never>;
     getDefined: import("../..").OperationTypes<"value" | "defined", never, "defined">;
     coalesce: import("../..").OperationTypes<"a" | "b", "c" | "d" | "e", never>;
+    require: import("../..").OperationTypes<"value", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEqual: import("../..").OperationTypes<"value" | "test", never, never>;
     isNotEqual: import("../..").OperationTypes<"value" | "test", never, never>;

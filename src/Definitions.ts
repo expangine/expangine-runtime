@@ -1,6 +1,6 @@
 
 import { isArray, objectMap, isSameClass, objectValues, objectEach } from './fns';
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps } from './Type';
+import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction } from './Operation';
 import { ConstantExpression } from './exprs/Constant';
@@ -288,6 +288,21 @@ export class Definitions
       type.registered = true;
       type.register();
     }
+  }
+
+  public findAliased(type: Type, options: TypeCompatibleOptions = { strict: true, value: false, exact: false }): string | false
+  {
+    for (const name in this.aliased)
+    {
+      const alias = this.aliased[name];
+
+      if (alias.isCompatible(type, options))
+      {
+        return name;
+      }
+    }
+
+    return false;
   }
 
   public addAlias(alias: string, instance: ObjectType | any): this
@@ -611,13 +626,13 @@ export class Definitions
     }
 
     const paramTypes = op.resultDependency.length > 0
-      ? this.getOperationParamTypes(id, params, scopeAlias, context)
+      ? this.getOperationParamTypes(id, params, scopeAlias, context, types.rawTypes)
       : {};
 
     return this.getOperationInputType(types.returnType, paramTypes);
   }
 
-  public getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap
+  public getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMap
   {
     const opTypes = this.getOperationTypes(id);
 
@@ -626,12 +641,12 @@ export class Definitions
       return {};
     }
 
-    const paramTypes = this.getOperationParamTypes(id, params, scopeAlias, context);
+    const paramTypes = this.getOperationParamTypes(id, params, scopeAlias, context, rawTypes);
 
     return objectMap(paramTypes, (paramType, name) => this.getOperationInputType(opTypes.params[name] || opTypes.optional[name] || paramType, paramTypes));
   }
 
-  public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): TypeMap
+  public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMap
   {
     const types: TypeMap = {};
     const op = this.getOperation(id);
@@ -650,7 +665,7 @@ export class Definitions
 
         if (paramType)
         {
-          types[param] = paramType.getSimplifiedType();
+          types[param] = rawTypes ? paramType : paramType.getSimplifiedType();
         }
       }
     }
@@ -665,7 +680,7 @@ export class Definitions
       {
         const alias = scopeAlias[scopeParam] || scopeParam;
 
-        scopeTarget[alias] = scopeType.getSimplifiedType();
+        scopeTarget[alias] = rawTypes ? scopeType : scopeType.getSimplifiedType();
       }
     }
 
@@ -677,7 +692,7 @@ export class Definitions
 
         if (paramType)
         {
-          types[param] = paramType.getSimplifiedType();
+          types[param] = rawTypes ? paramType : paramType.getSimplifiedType();
         }
       }
     }

@@ -19,6 +19,7 @@ export interface TypeIndexOptions {
 export interface TypeStorageOptions {
     name: string;
     key?: any;
+    describe?: any;
     transcoders?: Record<string, TypeStorageTranscoderOptions>;
     indexes?: Record<string, TypeIndexOptions>;
 }
@@ -42,6 +43,7 @@ export declare class TypeStorage {
     name: string;
     type: ObjectType;
     key: Expression;
+    describe: Expression;
     transcoders: Record<string, TypeStorageTranscoder>;
     indexes: Record<string, TypeIndex>;
     primaryType: TypeStoragePrimaryType;
@@ -53,6 +55,7 @@ export declare class TypeStorage {
     removeProp(prop: string): void;
     getTypeProps(): TypeProps;
     getKey(run: Runtime, instance: any): any;
+    getDescribe(run: Runtime, instance: any): any;
     getDecodedPropertyTypes(): TypeMap;
     getPropertyTypeFor(forProperty?: string): EnumType;
     getEncodedPropertyTypes(): TypeMap;
@@ -61,6 +64,7 @@ export declare class TypeStorage {
     getProperties(): string[];
     getPropertyType(): EnumType;
     getKeyContext(): Type;
+    getDescribeContext(): Type;
     getEncoded(run: Runtime, instance: any): any;
     getEncodedValue(run: Runtime, instance: any, property: string): any;
     getEncodeContext(forProperty?: string): ObjectType;

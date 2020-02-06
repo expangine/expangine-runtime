@@ -1,11 +1,10 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Operations } from '../Operation';
 import { Expression } from '../Expression';
+import { AliasedOperations, AliasedComputeds } from '../ops/AliasedOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
-import { Computeds } from '../Computed';
 import { NullType } from './Null';
 
 
@@ -16,9 +15,9 @@ export class AliasedType extends Type<string>
 
   public static id = ID.Aliased;
 
-  public static operations = new Operations(ID.Aliased + ID.Delimiter);
+  public static operations = AliasedOperations;
 
-  public static computeds = new Computeds(ID.Aliased + ID.Delimiter);
+  public static computeds = AliasedComputeds;
 
   public static baseType = new AliasedType('', null);
 

@@ -23,9 +23,7 @@ describe('Definitions', () => {
 
       if (!types) 
       {
-        console.log(`types missing for ${op.id}`);
-        
-        expect(types).toBeDefined();
+        expect({ op: op.id, message: 'Missing types' }).toBeUndefined();
       }
     });
   });

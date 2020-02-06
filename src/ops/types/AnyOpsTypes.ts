@@ -93,6 +93,13 @@ export const AnyOpsTypes =
     { c: AnyType, d: AnyType, e: AnyType }
   ),
 
+  require: ops.setTypes(AnyOps.require, 
+    i => i.value instanceof OptionalType
+      ? i.value.options
+      : i.value || AnyType,
+    { value: i => i.value || AnyType },
+  ),
+
   // Comparisons
 
   isValid: ops.setTypes(AnyOps.isValid, BooleanType, { value: AnyType }),
