@@ -425,12 +425,12 @@ export class ListType extends Type<ListOptions>
 
   public fromJson(json: any[]): any[]
   {
-    return json.map((e: any) => this.options.item.fromJson(e));
+    return json ? json.map((e: any) => this.options.item.fromJson(e)) : null;
   }
 
   public toJson(value: any[]): any[]
   {
-    return value.map((e: any) => this.options.item.toJson(e));
+    return value ? value.map((e: any) => this.options.item.toJson(e)) : null;
   }
 
 }

@@ -360,7 +360,7 @@ export class DateType extends Type<DateOptions>
 
   public toJson(value: Date): string
   {
-    return value.toISOString();
+    return value ? value.toISOString() : null;
   }
 
 }

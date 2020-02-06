@@ -241,12 +241,12 @@ export class ColorType extends ObjectType<ColorOptions>
 
   public toJson(value: Color): Color
   {
-    return {
+    return value ? {
       r: value.r,
       g: value.g,
       b: value.b,
       a: value.a,
-    };
+    } : null;
   }
 
 }

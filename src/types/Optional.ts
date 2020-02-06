@@ -211,12 +211,12 @@ export class OptionalType extends Type<Type>
 
   public fromJson(json: any): any
   {
-    return json === undefined ? undefined : this.options.fromJson(json);
+    return json === undefined || json === null ? undefined : this.options.fromJson(json);
   }
 
   public toJson(value: any): any
   {
-    return value === undefined ? undefined : this.options.toJson(value);
+    return value === undefined || value === null ? undefined : this.options.toJson(value);
   }
 
 }
