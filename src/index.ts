@@ -37,6 +37,7 @@ export * from './types/Tuple';
 
 export * from './exprs/And';
 export * from './exprs/Chain';
+export * from './exprs/Comment';
 export * from './exprs/Computed';
 export * from './exprs/Constant';
 export * from './exprs/Define';

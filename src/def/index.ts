@@ -22,6 +22,7 @@ import { TupleType } from '../types/Tuple';
 
 import { AndExpression } from '../exprs/And';
 import { ChainExpression } from '../exprs/Chain';
+import { CommentExpression } from '../exprs/Comment';
 import { ComputedExpression } from '../exprs/Computed';
 import { ConstantExpression } from '../exprs/Constant';
 import { DefineExpression } from '../exprs/Define';
@@ -70,6 +71,7 @@ export const defs = new Definitions({
   expressions: [
     AndExpression,
     ChainExpression,
+    CommentExpression,
     ComputedExpression,
     ConstantExpression,
     DefineExpression,

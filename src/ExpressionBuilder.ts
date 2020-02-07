@@ -2,10 +2,12 @@
 import { Expression, ExpressionValue } from './Expression'
 import { NotExpression } from './exprs/Not';
 import { AndExpression } from './exprs/And';
-import { ChainExpression } from './exprs/Chain';
 import { NoExpression } from './exprs/No';
 import { DefineExpression } from './exprs/Define';
 import { DoExpression } from './exprs/Do';
+import { ChainExpression } from './exprs/Chain';
+import { CommentExpression } from './exprs/Comment';
+import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
 import { GetExpression } from './exprs/Get';
@@ -23,7 +25,6 @@ import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
-import { ComputedExpression } from './exprs/Computed';
 import { toExpr } from './fns';
 
 
@@ -196,6 +197,11 @@ export class ExpressionBuilder
   public string()
   {
     return this.const('');
+  }
+
+  public comment(comment: string)
+  {
+    return new CommentExpression(comment);
   }
 
 }
