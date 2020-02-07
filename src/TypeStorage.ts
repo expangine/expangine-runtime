@@ -253,6 +253,11 @@ export class TypeStorage
     return Types.enumForText(this.getProperties());
   }
 
+  public getKeyReturnType(defs: Definitions)
+  {
+    return this.key.getType(defs, this.getKeyContext());
+  }
+
   public getKeyContext(): Type
   {
     return Types.object({

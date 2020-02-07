@@ -12,7 +12,7 @@ import { ObjectType } from './types/Object';
 import { FunctionType } from './types/Function';
 import { ListType } from './types/List';
 import { ManyType } from './types/Many';
-import { isArray, isMap } from './fns';
+import { isArray, isMap, MapInput, toMap } from './fns';
 import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
@@ -40,12 +40,12 @@ export class TypeBuilder
     return new DateType(options);
   }
 
-  public enum(value: TypeInput, key: TypeInput = TextType, constants: Map<any, any> = new Map([]))
+  public enum(value: TypeInput, key: TypeInput = TextType, constants: MapInput = new Map([]))
   {
     return new EnumType({
       value: Type.fromInput(value),
       key: Type.fromInput(key),
-      constants
+      constants: toMap(constants),
     });
   }
 

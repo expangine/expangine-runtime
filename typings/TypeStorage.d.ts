@@ -63,6 +63,7 @@ export declare class TypeStorage {
     getDecodedType(): ObjectType;
     getProperties(): string[];
     getPropertyType(): EnumType;
+    getKeyReturnType(defs: Definitions): Type<any>;
     getKeyContext(): Type;
     getDescribeContext(): Type;
     getEncoded(run: Runtime, instance: any): any;

@@ -71,6 +71,7 @@ export declare const NumberOpsTypes: {
     isPositive: import("../..").OperationTypes<"value", never, never>;
     isNegative: import("../..").OperationTypes<"value", never, never>;
     isDivisible: import("../..").OperationTypes<"value" | "by", "epsilon", never>;
+    bitCompare: import("../..").OperationTypes<"value" | "test" | "method", never, never>;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
     asColor: import("../..").OperationTypes<"value", never, never>;

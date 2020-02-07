@@ -1,13 +1,17 @@
 import { Expression, ExpressionValue } from './Expression';
 import { NotExpression } from './exprs/Not';
 import { AndExpression } from './exprs/And';
-import { ChainExpression } from './exprs/Chain';
 import { NoExpression } from './exprs/No';
 import { DefineExpression } from './exprs/Define';
 import { DoExpression } from './exprs/Do';
+import { ChainExpression } from './exprs/Chain';
+import { CommentExpression } from './exprs/Comment';
+import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
 import { GetExpression } from './exprs/Get';
+import { GetTypeExpression } from './exprs/GetType';
+import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
 import { InvokeExpression } from './exprs/Invoke';
 import { OperationExpression } from './exprs/Operation';
@@ -22,7 +26,6 @@ import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
-import { ComputedExpression } from './exprs/Computed';
 export declare class ExpressionBuilder {
     and(...exprs: Expression[]): AndExpression;
     body(...exprs: Expression[]): ChainExpression;
@@ -57,5 +60,8 @@ export declare class ExpressionBuilder {
     compareLess(): ConstantExpression;
     compareGreater(): ConstantExpression;
     string(): ConstantExpression;
+    comment(comment: string): CommentExpression;
+    type(name: string): GetTypeExpression;
+    relation(name: string): GetRelationExpression;
 }
 export declare const Exprs: ExpressionBuilder;

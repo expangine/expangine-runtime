@@ -211,9 +211,9 @@ export class ExpressionBuilder
     return new GetTypeExpression(name);
   }
 
-  public relation(name: string, subject: boolean = true)
+  public relation(name: string)
   {
-    return new GetRelationExpression(name, subject);
+    return new GetRelationExpression(name);
   }
 
 }

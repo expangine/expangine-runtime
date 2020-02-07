@@ -15,8 +15,18 @@ export const AliasedOps =
 
   newInstance: ops.set('newInstance', {}, ['name'], [], [], [], ['name']),
 
-  // save: ops.set('create', {}, ['name', 'instance']),
+  getKey: ops.set('getKey', {}, ['name', 'instance'], [], [], [], ['name']),
 
-  // remove: ops.set('remove', {}, ['name', 'instance']),
+  save: ops.set('save', { mutates: ['instance'] }, ['name', 'instance'], [], [], [], ['name']),
+
+  remove: ops.set('remove', { mutates: ['instance'] }, ['name', 'instance'], [], [], [], ['name']),
+
+  setRelated: ops.set('setRelated', { complexity: 1, mutates: ['instance', 'related']  }, ['name', 'instance', 'relation', 'related'], [], [], [], ['name', 'relation']),
+
+  addRelated: ops.set('addRelated', { mutates: ['instance', 'related'] }, ['name', 'instance', 'relation', 'related'], [], [], [], ['name', 'relation']),
+
+  removeRelated: ops.set('removeRelated', { mutates: ['instance', 'related'] }, ['name', 'instance', 'relation', 'related'], [], [], [], ['name', 'relation']),
+
+  clearRelated: ops.set('clearRelated', { complexity: 1, mutates: ['instance'] }, ['name', 'instance', 'relation'], [], [], [], ['name', 'relation']),
 
 };

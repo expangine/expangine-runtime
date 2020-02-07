@@ -4,41 +4,37 @@ import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler, ValidationSeverity, ValidationType } from '../Validate';
-import { NullType } from '../types/Null';
-import { TypeRelation } from '../Relation';
+import { EnumType } from '../types/Enum';
+import { TextType } from '../types/Text';
 
 
 const INDEX_NAME = 1;
-const INDEX_SUBJECT = 2;
 
 export class GetRelationExpression extends Expression 
 {
 
   public static id = 'relation';
 
-  public static readonly instance = new GetRelationExpression('', true);
+  public static readonly instance = new GetRelationExpression('');
 
   public static decode(data: any[], exprs: ExpressionProvider): GetRelationExpression 
   {
     const name = data[INDEX_NAME];
-    const subject = data[INDEX_SUBJECT];
 
-    return new GetRelationExpression(name, subject);
+    return new GetRelationExpression(name);
   }
 
   public static encode(expr: GetRelationExpression): any 
   {
-    return [this.id, expr.name, expr.subject];
+    return [this.id, expr.name];
   }
 
   public name: string;
-  public subject: boolean;
 
-  public constructor(name: string, subject: boolean)
+  public constructor(name: string)
   {
     super();
     this.name = name;
-    this.subject = subject;
   }
 
   public getId(): string
@@ -61,23 +57,15 @@ export class GetRelationExpression extends Expression
     return GetRelationExpression.encode(this);
   }
 
-  public getRelationType(def: Definitions, name: string): TypeRelation | null
-  {
-    const relation = def.relations[this.name];
-
-    if (!relation)
-    {
-      return null;
-    }
-
-    return this.subject
-      ? relation.getSubjectRelation(name)
-      : relation.getRelatedRelation(name);
-  }
-
   public getType(def: Definitions, context: Type): Type | null
   {
-    return NullType.baseType;
+    return new EnumType({
+      key: TextType.baseType,
+      value: TextType.baseType,
+      constants: new Map([
+        ['relation', this.name],
+      ])
+    });
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R

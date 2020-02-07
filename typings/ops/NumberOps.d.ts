@@ -75,6 +75,7 @@ export declare const NumberOps: {
     isPositive: import("../Operation").Operation<"value", never, never, never, never>;
     isNegative: import("../Operation").Operation<"value", never, never, never, never>;
     isDivisible: import("../Operation").Operation<"value" | "by", "epsilon", never, never, never>;
+    bitCompare: import("../Operation").Operation<"value" | "test" | "method", never, never, never, never>;
     asAny: import("../Operation").Operation<"value", never, never, never, never>;
     asBoolean: import("../Operation").Operation<"value", never, never, never, never>;
     asColor: import("../Operation").Operation<"value", never, never, never, never>;

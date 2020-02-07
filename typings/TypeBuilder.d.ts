@@ -11,6 +11,7 @@ import { ObjectType } from './types/Object';
 import { FunctionType } from './types/Function';
 import { ListType } from './types/List';
 import { ManyType } from './types/Many';
+import { MapInput } from './fns';
 import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
@@ -22,7 +23,7 @@ export declare class TypeBuilder {
     any(): AnyType;
     bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
     date(options?: DateOptions): DateType;
-    enum(value: TypeInput, key?: TypeInput, constants?: Map<any, any>): EnumType;
+    enum(value: TypeInput, key?: TypeInput, constants?: MapInput): EnumType;
     enumForText(constants: string[] | Array<[string, string]> | Map<string, string>): EnumType;
     func(returnType: TypeInput, params: TypeInputMap, getExpression: (ex: ExpressionBuilder) => Expression): FunctionType;
     list(item: TypeInput, min?: number, max?: number): ListType;

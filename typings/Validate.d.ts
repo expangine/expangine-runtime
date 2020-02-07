@@ -12,7 +12,11 @@ export declare enum ValidationType {
     INVALID_EXPRESSION = 4,
     MISSING_FUNCTION = 5,
     MISSING_EXPRESSION = 6,
-    MISSING_OPERATION = 7
+    MISSING_OPERATION = 7,
+    MISSING_TYPE_NAME = 8,
+    MISSING_TYPE = 9,
+    MISSING_RELATION_NAME = 10,
+    MISSING_RELATION = 11
 }
 export interface Validation {
     type: ValidationType;
