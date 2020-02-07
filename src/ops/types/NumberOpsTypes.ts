@@ -13,9 +13,25 @@ import { NumberOps } from '../NumberOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
 import { OptionalType } from '../../types/Optional';
+import { EnumType } from '../../types/Enum';
 
 
 const ops = NumberType.operations;
+
+
+const BitMethod = new EnumType({
+  key: TextType.baseType.newInstance(), 
+  value: TextType.baseType.newInstance(),
+  constants: new Map([
+    ['Contains', 'contain'],        // value & test === test
+    ['Not Contains', 'notcontain'], // value & test !== test
+    ['Overlaps', 'overlap'],        // value & test !== 0
+    ['No Overlap', 'none'],         // value & test === 0
+    ['Equals', 'equal'],            // value === test
+    ['Not Equal', 'not'],           // value !== test
+    ['Is Contained In', 'subset'],  // test & value === value
+  ])
+});
 
 
 export const NumberOpsTypes = 
@@ -181,6 +197,11 @@ export const NumberOpsTypes =
   isNegative: ops.setTypes(NumberOps.isNegative, BooleanType, { value: NumberType }),
 
   isDivisible: ops.setTypes(NumberOps.isDivisible, BooleanType, { value: NumberType, by: NumberType }, { epsilon: NumberType }),
+
+  bitCompare: ops.setTypes(NumberOps.bitCompare, 
+    BooleanType,
+    { value: NumberType, method: BitMethod, test: NumberType },
+  ),
 
   // Casts
 

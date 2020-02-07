@@ -171,6 +171,8 @@ export const NumberOps =
 
   isDivisible: ops.set('%?', {}, ['value', 'by'], ['epsilon']),
 
+  bitCompare: ops.set('bit', {}, ['value', 'method', 'test']),
+
   // Casts
   
   asAny: ops.set('~' + ID.Any, {}, ['value']),
