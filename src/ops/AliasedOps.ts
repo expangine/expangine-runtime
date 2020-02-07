@@ -31,4 +31,6 @@ export const AliasedOps =
 
   getRelated: ops.set('getRelated', { complexity: 1 }, ['name', 'instance', 'relation'], [], [], [], ['name', 'relation']),
 
+  isRelated: ops.set('isRelated', {}, ['name', 'instance', 'relation', 'related'], [], [], [], ['name', 'relation']),
+
 };

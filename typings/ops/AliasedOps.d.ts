@@ -12,4 +12,5 @@ export declare const AliasedOps: {
     removeRelated: import("../Operation").Operation<"name" | "related" | "instance" | "relation", never, never, never, "name" | "relation">;
     clearRelated: import("../Operation").Operation<"name" | "instance" | "relation", never, never, never, "name" | "relation">;
     getRelated: import("../Operation").Operation<"name" | "instance" | "relation", never, never, never, "name" | "relation">;
+    isRelated: import("../Operation").Operation<"name" | "related" | "instance" | "relation", never, never, never, "name" | "relation">;
 };

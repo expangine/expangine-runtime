@@ -154,6 +154,11 @@ export const AliasedOpsTypes =
     { name: GetName, instance: GetNamedType, relation: GetRelation }
   ),
 
+  isRelated: ops.setTypes(AliasedOps.isRelated, 
+    BooleanType,
+    { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
+  ),
+
 };
 
 AliasedOpsTypes.newInstance.rawTypes = true;
@@ -164,3 +169,5 @@ AliasedOpsTypes.setRelated.rawTypes = true;
 AliasedOpsTypes.addRelated.rawTypes = true;
 AliasedOpsTypes.removeRelated.rawTypes = true;
 AliasedOpsTypes.clearRelated.rawTypes = true;
+AliasedOpsTypes.getRelated.rawTypes = true;
+AliasedOpsTypes.isRelated.rawTypes = true;
