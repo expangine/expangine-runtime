@@ -11,6 +11,8 @@ import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
 import { GetExpression } from './exprs/Get';
+import { GetTypeExpression } from './exprs/GetType';
+import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
 import { InvokeExpression } from './exprs/Invoke';
 import { OperationExpression } from './exprs/Operation';
@@ -202,6 +204,16 @@ export class ExpressionBuilder
   public comment(comment: string)
   {
     return new CommentExpression(comment);
+  }
+
+  public type(name: string)
+  {
+    return new GetTypeExpression(name);
+  }
+
+  public relation(name: string, subject: boolean = true)
+  {
+    return new GetRelationExpression(name, subject);
   }
 
 }

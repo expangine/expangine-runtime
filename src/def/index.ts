@@ -29,6 +29,8 @@ import { DefineExpression } from '../exprs/Define';
 import { DoExpression } from '../exprs/Do';
 import { ForExpression } from '../exprs/For';
 import { GetExpression } from '../exprs/Get';
+import { GetTypeExpression } from '../exprs/GetType';
+import { GetRelationExpression } from '../exprs/GetRelation';
 import { IfExpression } from '../exprs/If';
 import { InvokeExpression } from '../exprs/Invoke';
 import { NoExpression } from '../exprs/No';
@@ -78,6 +80,8 @@ export const defs = new Definitions({
     DoExpression,
     ForExpression,
     GetExpression,
+    GetTypeExpression,
+    GetRelationExpression,
     IfExpression,
     InvokeExpression,
     NoExpression,

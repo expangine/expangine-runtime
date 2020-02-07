@@ -12,13 +12,17 @@ export enum ValidationSeverity
 
 export enum ValidationType 
 {
-  UNSAFE_OPERATION = 1,     // LOW
-  POSSIBLY_NULL = 2,        // MEDIUM
-  INCOMPATIBLE_TYPES = 3,   // HIGH
-  INVALID_EXPRESSION = 4,   // HIGH
-  MISSING_FUNCTION = 5,     // HiGH
-  MISSING_EXPRESSION = 6,   // HiGH
-  MISSING_OPERATION = 7,    // HiGH
+  UNSAFE_OPERATION = 1,       // LOW
+  POSSIBLY_NULL = 2,          // MEDIUM
+  INCOMPATIBLE_TYPES = 3,     // HIGH
+  INVALID_EXPRESSION = 4,     // HIGH
+  MISSING_FUNCTION = 5,       // HiGH
+  MISSING_EXPRESSION = 6,     // HiGH
+  MISSING_OPERATION = 7,      // HiGH
+  MISSING_TYPE_NAME = 8,      // HIGH
+  MISSING_TYPE = 9,           // HIGH
+  MISSING_RELATION_NAME = 10, // HIGH
+  MISSING_RELATION = 11,      // HIGH
 }
 
 export interface Validation 

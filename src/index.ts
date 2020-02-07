@@ -44,6 +44,8 @@ export * from './exprs/Define';
 export * from './exprs/Do';
 export * from './exprs/For';
 export * from './exprs/Get';
+export * from './exprs/GetType';
+export * from './exprs/GetRelation';
 export * from './exprs/If';
 export * from './exprs/Invoke';
 export * from './exprs/No';
