@@ -100,6 +100,21 @@ export const AnyOpsTypes =
     { value: i => i.value || AnyType },
   ),
 
+  ternary: ops.setTypes(AnyOps.ternary, 
+    (i, defs) => {
+      if (i.truthy && i.falsy) {
+        return defs.mergeTypes([i.truthy, i.falsy]);
+      } else if (i.truthy) {
+        return i.truthy;
+      } else if (i.falsy) {
+        return i.falsy;
+      } else {
+        return AnyType;
+      }
+    },
+    { condition: BooleanType, truthy: i => i.truthy || AnyType, falsy: i => i.falsy || AnyType },
+  ),
+
   // Comparisons
 
   isValid: ops.setTypes(AnyOps.isValid, BooleanType, { value: AnyType }),

@@ -30,6 +30,8 @@ export const AnyOps =
 
   require: ops.set('require', {}, ['value'], [], [], [], ['value']),
 
+  ternary: ops.set('ternary', {}, ['condition', 'truthy', 'falsy'], [], [], [], ['truthy', 'falsy']),
+
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),
