@@ -7,4 +7,5 @@ export declare const AliasedOpsTypes: {
     addRelated: import("../../Operation").OperationTypes<"name" | "related" | "instance" | "relation", never, never>;
     removeRelated: import("../../Operation").OperationTypes<"name" | "related" | "instance" | "relation", never, never>;
     clearRelated: import("../../Operation").OperationTypes<"name" | "instance" | "relation", never, never>;
+    getRelated: import("../../Operation").OperationTypes<"name" | "instance" | "relation", never, never>;
 };

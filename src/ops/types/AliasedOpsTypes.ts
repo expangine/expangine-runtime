@@ -149,6 +149,11 @@ export const AliasedOpsTypes =
     { name: GetName, instance: GetNamedType, relation: GetRelation } 
   ),
 
+  getRelated: ops.setTypes(AliasedOps.getRelated,
+    (i, defs) => GetRelatedRelationType(i, defs),
+    { name: GetName, instance: GetNamedType, relation: GetRelation }
+  ),
+
 };
 
 AliasedOpsTypes.newInstance.rawTypes = true;
