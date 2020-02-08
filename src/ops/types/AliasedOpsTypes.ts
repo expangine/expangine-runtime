@@ -135,12 +135,12 @@ export const AliasedOpsTypes =
   ),
 
   addRelated: ops.setTypes(AliasedOps.addRelated, 
-    BooleanType,
+    NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
   removeRelated: ops.setTypes(AliasedOps.removeRelated, 
-    BooleanType,
+    NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
@@ -155,7 +155,7 @@ export const AliasedOpsTypes =
   ),
 
   isRelated: ops.setTypes(AliasedOps.isRelated, 
-    BooleanType,
+    NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
