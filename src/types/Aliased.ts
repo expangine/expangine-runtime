@@ -6,6 +6,7 @@ import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { NullType } from './Null';
+import { ObjectType } from './Object';
 
 
 const INDEX_NAME = 1;
@@ -65,7 +66,7 @@ export class AliasedType extends Type<string>
   {
     return this.provider
       ? this.provider.getType(this.options) || NullType.baseType
-      : NullType.baseType;
+      : ObjectType.baseType;
   }
 
   public getOperations()

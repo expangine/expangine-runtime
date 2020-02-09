@@ -23,13 +23,13 @@ const BitMethod = new EnumType({
   key: TextType.baseType.newInstance(), 
   value: TextType.baseType.newInstance(),
   constants: new Map([
-    ['Contains', 'contain'],        // value & test === test
-    ['Not Contains', 'notcontain'], // value & test !== test
-    ['Overlaps', 'overlap'],        // value & test !== 0
-    ['No Overlap', 'none'],         // value & test === 0
-    ['Equals', 'equal'],            // value === test
-    ['Not Equal', 'not'],           // value !== test
-    ['Is Contained In', 'subset'],  // test & value === value
+    ['has the bits', 'contain'],              // value & test === test
+    ['does not have the bits', 'notcontain'], // value & test !== test
+    ['has some of the bits', 'overlap'],      // value & test !== 0
+    ['has none of the bits', 'none'],         // value & test === 0
+    ['has the same bits', 'equal'],           // value === test
+    ['does not have the same bits', 'not'],   // value !== test
+    ['has all bits in', 'subset'],            // test & value === value
   ])
 });
 
