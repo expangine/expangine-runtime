@@ -7,6 +7,8 @@ export interface MapOptions {
     value: Type;
 }
 export declare class MapType extends Type<MapOptions> {
+    static STEP_KEY: string;
+    static STEP_VALUE: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;

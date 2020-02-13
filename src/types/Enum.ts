@@ -26,6 +26,10 @@ export interface EnumOptions
 export class EnumType extends Type<EnumOptions> 
 {
 
+  public static STEP_KEY = 'key';
+  
+  public static STEP_VALUE = 'value';
+
   public static id = ID.Enum;
 
   public static operations = new Operations(ID.Enum + ID.Delimiter);
@@ -152,16 +156,16 @@ export class EnumType extends Type<EnumOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('key', this.options.key);
-      traverse.step('value', this.options.value);
+      traverse.step(EnumType.STEP_KEY, this.options.key);
+      traverse.step(EnumType.STEP_VALUE, this.options.value);
     });
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'key' 
+    return step === EnumType.STEP_KEY
       ? this.options.key
-      : step === 'value'
+      : step === EnumType.STEP_VALUE
         ? this.options.value
         : null;
   }
@@ -197,7 +201,7 @@ export class EnumType extends Type<EnumOptions>
   public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
   {
     // from & to = key or value
-    if (from === 'key') 
+    if (from === EnumType.STEP_KEY) 
     {
       return Exprs.op(MapOps.map, {
         map: Exprs.get('value'),

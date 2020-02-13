@@ -2,7 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class NotType extends Type<Type[]> {
     static id: string;
@@ -28,6 +28,7 @@ export declare class NotType extends Type<Type[]> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;

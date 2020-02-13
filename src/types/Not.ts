@@ -5,7 +5,7 @@ import { AnyType } from './Any';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { NoExpression } from '../exprs/No';
 import { Computeds } from '../Computed';
 
@@ -128,6 +128,11 @@ export class NotType extends Type<Type[]>
     return traverse.enter(this, () =>
       this.options.map((type, index) => traverse.step(index, type))
     );
+  }
+
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return this.options[step] || null;
   }
 
   public setParent(parent: Type = null): void

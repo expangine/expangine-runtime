@@ -23,6 +23,8 @@ export interface SetOptions
 export class SetType extends Type<SetOptions> 
 {
 
+  public static STEP_VALUE = 'value';
+
   public static id = ID.Set;
 
   public static operations = SetOperations;
@@ -163,13 +165,13 @@ export class SetType extends Type<SetOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('value', this.options.value);
+      traverse.step(SetType.STEP_VALUE, this.options.value);
     });
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'value' 
+    return step === SetType.STEP_VALUE 
       ? this.options.value
       : null;
   }

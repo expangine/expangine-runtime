@@ -3,6 +3,7 @@ import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser, TraverseStep } from '../Traverser';
 export declare class AliasedType extends Type<string> {
+    static STEP_ALIASED: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;

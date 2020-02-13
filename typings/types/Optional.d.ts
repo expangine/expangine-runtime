@@ -5,6 +5,7 @@ import { Definitions } from '../Definitions';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class OptionalType extends Type<Type> {
+    static STEP_OPTIONAL: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;

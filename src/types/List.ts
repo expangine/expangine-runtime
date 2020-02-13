@@ -31,6 +31,8 @@ export interface ListOptions
 export class ListType extends Type<ListOptions> 
 {
 
+  public static STEP_ITEM = 'item';
+
   public static lengthType = new NumberType({min: 0, whole: true});
 
   public static indexType = new NumberType({min: 0, whole: true});
@@ -279,13 +281,13 @@ export class ListType extends Type<ListOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step('item', this.options.item)
+      traverse.step(ListType.STEP_ITEM, this.options.item)
     );
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'item' 
+    return step === ListType.STEP_ITEM 
       ? this.options.item 
       : null;
   }

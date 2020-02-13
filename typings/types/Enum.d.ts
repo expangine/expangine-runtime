@@ -10,6 +10,8 @@ export interface EnumOptions {
     constants: Map<any, any>;
 }
 export declare class EnumType extends Type<EnumOptions> {
+    static STEP_KEY: string;
+    static STEP_VALUE: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;

@@ -14,6 +14,8 @@ const INDEX_NAME = 1;
 export class AliasedType extends Type<string>
 {
 
+  public static STEP_ALIASED = 'aliased';
+
   public static id = ID.Aliased;
 
   public static operations = AliasedOperations;
@@ -128,12 +130,12 @@ export class AliasedType extends Type<string>
   
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
-    return traverse.enter(this, () => traverse.step('aliased', this.getType()));
+    return traverse.enter(this, () => traverse.step(AliasedType.STEP_ALIASED, this.getType()));
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'aliased' 
+    return step === AliasedType.STEP_ALIASED
       ? this.getType() 
       : null;
   }

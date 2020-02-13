@@ -27,6 +27,10 @@ export interface MapOptions
 export class MapType extends Type<MapOptions> 
 {
 
+  public static STEP_KEY = 'key';
+
+  public static STEP_VALUE = 'value';
+
   public static id = ID.Map;
 
   public static operations = MapOperations;
@@ -196,16 +200,16 @@ export class MapType extends Type<MapOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('key', this.options.key);
-      traverse.step('value', this.options.value);
+      traverse.step(MapType.STEP_KEY, this.options.key);
+      traverse.step(MapType.STEP_VALUE, this.options.value);
     });
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'key' 
+    return step === MapType.STEP_KEY
       ? this.options.key
-      : step === 'value'
+      : step === MapType.STEP_VALUE
         ? this.options.value
         : null;
   }
@@ -266,7 +270,7 @@ export class MapType extends Type<MapOptions>
   public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
   {
     // from & to = key or value
-    if (from === 'key') 
+    if (from === MapType.STEP_KEY) 
     {
       return Exprs.op(MapOps.map, {
         map: Exprs.get('value'),

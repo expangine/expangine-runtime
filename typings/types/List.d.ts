@@ -9,6 +9,7 @@ export interface ListOptions {
     max?: number;
 }
 export declare class ListType extends Type<ListOptions> {
+    static STEP_ITEM: string;
     static lengthType: NumberType;
     static indexType: NumberType;
     static id: string;

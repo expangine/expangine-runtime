@@ -17,6 +17,8 @@ const RANDOM_CHANCE = 0.3;
 export class OptionalType extends Type<Type>
 {
 
+  public static STEP_OPTIONAL = 'optional';
+
   public static id = ID.Optional;
 
   public static operations = new Operations(ID.Optional + ID.Delimiter);
@@ -115,12 +117,14 @@ export class OptionalType extends Type<Type>
   
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
-    return traverse.enter(this, () => traverse.step('optional', this.options));
+    return traverse.enter(this, () => 
+      traverse.step(OptionalType.STEP_OPTIONAL, this.options)
+    );
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === 'optional' 
+    return step === OptionalType.STEP_OPTIONAL
       ? this.options
       : null;
   }
