@@ -231,7 +231,7 @@ export class ManyType extends Type<Type[]>
 
     if (hasFrom && !hasTo) // removed
     {
-      const targetType = this.options[0];
+      const targetType = from === 0 ? this.options[1] : this.options[0];
       const valueType = this.options[from];
       const casting = Exprs.cast(valueType, targetType);
 
