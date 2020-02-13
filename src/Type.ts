@@ -3,7 +3,7 @@ import { objectMap, isArray, isObject, isSameClass } from './fns';
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
-import { Traverser, Traversable } from './Traverser';
+import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { EnumType } from './types/Enum';
 import { Computeds } from './Computed';
 import { Relation } from './Relation';
@@ -220,6 +220,72 @@ export abstract class Type<O = any> implements Traversable<Type>
   public abstract getValidateExpression(): Expression;
 
   public abstract getCompareExpression(): Expression;
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    return newValue;
+  }
+
+  public getValueChangeAt(newValue: Expression): Expression
+  {
+    let node: Type = this.parent;
+    const path = this.getPath();
+
+    while(node)
+    {
+      const step = path.pop();
+
+      newValue = node.getValueChangeExpression(newValue, step, step);
+      node = node.parent;
+    }
+
+    return newValue;
+  }
+
+  public getPath(): TraverseStep[]
+  {
+    return this.getRootType().traverse(new Traverser((type, _, path, traverser) =>
+    {
+      if (type === this)
+      {
+        traverser.stop(path.slice());
+      }
+    }));
+  }
+
+  public getTypeFromPath(path: TraverseStep[]): Type | null
+  {
+    if (path.length === 0)
+    {
+      return this;
+    }
+    
+    const type = this.getTypeFromStep(path[0]);
+
+    if (!type)
+    {
+      return null;
+    }
+
+    return type.getTypeFromPath(path.slice(1));
+  }
+
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return null;
+  }
+
+  public getRootType(): Type
+  {
+    let node: Type = this;
+
+    while (node.parent)
+    {
+      node = node.parent;
+    }
+
+    return node;
+  }
 
   public abstract isValid(value: any): boolean;
 

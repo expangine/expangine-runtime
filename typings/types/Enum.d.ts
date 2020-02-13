@@ -2,7 +2,7 @@ import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOption
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export interface EnumOptions {
     key: Type;
@@ -31,11 +31,13 @@ export declare class EnumType extends Type<EnumOptions> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(test: any): boolean;
     normalize(value: any): any;
     newInstance(): EnumType;

@@ -11,8 +11,9 @@ import { NumberType } from './Number';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ListType } from './List';
+import { ListOps } from '../ops/ListOps';
 
 
 const INDEX_ELEMENTS = 1;
@@ -198,6 +199,44 @@ export class TupleType extends Type<Type[]>
     );
   }
 
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = element index
+    const hasFrom = isNumber(from);
+    const hasTo = isNumber(to);
+
+    if (!hasFrom && hasTo) // add
+    {
+      return Exprs.define({ parent: Exprs.get('value') },
+        Exprs.op(ListOps.insert, {
+          list: Exprs.get('value'),
+          index: to,
+          item: newValue,
+        }),
+      );
+    } 
+    else if (hasFrom && !hasTo) // remove
+    {
+      return Exprs.body(
+        Exprs.op(ListOps.removeAt, {
+          list: Exprs.get('value'),
+          index: from,
+        }),
+        Exprs.get('value'),
+      );
+    }
+    else if (from === to && hasFrom) // change
+    { 
+      return Exprs.body(
+        Exprs.update('value', from)
+          .to(newValue, 'value'),
+        Exprs.get('value'),
+      );
+    }
+
+    return newValue;
+  }
+
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     if (!options.exact && 
@@ -249,6 +288,11 @@ export class TupleType extends Type<Type[]>
     return traverse.enter(this, () =>
       this.options.map((type, index) => traverse.step(index, type))
     );
+  }
+
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return this.options[step] || null;
   }
 
   public setParent(parent: Type = null): void

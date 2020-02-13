@@ -4,10 +4,12 @@ import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOption
 import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { Expression } from '../Expression';
+import { Exprs } from '../ExpressionBuilder';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
+import { MapOps } from '../ops/MapOps';
 
 
 const INDEX_KEY = 1;
@@ -155,6 +157,15 @@ export class EnumType extends Type<EnumOptions>
     });
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'key' 
+      ? this.options.key
+      : step === 'value'
+        ? this.options.value
+        : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -181,6 +192,28 @@ export class EnumType extends Type<EnumOptions>
   public getCompareExpression(): Expression
   {
     return this.options.value.getCompareExpression();
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = key or value
+    if (from === 'key') 
+    {
+      return Exprs.op(MapOps.map, {
+        map: Exprs.get('value'),
+        transformKey: newValue,
+      }, {
+        key: 'value',
+        value: 'actualValue',
+      });
+    } 
+    else 
+    {
+      return Exprs.op(MapOps.map, {
+        map: Exprs.get('value'),
+        transform: newValue,
+      });
+    }
   }
 
   public isValid(test: any): boolean 

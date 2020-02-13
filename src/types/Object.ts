@@ -9,7 +9,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { AnyType } from './Any';
 
 
@@ -213,6 +213,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     );
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return this.options.props[step] || null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -328,6 +333,59 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         ),
       ),
     );
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = property
+    const hasFrom = from !== null && from !== undefined;
+    const hasTo = to !== null && to !== undefined;
+
+    if (!hasFrom && hasTo) // add
+    {
+      return Exprs.define({ parent: Exprs.get('value') },
+        Exprs.op(ObjectOps.set, {
+          object: Exprs.get('value'),
+          key: to,
+          value: newValue,
+        }),
+      );
+    } 
+    else if (hasFrom && !hasTo) // remove
+    {
+      return Exprs.body(
+        Exprs.op(ObjectOps.delete, {
+          object: Exprs.get('value'),
+          key: from,
+        }),
+        Exprs.get('value'),
+      );
+    } 
+    else if (from !== to) // rename
+    {
+      return Exprs.body(
+        Exprs.op(ObjectOps.set, {
+          object: Exprs.get('value'),
+          key: to,
+          value: Exprs.get('value', from),
+        }),
+        Exprs.op(ObjectOps.delete, {
+          object: Exprs.get('value'),
+          key: from,
+        }),
+        Exprs.get('value'),
+      );
+    } 
+    else if (from === to && hasFrom) // change
+    { 
+      return Exprs.body(
+        Exprs.update('value', from)
+          .to(newValue, 'value'),
+        Exprs.get('value'),
+      );
+    }
+
+    return newValue;
   }
 
   public isValid(value: any): boolean 

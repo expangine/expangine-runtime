@@ -7,8 +7,8 @@ import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { isSameClass } from '../fns';
-import { Traverser } from '../Traverser';
+import { isSameClass, isNumber } from '../fns';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 
 
@@ -186,6 +186,11 @@ export class ManyType extends Type<Type[]>
     );
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return this.options[step] || null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -216,6 +221,40 @@ export class ManyType extends Type<Type[]>
       value: Exprs.get('value'), 
       test: Exprs.get('test'),
     });
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = sub type index
+    const hasFrom = isNumber(from);
+    const hasTo = isNumber(to);
+
+    if (hasFrom && !hasTo) // removed
+    {
+      const targetType = this.options[0];
+      const valueType = this.options[from];
+      const casting = Exprs.cast(valueType, targetType);
+
+      return Exprs
+        .if(targetType.getValidateExpression())
+        .than(Exprs.get('value'))
+        .else(casting)
+      ;
+    }
+    else if (!hasFrom && hasTo) // added
+    {
+      return newValue;
+    }
+    else if (to === from && hasFrom) // change
+    {
+      return Exprs
+        .if(Exprs.not(this.getValidateExpression()))
+        .than(newValue)
+        .else(Exprs.get('value'))
+      ;
+    }
+
+    return newValue;
   }
 
   public isValid(value: any): boolean 

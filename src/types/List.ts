@@ -11,7 +11,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { TupleType } from './Tuple';
 
 
@@ -283,6 +283,13 @@ export class ListType extends Type<ListOptions>
     );
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'item' 
+      ? this.options.item 
+      : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -327,6 +334,17 @@ export class ListType extends Type<ListOptions>
       value: Exprs.get('value'),
       test: Exprs.get('test'),
       compare: this.options.item.getCompareExpression(),
+    });
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = item
+    return Exprs.op(ListOps.map, {
+      list: Exprs.get('value'),
+      transform: newValue,
+    }, {
+      item: 'value',
     });
   }
 

@@ -4,7 +4,7 @@ import { Expression } from '../Expression';
 import { AliasedOperations, AliasedComputeds } from '../ops/AliasedOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { NullType } from './Null';
 import { ObjectType } from './Object';
 
@@ -131,6 +131,13 @@ export class AliasedType extends Type<string>
     return traverse.enter(this, () => traverse.step('aliased', this.getType()));
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'aliased' 
+      ? this.getType() 
+      : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -156,6 +163,12 @@ export class AliasedType extends Type<string>
     return this.getType().getCompareExpression();
   }
 
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to === aliased
+    return newValue;
+  }
+  
   public isValid(value: any): boolean 
   {
     return this.getType().isValid(value);

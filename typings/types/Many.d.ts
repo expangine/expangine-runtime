@@ -2,7 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Operations, OperationGeneric } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class ManyType extends Type<Type[]> {
     static id: string;
@@ -29,11 +29,13 @@ export declare class ManyType extends Type<Type[]> {
     isSimple(): boolean;
     protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): ManyType;

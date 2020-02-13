@@ -28,10 +28,25 @@ import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { toExpr } from './fns';
+import { Type } from './Type';
 
 
 export class ExpressionBuilder
 {
+
+  public cast(valueType: Type, targetType: Type): Expression;
+  public cast(valueType: Type, targetType: Type, createOnMissing: false): Expression | null;
+  public cast(valueType: Type, targetType: Type, createOnMissing: boolean = true): Expression
+  {
+    const opId = `${valueType.getId()}:~${targetType.getId()}`;
+    const op = valueType.getOperations()[opId];
+
+    return op
+      ? this.op(op, { value: this.get('value') })
+      : createOnMissing
+        ? targetType.getCreateExpression()
+        : null as unknown as Expression;
+  }
 
   public and(...exprs: Expression[]): AndExpression
   {

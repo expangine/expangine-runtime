@@ -1,7 +1,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 export declare class AliasedType extends Type<string> {
     static id: string;
     static operations: import("..").Operations;
@@ -29,11 +29,13 @@ export declare class AliasedType extends Type<string> {
     isSimple(): boolean;
     protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
     newInstance(): AliasedType;

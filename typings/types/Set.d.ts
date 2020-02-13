@@ -1,7 +1,7 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 export interface SetOptions {
     value: Type;
 }
@@ -28,11 +28,13 @@ export declare class SetType extends Type<SetOptions> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(test: any): boolean;
     normalize(test: any): any;
     newInstance(): SetType;

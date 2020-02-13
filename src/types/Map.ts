@@ -10,7 +10,7 @@ import { ListOps } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 
 
 const INDEX_VALUE = 1;
@@ -201,6 +201,15 @@ export class MapType extends Type<MapOptions>
     });
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'key' 
+      ? this.options.key
+      : step === 'value'
+        ? this.options.value
+        : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -252,6 +261,28 @@ export class MapType extends Type<MapOptions>
       test: Exprs.get('test'),
       compare: this.options.value.getValidateExpression(),
     });
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = key or value
+    if (from === 'key') 
+    {
+      return Exprs.op(MapOps.map, {
+        map: Exprs.get('value'),
+        transformKey: newValue,
+      }, {
+        key: 'value',
+        value: 'actualValue',
+      });
+    } 
+    else 
+    {
+      return Exprs.op(MapOps.map, {
+        map: Exprs.get('value'),
+        transform: newValue,
+      });
+    }
   }
 
   public isValid(test: any): boolean 

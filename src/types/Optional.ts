@@ -7,7 +7,7 @@ import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 
 
@@ -118,6 +118,13 @@ export class OptionalType extends Type<Type>
     return traverse.enter(this, () => traverse.step('optional', this.options));
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'optional' 
+      ? this.options
+      : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -166,6 +173,16 @@ export class OptionalType extends Type<Type>
       .than(Exprs.compareGreater())
       .else(this.options.getCompareExpression()),
     );
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = optional
+    return Exprs
+      .if(this.options.getValidateExpression())
+      .than(newValue)
+      .else(Exprs.get('value'))
+    ;
   }
 
   public isValid(value: any): boolean 

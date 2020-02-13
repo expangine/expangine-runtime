@@ -2,7 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompa
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { NumberType } from './Number';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 export declare class TupleType extends Type<Type[]> {
     static lengthType: NumberType;
     static indexType: NumberType;
@@ -27,10 +27,12 @@ export declare class TupleType extends Type<Type[]> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
+    getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     isValid(value: any): boolean;

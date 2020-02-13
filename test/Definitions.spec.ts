@@ -1,5 +1,5 @@
 // import { describe, it, expect } from 'jest';
-import { inspect } from 'util';
+// import { inspect } from 'util';
 import { defs, TypeBuilder, ExpressionBuilder, Relation, Types } from '../src';
 
 
@@ -177,8 +177,11 @@ describe('Definitions', () => {
     const commentRelations = defs.getRelations('comment');
     const commentProps = defs.getTypeProps('comment');
 
-    console.log(inspect(commentRelations, { showHidden: false, depth: 4 }));
-    console.log(inspect(commentProps, { showHidden: false, depth: 4 }));
+    expect( commentRelations.length ).toBeGreaterThan(0);
+    expect( commentProps.length ).toBeGreaterThan(0);
+
+    // console.log(inspect(commentRelations, { showHidden: false, depth: 4 }));
+    // console.log(inspect(commentProps, { showHidden: false, depth: 4 }));
   });
 
 })

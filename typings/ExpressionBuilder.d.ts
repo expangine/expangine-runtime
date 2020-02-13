@@ -26,7 +26,10 @@ import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
+import { Type } from './Type';
 export declare class ExpressionBuilder {
+    cast(valueType: Type, targetType: Type): Expression;
+    cast(valueType: Type, targetType: Type, createOnMissing: false): Expression | null;
     and(...exprs: Expression[]): AndExpression;
     body(...exprs: Expression[]): ChainExpression;
     const(value: any): ConstantExpression;

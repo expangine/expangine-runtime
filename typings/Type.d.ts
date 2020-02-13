@@ -1,7 +1,7 @@
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
-import { Traverser, Traversable } from './Traverser';
+import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { Computeds } from './Computed';
 import { Relation } from './Relation';
 export declare type TypeInput = TypeClass | Type;
@@ -86,6 +86,12 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract getCreateExpression(): Expression;
     abstract getValidateExpression(): Expression;
     abstract getCompareExpression(): Expression;
+    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
+    getValueChangeAt(newValue: Expression): Expression;
+    getPath(): TraverseStep[];
+    getTypeFromPath(path: TraverseStep[]): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | null;
+    getRootType(): Type;
     abstract isValid(value: any): boolean;
     abstract normalize(value: any): any;
     abstract newInstance(): Type<O>;

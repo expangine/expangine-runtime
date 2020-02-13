@@ -8,7 +8,7 @@ import { SetOps, SetOperations, SetComputeds } from '../ops/SetOps';
 import { ListOps } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 
 
 const INDEX_VALUE = 1;
@@ -167,6 +167,13 @@ export class SetType extends Type<SetOptions>
     });
   }
 
+  public getTypeFromStep(step: TraverseStep): Type | null
+  {
+    return step === 'value' 
+      ? this.options.value
+      : null;
+  }
+
   public setParent(parent: Type = null): void
   {
     this.parent = parent;
@@ -206,6 +213,17 @@ export class SetType extends Type<SetOptions>
     return Exprs.op(SetOps.cmp, {
       value: Exprs.get('value'),
       test: Exprs.get('test'),
+    });
+  }
+
+  public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
+  {
+    // from & to = value
+    return Exprs.op(SetOps.map, {
+      set: Exprs.get('value'),
+      transform: newValue,
+    }, {
+      value: 'value',
     });
   }
 
