@@ -26,7 +26,7 @@ export interface TypeProps {
     relation?: Relation;
 }
 export interface TypeProvider {
-    getType(data: any): Type;
+    getType(data: any, otherwise?: Type): Type;
     getExpression(data: any): Expression;
 }
 export interface TypeDescribeProvider {

@@ -51,7 +51,7 @@ export interface TypeProps
 
 export interface TypeProvider 
 {
-  getType(data: any): Type;
+  getType(data: any, otherwise?: Type): Type;
   getExpression(data: any): Expression;
 }
 

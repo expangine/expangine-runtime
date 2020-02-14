@@ -457,7 +457,7 @@ export class Definitions
     return this.getType(type.encode());
   }
 
-  public getType(value: any): Type 
+  public getType(value: any, otherwise?: Type): Type 
   {
     if (value instanceof Type)
     {
@@ -470,6 +470,11 @@ export class Definitions
 
     if (!parser)
     {
+      if (otherwise)
+      {
+        return otherwise;
+      }
+      
       throw new Error(`No parser found for ${id} with payload ${JSON.stringify(data)}`);
     }
     

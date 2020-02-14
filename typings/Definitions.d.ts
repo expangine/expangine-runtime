@@ -55,7 +55,7 @@ export declare class Definitions {
     removeProp(name: string, prop: string): void;
     removeType(name: string): void;
     cloneType(type: Type): Type<any>;
-    getType(value: any): Type;
+    getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];
     getSimpleTypes(): Type[];
     getComplexTypes(): Type[];
