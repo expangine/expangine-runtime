@@ -6,7 +6,7 @@ import { isArray } from '../fns';
 import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -14,6 +14,8 @@ const INDEX_EXPR = 1;
 
 export class NotExpression extends Expression 
 {
+
+  public static STEP_NOT = 'not';
 
   public static id = 'not';
 
@@ -67,8 +69,15 @@ export class NotExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () =>
-      traverse.step('not', this.expression)
+      traverse.step(NotExpression.STEP_NOT, this.expression)
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === NotExpression.STEP_NOT
+      ? [1, this.expression]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

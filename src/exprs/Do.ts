@@ -3,7 +3,7 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -16,6 +16,10 @@ const INDEX_MAX = 4;
 
 export class DoExpression extends Expression 
 {
+
+  public static STEP_CONDITION = 'condition';
+
+  public static STEP_BODY = 'body';
 
   public static MAX_ITERATIONS = DEFAULT_MAX_ITERATIONS;
 
@@ -94,9 +98,18 @@ export class DoExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('condition', this.condition);
-      traverse.step('body', this.body);
+      traverse.step(DoExpression.STEP_CONDITION, this.condition);
+      traverse.step(DoExpression.STEP_BODY, this.body);
     });
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === DoExpression.STEP_CONDITION
+      ? [1, this.condition]
+      : steps[0] === DoExpression.STEP_BODY
+        ? [1, this.body]
+        : null;
   }
 
   public setParent(parent: Expression = null): void

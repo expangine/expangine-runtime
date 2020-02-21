@@ -4,7 +4,7 @@ import { isString, toExpr, objectEach } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -13,6 +13,10 @@ const INDEX_BODY = 2;
 
 export class DefineExpression extends Expression 
 {
+
+  public static STEP_DEFINE = 'define';
+
+  public static STEP_BODY = 'body';
 
   public static id = 'def';
 
@@ -77,14 +81,25 @@ export class DefineExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('define', () =>
+      traverse.step(DefineExpression.STEP_DEFINE, () =>
         this.define.forEach(([name, defined]) => 
           traverse.step(name, defined)
         )
       );
-      traverse.step('body', this.body);
+      traverse.step(DefineExpression.STEP_BODY, this.body);
     });
   }
+
+  // tslint:disable: no-magic-numbers
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === DefineExpression.STEP_BODY
+      ? [1, this.body]
+      : steps[0] === DefineExpression.STEP_DEFINE
+        ? [2, this.define.filter(([name]) => name === steps[1]).map(([_, expr]) => expr)[0]]
+        : null;
+  }
+  // tslint:enable: no-magic-numbers
 
   public setParent(parent: Expression = null): void
   {

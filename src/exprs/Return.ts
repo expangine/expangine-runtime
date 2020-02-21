@@ -2,7 +2,7 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -10,6 +10,8 @@ const INDEX_VALUE = 1;
 
 export class ReturnExpression extends Expression 
 {
+
+  public static STEP_VALUE = 'value';
 
   public static id = 'return';
 
@@ -67,8 +69,15 @@ export class ReturnExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step('value', this.value)
+      traverse.step(ReturnExpression.STEP_VALUE, this.value)
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === ReturnExpression.STEP_VALUE
+      ? [1, this.value]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

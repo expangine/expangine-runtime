@@ -5,7 +5,7 @@ import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { toExpr } from '../fns';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -20,6 +20,12 @@ const INDEX_MAX = 6;
 
 export class ForExpression extends Expression 
 {
+
+  public static STEP_START = 'start';
+
+  public static STEP_END = 'end';
+
+  public static STEP_BODY = 'body';
 
   public static MAX_ITERATIONS = DEFAULT_MAX_ITERATIONS;
 
@@ -105,10 +111,21 @@ export class ForExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('start', this.start);
-      traverse.step('end', this.end);
-      traverse.step('body', this.body);
+      traverse.step(ForExpression.STEP_START, this.start);
+      traverse.step(ForExpression.STEP_END, this.end);
+      traverse.step(ForExpression.STEP_BODY, this.body);
     });
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === ForExpression.STEP_START
+      ? [1, this.start]
+      : steps[0] === ForExpression.STEP_END
+        ? [1, this.end]
+        : steps[0] === ForExpression.STEP_BODY
+          ? [1, this.body]
+          : null;
   }
 
   public setParent(parent: Expression = null): void

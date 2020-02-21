@@ -2,10 +2,10 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
-import { toExpr, isArray } from '../fns';
+import { toExpr, isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -16,6 +16,10 @@ const INDEX_CURRENT = 3;
 
 export class UpdateExpression extends Expression 
 {
+
+  public static STEP_PATH = 'path';
+
+  public static STEP_VALUE = 'value';
 
   public static id = 'up';
 
@@ -85,14 +89,27 @@ export class UpdateExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('path', () => 
+      traverse.step(UpdateExpression.STEP_PATH, () => 
         this.path.forEach((expr, index) => 
           traverse.step(index, expr)
         )
       );
-      traverse.step('value', this.value);
+      traverse.step(UpdateExpression.STEP_VALUE, this.value);
     });
   }
+
+  // tslint:disable: no-magic-numbers
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === UpdateExpression.STEP_PATH
+      ? isNumber(steps[1]) && steps[1] < this.path.length
+        ? [2, this.path[steps[1]]]
+        : null
+      : steps[0] === UpdateExpression.STEP_VALUE
+        ? [1, this.value]
+        : null;
+  }
+  // tslint:enable: no-magic-numbers
 
   public setParent(parent: Expression = null): void
   {

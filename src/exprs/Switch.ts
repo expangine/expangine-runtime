@@ -4,9 +4,9 @@ import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
 import { Operation } from '../Operation';
 import { NoExpression } from './No';
-import { toExpr } from '../fns';
+import { toExpr, isNumber } from '../fns';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -17,6 +17,16 @@ const INDEX_DEFAULT_CASE = 4;
 
 export class SwitchExpression extends Expression 
 {
+
+  public static STEP_VALUE = 'value';
+
+  public static STEP_CASES = 'cases';
+
+  public static STEP_CASE = 'case';
+
+  public static STEP_RESULT = 'result';
+
+  public static STEP_DEFAULT = 'default';
 
   public static id = 'switch';
 
@@ -106,24 +116,45 @@ export class SwitchExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('value', this.value);
-      traverse.step('cases', () => 
+      traverse.step(SwitchExpression.STEP_VALUE, this.value);
+      traverse.step(SwitchExpression.STEP_CASES, () => 
         this.cases.forEach(([tests, result], caseIndex) =>
           traverse.step(caseIndex, () => {
-            traverse.step('case', () => 
+            traverse.step(SwitchExpression.STEP_CASE, () => 
               tests.forEach((test, index) => 
                 traverse.step(index, test)
               )
             );
-            traverse.step('result', result);
+            traverse.step(SwitchExpression.STEP_RESULT, result);
           })  
         )
       );
       if (this.defaultCase !== NoExpression.instance) {
-        traverse.step('default', this.defaultCase);
+        traverse.step(SwitchExpression.STEP_DEFAULT, this.defaultCase);
       }
     });
   }
+
+  // tslint:disable: no-magic-numbers
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === SwitchExpression.STEP_VALUE
+      ? [1, this.value]
+      : steps[0] === SwitchExpression.STEP_CASES
+        ? isNumber(steps[1]) && steps[1] < this.cases.length
+          ? steps[2] === SwitchExpression.STEP_CASE
+            ? isNumber(steps[3]) && steps[3] < this.cases[steps[1]][0].length
+              ? [4, this.cases[steps[1]][0][steps[3]]]
+              : null
+            : steps[2] === SwitchExpression.STEP_RESULT
+              ? [3, this.cases[steps[1]][1]]
+              : null
+            : null
+        : steps[0] === SwitchExpression.STEP_DEFAULT
+          ? [1, this.defaultCase]
+          : null;
+  }
+  // tslint:enable: no-magic-numbers
 
   public setParent(parent: Expression = null): void
   {

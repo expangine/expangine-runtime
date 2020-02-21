@@ -3,7 +3,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { Definitions } from '../Definitions';
 import { objectMap, isString, toExpr, objectEach } from '../fns';
 import { Type, TypeMap } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 
 
@@ -83,6 +83,13 @@ export class InvokeExpression extends Expression
         traverse.step(arg, expr)
       )
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] in this.args
+      ? [1, this.args[steps[0]]]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

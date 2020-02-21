@@ -2,9 +2,11 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 export declare class UpdateExpression extends Expression {
+    static STEP_PATH: string;
+    static STEP_VALUE: string;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): UpdateExpression;
     static encode(expr: UpdateExpression): any;
@@ -21,6 +23,7 @@ export declare class UpdateExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression;

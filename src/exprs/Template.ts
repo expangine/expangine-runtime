@@ -4,7 +4,7 @@ import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '
 import { Definitions } from '../Definitions';
 import { TextType } from '../types/Text';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -80,6 +80,13 @@ export class TemplateExpression extends Expression
         traverse.step(param, expr)
       )
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] in this.params
+      ? [1, this.params[steps[0]]]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

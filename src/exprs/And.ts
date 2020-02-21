@@ -1,11 +1,11 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
-import { isArray } from '../fns';
+import { isArray, isNumber } from '../fns';
 import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -70,6 +70,13 @@ export class AndExpression extends Expression
         traverse.step(index, expr)
       )
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return isNumber(steps[0]) && steps[0] < this.expressions.length
+      ? [1, this.expressions[steps[0]]]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

@@ -3,9 +3,10 @@ import { Definitions } from '../Definitions';
 import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 export declare class NotExpression extends Expression {
+    static STEP_NOT: string;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): NotExpression;
     static encode(expr: NotExpression): any;
@@ -17,6 +18,7 @@ export declare class NotExpression extends Expression {
     encode(): any;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     and(exprs: Expression | Expression[]): AndExpression;

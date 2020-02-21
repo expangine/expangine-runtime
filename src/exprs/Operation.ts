@@ -7,7 +7,7 @@ import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 
 
@@ -98,6 +98,13 @@ export class OperationExpression<P extends string = never, O extends string = ne
         traverse.step(param, expr)
       )
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] in this.params
+      ? [1, this.params[steps[0]]]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

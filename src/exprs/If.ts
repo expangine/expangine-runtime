@@ -4,9 +4,10 @@ import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
 import { NoExpression } from './No';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { BooleanType } from '../types/Boolean';
+import { isNumber } from '../fns';
 
 
 const INDEX_CASES = 1;
@@ -14,6 +15,14 @@ const INDEX_OTHERWISE = 2;
 
 export class IfExpression extends Expression 
 {
+
+  public static STEP_CASES = 'cases';
+
+  public static STEP_IF = 'if';
+
+  public static STEP_THEN = 'then';
+
+  public static STEP_ELSE = 'else';
 
   public static id = 'if';
 
@@ -87,19 +96,36 @@ export class IfExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('cases', () => 
+      traverse.step(IfExpression.STEP_CASES, () => 
         this.cases.forEach(([condition, result], index) => 
           traverse.step(index, () => {
-            traverse.step('if', condition);
-            traverse.step('then', result);
+            traverse.step(IfExpression.STEP_IF, condition);
+            traverse.step(IfExpression.STEP_THEN, result);
           })
         )
       );
       if (this.otherwise !== NoExpression.instance) {
-        traverse.step('else', this.otherwise);
+        traverse.step(IfExpression.STEP_ELSE, this.otherwise);
       }
     });
   }
+
+  // tslint:disable: no-magic-numbers
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === IfExpression.STEP_CASES
+      ? isNumber(steps[1]) && steps[1] < this.cases.length
+        ? steps[2] === IfExpression.STEP_IF
+          ? [3, this.cases[steps[1]][0]]
+          : steps[2] === IfExpression.STEP_THEN
+            ? [3, this.cases[steps[1]][1]]
+            : null
+        : null
+      : steps[0] === IfExpression.STEP_ELSE
+        ? [1, this.otherwise]
+        : null;
+  }
+  // tslint:enable: no-magic-numbers
 
   public setParent(parent: Expression = null): void
   {

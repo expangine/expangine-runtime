@@ -1,10 +1,10 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { toExpr, isArray } from '../fns';
+import { toExpr, isArray, isNumber } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -13,6 +13,10 @@ const INDEX_VALUE = 2;
 
 export class SetExpression extends Expression 
 {
+
+  public static STEP_PATH = 'path';
+
+  public static STEP_VALUE = 'value';
 
   public static id = 'set';
 
@@ -74,14 +78,27 @@ export class SetExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step('path', () => 
+      traverse.step(SetExpression.STEP_PATH, () => 
         this.path.forEach((expr, index) => 
           traverse.step(index, expr)
         )
       );
-      traverse.step('value', this.value);
+      traverse.step(SetExpression.STEP_VALUE, this.value);
     });
   }
+
+  // tslint:disable: no-magic-numbers
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return steps[0] === SetExpression.STEP_PATH
+      ? isNumber(steps[1]) && steps[1] < this.path.length
+        ? [2, this.path[steps[1]]]
+        : null
+      : steps[0] === SetExpression.STEP_VALUE
+        ? [1, this.value]
+        : null;
+  }
+  // tslint:enable: no-magic-numbers
 
   public setParent(parent: Expression = null): void
   {

@@ -1,6 +1,6 @@
 import { Type, TypeMap } from './Type';
 import { Definitions } from './Definitions';
-import { Traversable, Traverser } from './Traverser';
+import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity, Validation } from './Validate';
 
 
@@ -41,6 +41,53 @@ export abstract class Expression implements Traversable<Expression>
   public abstract setParent(parent?: Expression): void;
 
   public abstract validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+  
+  public getPath(): TraverseStep[]
+  {
+    return this.getRootExpression().traverse(new Traverser((type, _, path, traverser) =>
+    {
+      if (type === this)
+      {
+        traverser.stop(path.slice());
+      }
+    }));
+  }
+
+  public getExpressionFromPath(path: TraverseStep[]): Expression | null
+  {
+    if (path.length === 0)
+    {
+      return this;
+    }
+    
+    const step = this.getExpressionFromStep(path);
+
+    if (!step || !step[1])
+    {
+      return null;
+    }
+
+    const [steps, expr] = step;
+
+    return expr.getExpressionFromPath(path.slice(steps));
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return null;
+  }
+
+  public getRootExpression(): Expression
+  {
+    let node: Expression = this;
+
+    while (node.parent)
+    {
+      node = node.parent;
+    }
+
+    return node;
+  }
 
   public validations(def: Definitions, context: Type): Validation[]
   {

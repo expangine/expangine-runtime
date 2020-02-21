@@ -3,9 +3,12 @@ import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 export declare class ForExpression extends Expression {
+    static STEP_START: string;
+    static STEP_END: string;
+    static STEP_BODY: string;
     static MAX_ITERATIONS: number;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): ForExpression;
@@ -25,6 +28,7 @@ export declare class ForExpression extends Expression {
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;

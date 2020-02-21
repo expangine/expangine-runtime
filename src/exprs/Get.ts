@@ -1,9 +1,9 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { toExpr, isArray } from '../fns';
+import { toExpr, isArray, isNumber } from '../fns';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
@@ -73,6 +73,13 @@ export class GetExpression extends Expression
         traverse.step(index, expr)
       )
     );
+  }
+
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  {
+    return isNumber(steps[0]) && steps[0] < this.path.length
+      ? [1, this.path[steps[0]]]
+      : null;
   }
 
   public setParent(parent: Expression = null): void

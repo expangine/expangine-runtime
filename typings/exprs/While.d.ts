@@ -2,9 +2,11 @@ import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
-import { Traverser } from '../Traverser';
+import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 export declare class WhileExpression extends Expression {
+    static STEP_CONDITION: string;
+    static STEP_BODY: string;
     static MAX_ITERATIONS: number;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): WhileExpression;
@@ -22,6 +24,7 @@ export declare class WhileExpression extends Expression {
     encode(): any;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: Definitions, context: Type, handler: ValidationHandler): void;
     while(condition: Expression): WhileExpression;
