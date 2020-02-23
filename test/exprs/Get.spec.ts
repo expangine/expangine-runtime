@@ -1,43 +1,49 @@
-// import { describe, it, expect } from 'jest';
-
-import { defs, ObjectType, NumberType, TextType, ExpressionBuilder, DateType, ManyType, TextOps, BooleanType, NumberOps, TypeBuilder, OptionalType } from '../../src';
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { defs } from '../../src/def';
+import { ObjectType } from '../../src/types/Object';
+import { NumberType } from '../../src/types/Number';
+import { TextType } from '../../src/types/Text';
+import { ManyType } from '../../src/types/Many';
+import { TextOps } from '../../src/ops/TextOps';
+import { BooleanType } from '../../src/types/Boolean';
+import { OptionalType } from '../../src/types/Optional';
+import { DateType } from '../../src/types/Date';
+import { NumberOps } from '../../src/ops/NumberOps';
 
 
 // tslint:disable: no-magic-numbers
 
 describe('Get', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-
-  const context0 = tp.object({
-    num: tp.number(),
-    num2: tp.number(),
-    list: tp.list(tp.date()),
-    list2: tp.list(tp.text(), 2),
-    obj: tp.object({
-      txt: tp.text()
+  const context0 = Types.object({
+    num: Types.number(),
+    num2: Types.number(),
+    list: Types.list(Types.date()),
+    list2: Types.list(Types.text(), 2),
+    obj: Types.object({
+      txt: Types.text()
     }),
-    obj2: tp.object({
-      txt: tp.text(),
-      num: tp.number(),
+    obj2: Types.object({
+      txt: Types.text(),
+      num: Types.number(),
     }),
-    enum: tp.enum(
-      tp.object({
-        enumSub: tp.bool()
+    enum: Types.enum(
+      Types.object({
+        enumSub: Types.bool()
       })
     ),
-    map: tp.map(tp.text(), tp.number()),
-    tuple: tp.tuple(
-      tp.number(),
-      tp.text(),
-      tp.number(),
+    map: Types.map(Types.text(), Types.number()),
+    tuple: Types.tuple(
+      Types.number(),
+      Types.text(),
+      Types.number(),
     ),
   })
 
   it('root', () =>
   {
-    const get = ex.get();
+    const get = Exprs.get();
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ObjectType);
@@ -45,7 +51,7 @@ describe('Get', () => {
 
   it('object prop', () =>
   {
-    const get = ex.get('num');
+    const get = Exprs.get('num');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(NumberType);
@@ -53,7 +59,7 @@ describe('Get', () => {
 
   it('object prop prop', () =>
   {
-    const get = ex.get('obj', 'txt');
+    const get = Exprs.get('obj', 'txt');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(TextType);
@@ -61,10 +67,10 @@ describe('Get', () => {
 
   it('object prop merge same', () =>
   {
-    const get = ex.get(
-      ex.if(ex.get(true))
-        .than(ex.const('num'))
-        .else(ex.const('num2'))
+    const get = Exprs.get(
+      Exprs.if(Exprs.get(true))
+        .than(Exprs.const('num'))
+        .else(Exprs.const('num2'))
     );
     const getType = get.getType(defs, context0);
 
@@ -73,10 +79,10 @@ describe('Get', () => {
 
   it('object prop merge different', () =>
   {
-    const get = ex.get(
-      ex.if(ex.get(true))
-        .than(ex.const('num'))
-        .else(ex.const('obj'))
+    const get = Exprs.get(
+      Exprs.if(Exprs.get(true))
+        .than(Exprs.const('num'))
+        .else(Exprs.const('obj'))
     );
     const getType = get.getType(defs, context0);
 
@@ -87,8 +93,8 @@ describe('Get', () => {
 
   it('object prop merge all same', () =>
   {
-    const get = ex.get('obj', 
-      ex.op(TextOps.create, {})
+    const get = Exprs.get('obj', 
+      Exprs.op(TextOps.create, {})
     );
     const getType = get.getType(defs, context0);
 
@@ -97,8 +103,8 @@ describe('Get', () => {
 
   it('object prop merge all different', () =>
   {
-    const get = ex.get('obj2', 
-      ex.op(TextOps.create, {})
+    const get = Exprs.get('obj2', 
+      Exprs.op(TextOps.create, {})
     );
     const getType = get.getType(defs, context0);
 
@@ -109,7 +115,7 @@ describe('Get', () => {
 
   it('enum sub', () =>
   {
-    const get = ex.get('enum', 'enumSub');
+    const get = Exprs.get('enum', 'enumSub');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(BooleanType);
@@ -117,7 +123,7 @@ describe('Get', () => {
 
   it('list length', () =>
   {
-    const get = ex.get('list', 'length');
+    const get = Exprs.get('list', 'length');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(NumberType);
@@ -125,7 +131,7 @@ describe('Get', () => {
 
   it('list item at constant', () =>
   {
-    const get = ex.get('list', 0);
+    const get = Exprs.get('list', 0);
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
@@ -134,7 +140,7 @@ describe('Get', () => {
 
   it('list item at constant with min', () =>
   {
-    const get = ex.get('list2', 0);
+    const get = Exprs.get('list2', 0);
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(TextType);
@@ -142,7 +148,7 @@ describe('Get', () => {
 
   it('list item at dynamic', () =>
   {
-    const get = ex.get('list', ex.get('num'));
+    const get = Exprs.get('list', Exprs.get('num'));
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
@@ -151,7 +157,7 @@ describe('Get', () => {
 
   it('list item at dynamic with min', () =>
   {
-    const get = ex.get('list2', ex.get('num'));
+    const get = Exprs.get('list2', Exprs.get('num'));
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
@@ -160,10 +166,10 @@ describe('Get', () => {
 
   it('list item at one of', () =>
   {
-    const get = ex.get('list', 
-      ex.if(ex.const(true))
-        .than(ex.const(0))
-        .else(ex.const(1))
+    const get = Exprs.get('list', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const(0))
+        .else(Exprs.const(1))
     );
     const getType = get.getType(defs, context0);
 
@@ -173,10 +179,10 @@ describe('Get', () => {
 
   it('list item at one of with min', () =>
   {
-    const get = ex.get('list2', 
-      ex.if(ex.const(true))
-        .than(ex.const(0))
-        .else(ex.const(1))
+    const get = Exprs.get('list2', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const(0))
+        .else(Exprs.const(1))
     );
     const getType = get.getType(defs, context0);
 
@@ -185,10 +191,10 @@ describe('Get', () => {
 
   it('list item at one of', () =>
   {
-    const get = ex.get('list', 
-      ex.if(ex.const(true))
-        .than(ex.const('length'))
-        .else(ex.const('length'))
+    const get = Exprs.get('list', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const('length'))
+        .else(Exprs.const('length'))
     );
     const getType = get.getType(defs, context0);
 
@@ -197,31 +203,31 @@ describe('Get', () => {
 
   it('many list with props', () => 
   {
-    const context2 = tp.many(
-      tp.list(tp.text()),
-      tp.object({
-        length: tp.bool(),
-        item: tp.date()
+    const context2 = Types.many(
+      Types.list(Types.text()),
+      Types.object({
+        length: Types.bool(),
+        item: Types.date()
       })
     );
 
-    const get1 = ex.get(0);
+    const get1 = Exprs.get(0);
     const getType1 = get1.getType(defs, context2);
 
     expect(getType1).toBeInstanceOf(OptionalType);
     expect(getType1.options).toBeInstanceOf(TextType);
 
-    const get2 = ex.get('length');
+    const get2 = Exprs.get('length');
     const getType2 = get2.getType(defs, context2);
 
     expect(getType2).toBeInstanceOf(NumberType);
 
-    const get3 = ex.get('item');
+    const get3 = Exprs.get('item');
     const getType3 = get3.getType(defs, context2);
 
     expect(getType3).toBeInstanceOf(DateType);
 
-    const get4 = ex.get('missing');
+    const get4 = Exprs.get('missing');
     const getType4 = get4.getType(defs, context2);
 
     expect(getType4).toBeNull();
@@ -229,22 +235,22 @@ describe('Get', () => {
 
   it('map', () => 
   {
-    const get1 = ex.get('map', 0);
+    const get1 = Exprs.get('map', 0);
     const getType1 = get1.getType(defs, context0);
 
     expect(getType1).toBeInstanceOf(TextType);
 
-    const get2 = ex.get('map', ex.op(NumberOps.create, {}));
+    const get2 = Exprs.get('map', Exprs.op(NumberOps.create, {}));
     const getType2 = get2.getType(defs, context0);
 
     expect(getType2).toBeInstanceOf(TextType);
 
-    const get3 = ex.get('map', 'invalidKey');
+    const get3 = Exprs.get('map', 'invalidKey');
     const getType3 = get3.getType(defs, context0);
 
     expect(getType3).toBeNull();
 
-    const get4 = ex.get('map', 0, 1);
+    const get4 = Exprs.get('map', 0, 1);
     const getType4 = get4.getType(defs, context0);
 
     expect(getType4).toBeInstanceOf(TextType);
@@ -252,7 +258,7 @@ describe('Get', () => {
 
   it('text length', () =>
   {
-    const get = ex.get('obj', 'txt', 'length');
+    const get = Exprs.get('obj', 'txt', 'length');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(NumberType);
@@ -260,7 +266,7 @@ describe('Get', () => {
 
   it('text char at constant', () =>
   {
-    const get = ex.get('obj', 'txt', 0);
+    const get = Exprs.get('obj', 'txt', 0);
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(TextType);
@@ -268,7 +274,7 @@ describe('Get', () => {
 
   it('text char at dynamic', () =>
   {
-    const get = ex.get('obj', 'txt', ex.op(NumberOps.create, {}));
+    const get = Exprs.get('obj', 'txt', Exprs.op(NumberOps.create, {}));
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(TextType);
@@ -276,10 +282,10 @@ describe('Get', () => {
 
   it('text char at one of', () =>
   {
-    const get = ex.get('obj', 'txt', 
-      ex.if(ex.const(true))
-        .than(ex.const(0))
-        .else(ex.const(1))
+    const get = Exprs.get('obj', 'txt', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const(0))
+        .else(Exprs.const(1))
     );
     const getType = get.getType(defs, context0);
 
@@ -288,7 +294,7 @@ describe('Get', () => {
 
   it('tuple length', () =>
   {
-    const get = ex.get('tuple', 'length');
+    const get = Exprs.get('tuple', 'length');
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(NumberType);
@@ -296,7 +302,7 @@ describe('Get', () => {
 
   it('tuple element at constant', () =>
   {
-    const get = ex.get('tuple', 1);
+    const get = Exprs.get('tuple', 1);
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(TextType);
@@ -304,7 +310,7 @@ describe('Get', () => {
 
   it('tuple element at dynamic', () =>
   {
-    const get = ex.get('tuple', ex.op(NumberOps.create, {}));
+    const get = Exprs.get('tuple', Exprs.op(NumberOps.create, {}));
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ManyType);
@@ -314,10 +320,10 @@ describe('Get', () => {
 
   it('tuple element at one of same', () =>
   {
-    const get = ex.get('tuple', 
-      ex.if(ex.const(true))
-        .than(ex.const(0))
-        .else(ex.const(2))
+    const get = Exprs.get('tuple', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const(0))
+        .else(Exprs.const(2))
     );
     const getType = get.getType(defs, context0);
 
@@ -326,10 +332,10 @@ describe('Get', () => {
 
   it('tuple element at one of different', () =>
   {
-    const get = ex.get('tuple', 
-      ex.if(ex.const(true))
-        .than(ex.const(0))
-        .else(ex.const(1))
+    const get = Exprs.get('tuple', 
+      Exprs.if(Exprs.const(true))
+        .than(Exprs.const(0))
+        .else(Exprs.const(1))
     );
     const getType = get.getType(defs, context0);
 

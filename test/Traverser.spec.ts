@@ -1,20 +1,24 @@
-// import { describe, it, expect } from 'jest';
-
-import { Type, TypeBuilder, Traverser, NumberType, BooleanType, ObjectType, ListType, DateType, MapType, TextType, TypeClass, TraverseStep, TraverseResult } from '../src';
-
+import { Types } from '../src/Types';
+import { TypeClass, Type } from '../src/Type';
+import { TraverseStep, Traverser, TraverseResult } from '../src/Traverser';
+import { ObjectType } from '../src/types/Object';
+import { NumberType } from '../src/types/Number';
+import { ListType } from '../src/types/List';
+import { DateType } from '../src/types/Date';
+import { MapType } from '../src/types/Map';
+import { TextType } from '../src/types/Text';
+import { BooleanType } from '../src/types/Boolean';
 
 // tslint:disable: no-magic-numbers
 
 describe('Traverser', () => {
 
-  const tp = new TypeBuilder();
-
   it('test all', () =>
   {
-    const node = tp.object({
-      x: tp.number(),
-      y: tp.list(tp.date()),
-      z: tp.map(tp.bool(), tp.text()),
+    const node = Types.object({
+      x: Types.number(),
+      y: Types.list(Types.date()),
+      z: Types.map(Types.bool(), Types.text()),
     });
 
     const expected: [TypeClass, TraverseStep[]][] = [
@@ -43,10 +47,10 @@ describe('Traverser', () => {
 
   it('test list', () =>
   {
-    const node = tp.object({
-      x: tp.number(),
-      y: tp.list(tp.date()),
-      z: tp.map(tp.bool(), tp.text()),
+    const node = Types.object({
+      x: Types.number(),
+      y: Types.list(Types.date()),
+      z: Types.map(Types.bool(), Types.text()),
     });
 
     const o1 = node;
@@ -74,10 +78,10 @@ describe('Traverser', () => {
 
   it('test filtered custom', () =>
   {
-    const node = tp.object({
-      x: tp.number(),
-      y: tp.list(tp.date()),
-      z: tp.map(tp.bool(), tp.text()),
+    const node = Types.object({
+      x: Types.number(),
+      y: Types.list(Types.date()),
+      z: Types.map(Types.bool(), Types.text()),
     });
 
     const expected: [TypeClass, TraverseStep[]][] = [
@@ -102,10 +106,10 @@ describe('Traverser', () => {
 
   it('test filtered class', () =>
   {
-    const node = tp.object({
-      x: tp.number(),
-      y: tp.list(tp.date()),
-      z: tp.map(tp.bool(), tp.text()),
+    const node = Types.object({
+      x: Types.number(),
+      y: Types.list(Types.date()),
+      z: Types.map(Types.bool(), Types.text()),
     });
 
     const expected: [TypeClass, TraverseStep[]][] = [

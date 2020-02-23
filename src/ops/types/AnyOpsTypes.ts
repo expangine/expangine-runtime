@@ -16,6 +16,7 @@ import { NullType } from '../../types/Null';
 import { Type } from '../../Type';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = AnyType.operations;
@@ -81,11 +82,11 @@ export const AnyOpsTypes =
 
       return types.length > 1
         ? optional
-          ? OptionalType.for(new ManyType(types))
+          ? Types.optional(new ManyType(types))
           : new ManyType(types)
         : types.length === 1
           ? optional
-            ? OptionalType.for(types[0])
+            ? Types.optional(types[0])
             : types[0]
           : NullType;
     },
@@ -103,7 +104,7 @@ export const AnyOpsTypes =
   ternary: ops.setTypes(AnyOps.ternary, 
     (i, defs) => {
       if (i.truthy && i.falsy) {
-        return defs.mergeTypes([i.truthy, i.falsy]);
+        return Types.mergeMany([i.truthy, i.falsy]);
       } else if (i.truthy) {
         return i.truthy;
       } else if (i.falsy) {

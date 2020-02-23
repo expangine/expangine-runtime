@@ -78,7 +78,7 @@ export class NotType extends Type<Type[]>
     return NotType.id;
   }
 
-  public merge(type: NotType, describer: TypeDescribeProvider): void
+  public merge(type: NotType): void
   {
     
   }
@@ -126,7 +126,7 @@ export class NotType extends Type<Type[]>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () =>
-      this.options.map((type, index) => traverse.step(index, type))
+      this.options.map((type, index) => traverse.step(index, type, (replaceWith) => this.options.splice(index, 1, replaceWith), () => this.options.splice(index, 1)))
     );
   }
 

@@ -1,16 +1,31 @@
-
-import { objectMap, isEmpty, isArray, objectReduce, objectEach } from './fns';
-import { Expression } from './Expression';
-import { Definitions } from './Definitions';
-import { Types } from './TypeBuilder';
-import { Runtime } from './Runtime';
-import { Type, TypeMap, TypeProps, TypeKeyType } from './Type';
-import { Exprs } from './ExpressionBuilder';
 import { ObjectType } from './types/Object';
+import { Definitions } from './Definitions';
+import { Types } from './Types';
+import { FuncOptions, Func } from './Func';
+import { objectMap, objectReduce, isArray, objectEach } from './fns';
+import { Type, TypeMap } from './Type';
+import { Expression } from './Expression';
+import { Exprs } from './Exprs';
+import { Runtime } from './Runtime';
 import { EnumType } from './types/Enum';
+import { Relation } from './Relation';
 
 
-export interface TypeIndex
+export interface EntityOptions
+{
+  name: string;
+  description: string;
+  meta: any;
+  type: any;
+  instances: any[];
+  key?: any;
+  describe?: any;
+  transcoders?: Record<string, EntityStorageTranscoderOptions>;
+  indexes?: Record<string, EntityIndexOptions>;
+  methods?: Record<string, Func | FuncOptions>;
+}
+
+export interface EntityIndex
 {
   name: string;
   props: string[];
@@ -19,64 +34,95 @@ export interface TypeIndex
   primary?: boolean;
 }
 
-export interface TypeIndexOptions
+export interface EntityIndexOptions
 {
   props: string[];
   unique?: boolean;
   primary?: boolean;
 }
 
-export interface TypeStorageOptions
-{
-  name: string;
-  key?: any;
-  describe?: any;
-  transcoders?: Record<string, TypeStorageTranscoderOptions>;
-  indexes?: Record<string, TypeIndexOptions>;
-}
-
-export interface TypeStorageTranscoder
+export interface EntityStorageTranscoder
 {
   encode: Expression;
   decode: Expression;
   encodedType: Type;
 }
 
-export interface TypeStorageTranscoderOptions
+export interface EntityStorageTranscoderOptions
 {
   encode: any;
   decode: any;
   encodedType: any;
 }
 
-export enum TypeStoragePrimaryType
+export type EntityPropPair = [string, Type];
+
+export interface EntityProps
+{
+  type: EntityKeyType;
+  props: EntityPropPair[];
+  relation?: Relation;
+}
+
+export enum EntityKeyType
+{
+  PRIMARY,
+  FOREIGN,
+  NONE
+}
+
+export enum EntityStoragePrimaryType
 {
   GIVEN,
   AUTO_INCREMENT,
   UUID
 }
 
-export class TypeStorage
+
+export class Entity
 {
 
-  public static PRIMARY_TYPES: Record<TypeStoragePrimaryType, Type> = {
-    [TypeStoragePrimaryType.GIVEN]: null,
-    [TypeStoragePrimaryType.AUTO_INCREMENT]: Types.number(1, undefined, true),
-    [TypeStoragePrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
+  public static create(defs: Definitions, defaults: Partial<EntityOptions> = {}) {
+    return new Entity({
+      name: '',
+      description: '',
+      meta: null,
+      type: Types.object(),
+      instances: [],
+      methods: Object.create(null),
+      ...defaults,
+    }, defs);
+  }
+
+  public static PRIMARY_TYPES: Record<EntityStoragePrimaryType, Type> = {
+    [EntityStoragePrimaryType.GIVEN]: null,
+    [EntityStoragePrimaryType.AUTO_INCREMENT]: Types.number(1, undefined, true),
+    [EntityStoragePrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
   };
 
   public name: string;
+  public description: string;
+  public meta: any;
   public type: ObjectType;
+  public instances: any[];
+  public methods: Record<string, Func>;
   public key: Expression;
   public describe: Expression;
-  public transcoders: Record<string, TypeStorageTranscoder>;
-  public indexes: Record<string, TypeIndex>;
-  public primaryType: TypeStoragePrimaryType;
-  
-  public constructor(options: TypeStorageOptions | TypeStorage, defs: Definitions)
-  {
+  public transcoders: Record<string, EntityStorageTranscoder>;
+  public indexes: Record<string, EntityIndex>;
+  public primaryType: EntityStoragePrimaryType;
+
+  public constructor(options: EntityOptions, defs: Definitions) {
     this.name = options.name;
-    this.type = defs.getType(options.name) as ObjectType;
+    this.description = options.description;
+    this.meta = options.meta;
+    this.type = defs.getTypeKind(options.type, ObjectType, Types.object());
+    this.instances = options.instances && options.instances.length
+      ? options.instances.map((i) => this.type.fromJson(i))
+      : [];
+    this.methods = options.methods 
+      ? objectMap(options.methods, (funcOptions) => funcOptions instanceof Func ? funcOptions : new Func(funcOptions, defs))
+      : Object.create(null);
     this.key = options.key 
       ? defs.getExpression(options.key)
       : Exprs.get('instance', this.getDynamicPrimaryKey());
@@ -85,10 +131,10 @@ export class TypeStorage
       : Exprs.noop();
     this.transcoders = this.decodeTranscoders(defs, options.transcoders);
     this.indexes = this.decodeIndexes(defs, options.indexes);
-    this.primaryType = TypeStoragePrimaryType.AUTO_INCREMENT;
+    this.primaryType = EntityStoragePrimaryType.AUTO_INCREMENT;
   }
 
-  private decodeTranscoders(defs: Definitions, transcoders?: Record<string, TypeStorageTranscoderOptions>)
+  private decodeTranscoders(defs: Definitions, transcoders?: Record<string, EntityStorageTranscoderOptions>)
   {
     return transcoders
       ? objectMap(transcoders, (t) => ({
@@ -99,7 +145,7 @@ export class TypeStorage
       : {};
   }
 
-  private decodeIndexes(defs: Definitions, indexes?: Record<string, TypeIndexOptions | TypeIndex>)
+  private decodeIndexes(defs: Definitions, indexes?: Record<string, EntityIndexOptions | EntityIndex>)
   {
     return indexes
       ? objectMap(indexes, ({ unique, primary, props }, name) => ({
@@ -111,35 +157,35 @@ export class TypeStorage
       : {};
   }
 
-  public encode(): TypeStorageOptions
+  public encode(): EntityOptions 
   {
-    const { name, key, describe, transcoders, indexes } = this;
+    const { name, description, meta, type, instances, methods, key, describe, transcoders, indexes } = this;
 
-    const options: TypeStorageOptions = {
+    return {
       name,
+      description,
+      meta,
+      type: type.encode(),
+      instances: instances.map((i) => type.toJson(i)),
+      methods: objectMap(methods, (m) => m.encode()),
       key: key.encode(),
       describe: describe.encode(),
-    };
-
-    if (!isEmpty(transcoders)) 
-    {
-      options.transcoders = objectMap(transcoders, ({ encode, decode, encodedType }) => ({
+      transcoders: objectMap(transcoders, ({ encode, decode, encodedType }) => ({
         encode: encode.encode(),
         decode: decode.encode(),
         encodedType: encodedType.encode(),
-      }));
-    }
-
-    if (!isEmpty(indexes)) 
-    {
-      options.indexes = objectMap(indexes, ({ props, unique, primary }) => ({
+      })),
+      indexes: objectMap(indexes, ({ props, unique, primary }) => ({
         props,
         unique,
         primary,
-      }));
-    }
+      })),
+    };
+  }
 
-    return options;
+  public canStore(): boolean
+  {
+    return this.key !== Exprs.noop() && this.describe !== Exprs.noop();
   }
 
   public renameProp(prop: string, newProp: string)
@@ -182,7 +228,7 @@ export class TypeStorage
     });
   }
 
-  public getTypeProps(): TypeProps
+  public getEntityProps(): EntityProps
   {
     const primary = this.getPrimary();
     const props: Array<[string, Type]> = primary.props.map((prop, i) => [
@@ -193,7 +239,7 @@ export class TypeStorage
     ]);
 
     return {
-      type: TypeKeyType.PRIMARY,
+      type: EntityKeyType.PRIMARY,
       props,
     };
   }
@@ -374,7 +420,7 @@ export class TypeStorage
         : '__id';
   }
 
-  public getPrimary(name: string = 'primary', returnDynamic: boolean = true): TypeIndex | null
+  public getPrimary(name: string = 'primary', returnDynamic: boolean = true): EntityIndex | null
   {
     const defined = name in this.indexes
       ? this.indexes[name]
@@ -390,7 +436,7 @@ export class TypeStorage
     if (returnDynamic)
     {
       const id = this.getDynamicPrimaryKey();
-      const type = TypeStorage.PRIMARY_TYPES[this.primaryType];
+      const type = Entity.PRIMARY_TYPES[this.primaryType];
 
       return {
         name,
@@ -404,7 +450,7 @@ export class TypeStorage
     return null;
   }
 
-  public getUniqueIndexes(): TypeIndex[]
+  public getUniqueIndexes(): EntityIndex[]
   {
     return objectReduce(this.indexes, (index, indexName, unique) => {
       if (index.unique) {
@@ -421,7 +467,7 @@ export class TypeStorage
 
     this.addIndex('primary', key, true, true);
 
-    this.primaryType = TypeStoragePrimaryType.GIVEN;
+    this.primaryType = EntityStoragePrimaryType.GIVEN;
 
     return this;
   }

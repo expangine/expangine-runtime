@@ -7,6 +7,7 @@ import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Types } from '../Types';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -58,6 +59,11 @@ export class OrExpression extends Expression
     return OrExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new OrExpression(this.expressions.map((e) => e.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     const types: Type[] = this.expressions
@@ -66,14 +72,14 @@ export class OrExpression extends Expression
       .filter(t => !!t)
     ;
     
-    return def.mergeTypes(types);
+    return Types.mergeMany(types);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
       this.expressions.forEach((expr, index) => 
-        traverse.step(index, expr)
+        traverse.step(index, expr, (replaceWith) => this.expressions.splice(index, 1, replaceWith), () => this.expressions.splice(index, 1))
       )
     );
   }

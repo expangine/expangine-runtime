@@ -1,7 +1,7 @@
 
 import { objectMap, isObject, objectValues, isString, objectEach, addCopier } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
 import { Definitions } from '../Definitions';
@@ -11,6 +11,7 @@ import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { AnyType } from './Any';
+import { Types } from '../Types';
 
 
 const INDEX_PROPS = 1;
@@ -62,7 +63,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   public static from(types?: TypeInputMap): ObjectType
   {
     return new ObjectType({
-      props: types ? Type.resolve(types) : {}
+      props: types ? Types.resolve(types) : {}
     });
   }
 
@@ -108,7 +109,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return ObjectType.operations.map;
   }
 
-  public merge(type: Type<O>, describer: TypeDescribeProvider): void
+  public merge(type: Type<O>): void
   {
     const p1 = this.options.props;
     const p2 = type.options.props;
@@ -117,11 +118,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     {
       if (prop in p2 && p2[prop])
       {
-        p1[prop] = describer.mergeType(p1[prop], p2[prop]);
+        p1[prop] = Types.merge(p1[prop], p2[prop]);
       }
       else if (p1[prop])
       {
-        p1[prop] = describer.optionalType(p1[prop]);
+        p1[prop] = Types.optional(p1[prop]);
       }
     }
 
@@ -129,7 +130,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     {
       if (!(prop in p1) && p2[prop])
       {
-        p1[prop] = describer.optionalType(p2[prop]);
+        p1[prop] = Types.optional(p2[prop]);
       }
     }
   }
@@ -144,7 +145,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       }
     }
 
-    const exprType = def.requiredType(expr.getType(def, context));
+    const exprType = Types.required(expr.getType(def, context));
 
     if (exprType)
     {
@@ -152,7 +153,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       {
         const types = objectValues(this.options.props);
 
-        return def.mergeTypes(types);
+        return Types.mergeMany(types);
       }
 
       if (exprType instanceof EnumType)
@@ -160,7 +161,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         const values = Array.from(exprType.options.constants.values());
         const types = values.map((p) => this.options.props[p]).filter(t => !!t);
 
-        return def.mergeTypes(types);
+        return Types.mergeMany(types);
       }
     }
 
@@ -179,14 +180,14 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
             objectValues(this.options.props, (prop, key) => [key, key]),
           ),
         }),
-        value: def.mergeTypes(
+        value: Types.mergeMany(
           objectValues(this.options.props)
         ),
       },
       { 
         key: TextType.baseType, 
-        value: def.optionalType(
-          def.mergeTypes(
+        value: Types.optional(
+          Types.mergeMany(
             objectValues(this.options.props)
           )
         ),
@@ -208,7 +209,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   {
     return traverse.enter(this, () => 
       objectEach(this.options.props, 
-        (type, prop) => traverse.step(prop, type)
+        (type, prop) => traverse.step(prop, type, (replaceWith) => this.options.props[prop] = replaceWith, () => delete this.options.props[prop])
       )
     );
   }

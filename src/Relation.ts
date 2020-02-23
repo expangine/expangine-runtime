@@ -1,7 +1,8 @@
-import { Type, TypeKeyType, TypePropPair, TypeProps } from './Type';
+import { Type } from './Type';
 import { Definitions } from './Definitions';
-import { Types } from './TypeBuilder';
+import { Types } from './Types';
 import { MapInput, toMap, reverseMap } from './fns';
+import { EntityPropPair, EntityProps, EntityKeyType } from './Entity';
 
 
 export interface RelationTypeKey
@@ -32,7 +33,7 @@ export interface TypeRelation
   name: string;
   kind: RelationKind;
   related: RelationTypeKey[];
-  morphs?: TypePropPair;
+  morphs?: EntityPropPair;
   morphsToRelated?: Map<any, string>;
   relatedToMorphs?: Map<string, any>;
   where?: [string, any];
@@ -84,7 +85,7 @@ export class Relation
    * A name-type pair for a property that exists on the subject type that is 
    * used to determine which related type.
    */
-  public morphs: TypePropPair | null;
+  public morphs: EntityPropPair | null;
 
   /**
    * A map of values from the morphs property to the related type names.
@@ -160,7 +161,7 @@ export class Relation
     this.extension = !!options.extension;
   }
 
-  private decodeTypePair([prop, propType]: [string, any]): TypePropPair
+  private decodeTypePair([prop, propType]: [string, any]): EntityPropPair
   {
     return [prop, this.defs.getType(propType)];
   }
@@ -290,15 +291,15 @@ export class Relation
 
     related.forEach(({ name, props }) => 
     {
-      const storage = this.defs.storage[name];
-      const primary = storage.getTypeProps();
+      const entity = this.defs.getEntity(name);
+      const primary = entity.getEntityProps();
 
       props.forEach((_, i) =>
       {
         const propType = primary.props[i][1];
 
         types[i] = types[i]
-          ? this.defs.mergeType(types[i], propType)
+          ? Types.merge(types[i], propType)
           : propType.clone();
       });
     });
@@ -411,17 +412,17 @@ export class Relation
     return relation;
   }
 
-  public getTypeProps(name: string): TypeProps[]
+  public getTypeProps(name: string): EntityProps[]
   {
-    const typeProps: TypeProps[] = [];
+    const typeProps: EntityProps[] = [];
 
     if (this.subject.name === name)
     {
       const propTypesList = this.getPropTypes(this.related);
-      const props: TypePropPair[] = this.subject.props.map((prop, i) => [prop, propTypesList[i]]);
+      const props: EntityPropPair[] = this.subject.props.map((prop, i) => [prop, propTypesList[i]]);
 
       typeProps.push({
-        type: TypeKeyType.FOREIGN,
+        type: EntityKeyType.FOREIGN,
         props,
         relation: this,
       });
@@ -429,7 +430,7 @@ export class Relation
       if (this.morphs)
       {
         typeProps.push({
-          type: TypeKeyType.NONE,
+          type: EntityKeyType.NONE,
           props: [this.morphs],
           relation: this,
         });
@@ -454,7 +455,7 @@ export class Relation
     const subjectRelationName = options.manyRelationName || options.one;
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const name = options.name || (subjectRelationName + '_hasMany_' + relatedRelationName);
-    const relatedProps = defs.storage[options.one].getPrimary().props;
+    const relatedProps = defs.getEntity(options.one).getPrimary().props;
     const subjectProps = relatedProps.map((p) => foreignKeyPrefix + p);
 
     return new Relation(defs, {
@@ -514,7 +515,7 @@ export class Relation
     const subjectRelationName = options.hasOneRelationName || options.one;
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const name = options.name || (subjectRelationName + '_hasOne_' + relatedRelationName);
-    const relatedProps = defs.storage[options.one].getPrimary().props;
+    const relatedProps = defs.getEntity(options.one).getPrimary().props;
     const subjectProps = relatedProps.map((p) => foreignKeyPrefix + p);
 
     return new Relation(defs, {
@@ -579,7 +580,7 @@ export class Relation
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const related = options.poly.map((polyName) => ({
       name: polyName, 
-      props: defs.storage[polyName].getPrimary().props
+      props: defs.getEntity(polyName).getPrimary().props
     }));
     const subjectProps = related[0].props.map((p) => foreignKeyPrefix + p);
 

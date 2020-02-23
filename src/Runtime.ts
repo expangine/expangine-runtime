@@ -4,8 +4,8 @@ import { Definitions } from './Definitions';
 import { Expression, ExpressionClass } from './Expression';
 import { isArray } from './fns';
 import { Operation } from './Operation';
-import { FunctionType } from './types/Function';
 import { Computed } from './Computed';
+import { Func } from './Func';
 
 
 
@@ -55,7 +55,7 @@ export class Runtime<Context = any, Result = any>
     return this;
   }
 
-  public getFunction (name: string): FunctionType
+  public getFunction (name: string): Func
   {
     return this.defs.getFunction(name);
   }

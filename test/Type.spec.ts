@@ -1,4 +1,5 @@
-import { Types } from '../src';
+import { Types } from '../src/Types';
+
 
 describe('Type', () => 
 {
@@ -32,8 +33,6 @@ describe('Type', () =>
     const l = Types.map(j, k);
     const m = Types.set(l);
     const n = Types.optional(Types.many(m, i));
-
-    n.setParent();
 
     return { a, b, c, d, e, f, g, h, i, j, k, l, m, n };
   }

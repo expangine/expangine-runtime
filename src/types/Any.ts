@@ -6,7 +6,7 @@ import { Definitions } from '../Definitions';
 import { AnyOps, AnyOperations, AnyComputeds } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 
 
 export type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
@@ -81,7 +81,7 @@ export class AnyType extends Type
     return AnyType.operations.map;
   }
 
-  public merge(type: AnyType, describer: TypeDescribeProvider): void
+  public merge(type: AnyType): void
   {
     
   }

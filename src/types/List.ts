@@ -3,7 +3,7 @@ import { isNumber, isEmpty, isArray, coalesce, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ListOps, ListOperations, ListComputeds } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
@@ -13,6 +13,7 @@ import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { TupleType } from './Tuple';
+import { Types } from '../Types';
 
 
 const INDEX_ITEM = 1;
@@ -77,7 +78,7 @@ export class ListType extends Type<ListOptions>
 
     for (let i = 1; i < data.length; i++)
     {
-      item = describer.merge(item, data[i]);
+      item = Types.merge(item, data[i]);
     }
 
     return new ListType({ 
@@ -121,7 +122,7 @@ export class ListType extends Type<ListOptions>
 
   public static forItem(itemOrClass: TypeInput)
   {
-    const item = Type.fromInput(itemOrClass);
+    const item = Types.parse(itemOrClass);
     
     return new ListType({ item });
   }
@@ -136,12 +137,12 @@ export class ListType extends Type<ListOptions>
     return ListType.operations.map;
   }
 
-  public merge(type: ListType, describer: TypeDescribeProvider): void
+  public merge(type: ListType): void
   {
     const o1 = this.options;
     const o2 = type.options;
 
-    o1.item = describer.mergeType(o1.item, o2.item);
+    o1.item = Types.merge(o1.item, o2.item);
     o1.min = Math.min(o1.min, o2.min);
     o1.max = Math.max(o1.max, o2.max);
   }
@@ -159,17 +160,17 @@ export class ListType extends Type<ListOptions>
       {
         return isNumber(this.options.min) && expr.value < this.options.min
           ? this.options.item
-          : def.optionalType(this.options.item);
+          : Types.optional(this.options.item);
       }
     }
 
-    const exprType = def.requiredType(expr.getType(def, context));
+    const exprType = Types.required(expr.getType(def, context));
 
     if (exprType)
     {
       if (exprType instanceof NumberType)
       {
-        return def.optionalType(this.options.item);
+        return Types.optional(this.options.item);
       }
 
       if (exprType instanceof EnumType)
@@ -183,7 +184,7 @@ export class ListType extends Type<ListOptions>
             return this.options.item;
           }
 
-          return def.optionalType(this.options.item);
+          return Types.optional(this.options.item);
         }
 
         if (exprType.options.value instanceof TextType)
@@ -212,7 +213,7 @@ export class ListType extends Type<ListOptions>
     return [
       ...required,
       { key: 'length', value: ListType.lengthType },
-      { key: ListType.indexType, value: def.optionalType(item) },
+      { key: ListType.indexType, value: Types.optional(item) },
     ];
   }
 
@@ -281,7 +282,7 @@ export class ListType extends Type<ListOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step(ListType.STEP_ITEM, this.options.item)
+      traverse.step(ListType.STEP_ITEM, this.options.item, (replaceWith) => this.options.item = replaceWith)
     );
   }
 

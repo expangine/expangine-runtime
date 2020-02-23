@@ -1,42 +1,41 @@
-// import { describe, it, expect } from 'jest';
-
-import { defs, ObjectType, NumberType, TextType, ExpressionBuilder, TypeBuilder } from '../../src';
-
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { ObjectType } from '../../src/types/Object';
+import { defs } from '../../src/def';
+import { NumberType } from '../../src/types/Number';
+import { TextType } from '../../src/types/Text';
 
 // tslint:disable: no-magic-numbers
 
 describe('Sub', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-
-  const context0 = tp.object({
-    num: tp.number(),
-    num2: tp.number(),
-    list: tp.list(tp.date()),
-    obj: tp.object({
-      txt: tp.text()
+  const context0 = Types.object({
+    num: Types.number(),
+    num2: Types.number(),
+    list: Types.list(Types.date()),
+    obj: Types.object({
+      txt: Types.text()
     }),
-    obj2: tp.object({
-      txt: tp.text(),
-      num: tp.number(),
+    obj2: Types.object({
+      txt: Types.text(),
+      num: Types.number(),
     }),
-    enum: tp.enum(
-      tp.object({
-        enumSub: tp.bool()
+    enum: Types.enum(
+      Types.object({
+        enumSub: Types.bool()
       })
     ),
-    map: tp.map(tp.text(), tp.number()),
-    tuple: tp.tuple(
-      tp.number(),
-      tp.text(),
-      tp.number(),
+    map: Types.map(Types.text(), Types.number()),
+    tuple: Types.tuple(
+      Types.number(),
+      Types.text(),
+      Types.number(),
     ),
   })
 
   it('root', () =>
   {
-    const sub = ex.sub(ex.get());
+    const sub = Exprs.sub(Exprs.get());
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(ObjectType);
@@ -44,7 +43,7 @@ describe('Sub', () => {
 
   it('object prop', () =>
   {
-    const sub = ex.sub(ex.get('num'));
+    const sub = Exprs.sub(Exprs.get('num'));
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(NumberType);
@@ -52,7 +51,7 @@ describe('Sub', () => {
 
   it('object sub', () =>
   {
-    const sub = ex.sub(ex.get(), 'num');
+    const sub = Exprs.sub(Exprs.get(), 'num');
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(NumberType);
@@ -60,7 +59,7 @@ describe('Sub', () => {
 
   it('object prop prop', () =>
   {
-    const sub = ex.sub(ex.get('obj', 'txt'));
+    const sub = Exprs.sub(Exprs.get('obj', 'txt'));
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(TextType);
@@ -68,7 +67,7 @@ describe('Sub', () => {
 
   it('object sub sub', () =>
   {
-    const sub = ex.sub(ex.get(), 'obj', 'txt');
+    const sub = Exprs.sub(Exprs.get(), 'obj', 'txt');
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(TextType);
@@ -76,7 +75,7 @@ describe('Sub', () => {
 
   it('object prop sub', () =>
   {
-    const sub = ex.sub(ex.get('obj'), 'txt');
+    const sub = Exprs.sub(Exprs.get('obj'), 'txt');
     const subType = sub.getType(defs, context0);
 
     expect(subType).toBeInstanceOf(TextType);

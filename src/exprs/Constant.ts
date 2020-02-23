@@ -1,5 +1,5 @@
 
-import { isArray, isString, isNumber } from '../fns';
+import { isArray, isString, isNumber, copy } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Type } from '../Type';
 import { Definitions } from '../Definitions';
@@ -70,6 +70,11 @@ export class ConstantExpression extends Expression
   public encode(): any 
   {
     return ConstantExpression.encode(this);
+  }
+
+  public clone(): Expression
+  {
+    return new ConstantExpression(copy(this.value));
   }
 
   public getType(def: Definitions, context: Type): Type | null

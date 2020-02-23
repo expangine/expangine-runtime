@@ -1,5 +1,5 @@
 
-import { objectMap, isEmpty, isArray, toExpr, objectEach } from '../fns';
+import { objectMap, isEmpty, isArray, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Operation } from '../Operation';
@@ -9,6 +9,8 @@ import { NotExpression } from './Not';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
+import { Types } from '../Types';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_NAME = 1;
@@ -86,6 +88,11 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return OperationExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new OperationExpression(this.name, objectMap(this.params, (p) => p.clone()), { ...this.scopeAlias });
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
@@ -95,7 +102,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   {
     return traverse.enter(this, () =>
       objectEach(this.params, (expr, param) =>
-        traverse.step(param, expr)
+        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => delete this.params[param])
       )
     );
   }
@@ -141,7 +148,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     {
       const optional = operation.optional.indexOf(paramName) !== -1;
       const expectedRequired = expectedTypes[paramName];
-      const expected = optional ? def.optionalType(expectedRequired) : expectedRequired;
+      const expected = optional ? Types.optional(expectedRequired) : expectedRequired;
       const subject = params[paramName];
       const hasScope = operation.hasScope.indexOf(paramName) !== -1;
       const paramContext = hasScope ? scopeContext : context;
@@ -176,7 +183,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   {
     return new OperationExpression<P, O, S>(this.name, {
       ...this.params,
-      [name]: toExpr(value),
+      [name]: Exprs.parse(value),
     }, this.scopeAlias);
   }
 

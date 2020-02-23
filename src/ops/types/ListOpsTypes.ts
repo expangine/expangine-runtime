@@ -11,9 +11,9 @@ import { ObjectType } from '../../types/Object';
 import { TupleType } from '../../types/Tuple';
 
 import { ListOps } from '../ListOps';
-import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = ListType.operations;
@@ -23,7 +23,7 @@ const ListItem = (list?: Type, otherwise?: TypeInput) => list instanceof ListTyp
 const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
 const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
 const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
-const GivenListItemOptional = (i: {list?: Type}) => OptionalType.for(GivenListItem(i));
+const GivenListItemOptional = (i: {list?: Type}) => Types.optional(GivenListItem(i));
 const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
 const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initial || AnyType;
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
@@ -50,7 +50,7 @@ export const ListOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ListOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, ListType),
+    (i, defs) => Types.maybe(i.value, ListType),
     { value: AnyType } 
   ),
 
@@ -364,21 +364,21 @@ export const ListOpsTypes =
     i => ListType.forItem(i.join || AnyType),
     { a: i => RequireList(i.a, ListType), b: i => RequireList(i.b, ListType), on: BooleanType, join: AnyType },
     { },
-    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => ListItem(i.a, AnyType), joinB: i => Types.optional(ListItem(i.b, AnyType)) }
   ),
 
   joinRight: ops.setTypes(ListOps.joinRight, 
     i => ListType.forItem(i.join || AnyType),
     { a: i => RequireList(i.a, ListType), b: i => RequireList(i.b, ListType), on: BooleanType, join: AnyType },
     { },
-    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => ListItem(i.b, AnyType) }
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => Types.optional(ListItem(i.a, AnyType)), joinB: i => ListItem(i.b, AnyType) }
   ),
 
   joinFull: ops.setTypes(ListOps.joinFull, 
     i => ListType.forItem(i.join || AnyType),
     { a: i => RequireList(i.a, ListType), b: i => RequireList(i.b, ListType), on: BooleanType, join: AnyType },
     { },
-    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => OptionalType.for(ListItem(i.a, AnyType)), joinB: i => OptionalType.for(ListItem(i.b, AnyType)) }
+    { onA: i => ListItem(i.a, AnyType), onB: i => ListItem(i.b, AnyType), joinA: i => Types.optional(ListItem(i.a, AnyType)), joinB: i => Types.optional(ListItem(i.b, AnyType)) }
   ),
 
   joinCross: ops.setTypes(ListOps.joinCross, 
@@ -391,49 +391,49 @@ export const ListOpsTypes =
   // Aggregates
 
   min: ops.setTypes(ListOps.min,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   max: ops.setTypes(ListOps.max,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   sum: ops.setTypes(ListOps.sum,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   avg: ops.setTypes(ListOps.avg,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   std: ops.setTypes(ListOps.std,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   variance: ops.setTypes(ListOps.variance,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope
   ),
 
   median: ops.setTypes(ListOps.median,
-    OptionalType.for(NumberType),
+    Types.optional(NumberType),
     { list: GivenList, value: NumberType },
     {},
     GivenListIterationScope

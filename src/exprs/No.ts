@@ -44,6 +44,11 @@ export class NoExpression extends Expression
     return NoExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return this;
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return NullType.baseType;

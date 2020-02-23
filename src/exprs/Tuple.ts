@@ -6,6 +6,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { TupleType } from '../types/Tuple';
 import { ValidationHandler } from '../Validate';
 import { isNumber } from '../fns';
+import { Types } from '../Types';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -57,16 +58,21 @@ export class TupleExpression extends Expression
     return TupleExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new TupleExpression(this.expressions.map((e) => e.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
-    return new TupleType(this.expressions.map((e) => Type.simplify(e.getType(def, context))));
+    return new TupleType(this.expressions.map((e) => Types.simplify(e.getType(def, context))));
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
       this.expressions.forEach((expr, index) => 
-        traverse.step(index, expr)
+        traverse.step(index, expr, (replaceWith) => this.expressions.splice(index, 1, replaceWith), () => this.expressions.splice(index, 1))
       )
     );
   }

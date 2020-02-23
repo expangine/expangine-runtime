@@ -12,10 +12,10 @@ import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
 import { EnumType } from '../../types/Enum';
 import { ManyType } from '../../types/Many';
-import { OptionalType } from '../../types/Optional';
 import { ColorSpaceHSL } from '../../util/color/ColorSpaceHSL';
 import { Color } from '../../util/color/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = ColorType.operations;
@@ -233,7 +233,7 @@ export const ColorOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ColorOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, ColorType),
+    (i, defs) => Types.maybe(i.value, ColorType),
     { value: AnyType } 
   ),
 
@@ -314,7 +314,7 @@ export const ColorOpsTypes =
   ),
 
   parse: ops.setTypes(ColorOps.parse, 
-    OptionalType.for(ColorType),
+    Types.optional(ColorType),
     { value: AnyType }
   ),
 

@@ -22,7 +22,7 @@ export declare class MapType extends Type<MapOptions> {
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: MapType, describer: TypeDescribeProvider): void;
+    merge(type: MapType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

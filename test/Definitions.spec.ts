@@ -1,15 +1,11 @@
-// import { describe, it, expect } from 'jest';
-// import { inspect } from 'util';
-import { defs, TypeBuilder, ExpressionBuilder, Relation, Types } from '../src';
-
+import { defs } from '../src/def';
+import { Exprs } from '../src/Exprs';
+import { Types } from '../src/Types';
+import { Relation } from '../src/Relation';
 
 // tslint:disable: no-magic-numbers
 
 describe('Definitions', () => {
-
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-
 
   it('has all types', () =>
   {
@@ -30,7 +26,7 @@ describe('Definitions', () => {
 
   it('get ops from type', () =>
   {
-    const ops = defs.getOperationsForType(tp.tuple());
+    const ops = defs.getOperationsForType(Types.tuple());
 
     expect(ops.length).toBeGreaterThan(0);
 
@@ -40,11 +36,11 @@ describe('Definitions', () => {
   it('get ops from expression', () =>
   {
     const ops = defs.getOperationsForExpression(
-      ex.if(ex.true())
-        .than(ex.const(0))
-        .else(ex.get('x')),
-      tp.object({
-        x: tp.number()
+      Exprs.if(Exprs.true())
+        .than(Exprs.const(0))
+        .else(Exprs.get('x')),
+      Types.object({
+        x: Types.number()
       })
     );
 
@@ -55,7 +51,7 @@ describe('Definitions', () => {
 
   it('get ops from return type', () =>
   {
-    const ops = defs.getOperationsWithReturnType(tp.tuple());
+    const ops = defs.getOperationsWithReturnType(Types.tuple());
 
     expect(ops.length).toBeGreaterThan(0);
 
@@ -65,11 +61,11 @@ describe('Definitions', () => {
   it('get ops from return expression', () =>
   {
     const ops = defs.getOperationsWithReturnExpression(
-      ex.if(ex.true())
-        .than(ex.const(0))
-        .else(ex.get('x')),
-      tp.object({
-        x: tp.number()
+      Exprs.if(Exprs.true())
+        .than(Exprs.const(0))
+        .else(Exprs.get('x')),
+      Types.object({
+        x: Types.number()
       })
     );
 
@@ -81,8 +77,8 @@ describe('Definitions', () => {
   it('get ops for param types', () =>
   {
     const ops = defs.getOperationsForParamTypes({
-      value: tp.number(),
-      test: tp.number()
+      value: Types.number(),
+      test: Types.number()
     });
 
     expect(ops.length).toBeGreaterThan(0);
@@ -93,10 +89,10 @@ describe('Definitions', () => {
   it('get ops for param expressions', () =>
   {
     const ops = defs.getOperationsForParamExpressions({
-      value: ex.const(0),
-      test: ex.get('x')
-    }, tp.object({
-      x: tp.number()
+      value: Exprs.const(0),
+      test: Exprs.get('x')
+    }, Types.object({
+      x: Types.number()
     }));
 
     expect(ops.length).toBeGreaterThan(0);
@@ -106,32 +102,29 @@ describe('Definitions', () => {
 
   it('has relations', () =>
   {
-    defs.addAlias('post', tp.object({
-      title: tp.text(),
-      content: tp.text(),
-      brief: tp.text(),
-      created: tp.date(),
-    }));
-
-    defs.addAlias('comment', tp.object({
-      content: tp.text(),
-      created: tp.date(),
-    }));
-
-    defs.addAlias('user', tp.object({
-      name: tp.text(),
-    }))
-
-    defs.addStorage({
-      name: 'post'
+    defs.addEntity({
+      name: 'post',
+      type: Types.object({
+        title: Types.text(),
+        content: Types.text(),
+        brief: Types.text(),
+        created: Types.date(),
+      }),
     });
 
-    defs.addStorage({
-      name: 'comment',
+    defs.addEntity({
+      name: 'comment', 
+      type: Types.object({
+        content: Types.text(),
+        created: Types.date(),
+      }),
     });
 
-    defs.addStorage({
-      name: 'user'
+    defs.addEntity({
+      name: 'user', 
+      type: Types.object({
+        name: Types.text(),
+      }),
     });
 
     defs.addRelation(Relation.hasMany(defs, {
@@ -175,7 +168,7 @@ describe('Definitions', () => {
     }));
 
     const commentRelations = defs.getRelations('comment');
-    const commentProps = defs.getTypeProps('comment');
+    const commentProps = defs.getEntityProps('comment');
 
     expect( commentRelations.length ).toBeGreaterThan(0);
     expect( commentProps.length ).toBeGreaterThan(0);

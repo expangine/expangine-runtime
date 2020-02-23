@@ -8,6 +8,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { BooleanType } from '../types/Boolean';
 import { isNumber } from '../fns';
+import { Types } from '../Types';
 
 
 const INDEX_CASES = 1;
@@ -80,6 +81,11 @@ export class IfExpression extends Expression
     return IfExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new IfExpression(this.cases.map(([condition, then]) => [condition.clone(), then.clone()]), this.otherwise.clone());
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     const types = this.cases
@@ -90,7 +96,7 @@ export class IfExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return def.mergeTypes(types);
+    return Types.mergeMany(types);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -99,13 +105,13 @@ export class IfExpression extends Expression
       traverse.step(IfExpression.STEP_CASES, () => 
         this.cases.forEach(([condition, result], index) => 
           traverse.step(index, () => {
-            traverse.step(IfExpression.STEP_IF, condition);
-            traverse.step(IfExpression.STEP_THEN, result);
+            traverse.step(IfExpression.STEP_IF, condition, (replaceWith) => this.cases[index].splice(0, 1, replaceWith));
+            traverse.step(IfExpression.STEP_THEN, result, (replaceWith) => this.cases[index].splice(1, 1, replaceWith));
           })
         )
       );
       if (this.otherwise !== NoExpression.instance) {
-        traverse.step(IfExpression.STEP_ELSE, this.otherwise);
+        traverse.step(IfExpression.STEP_ELSE, this.otherwise, (replaceWith) => this.otherwise = replaceWith);
       }
     });
   }

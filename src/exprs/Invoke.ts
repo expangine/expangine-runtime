@@ -1,10 +1,11 @@
 
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
-import { objectMap, isString, toExpr, objectEach } from '../fns';
+import { objectMap, isString, objectEach } from '../fns';
 import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_NAME = 1;
@@ -54,7 +55,7 @@ export class InvokeExpression extends Expression
       return 0;
     }
 
-    return func.options.expression.getComplexity(def);
+    return func.expression.getComplexity(def);
   }
 
   public getScope(): null
@@ -67,12 +68,18 @@ export class InvokeExpression extends Expression
     return InvokeExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new InvokeExpression(this.name, objectMap(this.args, (a) => a.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     const func = def.getFunction(this.name);
+    const argTypes = objectMap(this.args, (a) => a.getType(def, context));
 
     return func
-      ? func.options.returnType
+      ? func.getReturnType(def, argTypes)
       : null;
   }
 
@@ -80,7 +87,7 @@ export class InvokeExpression extends Expression
   {
     return traverse.enter(this, () =>
       objectEach(this.args, (expr, arg) =>
-        traverse.step(arg, expr)
+        traverse.step(arg, expr, (replaceWith) => this.args[arg] = replaceWith, () => delete this.args[arg])
       )
     );
   }
@@ -116,7 +123,7 @@ export class InvokeExpression extends Expression
     {
       const params: TypeMap = {};
 
-      objectEach(func.options.params.options.props, (param, paramName) =>
+      objectEach(func.params.options.props, (param, paramName) =>
       {
         const arg = this.args[paramName];
 
@@ -147,7 +154,7 @@ export class InvokeExpression extends Expression
 
     return new InvokeExpression(this.name, {
       ...this.args,
-      ...toExpr(append),
+      ...Exprs.parse(append),
     });
   }
 

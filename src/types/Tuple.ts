@@ -1,7 +1,7 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
 import { isArray, isNumber } from '../fns';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { TupleOps, TupleOperations, TupleComputeds } from '../ops/TupleOps';
 import { NumberOps } from '../ops/NumberOps';
@@ -14,6 +14,7 @@ import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ListType } from './List';
 import { ListOps } from '../ops/ListOps';
+import { Types } from '../Types';
 
 
 const INDEX_ELEMENTS = 1;
@@ -63,7 +64,7 @@ export class TupleType extends Type<Type[]>
 
   public static forItem(types: TypeInput[])
   {
-    return new TupleType(types.map((t) => Type.fromInput(t)));
+    return new TupleType(types.map((t) => Types.parse(t)));
   }
 
   public getId(): string
@@ -76,7 +77,7 @@ export class TupleType extends Type<Type[]>
     return TupleType.operations.map;
   }
 
-  public merge(type: TupleType, describer: TypeDescribeProvider): void
+  public merge(type: TupleType): void
   {
     
   }
@@ -96,13 +97,13 @@ export class TupleType extends Type<Type[]>
       }
     }
 
-    const exprType = def.requiredType(expr.getType(def, context));
+    const exprType = Types.required(expr.getType(def, context));
 
     if (exprType)
     {
       if (exprType instanceof NumberType)
       {
-        return def.mergeTypes(this.options);
+        return Types.mergeMany(this.options);
       }
 
       if (exprType instanceof EnumType)
@@ -112,7 +113,7 @@ export class TupleType extends Type<Type[]>
           const values = Array.from(exprType.options.constants.values());
           const types = values.map((i: number) => this.options[i]).filter(t => !!t);
           
-          return def.mergeTypes(types);
+          return Types.mergeMany(types);
         }
 
         if (exprType.options.value instanceof TextType)
@@ -141,12 +142,12 @@ export class TupleType extends Type<Type[]>
             this.options.map((prop, key) => [key, key]),
           ),
         }),
-        value: def.mergeTypes(this.options),
+        value: Types.mergeMany(this.options),
       },
       { 
         key: TupleType.indexType, 
-        value: def.optionalType(
-          def.mergeTypes(this.options)
+        value: Types.optional(
+          Types.mergeMany(this.options)
         ),
       },
     ];
@@ -286,7 +287,7 @@ export class TupleType extends Type<Type[]>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () =>
-      this.options.map((type, index) => traverse.step(index, type))
+      this.options.map((type, index) => traverse.step(index, type, (replaceWith) => this.options.splice(index, 1, replaceWith), () => this.options.splice(index, 1)))
     );
   }
 

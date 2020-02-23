@@ -56,9 +56,14 @@ export class GetTypeExpression extends Expression
     return GetTypeExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new GetTypeExpression(this.name);
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
-    return def.aliased[this.name] || NullType.baseType;
+    return def.getType(this.name, NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -82,7 +87,7 @@ export class GetTypeExpression extends Expression
         parent: this,
       });
     }
-    else if (!def.aliased[this.name])
+    else if (!def.getEntity(this.name))
     {
       handler({
         type: ValidationType.MISSING_TYPE,

@@ -1,22 +1,77 @@
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps, TypeCompatibleOptions } from './Type';
+import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
-import { OptionalType } from './types/Optional';
-import { ManyType } from './types/Many';
-import { FunctionType } from './types/Function';
-import { ObjectType } from './types/Object';
 import { Computeds, Computed } from './Computed';
-import { TypeStorageOptions, TypeStorage } from './TypeStorage';
 import { Relation, RelationOptions, TypeRelation } from './Relation';
+import { Program, ProgramOptions, ProgramDataSet } from './Program';
+import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
+import { Func, FuncOptions, FuncTest } from './Func';
+import { EntityType } from './types/Entity';
+import { ManyType } from './types/Many';
+import { ObjectType } from './types/Object';
+import { GetTypeExpression } from './exprs/GetType';
+import { InvokeExpression } from './exprs/Invoke';
+import { GetRelationExpression } from './exprs/GetRelation';
+import { Runtime } from './Runtime';
 export interface DefinitionsImportOptions {
-    aliases?: Record<string, ObjectType | any>;
-    functions?: Record<string, FunctionType | any>;
-    storage?: Record<string, TypeStorageOptions>;
+    entities?: Record<string, Entity | EntityOptions>;
+    functions?: Record<string, Func | FuncOptions>;
     relations?: Record<string, RelationOptions>;
+    programs?: Record<string, Program | ProgramOptions>;
 }
 export interface DefinitionsOptions extends DefinitionsImportOptions {
     types?: TypeClass[];
     expressions?: ExpressionClass[];
+}
+export declare type DefinitionsReferenceSource = Program | [Program, ProgramDataSet] | Entity | [Entity, 'key' | 'describe'] | [Entity, string, EntityStorageTranscoder] | [Entity, string, EntityStorageTranscoder, 'encode' | 'decode'] | [Entity, Func] | [Entity, Func, 'params' | 'returnType'] | [Entity, Func, FuncTest, 'args' | 'expected'] | Func | [Func, 'params' | 'returnType'] | [Func, FuncTest, 'args' | 'expected'] | Relation;
+export declare type DefinitionsEntityReference = ({
+    value: EntityType;
+    root: Type;
+} | {
+    value: GetTypeExpression;
+    root: Expression;
+}) & {
+    source: DefinitionsReferenceSource;
+};
+export interface DefinitionsRelationReference {
+    value: GetRelationExpression;
+    root: Expression;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsFunctionReference {
+    value: InvokeExpression;
+    root: Expression;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsExpressionReference<E extends Expression> {
+    value: E;
+    root: Expression;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsTypeReference<T extends Type> {
+    value: T;
+    root: Type;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsDataTypeReference<T extends Type> {
+    type: T;
+    data: any;
+    root: Type;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsDataInstance {
+    data: any;
+    type: Type;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsTypeInstance {
+    type: Type;
+    source: DefinitionsReferenceSource;
+}
+export interface DefinitionsExpressionInstance {
+    expr: Expression;
+    context: Type;
+    source: DefinitionsReferenceSource;
 }
 export declare class Definitions {
     types: Record<string, TypeClass>;
@@ -26,44 +81,46 @@ export declare class Definitions {
     expressions: Record<string, ExpressionClass>;
     operations: Operations;
     computeds: Computeds;
-    aliased: Record<string, ObjectType>;
-    functions: Record<string, FunctionType>;
-    storage: Record<string, TypeStorage>;
     relations: Record<string, Relation>;
+    programs: Record<string, Program>;
+    entities: Record<string, Entity>;
+    functions: Record<string, Func>;
     constructor(initial?: DefinitionsOptions);
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     add(options: DefinitionsOptions): void;
     describe(data: any): Type;
-    maybeType<M extends Type>(type: Type, maybe: TypeClass<M>): Type<any>;
-    mergeTypes(readonlyTypes: Type[]): Type | null;
     merge(type: Type, data: any): Type;
-    mergeType(a: Type, b: Type): Type;
-    optionalType(type: Type): OptionalType;
-    requiredType(type: Type): Type;
-    getTypes(type: Type): Type[];
-    getReducedType(type: Type[]): Type;
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
-    findAliased(type: Type, options?: TypeCompatibleOptions): string | false;
-    addAlias(alias: string, instance: ObjectType | any): this;
-    addStorage(storage: TypeStorage | TypeStorageOptions): this;
+    findEntity(type: Type, options?: TypeCompatibleOptions): string | false;
+    addFunction(func: Func | Partial<FuncOptions>): this;
+    getFunction(name: string): Func;
+    addProgram(program: Program | Partial<ProgramOptions>): this;
+    getProgram(name: string): Program;
+    addEntity(entity: Entity | Partial<EntityOptions>): this;
+    getEntity(name: string): Entity;
     addRelation(relation: Relation | RelationOptions): this;
-    getRelations(name: string): TypeRelation[];
-    getTypeProps(name: string): TypeProps[];
-    renameProp(name: string, prop: string, newProp: string): void;
-    rename(name: string, newName: string): boolean;
-    removeProp(name: string, prop: string): void;
-    removeType(name: string): void;
-    cloneType(type: Type): Type<any>;
+    getRelation(name: string): Relation;
+    getRelations(entityName: string): TypeRelation[];
+    getEntityProps(name: string): EntityProps[];
+    renameProgram(name: string, newName: string): boolean;
+    renameEntity(name: string, newName: string): false | DefinitionsEntityReference[];
+    renameEntityProp(name: string, prop: string, newProp: string): void;
+    removeEntityProp(name: string, prop: string): void;
+    removeEntity(name: string, stopWithReferences?: boolean): boolean;
+    refactorEntity(name: string, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[];
+    renameRelation(oldName: string, newName: string): false | DefinitionsRelationReference[];
+    renameFunction(oldName: string, newName: string): false | DefinitionsFunctionReference[];
+    renameFunctionParameter(functionName: string, oldName: string, newName: string): false | DefinitionsFunctionReference[];
+    removeFunctionParameter(functionName: string, name: string): false | DefinitionsFunctionReference[];
+    removeFunction(name: string, stopWithReferences?: boolean): boolean;
+    getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
     getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];
     getSimpleTypes(): Type[];
     getComplexTypes(): Type[];
     getSimpleTypeClasses(): TypeClass[];
     getComplexTypeClasses(): TypeClass[];
-    addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType;
-    setFunction(name: string, typeValue: any): FunctionType;
-    getFunction(name: string): FunctionType;
     getComputed(id: string): Computed | null;
     getComputedReturnType(id: string, valueType?: Type | null): Type | null;
     getComputedsFor(valueType: Type): Computed[];
@@ -96,8 +153,17 @@ export declare class Definitions {
     getOperations(onOperation?: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean): OperationPair[];
     getPathType(path: Expression[], context: Type, stopBefore?: number): Type | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
-    cloneExpression(expr: Expression): Expression;
     getExpression(value: any): Expression;
+    getEntityReferences(name?: string): DefinitionsEntityReference[];
+    getEntityDataReferences(name?: string): DefinitionsDataTypeReference<EntityType>[];
+    getRelationReferences(relation?: string): DefinitionsRelationReference[];
+    getFunctionReferences(name?: string, param?: string): DefinitionsFunctionReference[];
+    getTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsTypeReference<T>[];
+    getDataTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsDataTypeReference<T>[];
+    getExpressionClassReferences<E extends Expression>(exprClass: ExpressionClass<E>): DefinitionsExpressionReference<E>[];
+    getDataInstances(): DefinitionsDataInstance[];
+    getTypeInstances(dynamic?: boolean): DefinitionsTypeInstance[];
+    getExpressionInstances(): DefinitionsExpressionInstance[];
     export(): DefinitionsImportOptions;
     import(exported: DefinitionsImportOptions): void;
 }

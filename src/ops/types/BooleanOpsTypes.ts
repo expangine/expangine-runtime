@@ -12,6 +12,7 @@ import { TupleType } from '../../types/Tuple';
 import { BooleanOps } from '../BooleanOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = BooleanType.operations;
@@ -27,7 +28,7 @@ export const BooleanOpsTypes =
   // Operations
 
   maybe: ops.setTypes(BooleanOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, BooleanType),
+    (i, defs) => Types.maybe(i.value, BooleanType),
     { value: AnyType } 
   ),
 

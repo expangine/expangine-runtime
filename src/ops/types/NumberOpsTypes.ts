@@ -12,8 +12,8 @@ import { DateType } from '../../types/Date';
 import { NumberOps } from '../NumberOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
-import { OptionalType } from '../../types/Optional';
 import { EnumType } from '../../types/Enum';
+import { Types } from '../../Types';
 
 
 const ops = NumberType.operations;
@@ -98,7 +98,7 @@ export const NumberOpsTypes =
   // Unary Operations
 
   maybe: ops.setTypes(NumberOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, NumberType),
+    (i, defs) => Types.maybe(i.value, NumberType),
     { value: AnyType } 
   ),
   
@@ -166,7 +166,7 @@ export const NumberOpsTypes =
 
   toPercent: ops.setTypes(NumberOps.toPercent, TextType, { value: NumberType }, { minPlaces: NumberType, maxPlaces: NumberType, thousandSeparator: TextType }),
 
-  fromPercent: ops.setTypes(NumberOps.fromPercent, OptionalType.for(NumberType), { value: TextType }),
+  fromPercent: ops.setTypes(NumberOps.fromPercent, Types.optional(NumberType), { value: TextType }),
 
   // Comparisons
 

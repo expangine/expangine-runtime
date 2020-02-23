@@ -1,7 +1,7 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { AliasedOperations, AliasedComputeds } from '../ops/AliasedOps';
+import { EntityOperations, EntityComputeds } from '../ops/EntityOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -11,27 +11,27 @@ import { ObjectType } from './Object';
 
 const INDEX_NAME = 1;
 
-export class AliasedType extends Type<string>
+export class EntityType extends Type<string>
 {
 
-  public static STEP_ALIASED = 'aliased';
+  public static STEP_ENTITY = 'entity';
 
-  public static id = ID.Aliased;
+  public static id = ID.Entity;
 
-  public static operations = AliasedOperations;
+  public static operations = EntityOperations;
 
-  public static computeds = AliasedComputeds;
+  public static computeds = EntityComputeds;
 
-  public static baseType = new AliasedType('', null);
+  public static baseType = new EntityType('', null);
 
-  public static decode(data: any[], types: TypeProvider): AliasedType 
+  public static decode(data: any[], types: TypeProvider): EntityType 
   {
     const type = data[INDEX_NAME];
 
-    return new AliasedType( type, types );
+    return new EntityType( type, types );
   }
 
-  public static encode(type: AliasedType): any 
+  public static encode(type: EntityType): any 
   {
     return [this.id, type.options];
   }
@@ -50,9 +50,9 @@ export class AliasedType extends Type<string>
 
   }
 
-  public static for(name: string, provider: TypeProvider): AliasedType
+  public static for(name: string, provider: TypeProvider): EntityType
   {
-    return new AliasedType(name, provider);
+    return new EntityType(name, provider);
   }
 
   protected provider: TypeProvider;
@@ -78,10 +78,10 @@ export class AliasedType extends Type<string>
 
   public getId(): string
   {
-    return AliasedType.id;
+    return EntityType.id;
   }
 
-  public merge(type: AliasedType, describer: TypeDescribeProvider): void
+  public merge(type: EntityType): void
   {
     
   }
@@ -108,7 +108,7 @@ export class AliasedType extends Type<string>
 
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
-    return other instanceof AliasedType
+    return other instanceof EntityType
       ? this.getType().isCompatible(other.getType(), options)
       : this.getType().isCompatible(other, options);
   }
@@ -130,12 +130,14 @@ export class AliasedType extends Type<string>
   
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
-    return traverse.enter(this, () => traverse.step(AliasedType.STEP_ALIASED, this.getType()));
+    return traverse.enter(this, () => 
+      traverse.step(EntityType.STEP_ENTITY, this.getType(), (replaceWith) => replaceWith instanceof EntityType ? this.options = replaceWith.options : 0)
+    );
   }
 
   public getTypeFromStep(step: TraverseStep): Type | null
   {
-    return step === AliasedType.STEP_ALIASED
+    return step === EntityType.STEP_ENTITY
       ? this.getType() 
       : null;
   }
@@ -181,19 +183,19 @@ export class AliasedType extends Type<string>
     return this.getType().normalize(value);
   }
 
-  public newInstance(): AliasedType
+  public newInstance(): EntityType
   {
-    return new AliasedType(this.options, this.provider);
+    return new EntityType(this.options, this.provider);
   }
 
-  public clone(): AliasedType
+  public clone(): EntityType
   {
-    return new AliasedType(this.options, this.provider);
+    return new EntityType(this.options, this.provider);
   }
 
   public encode(): any 
   {
-    return AliasedType.encode(this);
+    return EntityType.encode(this);
   }
 
   public create(): any

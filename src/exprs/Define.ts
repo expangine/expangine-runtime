@@ -1,11 +1,12 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { isString, toExpr, objectEach } from '../fns';
+import { isString, objectEach } from '../fns';
 import { AnyType } from '../types/Any';
 import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_DEFINE = 1;
@@ -69,6 +70,11 @@ export class DefineExpression extends Expression
     return DefineExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new DefineExpression(this.define.map(([name, variable]) => [name, variable.clone()]), this.body.clone());
+  }
+
   public getType(def: Definitions, original: Type): Type | null
   {
     const { scope, context } = def.getContextWithScope(original);
@@ -82,11 +88,11 @@ export class DefineExpression extends Expression
   {
     return traverse.enter(this, () => {
       traverse.step(DefineExpression.STEP_DEFINE, () =>
-        this.define.forEach(([name, defined]) => 
-          traverse.step(name, defined)
+        this.define.forEach(([name, defined], index) => 
+          traverse.step(name, defined, (replaceWith) => this.define[index].splice(1, 1, replaceWith), () => this.define.splice(index, 1))
         )
       );
-      traverse.step(DefineExpression.STEP_BODY, this.body);
+      traverse.step(DefineExpression.STEP_BODY, this.body, (replaceWith) => this.body = replaceWith);
     });
   }
 
@@ -133,9 +139,9 @@ export class DefineExpression extends Expression
       ? { [nameOrDefines]: value }
       : nameOrDefines;
 
-    objectEach(append, (defined, name) => define.push([name, toExpr(defined)]));
+    objectEach(append, (defined, name) => define.push([name, Exprs.parse(defined)]));
 
-    return new DefineExpression(define, this.body);
+    return new DefineExpression(define, this.body.clone());
   }
 
   public run(expr: Expression): DefineExpression

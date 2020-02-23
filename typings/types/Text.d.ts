@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
 import { Definitions } from '../Definitions';
@@ -30,7 +30,7 @@ export declare class TextType extends Type<TextOptions> {
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: TextType, describer: TypeDescribeProvider): void;
+    merge(type: TextType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

@@ -18,7 +18,7 @@ export declare class NotType extends Type<Type[]> {
     getOperations(): {};
     private forNot;
     getId(): string;
-    merge(type: NotType, describer: TypeDescribeProvider): void;
+    merge(type: NotType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

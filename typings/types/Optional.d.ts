@@ -19,7 +19,7 @@ export declare class OptionalType extends Type<Type> {
     static for(type: TypeInput): OptionalType;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     getId(): string;
-    merge(type: OptionalType, describer: TypeDescribeProvider): void;
+    merge(type: OptionalType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

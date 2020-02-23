@@ -4,13 +4,13 @@ import { ID } from '../types/ID';
 import { Computeds } from '../Computed';
 
 
-export const AliasedOperations = new Operations(ID.Aliased + ID.Delimiter);
+export const EntityOperations = new Operations(ID.Entity + ID.Delimiter);
 
-export const AliasedComputeds = new Computeds(ID.Aliased + ID.Delimiter);
+export const EntityComputeds = new Computeds(ID.Entity + ID.Delimiter);
 
-const ops = AliasedOperations;
+const ops = EntityOperations;
 
-export const AliasedOps = 
+export const EntityOps = 
 {
 
   newInstance: ops.set('newInstance', {}, ['name'], [], [], [], ['name']),

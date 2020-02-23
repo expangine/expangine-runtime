@@ -21,7 +21,7 @@ export declare class NumberType extends Type<NumberOptions> {
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: NumberType, describer: TypeDescribeProvider): void;
+    merge(type: NumberType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

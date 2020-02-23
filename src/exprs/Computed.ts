@@ -68,6 +68,11 @@ export class ComputedExpression extends Expression
     return ComputedExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new ComputedExpression(this.expression.encode(), this.name);
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return def.getComputedReturnType(this.name, this.expression.getType(def, context));
@@ -76,7 +81,7 @@ export class ComputedExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () =>
-      traverse.step(ComputedExpression.STEP_EXPRESSION, this.expression)
+      traverse.step(ComputedExpression.STEP_EXPRESSION, this.expression, (replaceWith) => this.expression = replaceWith)
     );
   }
 

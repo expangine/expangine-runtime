@@ -1,6 +1,6 @@
 
 export const ID = {
-  Aliased: '@',
+  Entity: '@',
   Any: 'any',
   Boolean: 'bool',
   Color: 'color',

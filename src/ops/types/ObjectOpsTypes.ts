@@ -14,7 +14,8 @@ import { TupleType } from '../../types/Tuple';
 import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
-import { AliasedType } from '../../types/Aliased';
+import { EntityType } from '../../types/Entity';
+import { Types } from '../../Types';
 
 
 const ops = ObjectType.operations;
@@ -32,7 +33,7 @@ export const ObjectOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ObjectOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, ObjectType),
+    (i, defs) => Types.maybe(i.value, ObjectType),
     { value: AnyType } 
   ),
 
@@ -77,7 +78,7 @@ export const ObjectOpsTypes =
       {
         let paramType = i[param];
 
-        if (paramType instanceof AliasedType)
+        if (paramType instanceof EntityType)
         {
           paramType = paramType.getType();
         }
@@ -92,7 +93,7 @@ export const ObjectOpsTypes =
 
             if (prop in props && paramProp instanceof OptionalType) 
             {
-              props[prop] = defs.mergeTypes([paramProp, props[prop]]);
+              props[prop] = Types.mergeMany([paramProp, props[prop]]);
             } 
             else 
             {

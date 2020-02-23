@@ -1,4 +1,6 @@
-import { Exprs, NumberOps } from '../src';
+import { Exprs } from '../src/Exprs';
+import { NumberOps } from '../src/ops/NumberOps';
+
 
 describe('Expression', () => 
 {
@@ -29,8 +31,6 @@ describe('Expression', () =>
     const h = Exprs.op(NumberOps.abs, { value: b });
     const i = Exprs.object({ g, h });
     const j = Exprs.if(c, f).elseif(a, i)
-
-    j.setParent();
 
     return { a, b, c, d, e, f, g, h, i, j };
   }

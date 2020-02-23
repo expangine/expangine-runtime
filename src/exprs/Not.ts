@@ -61,6 +61,11 @@ export class NotExpression extends Expression
     return NotExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new NotExpression(this.expression.clone());
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
@@ -69,7 +74,7 @@ export class NotExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () =>
-      traverse.step(NotExpression.STEP_NOT, this.expression)
+      traverse.step(NotExpression.STEP_NOT, this.expression, (replaceWith) => this.expression = replaceWith)
     );
   }
 

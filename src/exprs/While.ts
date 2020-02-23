@@ -5,6 +5,7 @@ import { Definitions } from '../Definitions';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Types } from '../Types';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -86,20 +87,25 @@ export class WhileExpression extends Expression
     return WhileExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new WhileExpression(this.condition.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
+  }
+
   public getType(def: Definitions, original: Type): Type | null
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
     const body = this.body.getType(def, context);
 
-    return body ? def.optionalType(body) : null;
+    return body ? Types.optional(body) : null;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(WhileExpression.STEP_CONDITION, this.condition);
-      traverse.step(WhileExpression.STEP_BODY, this.body);
+      traverse.step(WhileExpression.STEP_CONDITION, this.condition, (replaceWith) => this.condition = replaceWith);
+      traverse.step(WhileExpression.STEP_BODY, this.body, (replaceWith) => this.body = replaceWith);
     });
   }
 

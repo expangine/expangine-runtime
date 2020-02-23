@@ -8,7 +8,7 @@ import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { AnyType } from './Any';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_OPTIONS = 1;
@@ -123,7 +123,7 @@ export class DateType extends Type<DateOptions>
     return DateType.operations.map;
   }
 
-  public merge(type: DateType, describer: TypeDescribeProvider): void
+  public merge(type: DateType): void
   {
     const o1 = this.options;
     const o2 = type.options;

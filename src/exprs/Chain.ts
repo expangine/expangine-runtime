@@ -56,6 +56,11 @@ export class ChainExpression extends Expression
     return ChainExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new ChainExpression(this.chain.map(c => c.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return this.chain[this.chain.length - 1].getType(def, context);
@@ -65,7 +70,7 @@ export class ChainExpression extends Expression
   {
     return traverse.enter(this, () => 
       this.chain.forEach((expr, index) => 
-        traverse.step(index, expr)
+        traverse.step(index, expr, (replaceWith) => this.chain.splice(index, 1, replaceWith), () => this.chain.splice(index, 1))
       )
     );
   }

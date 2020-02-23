@@ -3,7 +3,6 @@ import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { Computeds } from './Computed';
-import { Relation } from './Relation';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
@@ -14,17 +13,6 @@ export interface TypeSub {
 export declare type TypeResolved<T> = T extends (null | undefined) ? undefined : T extends TypeInput ? Type : T extends TypeInput[] ? Type[] : T extends TypeInputMap ? Record<keyof T, Type> : {
     [K in keyof T]: TypeResolved<T[K]>;
 };
-export declare enum TypeKeyType {
-    PRIMARY = 0,
-    FOREIGN = 1,
-    NONE = 2
-}
-export declare type TypePropPair = [string, Type];
-export interface TypeProps {
-    type: TypeKeyType;
-    props: TypePropPair[];
-    relation?: Relation;
-}
 export interface TypeProvider {
     getType(data: any, otherwise?: Type): Type;
     getExpression(data: any): Expression;
@@ -32,8 +20,6 @@ export interface TypeProvider {
 export interface TypeDescribeProvider {
     describe(data: any): Type;
     merge(type: Type, data: any): Type;
-    mergeType(type: Type, other: Type): Type;
-    optionalType(type: Type): Type;
 }
 export interface TypeCompatibleOptions {
     strict?: boolean;
@@ -57,16 +43,12 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
     new (options: O, ...args: any[]): T;
 }
 export declare abstract class Type<O = any> implements Traversable<Type> {
-    static fromInput(input: TypeInput): Type;
-    static simplify(type: Type): Type;
-    static simplify(type: Type | null): Type | null;
-    static resolve<T>(types: T): TypeResolved<T>;
     options: O;
     parent: Type;
     constructor(options: O);
     abstract getOperations(): Record<string, OperationGeneric>;
     abstract getId(): string;
-    abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
+    abstract merge(type: Type<O>): void;
     abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     abstract getSubTypes(def: Definitions): TypeSub[];
     abstract getExactType(value: any): Type<O>;

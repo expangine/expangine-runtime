@@ -1,4 +1,3 @@
-import { Expression, ExpressionValue, ExpressionMap } from './Expression';
 export declare type RecordKey = string | number | symbol;
 export declare type MapInput<K = any, V = any> = Map<K, V> | Array<[K, V]> | (K extends string | number | symbol ? Record<K, V> : never);
 export declare function isNumber(value: any): value is number;
@@ -15,9 +14,6 @@ export declare function isSameClass(a: any, b: any): boolean;
 export declare function isWhole(x: number, epsilon?: number): boolean;
 export declare function isEmpty(value: any): boolean;
 export declare function clamp(x: number, min: number, max: number): number;
-export declare function toExpr(values: ExpressionValue[]): Expression[];
-export declare function toExpr(values: Record<string, ExpressionValue>): ExpressionMap;
-export declare function toExpr(value: ExpressionValue): Expression;
 export declare function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, V>;
 export declare function reverseMap<K, V>(map: Map<K, V>): Map<V, K>;
 export declare function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(map: Record<K, V>, getValue: (value: V, key: K) => R, getKey?: (key: K, value: V) => J): Record<J, R>;

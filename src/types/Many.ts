@@ -2,7 +2,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations, OperationGeneric } from '../Operation';
 import { AnyType } from './Any';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
@@ -97,7 +97,7 @@ export class ManyType extends Type<Type[]>
     return ManyType.id;
   }
 
-  public merge(type: ManyType, describer: TypeDescribeProvider): void
+  public merge(type: ManyType): void
   {
     
   }
@@ -182,7 +182,7 @@ export class ManyType extends Type<Type[]>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () =>
-      this.options.map((type, index) => traverse.step(index, type))
+      this.options.map((type, index) => traverse.step(index, type, (replaceWith) => this.options.splice(index, 1, replaceWith), () => this.options.splice(index, 1)))
     );
   }
 

@@ -1,12 +1,12 @@
 
-import { objectMap, isArray, isObject, isSameClass } from './fns';
+import { isSameClass } from './fns';
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { EnumType } from './types/Enum';
 import { Computeds } from './Computed';
-import { Relation } from './Relation';
+
 
 
 export type TypeInput = TypeClass | Type;
@@ -33,22 +33,6 @@ export type TypeResolved<T> = T extends (null | undefined)
           [K in keyof T]: TypeResolved<T[K]>
         };
 
-export enum TypeKeyType
-{
-  PRIMARY,
-  FOREIGN,
-  NONE
-}
-
-export type TypePropPair = [string, Type];
-
-export interface TypeProps
-{
-  type: TypeKeyType;
-  props: TypePropPair[];
-  relation?: Relation;
-}
-
 export interface TypeProvider 
 {
   getType(data: any, otherwise?: Type): Type;
@@ -59,8 +43,6 @@ export interface TypeDescribeProvider
 {
   describe(data: any): Type;
   merge(type: Type, data: any): Type;
-  mergeType(type: Type, other: Type): Type;
-  optionalType(type: Type): Type;
 }
 
 export interface TypeCompatibleOptions
@@ -93,47 +75,6 @@ export interface TypeClass<T extends Type<O> = any, O = any>
 export abstract class Type<O = any> implements Traversable<Type>
 {
 
-  public static fromInput(input: TypeInput): Type
-  {
-    return input instanceof Type
-      ? input
-      : input.baseType.newInstance();
-  }
-
-  public static simplify(type: Type): Type
-  public static simplify(type: Type | null): Type | null
-  public static simplify(type: Type | null): Type | null
-  {
-    return type ? type.getSimplifiedType() : null;
-  }
-
-  public static resolve<T>(types: T): TypeResolved<T>
-  {
-    let result: any;
-
-    if (!types)
-    {
-    }
-    else if (types instanceof Type)
-    {
-      result = types;
-    }
-    else if ((types as any).baseType instanceof Type)
-    {
-      result = (types as any).baseType.newInstance();
-    }
-    else if (isArray(types))
-    {
-      result = types.map(t => this.resolve(t));
-    }
-    else if (isObject(types))
-    {
-      result = objectMap(types as any, t => this.resolve(t));
-    }
-
-    return result as unknown as TypeResolved<T>;
-  }
-
   public options: O;
   public parent: Type = null;
 
@@ -146,7 +87,7 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract getId(): string;
 
-  public abstract merge(type: Type<O>, describer: TypeDescribeProvider): void;
+  public abstract merge(type: Type<O>): void;
 
   public abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
 

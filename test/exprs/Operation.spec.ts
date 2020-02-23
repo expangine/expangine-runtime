@@ -1,28 +1,34 @@
-// import { describe, it, expect } from 'jest';
-
-import { ExpressionBuilder, defs, TextType, BooleanType, TextOps, ObjectType, NumberType, ListType, ListOps, NumberOps, MapType, TypeBuilder } from '../../src';
-
+import { Types } from '../../src/Types';
+import { TextOps } from '../../src/ops/TextOps';
+import { Exprs } from '../../src/Exprs';
+import { TextType } from '../../src/types/Text';
+import { defs } from '../../src/def';
+import { BooleanType } from '../../src/types/Boolean';
+import { ListOps } from '../../src/ops/ListOps';
+import { ListType } from '../../src/types/List';
+import { NumberType } from '../../src/types/Number';
+import { MapType } from '../../src/types/Map';
+import { ObjectType } from '../../src/types/Object';
+import { NumberOps } from '../../src/ops/NumberOps';
 
 // tslint:disable: no-magic-numbers
 
 describe('Operation', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.object({
-    num1: tp.number(),
-    num2: tp.number(),
-    text1: tp.text(),
-    list1: tp.list(tp.date()),
-    list2: tp.list(tp.object({
-      num3: tp.number(),
-      text2: tp.text(),
+  const context = Types.object({
+    num1: Types.number(),
+    num2: Types.number(),
+    text1: Types.text(),
+    list1: Types.list(Types.date()),
+    list2: Types.list(Types.object({
+      num3: Types.number(),
+      text2: Types.text(),
     }))
   });
 
   it('type constant', () =>
   {
-    const op = ex.op(TextOps.create, {});
+    const op = Exprs.op(TextOps.create, {});
     const opType = op.getType(defs, context);
 
     expect(opType).toBeInstanceOf(TextType);
@@ -30,8 +36,8 @@ describe('Operation', () => {
 
   it('type param', () =>
   {
-    const op = ex.op(TextOps.isEmpty, {
-      value: ex.get('text1')
+    const op = Exprs.op(TextOps.isEmpty, {
+      value: Exprs.get('text1')
     });
     const opType = op.getType(defs, context);
 
@@ -40,9 +46,9 @@ describe('Operation', () => {
 
   it('type same', () =>
   {
-    const op = ex.op(ListOps.add, {
-      list: ex.get('list1'),
-      item: ex.const(new Date())
+    const op = Exprs.op(ListOps.add, {
+      list: Exprs.get('list1'),
+      item: Exprs.const(new Date())
     });
     const opType = op.getType(defs, context);
 
@@ -51,9 +57,9 @@ describe('Operation', () => {
 
   it('type dynamic', () =>
   {
-    const op = ex.op(ListOps.build, {
-      item: ex.const(0),
-      count: ex.const(34)
+    const op = Exprs.op(ListOps.build, {
+      item: Exprs.const(0),
+      count: Exprs.const(34)
     });
     const opType = op.getType(defs, context);
 
@@ -63,9 +69,9 @@ describe('Operation', () => {
 
   it('type inferred', () =>
   {
-    const op = ex.op(ListOps.map, {
-      list: ex.get('list2'),
-      transform: ex.get('item', 'text2')
+    const op = Exprs.op(ListOps.map, {
+      list: Exprs.get('list2'),
+      transform: Exprs.get('item', 'text2')
     });
     const opType = op.getType(defs, context);
 
@@ -75,12 +81,12 @@ describe('Operation', () => {
 
   it('type inferred 2', () =>
   {
-    const op = ex.op(ListOps.reduce, {
-      list: ex.get('list2'),
-      initial: ex.const(0),
-      reduce: ex.op(NumberOps.add, {
-        value: ex.get('item'),
-        addend: ex.get('reduced')
+    const op = Exprs.op(ListOps.reduce, {
+      list: Exprs.get('list2'),
+      initial: Exprs.const(0),
+      reduce: Exprs.op(NumberOps.add, {
+        value: Exprs.get('item'),
+        addend: Exprs.get('reduced')
       })
     });
     const opType = op.getType(defs, context);
@@ -90,9 +96,9 @@ describe('Operation', () => {
 
   it('type inferred 3', () =>
   {
-    const op = ex.op(ListOps.toMap, {
-      list: ex.get('list2'),
-      getKey: ex.get('item', 'text2')
+    const op = Exprs.op(ListOps.toMap, {
+      list: Exprs.get('list2'),
+      getKey: Exprs.get('item', 'text2')
     });
     const opType = op.getType(defs, context);
 
@@ -103,10 +109,10 @@ describe('Operation', () => {
 
   it('type inferred 4', () =>
   {
-    const op = ex.op(ListOps.toMap, {
-      list: ex.get('list2'),
-      getKey: ex.get('item', 'text2'),
-      getValue: ex.get('item', 'num3')
+    const op = Exprs.op(ListOps.toMap, {
+      list: Exprs.get('list2'),
+      getKey: Exprs.get('item', 'text2'),
+      getValue: Exprs.get('item', 'num3')
     });
     const opType = op.getType(defs, context);
 

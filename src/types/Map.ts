@@ -3,7 +3,7 @@ import { isObject, isMap, isSameClass, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { MapOps, MapOperations, MapComputeds } from '../ops/MapOps';
 import { ListOps } from '../ops/ListOps';
@@ -11,6 +11,7 @@ import { Definitions } from '../Definitions';
 import { ConstantExpression } from '../exprs/Constant';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
+import { Types } from '../Types';
 
 
 const INDEX_VALUE = 1;
@@ -115,8 +116,8 @@ export class MapType extends Type<MapOptions>
 
   public static forItem(valueOrClass: TypeInput, keyOrClass: TypeInput = TextType)
   {
-    const value = Type.fromInput(valueOrClass);
-    const key = Type.fromInput(keyOrClass);
+    const value = Types.parse(valueOrClass);
+    const key = Types.parse(keyOrClass);
     
     return new MapType({ key, value });
   }
@@ -131,13 +132,13 @@ export class MapType extends Type<MapOptions>
     return MapType.operations.map;
   }
 
-  public merge(type: MapType, describer: TypeDescribeProvider): void
+  public merge(type: MapType): void
   {
     const o1 = this.options;
     const o2 = type.options;
 
-    o1.key = describer.mergeType(o1.key, o2.key);
-    o1.value = describer.mergeType(o1.value, o2.value);
+    o1.key = Types.merge(o1.key, o2.key);
+    o1.value = Types.merge(o1.value, o2.value);
   }
 
   public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
@@ -150,7 +151,7 @@ export class MapType extends Type<MapOptions>
       }
     }
 
-    const exprType = def.requiredType(expr.getType(def, context));
+    const exprType = Types.required(expr.getType(def, context));
 
     if (exprType)
     {
@@ -200,8 +201,8 @@ export class MapType extends Type<MapOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(MapType.STEP_KEY, this.options.key);
-      traverse.step(MapType.STEP_VALUE, this.options.value);
+      traverse.step(MapType.STEP_KEY, this.options.key, (replaceWith) => this.options.key = replaceWith);
+      traverse.step(MapType.STEP_VALUE, this.options.value, (replaceWith) => this.options.value = replaceWith);
     });
   }
 

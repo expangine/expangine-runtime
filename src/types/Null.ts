@@ -1,9 +1,8 @@
 
-import { isEmpty, copy } from '../fns';
-import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
@@ -11,14 +10,7 @@ import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
 
 
-const INDEX_OPTIONS = 1;
-
-export interface NullOptions 
-{
-  includeUndefined?: boolean;
-}
-
-export class NullType extends Type<NullOptions> 
+export class NullType extends Type<null> 
 {
 
   public static id = ID.Null;
@@ -27,25 +19,23 @@ export class NullType extends Type<NullOptions>
 
   public static computeds = new Computeds(ID.Null + ID.Delimiter);
 
-  public static baseType = new NullType({});
+  public static baseType = new NullType(null);
 
   public static decode(data: any[]): NullType 
   {
-    return new NullType(data[INDEX_OPTIONS] || {});
+    return NullType.baseType;
   }
 
   public static encode(type: NullType): any 
   {
-    return isEmpty(type.options)
-      ? this.id
-      : [this.id, type.options];
+    return this.id;
   }
 
   public static describePriority: number = 6;
   
   public static describe(data: any): Type | null
   {
-    return data === null ? this.baseType : null;
+    return data === null || data === undefined ? this.baseType : null;
   }
 
   public static registered: boolean = false;
@@ -65,12 +55,9 @@ export class NullType extends Type<NullOptions>
     return NullType.operations.map;
   }
 
-  public merge(type: NullType, describer: TypeDescribeProvider): void
+  public merge(type: NullType): void
   {
-    const o1 = this.options;
-    const o2 = type.options;
-
-    o1.includeUndefined = o1.includeUndefined || o2.includeUndefined;
+    
   }
 
   public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
@@ -115,7 +102,7 @@ export class NullType extends Type<NullOptions>
 
   public setParent(parent: Type = null): void
   {
-    this.parent = parent;
+    
   }
 
   public removeDescribedRestrictions(): void
@@ -146,9 +133,7 @@ export class NullType extends Type<NullOptions>
 
   public isValid(value: any): boolean 
   {
-    return value === null || (
-      this.options.includeUndefined && value === undefined
-    );
+    return value === null || value === undefined;
   }
 
   public normalize(value: any): any
@@ -158,12 +143,12 @@ export class NullType extends Type<NullOptions>
 
   public newInstance(): NullType
   {
-    return new NullType({});
+    return this;
   }
 
   public clone(): NullType
   {
-    return new NullType(copy(this.options));
+    return this;
   }
 
   public encode(): any 

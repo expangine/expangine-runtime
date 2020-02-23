@@ -1,26 +1,26 @@
-// import { describe, it, expect } from 'jest';
-
-import { ExpressionBuilder, defs, NumberType, TypeBuilder, TupleType, DateType } from '../../src';
-
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { defs } from '../../src/def';
+import { TupleType } from '../../src/types/Tuple';
+import { NumberType } from '../../src/types/Number';
+import { DateType } from '../../src/types/Date';
 
 // tslint:disable: no-magic-numbers
 
 describe('TupleExpression', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.object({
-    x: tp.number(),
-    y: tp.text(),
-    z: tp.date(),
+  const context = Types.object({
+    x: Types.number(),
+    y: Types.text(),
+    z: Types.date(),
   });
 
   it('type', () =>
   {
-    const tuple = ex.tuple(
-      ex.get('x'),
-      ex.const(0),
-      ex.get('z'),
+    const tuple = Exprs.tuple(
+      Exprs.get('x'),
+      Exprs.const(0),
+      Exprs.get('z'),
     );
     const tupleType = tuple.getType(defs, context);
 

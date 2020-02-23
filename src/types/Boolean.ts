@@ -6,7 +6,7 @@ import { BooleanOps, BooleanOperations, BooleanComputeds } from '../ops/BooleanO
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_OPTIONS = 1;
@@ -65,7 +65,7 @@ export class BooleanType extends Type<BooleanOptions>
     return BooleanType.operations.map;
   }
 
-  public merge(type: BooleanType, describer: TypeDescribeProvider): void
+  public merge(type: BooleanType): void
   {
     
   }

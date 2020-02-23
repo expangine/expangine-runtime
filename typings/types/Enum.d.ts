@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
@@ -24,7 +24,7 @@ export declare class EnumType extends Type<EnumOptions> {
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
-    merge(type: EnumType, describer: TypeDescribeProvider): void;
+    merge(type: EnumType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

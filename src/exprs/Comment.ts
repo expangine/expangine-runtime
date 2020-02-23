@@ -56,6 +56,11 @@ export class CommentExpression extends Expression
     return CommentExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new CommentExpression(this.comment);
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return NullType.baseType;

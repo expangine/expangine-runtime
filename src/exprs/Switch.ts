@@ -4,10 +4,12 @@ import { Definitions } from '../Definitions';
 import { ConstantExpression } from './Constant';
 import { Operation } from '../Operation';
 import { NoExpression } from './No';
-import { toExpr, isNumber } from '../fns';
+import { isNumber } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Types } from '../Types';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_VALUE = 1;
@@ -100,6 +102,11 @@ export class SwitchExpression extends Expression
     return SwitchExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new SwitchExpression(this.value.clone(), this.op, this.cases.map(([tests, then]) => [tests.map((t) => t.clone()), then.clone()]), this.defaultCase.clone());
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     const types = this.cases
@@ -110,28 +117,26 @@ export class SwitchExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return def.mergeTypes(types);
+    return Types.mergeMany(types);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(SwitchExpression.STEP_VALUE, this.value);
+      traverse.step(SwitchExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
       traverse.step(SwitchExpression.STEP_CASES, () => 
         this.cases.forEach(([tests, result], caseIndex) =>
           traverse.step(caseIndex, () => {
             traverse.step(SwitchExpression.STEP_CASE, () => 
               tests.forEach((test, index) => 
-                traverse.step(index, test)
+                traverse.step(index, test, (replaceWith) => tests.splice(index, 1, replaceWith), () => tests.splice(index, 1))
               )
             );
-            traverse.step(SwitchExpression.STEP_RESULT, result);
+            traverse.step(SwitchExpression.STEP_RESULT, result, (replaceWith) => this.cases[caseIndex].splice(1, 1, replaceWith));
           })  
         )
       );
-      if (this.defaultCase !== NoExpression.instance) {
-        traverse.step(SwitchExpression.STEP_DEFAULT, this.defaultCase);
-      }
+      traverse.step(SwitchExpression.STEP_DEFAULT, this.defaultCase, (replaceWith) => this.defaultCase = replaceWith);
     });
   }
 
@@ -189,7 +194,7 @@ export class SwitchExpression extends Expression
 
   public val(value: ExpressionValue, op?: Operation): SwitchExpression
   {
-    return new SwitchExpression(toExpr(value), op ? op.id : this.op, this.cases, this.defaultCase);
+    return new SwitchExpression(Exprs.parse(value), op ? op.id : this.op, this.cases, this.defaultCase);
   }
 
   public case(test: ExpressionValue): SwitchExpression
@@ -199,11 +204,11 @@ export class SwitchExpression extends Expression
 
     if (n >= 0 && cases[n][1] === NoExpression.instance)
     {
-      cases[n][0].push(toExpr(test));
+      cases[n][0].push(Exprs.parse(test));
     }
     else
     {
-      cases.push([[toExpr(test)], NoExpression.instance]);
+      cases.push([[Exprs.parse(test)], NoExpression.instance]);
     }
 
     return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
@@ -212,14 +217,14 @@ export class SwitchExpression extends Expression
   public than(body: ExpressionValue): SwitchExpression
   {
     const cases = this.copyCases();
-    cases[cases.length - 1][1] = toExpr(body);
-    
+    cases[cases.length - 1][1] = Exprs.parse(body);
+
     return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
   }
 
   public default(body: ExpressionValue)
   {
-    return new SwitchExpression(this.value, this.op, this.cases, toExpr(body));
+    return new SwitchExpression(this.value, this.op, this.cases, Exprs.parse(body));
   }
 
 }

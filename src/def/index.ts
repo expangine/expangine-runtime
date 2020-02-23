@@ -1,13 +1,12 @@
 
 import { Definitions } from '../Definitions';
 
-import { AliasedType } from '../types/Aliased';
+import { EntityType } from '../types/Entity';
 import { AnyType } from '../types/Any';
 import { BooleanType } from '../types/Boolean';
 import { ColorType } from '../types/Color';
 import { DateType } from '../types/Date';
 import { EnumType } from '../types/Enum';
-import { FunctionType } from '../types/Function';
 import { ListType } from '../types/List';
 import { ManyType } from '../types/Many';
 import { MapType } from '../types/Map';
@@ -51,13 +50,12 @@ import { WhileExpression } from '../exprs/While';
 
 export const defs = new Definitions({
   types: [
-    AliasedType,
+    EntityType,
     AnyType,
     BooleanType, 
     ColorType,
     DateType,
     EnumType,
-    FunctionType,
     ListType, 
     ManyType,
     MapType,

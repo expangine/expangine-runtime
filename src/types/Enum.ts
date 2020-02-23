@@ -1,15 +1,16 @@
 
 import { compare } from '../fns';
-import { Type, TypeDescribeProvider, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { Expression } from '../Expression';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 import { MapOps } from '../ops/MapOps';
+import { Types } from '../Types';
 
 
 const INDEX_KEY = 1;
@@ -89,13 +90,13 @@ export class EnumType extends Type<EnumOptions>
     return this.options.value.getOperations();
   }
 
-  public merge(type: EnumType, describer: TypeDescribeProvider): void
+  public merge(type: EnumType): void
   {
     const c1 = this.options.constants;
     const c2 = type.options.constants;
 
-    this.options.key = describer.mergeType(this.options.key, type.options.key);
-    this.options.value = describer.mergeType(this.options.value, type.options.value);
+    this.options.key = Types.merge(this.options.key, type.options.key);
+    this.options.value = Types.merge(this.options.value, type.options.value);
 
     for (const [key, value] of c2.entries())
     {
@@ -156,8 +157,8 @@ export class EnumType extends Type<EnumOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(EnumType.STEP_KEY, this.options.key);
-      traverse.step(EnumType.STEP_VALUE, this.options.value);
+      traverse.step(EnumType.STEP_KEY, this.options.key, (replaceWith) => this.options.key = replaceWith);
+      traverse.step(EnumType.STEP_VALUE, this.options.value, (replaceWith) => this.options.value = replaceWith);
     });
   }
 

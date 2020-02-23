@@ -3,10 +3,11 @@ import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
 import { Definitions } from '../Definitions';
-import { toExpr } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Types } from '../Types';
+import { Exprs } from '../Exprs';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -99,21 +100,26 @@ export class ForExpression extends Expression
     return ForExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
+  }
+
   public getType(def: Definitions, original: Type): Type | null
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
     const body = this.body.getType(def, context);
 
-    return body ? def.optionalType(body) : null;
+    return body ? Types.optional(body) : null;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(ForExpression.STEP_START, this.start);
-      traverse.step(ForExpression.STEP_END, this.end);
-      traverse.step(ForExpression.STEP_BODY, this.body);
+      traverse.step(ForExpression.STEP_START, this.start, (replaceWith) => this.start = replaceWith);
+      traverse.step(ForExpression.STEP_END, this.end, (replaceWith) => this.end = replaceWith);
+      traverse.step(ForExpression.STEP_BODY, this.body, (replaceWith) => this.body = replaceWith);
     });
   }
 
@@ -149,17 +155,17 @@ export class ForExpression extends Expression
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
   {
-    return new ForExpression(variable, toExpr(start), toExpr(end), body || this.body, breakVariable || this.breakVariable, maxIterations || this.maxIterations);
+    return new ForExpression(variable, Exprs.parse(start), Exprs.parse(end), body || this.body, breakVariable || this.breakVariable, maxIterations || this.maxIterations);
   }
 
   public startAt(start: ExpressionValue): ForExpression
   {
-    return new ForExpression(this.variable, toExpr(start), this.end, this.body, this.breakVariable, this.maxIterations);
+    return new ForExpression(this.variable, Exprs.parse(start), this.end, this.body, this.breakVariable, this.maxIterations);
   }
 
   public endAt(end: ExpressionValue): ForExpression
   {
-    return new ForExpression(this.variable, this.start, toExpr(end), this.body, this.breakVariable, this.maxIterations);
+    return new ForExpression(this.variable, this.start, Exprs.parse(end), this.body, this.breakVariable, this.maxIterations);
   }
 
   public run(expr: Expression): ForExpression

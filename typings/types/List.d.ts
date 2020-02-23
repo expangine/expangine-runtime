@@ -25,7 +25,7 @@ export declare class ListType extends Type<ListOptions> {
     static forItem(itemOrClass: TypeInput): ListType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: ListType, describer: TypeDescribeProvider): void;
+    merge(type: ListType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

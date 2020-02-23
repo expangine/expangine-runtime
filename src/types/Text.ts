@@ -1,7 +1,7 @@
 
 import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
-import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Exprs } from '../ExpressionBuilder';
+import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations, TextComputeds } from '../ops/TextOps';
 import { ConstantExpression } from '../exprs/Constant';
@@ -10,6 +10,7 @@ import { Definitions } from '../Definitions';
 import { EnumType } from './Enum';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { Types } from '../Types';
 
 
 const INDEX_OPTIONS = 1;
@@ -110,7 +111,7 @@ export class TextType extends Type<TextOptions>
     return TextType.operations.map;
   }
 
-  public merge(type: TextType, describer: TypeDescribeProvider): void
+  public merge(type: TextType): void
   {
     const o1 = this.options;
     const o2 = type.options;
@@ -136,7 +137,7 @@ export class TextType extends Type<TextOptions>
       }
     }
 
-    const exprType = def.requiredType(expr.getType(def, context));
+    const exprType = Types.required(expr.getType(def, context));
 
     if (exprType)
     {
@@ -169,7 +170,7 @@ export class TextType extends Type<TextOptions>
   {
     return [
       { key: 'length', value: TextType.lengthType },
-      { key: TextType.indexType, value: def.optionalType(TextType.charType) },
+      { key: TextType.indexType, value: Types.optional(TextType.charType) },
     ];
   }
 

@@ -1,4 +1,4 @@
-import { Expression, ExpressionValue } from './Expression';
+import { Expression, ExpressionValue, ExpressionMap } from './Expression';
 import { NotExpression } from './exprs/Not';
 import { AndExpression } from './exprs/And';
 import { NoExpression } from './exprs/No';
@@ -28,6 +28,11 @@ import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { Type } from './Type';
 export declare class ExpressionBuilder {
+    autoSetParent: boolean;
+    setParent<E extends Expression>(expr: E, force?: boolean): E;
+    parse(values: ExpressionValue[]): Expression[];
+    parse(values: Record<string, ExpressionValue>): ExpressionMap;
+    parse(value: ExpressionValue): Expression;
     cast(valueType: Type, targetType: Type): Expression;
     cast(valueType: Type, targetType: Type, createOnMissing: false): Expression | null;
     and(...exprs: Expression[]): AndExpression;
@@ -67,4 +72,3 @@ export declare class ExpressionBuilder {
     type(name: string): GetTypeExpression;
     relation(name: string): GetRelationExpression;
 }
-export declare const Exprs: ExpressionBuilder;

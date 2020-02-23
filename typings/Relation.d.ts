@@ -1,6 +1,7 @@
-import { Type, TypePropPair, TypeProps } from './Type';
+import { Type } from './Type';
 import { Definitions } from './Definitions';
 import { MapInput } from './fns';
+import { EntityPropPair, EntityProps } from './Entity';
 export interface RelationTypeKey {
     name: string;
     props: string[];
@@ -24,7 +25,7 @@ export interface TypeRelation {
     name: string;
     kind: RelationKind;
     related: RelationTypeKey[];
-    morphs?: TypePropPair;
+    morphs?: EntityPropPair;
     morphsToRelated?: Map<any, string>;
     relatedToMorphs?: Map<string, any>;
     where?: [string, any];
@@ -66,7 +67,7 @@ export declare class Relation {
      * A name-type pair for a property that exists on the subject type that is
      * used to determine which related type.
      */
-    morphs: TypePropPair | null;
+    morphs: EntityPropPair | null;
     /**
      * A map of values from the morphs property to the related type names.
      */
@@ -128,7 +129,7 @@ export declare class Relation {
     private getItemType;
     getSubjectRelation(subjectName: string): TypeRelation | null;
     getRelatedRelation(relatedName: string): TypeRelation | null;
-    getTypeProps(name: string): TypeProps[];
+    getTypeProps(name: string): EntityProps[];
     static hasMany(defs: Definitions, options: {
         name?: string;
         one: string;

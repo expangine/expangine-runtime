@@ -15,6 +15,7 @@ export declare class ConstantExpression extends Expression {
     getComplexity(): number;
     getScope(): null;
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;

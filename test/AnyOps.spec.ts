@@ -1,14 +1,17 @@
-// import { describe, it, expect } from 'jest';
-
-import { Type, TypeBuilder, NumberType, AnyOpsTypes, NullType, ManyType, TextType, isOperationTypeFunction, defs } from '../src';
-
+import { AnyOpsTypes } from '../src/ops/types/AnyOpsTypes';
+import { isOperationTypeFunction } from '../src/Operation';
+import { Type } from '../src/Type';
+import { Types } from '../src/TypeBuilder';
+import { defs } from '../src/def';
+import { NumberType } from '../src/types/Number';
+import { NullType } from '../src/types/Null';
+import { ManyType } from '../src/types/Many';
+import { TextType } from '../src/types/Text';
 
 // tslint:disable: no-magic-numbers
 
 describe('AnyOps', () => {
 
-  const tp = new TypeBuilder();
-  
   it('coalesce', () =>
   {
     const coalesce = AnyOpsTypes.coalesce;
@@ -17,8 +20,8 @@ describe('AnyOps', () => {
       : (): Type => { throw new Error('Why?') };
 
     const r0 = Type.fromInput(getReturnType({
-      a: tp.optional(tp.number()),
-      b: tp.number(),
+      a: Types.optional(Types.number()),
+      b: Types.number(),
     }, defs));
 
     expect(r0).toBeInstanceOf(NumberType);
@@ -28,28 +31,28 @@ describe('AnyOps', () => {
     expect(r1).toBeInstanceOf(NullType);
 
     const r2 = Type.fromInput(getReturnType({
-      a: tp.number(),
+      a: Types.number(),
     }, defs));
 
     expect(r2).toBeInstanceOf(NumberType);
 
     const r3 = Type.fromInput(getReturnType({
-      a: tp.number(),
-      b: tp.number(),
+      a: Types.number(),
+      b: Types.number(),
     }, defs));
 
     expect(r3).toBeInstanceOf(NumberType);
 
     const r4 = Type.fromInput(getReturnType({
-      a: tp.number(),
-      b: tp.text(),
+      a: Types.number(),
+      b: Types.text(),
     }, defs));
 
     expect(r4).toBeInstanceOf(NumberType);
 
     const r5 = Type.fromInput(getReturnType({
-      a: tp.optional(tp.number()),
-      b: tp.text(),
+      a: Types.optional(Types.number()),
+      b: Types.text(),
     }, defs));
 
     expect(r5).toBeInstanceOf(ManyType);

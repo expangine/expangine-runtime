@@ -2,13 +2,14 @@
 import { isObject, isArray, isSet, isString, addCopier } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { SetOps, SetOperations, SetComputeds } from '../ops/SetOps';
 import { ListOps } from '../ops/ListOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
+import { Types } from '../Types';
 
 
 const INDEX_VALUE = 1;
@@ -103,7 +104,7 @@ export class SetType extends Type<SetOptions>
 
   public static forItem(valueOrClass: TypeInput)
   {
-    const value = Type.fromInput(valueOrClass);
+    const value = Types.parse(valueOrClass);
     
     return new SetType({ value });
   }
@@ -118,12 +119,12 @@ export class SetType extends Type<SetOptions>
     return SetType.operations.map;
   }
 
-  public merge(type: SetType, describer: TypeDescribeProvider): void
+  public merge(type: SetType): void
   {
     const o1 = this.options;
     const o2 = type.options;
 
-    o1.value = describer.mergeType(o1.value, o2.value);
+    o1.value = Types.merge(o1.value, o2.value);
   }
 
   public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
@@ -165,7 +166,7 @@ export class SetType extends Type<SetOptions>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(SetType.STEP_VALUE, this.options.value);
+      traverse.step(SetType.STEP_VALUE, this.options.value, (replaceWith) => this.options.value = replaceWith);
     });
   }
 

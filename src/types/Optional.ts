@@ -1,14 +1,14 @@
 
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
-import { AnyType } from './Any';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
 import { Definitions } from '../Definitions';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
+import { Types } from '../Types';
 
 
 const INDEX_TYPE = 1;
@@ -25,7 +25,7 @@ export class OptionalType extends Type<Type>
 
   public static computeds = new Computeds(ID.Optional + ID.Delimiter);
 
-  public static baseType = new OptionalType(AnyType.baseType);
+  public static baseType = new OptionalType(null);
 
   public static decode(data: any[], types: TypeProvider): OptionalType 
   {
@@ -55,7 +55,7 @@ export class OptionalType extends Type<Type>
 
   public static for(type: TypeInput): OptionalType
   {
-    return new OptionalType(Type.fromInput(type));
+    return new OptionalType(Types.parse(type));
   }
 
   public getOperations()
@@ -68,7 +68,7 @@ export class OptionalType extends Type<Type>
     return OptionalType.id;
   }
 
-  public merge(type: OptionalType, describer: TypeDescribeProvider): void
+  public merge(type: OptionalType): void
   {
     
   }
@@ -118,7 +118,7 @@ export class OptionalType extends Type<Type>
   public traverse<R>(traverse: Traverser<Type, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step(OptionalType.STEP_OPTIONAL, this.options)
+      traverse.step(OptionalType.STEP_OPTIONAL, this.options, (replaceWith) => this.options = replaceWith)
     );
   }
 

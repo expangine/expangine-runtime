@@ -16,6 +16,7 @@ export declare class DefineExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): {};
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;

@@ -59,6 +59,11 @@ export class ReturnExpression extends Expression
     return ReturnExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new ReturnExpression(this.value.encode());
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return this.value 
@@ -69,7 +74,7 @@ export class ReturnExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step(ReturnExpression.STEP_VALUE, this.value)
+      traverse.step(ReturnExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith)
     );
   }
 

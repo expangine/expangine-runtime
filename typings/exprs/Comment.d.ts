@@ -14,6 +14,7 @@ export declare class CommentExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;

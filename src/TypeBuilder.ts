@@ -1,7 +1,6 @@
 
-import { Type, TypeInput, TypeInputMap } from './Type';
-import { ExpressionBuilder, Exprs } from './ExpressionBuilder';
-import { Expression } from './Expression';
+import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved } from './Type';
+import { isArray, isMap, MapInput, toMap, isSameClass, isObject, objectMap } from './fns';
 import { NumberType } from './types/Number'
 import { AnyType } from './types/Any';
 import { BooleanType } from './types/Boolean';
@@ -9,10 +8,8 @@ import { DateOptions, DateType } from './types/Date';
 import { TextType, TextOptions } from './types/Text';
 import { EnumType } from './types/Enum';
 import { ObjectType } from './types/Object';
-import { FunctionType } from './types/Function';
 import { ListType } from './types/List';
 import { ManyType } from './types/Many';
-import { isArray, isMap, MapInput, toMap } from './fns';
 import { MapType } from './types/Map';
 import { NullType } from './types/Null';
 import { OptionalType } from './types/Optional';
@@ -24,6 +21,18 @@ import { SetType } from './types/Set';
 
 export class TypeBuilder
 {
+
+  public autoSetParent: boolean = true;
+
+  public setParent<T extends Type>(type: T, force: boolean = false): T
+  {
+    if (this.autoSetParent || force)
+    {
+      type.setParent();
+    }
+
+    return type;
+  }
 
   public any()
   {
@@ -42,16 +51,16 @@ export class TypeBuilder
 
   public enum(value: TypeInput, key: TypeInput = TextType, constants: MapInput = new Map([]))
   {
-    return new EnumType({
-      value: Type.fromInput(value),
-      key: Type.fromInput(key),
+    return this.setParent(new EnumType({
+      value: this.parse(value),
+      key: this.parse(key),
       constants: toMap(constants),
-    });
+    }));
   }
 
   public enumForText(constants: string[] | Array<[string, string]> | Map<string, string>)
   {
-    return new EnumType({
+    return this.setParent(new EnumType({
       value: this.text(),
       key: this.text(),
       constants: isMap(constants)
@@ -59,60 +68,51 @@ export class TypeBuilder
         : isArray(constants[0])
           ? new Map(constants as Array<[string, string]>)
           : new Map((constants as string[]).map((c) => [c, c]))
-    });
-  }
-
-  public func(returnType: TypeInput, params: TypeInputMap, getExpression: (ex: ExpressionBuilder) => Expression)
-  {
-    return new FunctionType({
-      returnType: Type.fromInput(returnType),
-      params: ObjectType.from(params),
-      expression: getExpression(Exprs),
-    });
+    }));
   }
 
   public list(item: TypeInput, min?: number, max?: number)
   {
-    return new ListType({
-      item: Type.fromInput(item),
+    return this.setParent(new ListType({
+      item: this.parse(item),
       min, 
       max,
-    });
+    }));
   }
 
   public many(types: TypeInput[]): ManyType
   public many(...types: TypeInput[]): ManyType
   public many(...types: TypeInput[] | [TypeInput[]]): ManyType
   {
-    return new ManyType(
+    return this.setParent(new ManyType(
       isArray(types[0])
-        ? types[0].map(Type.fromInput)
-        : (types as TypeInput[]).map(Type.fromInput)
-    );
+        ? types[0].map((t) => this.parse(t))
+        : (types as TypeInput[]).map((t) => this.parse(t))
+    ));
   }
 
   public not(types: TypeInput[]): NotType
   public not(...types: TypeInput[]): NotType
   public not(...types: TypeInput[] | [TypeInput[]]): NotType
   {
-    return new NotType(
+    return this.setParent(new NotType(
       isArray(types[0])
-        ? types[0].map(Type.fromInput)
-        : (types as TypeInput[]).map(Type.fromInput)
-    );
+        ? types[0].map((t) => this.parse(t))
+        : (types as TypeInput[]).map((t) => this.parse(t))
+    ));
   }
 
   public map(value: TypeInput, key: TypeInput = TextType)
   {
-    return new MapType({ 
-      key: Type.fromInput(key),
-      value: Type.fromInput(value)
-    });
+    return this.setParent(new MapType({ 
+      key: this.parse(key),
+      value: this.parse(value)
+    }));
   }
 
   public null()
   {
-    return new NullType({});
+    return NullType.baseType
   }
 
   public number(min?: number, max?: number, whole?: boolean)
@@ -127,24 +127,31 @@ export class TypeBuilder
 
   public object(props: TypeInputMap = {})
   {
-    return ObjectType.from(props);
+    return this.setParent(ObjectType.from(props));
   }
 
-  public optional(type: TypeInput)
+  public optional(type: TypeInput): Type
   {
-    return new OptionalType(Type.fromInput(type));
+    const innerType = this.parse(type);
+
+    return this.setParent(innerType.isOptional() ? innerType : new OptionalType(innerType));
+  }
+
+  public required(outerType: Type): Type
+  {
+    return outerType instanceof OptionalType ? outerType.options : outerType;
   }
 
   public color(options: { hasAlpha?: boolean } = {})
   {
-    return new ColorType(options);
+    return this.setParent(new ColorType(options));
   }
 
   public set(value: TypeInput)
   {
-    return new SetType({
-      value: Type.fromInput(value),
-    });
+    return this.setParent(new SetType({
+      value: this.parse(value),
+    }));
   }
 
   public text(options: TextOptions = {})
@@ -156,13 +163,176 @@ export class TypeBuilder
   public tuple(...types: TypeInput[]): TupleType
   public tuple(...types: TypeInput[] | [TypeInput[]]): TupleType
   {
-    return new TupleType(
+    return this.setParent(new TupleType(
       isArray(types[0])
-        ? types[0].map(Type.fromInput)
-        : (types as TypeInput[]).map(Type.fromInput)
-    );
+        ? types[0].map((t) => this.parse(t))
+        : (types as TypeInput[]).map((t) => this.parse(t))
+    ));
+  }
+
+  public parse(input: TypeInput): Type
+  {
+    return input instanceof Type
+      ? input
+      : input.baseType.newInstance();
+  }
+
+  public simplify(type: Type): Type;
+  public simplify(type: Type | null): Type | null;
+  public simplify(type: Type | null): Type | null
+  {
+    return type ? type.getSimplifiedType() : null;
+  }
+
+  public resolve<T>(types: T): TypeResolved<T>
+  {
+    let result: any;
+
+    if (!types)
+    {
+    }
+    else if (types instanceof Type)
+    {
+      result = types;
+    }
+    else if ((types as any).baseType instanceof Type)
+    {
+      result = (types as any).baseType.newInstance();
+    }
+    else if (isArray(types))
+    {
+      result = types.map(t => this.resolve(t));
+    }
+    else if (isObject(types))
+    {
+      result = objectMap(types as any, t => this.resolve(t));
+    }
+
+    return result as unknown as TypeResolved<T>;
+  }
+
+  public reduce(type: Type[]): Type
+  {
+    return type.length === 1 ? type[0] : new ManyType(type);
+  }
+
+  public explode(outerType: Type): Type[]
+  {
+    return outerType instanceof ManyType ? outerType.options : [outerType];
+  }
+
+  public maybe<M extends Type>(type: Type, maybe: TypeClass<M>)
+  {
+    if (type instanceof maybe)
+    {
+      return type;
+    }
+
+    if (type instanceof OptionalType && type.options instanceof maybe)
+    {
+      return type;
+    }
+
+    if (type instanceof ManyType) 
+    {
+      const oneOf = type.options.find((t) => t instanceof maybe);
+
+      if (oneOf) 
+      {
+        return this.optional(oneOf);
+      }
+
+      const oneOfOptional = type.options.find((t) => t instanceof OptionalType && t.options instanceof maybe);
+
+      if (oneOfOptional) 
+      {
+        return oneOfOptional;
+      }
+    }
+
+    return this.optional(maybe);
+  }
+
+  public mergeMany(readonlyTypes: Type[]): Type | null
+  {
+    if (readonlyTypes.length === 0)
+    {
+      return null;
+    }
+
+    if (readonlyTypes.find(t => t instanceof AnyType))
+    {
+      return AnyType.baseType;
+    }
+
+    const cloned = readonlyTypes.map(t => t ? t.clone() : null);
+
+    return cloned.reduce((a, b) => a && b ? this.merge(a, b) : a || b);
+  }
+
+  public merge(a: Type, b: Type): Type
+  {
+    if (a instanceof AnyType)
+    {
+      return b;
+    }
+
+    const optional = 
+      a instanceof OptionalType ||
+      b instanceof OptionalType;
+
+    const ar = this.required(a);
+    const br = this.required(b);
+
+    if (isSameClass(ar, br))
+    {
+      ar.merge(br);
+
+      return optional ? this.optional(ar) : ar;
+    }
+
+    if (ar instanceof ManyType || br instanceof ManyType)
+    {
+      const atypes = this.explode(ar);
+      const btypes = this.explode(br);
+      const an = atypes.length;
+
+      for (const ktype of btypes)
+      {
+        let matched = false;
+        const koptional = ktype instanceof OptionalType;
+        const krequired = koptional ? ktype.options : ktype;
+
+        for (let i = 0; i < an; i++)
+        {
+          const itype = atypes[i];
+          const ioptional = itype instanceof OptionalType;
+          const irequired = ioptional ? itype.options : itype;
+
+          if (isSameClass(irequired, krequired))
+          {
+            matched = true;
+            irequired.merge(krequired, this);
+
+            if (koptional && !ioptional) 
+            {
+              atypes[i] = this.optional(irequired);
+            }
+          }
+        }
+
+        if (!matched)
+        {
+          atypes.push(ktype);
+        }
+      }
+
+      return optional
+        ? this.optional(this.reduce(atypes))
+        : this.reduce(atypes);
+    }
+
+    return this.many(a, b);
   }
 
 }
-
-export const Types = new TypeBuilder();

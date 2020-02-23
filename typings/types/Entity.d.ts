@@ -2,25 +2,25 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser, TraverseStep } from '../Traverser';
-export declare class AliasedType extends Type<string> {
-    static STEP_ALIASED: string;
+export declare class EntityType extends Type<string> {
+    static STEP_ENTITY: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: AliasedType;
-    static decode(data: any[], types: TypeProvider): AliasedType;
-    static encode(type: AliasedType): any;
+    static baseType: EntityType;
+    static decode(data: any[], types: TypeProvider): EntityType;
+    static encode(type: EntityType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static registered: boolean;
     static register(): void;
-    static for(name: string, provider: TypeProvider): AliasedType;
+    static for(name: string, provider: TypeProvider): EntityType;
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
     getType(): Type<any>;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     getId(): string;
-    merge(type: AliasedType, describer: TypeDescribeProvider): void;
+    merge(type: EntityType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;
@@ -39,8 +39,8 @@ export declare class AliasedType extends Type<string> {
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
-    newInstance(): AliasedType;
-    clone(): AliasedType;
+    newInstance(): EntityType;
+    clone(): EntityType;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;

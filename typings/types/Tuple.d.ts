@@ -19,7 +19,7 @@ export declare class TupleType extends Type<Type[]> {
     static forItem(types: TypeInput[]): TupleType;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: TupleType, describer: TypeDescribeProvider): void;
+    merge(type: TupleType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

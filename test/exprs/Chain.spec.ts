@@ -1,25 +1,24 @@
-// import { describe, it, expect } from 'jest';
-
-import { defs, ExpressionBuilder, NumberType, TextType, TypeBuilder } from '../../src';
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { defs } from '../../src/def';
+import { TextType } from '../../src/types/Text';
+import { NumberType } from '../../src/types/Number';
 
 
 // tslint:disable: no-magic-numbers
 
 describe('Chain', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-
-  const context = tp.object({
-    a: tp.number(),
-    b: tp.text()
+  const context = Types.object({
+    a: Types.number(),
+    b: Types.text()
   });
 
   it('type last', () =>
   {
-    const chain = ex.body(
-      ex.get('a'),
-      ex.get('b')
+    const chain = Exprs.body(
+      Exprs.get('a'),
+      Exprs.get('b')
     );
     const chainType = chain.getType(defs, context);
 
@@ -28,9 +27,9 @@ describe('Chain', () => {
 
   it('type last 2', () =>
   {
-    const chain = ex.body(
-      ex.get('b'),
-      ex.get('a')
+    const chain = Exprs.body(
+      Exprs.get('b'),
+      Exprs.get('a')
     );
     const chainType = chain.getType(defs, context);
 

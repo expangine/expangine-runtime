@@ -11,10 +11,10 @@ import { ListType } from '../../types/List';
 import { ObjectType } from '../../types/Object';
 import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
-import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
 import { objectValues } from '../../fns';
+import { Types } from '../../Types';
 
 
 const ops = MapType.operations;
@@ -22,7 +22,7 @@ const ops = MapType.operations;
 const RequireMap = (map?: Type) => map instanceof MapType ? map : undefined;
 const GivenMap = (i: {map?: Type}) => RequireMap(i.map) || MapType;
 const GivenMapValue = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.value : AnyType;
-const GivenMapValueOptional = (i: {map?: Type}) => OptionalType.for(GivenMapValue(i));
+const GivenMapValueOptional = (i: {map?: Type}) => Types.optional(GivenMapValue(i));
 const GivenMapKey = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.key : TextType;
 const GivenMapIterationScope = { map: GivenMap, key: GivenMapKey, value: GivenMapValue };
 
@@ -52,7 +52,7 @@ export const MapOpsTypes =
   // Operations
 
   maybe: ops.setTypes(MapOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, MapType),
+    (i, defs) => Types.maybe(i.value, MapType),
     { value: AnyType } 
   ),
 
@@ -149,7 +149,7 @@ export const MapOpsTypes =
       const propTypes = objectValues((i.object as ObjectType).options.props);
       
       return propTypes.length > 0
-        ? MapType.forItem(defs.mergeTypes(propTypes))
+        ? MapType.forItem(Types.mergeMany(propTypes))
         : MapType; 
     },
     { object: i => i.object || ObjectType }

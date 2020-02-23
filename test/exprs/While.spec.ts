@@ -1,22 +1,22 @@
-// import { describe, it, expect } from 'jest';
-
-import { ExpressionBuilder, TextType, defs, OptionalType, BooleanType, TypeBuilder } from '../../src';
-
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { defs } from '../../src/def';
+import { OptionalType } from '../../src/types/Optional';
+import { BooleanType } from '../../src/types/Boolean';
+import { TextType } from '../../src/types/Text';
 
 // tslint:disable: no-magic-numbers
 
 describe('While', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.object({
-    a: tp.text(),
-    b: tp.number(),
+  const context = Types.object({
+    a: Types.text(),
+    b: Types.number(),
   });
 
   it('type constant', () =>
   {
-    const loop = ex.while(ex.const(false), ex.const(true));
+    const loop = Exprs.while(Exprs.const(false), Exprs.const(true));
     const loopType = loop.getType(defs, context);
 
     expect(loopType).toBeInstanceOf(OptionalType);
@@ -25,7 +25,7 @@ describe('While', () => {
 
   it('type dynamic', () =>
   {
-    const loop = ex.while(ex.const(false), ex.get('a'));
+    const loop = Exprs.while(Exprs.const(false), Exprs.get('a'));
     const loopType = loop.getType(defs, context);
 
     expect(loopType).toBeInstanceOf(OptionalType);
@@ -34,7 +34,7 @@ describe('While', () => {
 
   it('type from break', () =>
   {
-    const loop = ex.while(ex.const(false), ex.get('break'));
+    const loop = Exprs.while(Exprs.const(false), Exprs.get('break'));
     const loopType = loop.getType(defs, context);
 
     expect(loopType).toBeInstanceOf(OptionalType);

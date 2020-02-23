@@ -57,6 +57,11 @@ export class GetRelationExpression extends Expression
     return GetRelationExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new GetRelationExpression(this.name);
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return new EnumType({

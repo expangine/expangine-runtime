@@ -1,7 +1,7 @@
 
-import { AliasedType } from '../../types/Aliased';
-import { AliasedOps } from '../AliasedOps';
-import { Types } from '../../TypeBuilder';
+import { EntityType } from '../../types/Entity';
+import { EntityOps } from '../EntityOps';
+import { Types } from '../../Types';
 import { objectValues, isArray } from '../../fns';
 import { OperationTypeInput } from '../../Operation';
 import { ObjectType } from '../../types/Object';
@@ -15,20 +15,20 @@ import { Type } from '../../Type';
 import { TypeRelation } from '../../Relation';
 import { Definitions } from '../../Definitions';
 
-const ops = AliasedType.operations;
+const ops = EntityType.operations;
 
 const GetNamedType: OperationTypeInput<'name'> = (i, defs) => 
-  i.name instanceof AliasedType
+  i.name instanceof EntityType
     ? i.name
     : ObjectType.baseType;
 
 const GetName: OperationTypeInput<'name'> = (i, defs) => 
-  i.name instanceof AliasedType
+  i.name instanceof EntityType
     ? i.name
-    : Types.many(objectValues(defs.aliased));
+    : Types.many(objectValues(defs.entities));
 
 const GetTypeRelation = (i: {name?: Type, relation?: Type}, defs: Definitions): TypeRelation | TypeRelation[] | null => {
-  if (!(i.name instanceof AliasedType)) {
+  if (!(i.name instanceof EntityType)) {
     return null;
   }
 
@@ -96,78 +96,78 @@ const GetRelatedItemType: OperationTypeInput<'name' | 'relation' | 'related'> = 
 };
 
 
-export const AliasedOpsTypes = 
+export const EntityOpsTypes = 
 {
 
-  newInstance: ops.setTypes(AliasedOps.newInstance, 
+  newInstance: ops.setTypes(EntityOps.newInstance, 
     GetNamedType,
     { name: GetName }
   ),
 
-  getKey: ops.setTypes(AliasedOps.getKey,
+  getKey: ops.setTypes(EntityOps.getKey,
     (i, defs) => {
-      if (!(i.name instanceof AliasedType)) {
+      if (!(i.name instanceof EntityType)) {
         return AnyType;
       }
-      const storage = defs.storage[i.name.options];
-      if (!storage || !storage.key) {
+      const entity = defs.getEntity(i.name.options);
+      if (!entity || !entity.key) {
         return AnyType;
       }
 
-      return storage.getKeyReturnType(defs);
+      return entity.getKeyReturnType(defs);
     },
     { name: GetName, instance: GetNamedType }
   ),
 
-  save: ops.setTypes(AliasedOps.save, 
+  save: ops.setTypes(EntityOps.save, 
     BooleanType,
     { name: GetName, instance: GetNamedType }
   ),
 
-  remove: ops.setTypes(AliasedOps.remove, 
+  remove: ops.setTypes(EntityOps.remove, 
     BooleanType,
     { name: GetName, instance: GetNamedType }
   ),
 
-  setRelated: ops.setTypes(AliasedOps.setRelated, 
+  setRelated: ops.setTypes(EntityOps.setRelated, 
     NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedRelationType }
   ),
 
-  addRelated: ops.setTypes(AliasedOps.addRelated, 
+  addRelated: ops.setTypes(EntityOps.addRelated, 
     NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
-  removeRelated: ops.setTypes(AliasedOps.removeRelated, 
+  removeRelated: ops.setTypes(EntityOps.removeRelated, 
     NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
-  clearRelated: ops.setTypes(AliasedOps.clearRelated, 
+  clearRelated: ops.setTypes(EntityOps.clearRelated, 
     NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation } 
   ),
 
-  getRelated: ops.setTypes(AliasedOps.getRelated,
+  getRelated: ops.setTypes(EntityOps.getRelated,
     (i, defs) => GetRelatedRelationType(i, defs),
     { name: GetName, instance: GetNamedType, relation: GetRelation }
   ),
 
-  isRelated: ops.setTypes(AliasedOps.isRelated, 
+  isRelated: ops.setTypes(EntityOps.isRelated, 
     NumberType,
     { name: GetName, instance: GetNamedType, relation: GetRelation, related: GetRelatedItemType } 
   ),
 
 };
 
-AliasedOpsTypes.newInstance.rawTypes = true;
-AliasedOpsTypes.getKey.rawTypes = true;
-AliasedOpsTypes.save.rawTypes = true;
-AliasedOpsTypes.remove.rawTypes = true;
-AliasedOpsTypes.setRelated.rawTypes = true;
-AliasedOpsTypes.addRelated.rawTypes = true;
-AliasedOpsTypes.removeRelated.rawTypes = true;
-AliasedOpsTypes.clearRelated.rawTypes = true;
-AliasedOpsTypes.getRelated.rawTypes = true;
-AliasedOpsTypes.isRelated.rawTypes = true;
+EntityOpsTypes.newInstance.rawTypes = true;
+EntityOpsTypes.getKey.rawTypes = true;
+EntityOpsTypes.save.rawTypes = true;
+EntityOpsTypes.remove.rawTypes = true;
+EntityOpsTypes.setRelated.rawTypes = true;
+EntityOpsTypes.addRelated.rawTypes = true;
+EntityOpsTypes.removeRelated.rawTypes = true;
+EntityOpsTypes.clearRelated.rawTypes = true;
+EntityOpsTypes.getRelated.rawTypes = true;
+EntityOpsTypes.isRelated.rawTypes = true;

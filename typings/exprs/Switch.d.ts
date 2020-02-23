@@ -22,6 +22,7 @@ export declare class SwitchExpression extends Expression {
     getComplexity(def: Definitions): number;
     getScope(): null;
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;

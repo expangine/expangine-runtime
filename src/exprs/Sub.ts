@@ -1,10 +1,11 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { toExpr, isArray, isNumber } from '../fns';
+import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_VALUE = 1;
@@ -37,7 +38,7 @@ export class SubExpression extends Expression
 
   public static create(value: ExpressionValue, path: ExpressionValue[])
   {
-    return new SubExpression(toExpr(value), toExpr(path));
+    return new SubExpression(Exprs.parse(value), Exprs.parse(path));
   }
 
   public value: Expression;
@@ -70,6 +71,11 @@ export class SubExpression extends Expression
     return SubExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new SubExpression(this.value.clone(), this.path.map((p) => p.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     const valueType = this.value.getType(def, context);
@@ -82,10 +88,10 @@ export class SubExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(SubExpression.STEP_VALUE, this.value);
+      traverse.step(SubExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
       traverse.step(SubExpression.STEP_PATH, () => {
         this.path.forEach((expr, index) => 
-          traverse.step(index, expr)
+          traverse.step(index, expr, (replaceWith) => this.path.splice(index, 1, replaceWith), () => this.path.splice(index, 1))
         )
       });
     });
@@ -123,7 +129,7 @@ export class SubExpression extends Expression
 
   public with(expr: ExpressionValue): SubExpression
   {
-    return new SubExpression(toExpr(expr), this.path.slice());
+    return new SubExpression(Exprs.parse(expr), this.path.slice());
   }
 
   public sub(expr: ExpressionValue | ExpressionValue[]): SubExpression
@@ -132,7 +138,7 @@ export class SubExpression extends Expression
       ? expr
       : [expr];
 
-    return new SubExpression(this.value, this.path.concat(toExpr(append)));
+    return new SubExpression(this.value, this.path.concat(Exprs.parse(append)));
   }
 
 }

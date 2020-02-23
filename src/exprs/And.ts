@@ -2,11 +2,11 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { Definitions } from '../Definitions';
 import { isArray, isNumber } from '../fns';
-import { OrExpression } from './Or';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { OrExpression } from './Or';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -58,6 +58,11 @@ export class AndExpression extends Expression
     return AndExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new AndExpression(this.expressions.map(e => e.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
@@ -67,7 +72,7 @@ export class AndExpression extends Expression
   {
     return traverse.enter(this, () => 
       this.expressions.forEach((expr, index) => 
-        traverse.step(index, expr)
+        traverse.step(index, expr, (replaceWith) => this.expressions.splice(index, 1, replaceWith), () => this.expressions.splice(index, 1))
       )
     );
   }
@@ -96,14 +101,14 @@ export class AndExpression extends Expression
     });
   }
 
-  public and(exprs: Expression | Expression[]): AndExpression
+  public and(exprs: Expression | Expression[])
   {
     const append = isArray(exprs) ? exprs : [exprs];
 
     return new AndExpression(this.expressions.concat(append));
   }
 
-  public or(exprs: Expression | Expression[]): OrExpression
+  public or(exprs: Expression | Expression[])
   {
     const append = isArray(exprs) ? exprs : [exprs];
 

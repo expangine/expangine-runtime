@@ -12,6 +12,7 @@ import { TupleType } from '../../types/Tuple';
 import { TextOps } from '../TextOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = TextType.operations;
@@ -36,7 +37,7 @@ export const TextOpsTypes =
   // Operations
 
   maybe: ops.setTypes(TextOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, TextType),
+    (i, defs) => Types.maybe(i.value, TextType),
     { value: AnyType } 
   ),
 

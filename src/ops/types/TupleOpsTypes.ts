@@ -13,6 +13,7 @@ import { TupleOps } from '../TupleOps';
 import { ColorType } from '../../types/Color';
 import { Type } from '../../Type';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = TupleType.operations;
@@ -28,7 +29,7 @@ export const TupleOpsTypes =
   // Operations
 
   maybe: ops.setTypes(TupleOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, TupleType),
+    (i, defs) => Types.maybe(i.value, TupleType),
     { value: AnyType } 
   ),
 
@@ -65,7 +66,7 @@ export const TupleOpsTypes =
       }
 
       return list
-        ? ListType.forItem(defs.mergeTypes(elements))
+        ? ListType.forItem(Types.mergeMany(elements))
         : new TupleType(elements);
     },
     { a: AnyType, b: AnyType },

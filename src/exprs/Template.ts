@@ -1,11 +1,12 @@
 
-import { objectMap, isString, toExpr, objectEach } from '../fns';
+import { objectMap, isString, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { Definitions } from '../Definitions';
 import { TextType } from '../types/Text';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_TEMPLATE = 1;
@@ -68,6 +69,11 @@ export class TemplateExpression extends Expression
     return TemplateExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new TemplateExpression(this.template, objectMap(this.params, (p) => p.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return TextType.baseType.newInstance();
@@ -77,7 +83,7 @@ export class TemplateExpression extends Expression
   {
     return traverse.enter(this, () => 
       objectEach(this.params, (expr, param) =>
-        traverse.step(param, expr)
+        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => delete this.params[param])
       )
     );
   }
@@ -114,7 +120,7 @@ export class TemplateExpression extends Expression
 
     return new TemplateExpression(this.template, {
       ...this.params,
-      ...toExpr(append),
+      ...Exprs.parse(append),
     });
   }
 

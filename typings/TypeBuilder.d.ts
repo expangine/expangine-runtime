@@ -1,6 +1,5 @@
-import { TypeInput, TypeInputMap } from './Type';
-import { ExpressionBuilder } from './ExpressionBuilder';
-import { Expression } from './Expression';
+import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved } from './Type';
+import { MapInput } from './fns';
 import { NumberType } from './types/Number';
 import { AnyType } from './types/Any';
 import { BooleanType } from './types/Boolean';
@@ -8,24 +7,22 @@ import { DateOptions, DateType } from './types/Date';
 import { TextType, TextOptions } from './types/Text';
 import { EnumType } from './types/Enum';
 import { ObjectType } from './types/Object';
-import { FunctionType } from './types/Function';
 import { ListType } from './types/List';
 import { ManyType } from './types/Many';
-import { MapInput } from './fns';
 import { MapType } from './types/Map';
 import { NullType } from './types/Null';
-import { OptionalType } from './types/Optional';
 import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
 import { SetType } from './types/Set';
 export declare class TypeBuilder {
+    autoSetParent: boolean;
+    setParent<T extends Type>(type: T, force?: boolean): T;
     any(): AnyType;
     bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
     date(options?: DateOptions): DateType;
     enum(value: TypeInput, key?: TypeInput, constants?: MapInput): EnumType;
     enumForText(constants: string[] | Array<[string, string]> | Map<string, string>): EnumType;
-    func(returnType: TypeInput, params: TypeInputMap, getExpression: (ex: ExpressionBuilder) => Expression): FunctionType;
     list(item: TypeInput, min?: number, max?: number): ListType;
     many(types: TypeInput[]): ManyType;
     many(...types: TypeInput[]): ManyType;
@@ -36,7 +33,8 @@ export declare class TypeBuilder {
     number(min?: number, max?: number, whole?: boolean): NumberType;
     int(min?: number, max?: number): NumberType;
     object(props?: TypeInputMap): ObjectType<import("./types/Object").ObjectOptions>;
-    optional(type: TypeInput): OptionalType;
+    optional(type: TypeInput): Type;
+    required(outerType: Type): Type;
     color(options?: {
         hasAlpha?: boolean;
     }): ColorType;
@@ -44,5 +42,13 @@ export declare class TypeBuilder {
     text(options?: TextOptions): TextType;
     tuple(types: TypeInput[]): TupleType;
     tuple(...types: TypeInput[]): TupleType;
+    parse(input: TypeInput): Type;
+    simplify(type: Type): Type;
+    simplify(type: Type | null): Type | null;
+    resolve<T>(types: T): TypeResolved<T>;
+    reduce(type: Type[]): Type;
+    explode(outerType: Type): Type[];
+    maybe<M extends Type>(type: Type, maybe: TypeClass<M>): Type<any>;
+    mergeMany(readonlyTypes: Type[]): Type | null;
+    merge(a: Type, b: Type): Type;
 }
-export declare const Types: TypeBuilder;

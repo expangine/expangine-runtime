@@ -1,5 +1,5 @@
 
-import { Type, TypeDescribeProvider, TypeCompatibleOptions } from '../Type';
+import { Type, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { ColorOps, ColorOperations, ColorComputeds } from '../ops/ColorOps';
 import { ID } from './ID';
@@ -9,7 +9,7 @@ import { ColorSpaceRGB } from '../util/color/ColorSpaceRGB';
 import { ColorSpace, ColorFormat } from '../util/color/ColorSpace';
 import { ColorSpaceHSL } from '../util/color/ColorSpaceHSL';
 import { ObjectType, ObjectOptions } from './Object';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_OPTIONS = 1;
@@ -113,7 +113,7 @@ export class ColorType extends ObjectType<ColorOptions>
     return ColorType.operations.map;
   }
 
-  public merge(type: ColorType, describer: TypeDescribeProvider): void
+  public merge(type: ColorType): void
   {
     const o1 = this.options;
     const o2 = type.options;

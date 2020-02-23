@@ -1,34 +1,118 @@
 
-import { isArray, objectMap, isSameClass, objectValues, objectEach } from './fns';
-import { Type, TypeClass, TypeParser, TypeInput, TypeInputMap, TypeMap, TypeProps, TypeCompatibleOptions } from './Type';
+import { isArray, objectMap, objectValues, objectEach } from './fns';
+import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction } from './Operation';
-import { ConstantExpression } from './exprs/Constant';
+import { Computeds, Computed } from './Computed';
+import { Relation, RelationOptions, TypeRelation } from './Relation';
+import { Program, ProgramOptions, ProgramDataSet } from './Program';
+import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
+import { Func, FuncOptions, FuncTest } from './Func';
+import { Types } from './Types';
+import { Traverser } from './Traverser';
+import { ID } from './types/ID';
+import { EntityType } from './types/Entity';
 import { AnyType } from './types/Any';
-import { OptionalType } from './types/Optional';
 import { ManyType } from './types/Many';
-import { FunctionType } from './types/Function';
 import { ObjectType } from './types/Object';
 import { NullType } from './types/Null';
-import { ID } from './types/ID';
-import { Computeds, Computed } from './Computed';
-import { TypeStorageOptions, TypeStorage } from './TypeStorage';
-import { Relation, RelationOptions, TypeRelation } from './Relation';
+import { ConstantExpression } from './exprs/Constant';
+import { GetTypeExpression } from './exprs/GetType';
+import { NoExpression } from './exprs/No';
+import { InvokeExpression } from './exprs/Invoke';
+import { GetRelationExpression } from './exprs/GetRelation';
+import { Runtime } from './Runtime';
 
 
 
 export interface DefinitionsImportOptions
 {
-  aliases?: Record<string, ObjectType | any>;
-  functions?: Record<string, FunctionType | any>;
-  storage?: Record<string, TypeStorageOptions>;
+  entities?: Record<string, Entity | EntityOptions>;
+  functions?: Record<string, Func | FuncOptions>;
   relations?: Record<string, RelationOptions>;
+  programs?: Record<string, Program | ProgramOptions>;
 }
 
 export interface DefinitionsOptions extends DefinitionsImportOptions
 {
   types?: TypeClass[];
   expressions?: ExpressionClass[];
+}
+
+export type DefinitionsReferenceSource = 
+  Program | 
+  [Program, ProgramDataSet] |
+  Entity | 
+  [Entity, 'key' | 'describe'] |
+  [Entity, string, EntityStorageTranscoder] |
+  [Entity, string, EntityStorageTranscoder, 'encode' | 'decode'] |
+  [Entity, Func] |
+  [Entity, Func, 'params' | 'returnType'] |
+  [Entity, Func, FuncTest, 'args' | 'expected'] |
+  Func | 
+  [Func, 'params' | 'returnType'] |
+  [Func, FuncTest, 'args' | 'expected'] |
+  Relation;
+
+export type DefinitionsEntityReference = (
+  { value: EntityType, root: Type } |
+  { value: GetTypeExpression, root: Expression }
+) & { source: DefinitionsReferenceSource };
+
+export interface DefinitionsRelationReference
+{
+  value: GetRelationExpression;
+  root: Expression;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsFunctionReference
+{
+  value: InvokeExpression;
+  root: Expression;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsExpressionReference<E extends Expression>
+{
+  value: E;
+  root: Expression;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsTypeReference<T extends Type>
+{
+  value: T;
+  root: Type;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsDataTypeReference<T extends Type>
+{
+  type: T;
+  data: any;
+  root: Type;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsDataInstance
+{
+  data: any;
+  type: Type;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsTypeInstance
+{
+  type: Type;
+  source: DefinitionsReferenceSource;
+}
+
+export interface DefinitionsExpressionInstance
+{
+  expr: Expression;
+  context: Type;
+  source: DefinitionsReferenceSource;
 }
 
 export class Definitions 
@@ -41,24 +125,24 @@ export class Definitions
   public expressions: Record<string, ExpressionClass>;
   public operations: Operations;
   public computeds: Computeds;
-  public aliased: Record<string, ObjectType>;
-  public functions: Record<string, FunctionType>;
-  public storage: Record<string, TypeStorage>;
   public relations: Record<string, Relation>;
+  public programs: Record<string, Program>;
+  public entities: Record<string, Entity>;
+  public functions: Record<string, Func>;
 
   public constructor(initial?: DefinitionsOptions)
   { 
     this.types = Object.create(null);
     this.typeList = [];
-    this.expressions = Object.create(null);
-    this.parsers = Object.create(null);
-    this.aliased = Object.create(null);
-    this.functions = Object.create(null);
     this.describers = [];
+    this.expressions = Object.create(null);
     this.operations = new Operations('');
     this.computeds = new Computeds('');
-    this.storage = Object.create(null);
+    this.parsers = Object.create(null);
+    this.entities = Object.create(null);
+    this.functions = Object.create(null);
     this.relations = Object.create(null);
+    this.programs = Object.create(null);
 
     if (initial) 
     {
@@ -71,10 +155,10 @@ export class Definitions
     const copy = new Definitions({
       types: objectValues(this.types),
       expressions: objectValues(this.expressions),
-      aliases: objectMap(this.aliased, a => deepCopy ? a.encode() : a),
+      entities: objectMap(this.entities, a => deepCopy ? a.encode() : a),
       functions: objectMap(this.functions, f => deepCopy ? f.encode() : f),
-      storage: objectMap(this.storage, s => s.encode()),
       relations: objectMap(this.relations, r => r.encode()),
+      programs: objectMap(this.programs, p => deepCopy ? p.encode() : p),
     });
 
     if (initial)
@@ -117,155 +201,11 @@ export class Definitions
     return AnyType.baseType;
   }
 
-  public maybeType<M extends Type>(type: Type, maybe: TypeClass<M>)
-  {
-    if (type instanceof maybe)
-    {
-      return type;
-    }
-
-    if (type instanceof OptionalType && type.options instanceof maybe)
-    {
-      return type;
-    }
-
-    if (type instanceof ManyType) 
-    {
-      const oneOf = type.options.find((t) => t instanceof maybe);
-
-      if (oneOf) 
-      {
-        return this.optionalType(oneOf);
-      }
-
-      const oneOfOptional = type.options.find((t) => t instanceof OptionalType && t.options instanceof maybe);
-
-      if (oneOfOptional) 
-      {
-        return oneOfOptional;
-      }
-    }
-
-    return OptionalType.for(maybe);
-  }
-
-  public mergeTypes(readonlyTypes: Type[]): Type | null
-  {
-    if (readonlyTypes.length === 0)
-    {
-      return null;
-    }
-
-    if (readonlyTypes.find(t => t instanceof AnyType))
-    {
-      return AnyType.baseType;
-    }
-
-    const cloned = readonlyTypes.map(t => t ? t.clone() : null);
-
-    return cloned.reduce((a, b) => a && b ? this.mergeType(a, b) : a || b);
-  }
-
   public merge(type: Type, data: any): Type
   {
-    return this.mergeType(type, this.describe(data));
+    return Types.merge(type, this.describe(data));
   }
-
-  public mergeType(a: Type, b: Type): Type
-  {
-    if (a instanceof AnyType)
-    {
-      return b;
-    }
-
-    const optional = 
-      a instanceof OptionalType ||
-      b instanceof OptionalType;
-
-    const ar = this.requiredType(a);
-    const br = this.requiredType(b);
-
-    if (isSameClass(ar, br))
-    {
-      ar.merge(br, this);
-
-      return optional ? new OptionalType(ar) : ar;
-    }
-
-    if (ar instanceof ManyType || br instanceof ManyType)
-    {
-      const atypes = this.getTypes(ar);
-      const btypes = this.getTypes(br);
-      const an = atypes.length;
-
-      for (const ktype of btypes)
-      {
-        let matched = false;
-        const koptional = ktype instanceof OptionalType;
-        const krequired = koptional ? ktype.options : ktype;
-
-        for (let i = 0; i < an; i++)
-        {
-          const itype = atypes[i];
-          const ioptional = itype instanceof OptionalType;
-          const irequired = ioptional ? itype.options : itype;
-
-          if (isSameClass(irequired, krequired))
-          {
-            matched = true;
-            irequired.merge(krequired, this);
-
-            if (koptional && !ioptional) 
-            {
-              atypes[i] = new OptionalType(irequired);
-            }
-          }
-        }
-
-        if (!matched)
-        {
-          atypes.push(ktype);
-        }
-      }
-
-      return optional
-        ? new OptionalType(this.getReducedType(atypes))
-        : this.getReducedType(atypes);
-    }
-
-    return new ManyType([ a, b ]);
-  }
-
-  public optionalType(type: Type): OptionalType
-  {
-    if (type instanceof OptionalType)
-    {
-      return type;
-    }
-
-    if (type instanceof ManyType)
-    {
-      type.options = type.options.map(t => this.requiredType(t));
-    }
-
-    return new OptionalType(type);
-  }
-
-  public requiredType(type: Type): Type
-  {
-    return (type instanceof OptionalType) ? type.options : type;
-  }
-
-  public getTypes(type: Type): Type[]
-  {
-    return (type instanceof ManyType) ? type.options : [type];
-  }
-
-  public getReducedType(type: Type[]): Type
-  {
-    return type.length === 1 ? type[0] : new ManyType(type);
-  }
-
+  
   public sortDescribers()
   {
     this.describers.sort((a, b) => b.describePriority - a.describePriority);
@@ -290,40 +230,61 @@ export class Definitions
     }
   }
 
-  public findAliased(type: Type, options: TypeCompatibleOptions = { strict: true, value: false, exact: false }): string | false
+  public findEntity(type: Type, options: TypeCompatibleOptions = { strict: true, value: false, exact: false }): string | false
   {
-    for (const name in this.aliased)
+    for (const entityName in this.entities)
     {
-      const alias = this.aliased[name];
+      const entity = this.entities[entityName];
 
-      if (alias.isCompatible(type, options))
+      if (entity.type.isCompatible(type, options))
       {
-        return name;
+        return entityName;
       }
     }
 
     return false;
   }
 
-  public addAlias(alias: string, instance: ObjectType | any): this
+  public addFunction(func: Func | Partial<FuncOptions>): this
   {
-    const type = instance instanceof ObjectType
-      ? instance
-      : this.getType(instance) as ObjectType;
-
-    this.parsers[alias] = () => type;
-    this.aliased[alias] = type;
+    this.functions[func.name] = func instanceof Func
+      ? func
+      : Func.create(this, func);
 
     return this;
   }
 
-  public addStorage(storage: TypeStorage | TypeStorageOptions): this
+  public getFunction(name: string): Func
   {
-    this.storage[storage.name] = storage instanceof TypeStorage
-      ? storage
-      : new TypeStorage(storage, this);
+    return this.functions[name];
+  }
+
+  public addProgram(program: Program | Partial<ProgramOptions>): this
+  {
+    this.programs[program.name] = program instanceof Program
+      ? program
+      : Program.create(this, program);
 
     return this;
+  }
+
+  public getProgram(name: string): Program
+  {
+    return this.programs[name];
+  }
+  
+  public addEntity(entity: Entity | Partial<EntityOptions>): this
+  {
+    this.entities[entity.name] = entity instanceof Entity
+      ? entity
+      : Entity.create(this, entity);
+
+    return this;
+  }
+
+  public getEntity(name: string)
+  {
+    return this.entities[name];
   }
 
   public addRelation(relation: Relation | RelationOptions): this
@@ -335,20 +296,25 @@ export class Definitions
     return this;
   }
 
-  public getRelations(name: string): TypeRelation[]
+  public getRelation(name: string)
+  {
+    return this.relations[name];
+  }
+
+  public getRelations(entityName: string): TypeRelation[]
   {
     const relations: TypeRelation[] = [];
 
     objectEach(this.relations, (relation) =>
     {
-      const subjectRelation = relation.getSubjectRelation(name);
+      const subjectRelation = relation.getSubjectRelation(entityName);
 
       if (subjectRelation)
       {
         relations.push(subjectRelation);
       }
 
-      const relatedRelation = relation.getRelatedRelation(name);
+      const relatedRelation = relation.getRelatedRelation(entityName);
 
       if (relatedRelation)
       {
@@ -359,87 +325,127 @@ export class Definitions
     return relations;
   }
 
-  public getTypeProps(name: string): TypeProps[]
+  public getEntityProps(name: string): EntityProps[]
   {
-    const keys: TypeProps[] = [];
-    const storage = this.storage[name];
+    const keys: EntityProps[] = [];
+    const entity = this.entities[name];
 
-    if (storage)
+    if (entity)
     {
-      keys.push(storage.getTypeProps());
+      keys.push(entity.getEntityProps());
+
+      objectEach(this.relations, (relation) =>
+      {
+        keys.push(...relation.getTypeProps(name));
+      });
     }
-
-    objectEach(this.relations, (relation) =>
-    {
-      keys.push(...relation.getTypeProps(name));
-    });
 
     return keys;
   }
 
-  public renameProp(name: string, prop: string, newProp: string)
+  public renameProgram(name: string, newName: string): boolean
   {
-    const storage = this.storage[name];
+    const program = this.programs[name];
 
-    if (storage)
-    {
-      storage.renameProp(prop, newProp);
-    }
-
-    objectEach(this.relations, (relation) =>
-    {
-      relation.renameProp(name, prop, newProp);
-    });
-  }
-
-  public rename(name: string, newName: string)
-  {
-    if (name === newName || !newName)
+    if (!program)
     {
       return false;
     }
 
-    this.parsers[newName] = this.parsers[name];
-    this.aliased[newName] = this.aliased[name];
-    this.storage[newName] = this.storage[name];
+    program.name = newName;
 
-    delete this.parsers[name];
-    delete this.aliased[name];
-    delete this.storage[name];
+    this.programs[newName] = program;
+
+    delete this.programs[name];
+
+    return true;
+  }
+
+  public renameEntity(name: string, newName: string): false | DefinitionsEntityReference[]
+  {
+    const entity = this.entities[name];
+
+    if (name === newName || !newName || !entity)
+    {
+      return false;
+    }
+
+    entity.name = name;
+
+    this.entities[newName] = entity;
+    
+    delete this.entities[name];
 
     objectEach(this.relations, (relation) => 
     {
       relation.rename(name, newName);
     });
 
-    return true;
-  }
+    const refs = this.getEntityReferences(name);
 
-  public removeProp(name: string, prop: string)
-  {
-    const storage = this.storage[name];
-
-    if (storage)
+    refs.forEach((ref) => 
     {
-      storage.removeProp(prop);
-    }
-
-    objectEach(this.relations, (relation, relationName) =>
-    {
-      relation.removeProp(name, prop);
-
-      if (relation.isEmpty())
+      if (ref.value instanceof EntityType) 
       {
-        delete this.relations[relationName];
+        ref.value.options = newName;
+      } 
+      else 
+      {
+        ref.value.name = newName;
       }
     });
+
+    return refs;
   }
 
-  public removeType(name: string)
+  public renameEntityProp(name: string, prop: string, newProp: string)
   {
-    delete this.parsers[name];
-    delete this.aliased[name];
-    delete this.storage[name];
+    const entity = this.entities[name];
+
+    if (entity)
+    {
+      entity.renameProp(prop, newProp);
+
+      objectEach(this.relations, (relation) =>
+      {
+        relation.renameProp(name, prop, newProp);
+      });
+    }
+  }
+
+  public removeEntityProp(name: string, prop: string)
+  {
+    const entity = this.entities[name];
+
+    if (entity)
+    {
+      entity.removeProp(prop);
+
+      objectEach(this.relations, (relation, relationName) =>
+      {
+        relation.removeProp(name, prop);
+
+        if (relation.isEmpty())
+        {
+          delete this.relations[relationName];
+        }
+      });
+    } 
+  }
+
+  public removeEntity(name: string, stopWithReferences: boolean = true): boolean
+  {
+    if (!(name in this.entities))
+    {
+      return true;
+    }
+
+    if (stopWithReferences && this.getEntityReferences(name).length > 0)
+    {
+      return false;
+    }
+
+    delete this.entities[name];
 
     objectEach(this.relations, (relation, relationName) =>
     {
@@ -450,11 +456,149 @@ export class Definitions
         delete this.relations[relationName];
       }
     });
+
+    return true;
+  }
+
+  public refactorEntity(name: string, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[]
+  {
+    const refs = this.getEntityDataReferences();
+
+    refs.forEach((ref) =>
+    {
+      ref.root.setParent();
+
+      const dataTransform = ref.type.getValueChangeAt(transform);
+
+      ref.data = runtime.run(dataTransform, { value: ref.data });
+    });
+
+    return refs;
+  }
+
+  public renameRelation(oldName: string, newName: string): false | DefinitionsRelationReference[]
+  {
+    const relation = this.relations[oldName];
+
+    if (!relation)
+    {
+      return false;
+    }
+
+    relation.name = newName;
+
+    this.relations[newName] = relation;
+
+    delete this.relations[oldName];
+
+    const refs = this.getRelationReferences(oldName);
+
+    refs.forEach((ref) => 
+    {
+      ref.value.name = newName;
+    });
+
+    return refs;
+  }
+
+  public renameFunction(oldName: string, newName: string): false | DefinitionsFunctionReference[]
+  {
+    const func = this.functions[oldName];
+
+    if (!func)
+    {
+      return false;
+    }
+
+    func.name = newName;
+
+    this.functions[newName] = func;
+
+    delete this.functions[oldName];
+
+    const refs = this.getFunctionReferences(oldName);
+
+    refs.forEach((ref) =>
+    {
+      ref.value.name = newName;
+    });
+
+    return refs;
+  }
+
+  public renameFunctionParameter(functionName: string, oldName: string, newName: string): false | DefinitionsFunctionReference[]
+  {
+    const func = this.functions[functionName];
+
+    if (!func)
+    {
+      return false;
+    }
+
+    func.params.options[newName] = func.params.options[oldName];
+    delete func.params.options[oldName];
+
+    if (oldName in func.defaults)
+    {
+      func.defaults[newName] = func.defaults[oldName];
+      delete func.defaults[oldName];
+    }
+
+    const refs = this.getFunctionReferences(functionName, oldName);
+
+    refs.forEach((ref) =>
+    {
+      ref.value.args[newName] = ref.value.args[oldName];
+      delete ref.value.args[oldName];
+    });
+
+    return refs;
+  }
+
+  public removeFunctionParameter(functionName: string, name: string): false | DefinitionsFunctionReference[]
+  {
+    const func = this.functions[functionName];
+
+    if (!func)
+    {
+      return false;
+    }
+
+    delete func.params.options[name];
+    delete func.defaults[name];
+
+    const refs = this.getFunctionReferences(functionName, name);
+
+    refs.forEach((ref) =>
+    {
+      delete ref.value.args[name];
+    });
+
+    return refs;
+  }
+
+  public removeFunction(name: string, stopWithReferences: boolean = true): boolean
+  {
+    if (!(name in this.entities))
+    {
+      return true;
+    }
+
+    if (stopWithReferences && this.getFunctionReferences(name).length > 0)
+    {
+      return false;
+    }
+
+    delete this.functions[name];
+
+    return true;
   }
   
-  public cloneType(type: Type)
+  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T | null = null): T | null 
   {
-    return this.getType(type.encode());
+    const parsed = this.getType(value);
+
+    return parsed instanceof kind ? parsed : otherwise;
   }
 
   public getType(value: any, otherwise?: Type): Type 
@@ -470,6 +614,11 @@ export class Definitions
 
     if (!parser)
     {
+      if (id in this.entities)
+      {
+        return this.entities[id].type;
+      }
+
       if (otherwise)
       {
         return otherwise;
@@ -504,29 +653,6 @@ export class Definitions
   public getComplexTypeClasses(): TypeClass[]
   {
     return this.typeList.filter((t) => !t.baseType.isSimple());
-  }
-
-  public addFunction(name: string, returnType: TypeInput, params: TypeInputMap, expr: any): FunctionType
-  {
-    const func = new FunctionType({
-      returnType: Type.resolve(returnType),
-      params: ObjectType.from(Type.resolve(params)),
-      expression: this.getExpression(expr)
-    });
-
-    this.functions[name] = func;
-
-    return func;
-  }
-
-  public setFunction(name: string, typeValue: any): FunctionType
-  {
-    return this.functions[name] = this.getType(typeValue) as FunctionType;
-  }
-
-  public getFunction(name: string): FunctionType
-  {
-    return this.functions[name];
   }
 
   public getComputed(id: string): Computed | null
@@ -785,17 +911,17 @@ export class Definitions
       if (isOperationTypeFunction(typeInput))
       {
         chosenIndex = paramTypes.findIndex(([, type]) => 
-          type.acceptsType(Type.fromInput(typeInput({ ...mapped, [param]: type }, this))));
+          type.acceptsType(Types.parse(typeInput({ ...mapped, [param]: type }, this))));
         
         if (chosenIndex === -1)
         {
           chosenIndex = paramTypes.findIndex(([, type]) =>
-            Type.fromInput(typeInput({ ...mapped, [param]: type}, this)).acceptsType(type));
+            Types.parse(typeInput({ ...mapped, [param]: type}, this)).acceptsType(type));
         }
       }
       else
       {
-        const paramType = Type.fromInput(typeInput);
+        const paramType = Types.parse(typeInput);
 
         chosenIndex = paramTypes.findIndex(([, type]) => paramType.acceptsType(type));
       }
@@ -840,7 +966,7 @@ export class Definitions
       : 'baseType' in input
         ? input.baseType.clone()
         : params
-          ? Type.fromInput(input(params, this))
+          ? Types.parse(input(params, this))
           : null;
   }
 
@@ -1005,17 +1131,12 @@ export class Definitions
       optional = optional || node.isOptional();
     }
 
-    return optional && !node.isOptional() ? this.optionalType(node) : node;
+    return optional && !node.isOptional() ? Types.optional(node) : node;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 
   {
     this.expressions[expr.id] = expr;
-  }
-
-  public cloneExpression(expr: Expression): Expression
-  {
-    return this.getExpression(expr.encode());
   }
 
   public getExpression(value: any): Expression 
@@ -1039,36 +1160,335 @@ export class Definitions
     return new ConstantExpression(value);
   }
 
+  public getEntityReferences(name?: string): DefinitionsEntityReference[]
+  {
+    const types = this.getTypeClassReferences(EntityType).filter((match) => {
+      return (!name || name === match.value.options);
+    });
+
+    const exprs = this.getExpressionClassReferences(GetTypeExpression).filter((match) => {
+      return (!name || name === match.value.name);
+    });
+
+    return (types as DefinitionsEntityReference[]).concat(exprs);
+  }
+
+  public getEntityDataReferences(name?: string): DefinitionsDataTypeReference<EntityType>[]
+  {
+    return this.getDataTypeClassReferences(EntityType).filter((match) => {
+      return (!name || name === match.type.options);
+    });
+  }
+
+  public getRelationReferences(relation?: string): DefinitionsRelationReference[]
+  {
+    return this.getExpressionClassReferences(GetRelationExpression).filter((match) => {
+      return (!relation || relation === match.value.name);
+    });
+  }
+
+  public getFunctionReferences(name?: string, param?: string): DefinitionsFunctionReference[]
+  {
+    return this.getExpressionClassReferences(InvokeExpression).filter((match) => {
+      return (!name || name === match.value.name) && (!param || param in match.value.args);
+    });
+  }
+
+  public getTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsTypeReference<T>[]
+  {
+    const refs: DefinitionsTypeReference<T>[] = [];
+
+    this.getTypeInstances().forEach((instance) => {
+      instance.type.traverse(new Traverser((ref) => {
+        if (ref instanceof typeClass) {
+          refs.push({
+            value: ref, 
+            root: instance.type,
+            source: instance.source,
+          });
+        }
+      }));
+    });
+
+    return refs;
+  }
+
+  public getDataTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsDataTypeReference<T>[]
+  {
+    const refs: DefinitionsDataTypeReference<T>[] = [];
+
+    this.getDataInstances().forEach((instance) => {
+      instance.type.traverse(new Traverser((type) => {
+        if (type instanceof typeClass) {
+          refs.push({
+            type, 
+            data: instance.data,
+            root: instance.type,
+            source: instance.source,
+          });
+        }
+      }));
+    });
+
+    return refs;
+  }
+
+  public getExpressionClassReferences<E extends Expression>(exprClass: ExpressionClass<E>): DefinitionsExpressionReference<E>[]
+  {
+    const refs: DefinitionsExpressionReference<E>[] = [];
+
+    this.getExpressionInstances().forEach((instance) => {
+      instance.expr.traverse(new Traverser((ref) => {
+        if (ref instanceof exprClass) {
+          refs.push({
+            value: ref, 
+            root: instance.expr,
+            source: instance.source,
+          });
+        }
+      }));
+    });
+
+    return refs;
+  }
+
+  public getDataInstances(): DefinitionsDataInstance[]
+  {
+    const instances: DefinitionsDataInstance[] = [];
+
+    objectEach(this.programs, (program) => {
+      program.datasets.forEach((dataset) => {
+        instances.push({
+          data: dataset.data,
+          type: program.dataType,
+          source: [program, dataset],
+        });
+      });
+    });
+
+    objectEach(this.functions, (func) => {
+      const returnType = func.getReturnType(this);
+
+      func.tests.forEach((test) => {
+        instances.push({
+          data: test.args,
+          type: func.params,
+          source: [func, test, 'args'],
+        });
+
+        instances.push({
+          data: test.expected,
+          type: returnType,
+          source: [func, test, 'expected'],
+        });
+      });
+    });
+
+    objectEach(this.entities, (entity) => {
+      if (entity.instances && entity.instances.length > 0) {
+        instances.push({
+          data: entity.instances,
+          type: Types.list(entity.type),
+          source: entity,
+        });
+      }
+
+      objectEach(entity.methods, (method) => {
+        const returnType = method.getReturnType(this);
+
+        method.tests.forEach((test) => {
+          instances.push({
+            data: test.args,
+            type: method.params,
+            source: [entity, method, test, 'args'],
+          });
+
+          instances.push({
+            data: test.expected,
+            type: returnType,
+            source: [entity, method, test, 'expected'],
+          });
+        });
+      });
+    });
+
+    return instances;
+  }
+
+  public getTypeInstances(dynamic: boolean = false): DefinitionsTypeInstance[]
+  {
+    const instances: DefinitionsTypeInstance[] = [];
+
+    objectEach(this.programs, (program) => {
+      instances.push({
+        type: program.dataType,
+        source: program,
+      });
+    });
+
+    objectEach(this.functions, (func) => {
+      instances.push({
+        type: func.params,
+        source: [func, 'params'],
+      });
+
+      if (dynamic) {
+        instances.push({
+          type: func.getReturnType(this),
+          source: [func, 'returnType'],
+        });
+      }
+    });
+
+    objectEach(this.entities, (entity) => {
+      instances.push({
+        type: entity.type,
+        source: entity,
+      });
+
+      objectEach(entity.methods, (method) => {
+        instances.push({
+          type: method.params,
+          source: [entity, method, 'params'],
+        });
+
+        if (dynamic) {
+          instances.push({
+            type: method.getReturnType(this),
+            source: [entity, method, 'returnType'],
+          });
+        }
+      });
+
+      if (dynamic) {
+        if (entity.key !== NoExpression.instance) {
+          instances.push({
+            type: entity.getKeyContext(),
+            source: [entity, 'key'],
+          });
+        }
+        
+        if (entity.describe !== NoExpression.instance) {
+          instances.push({
+            type: entity.getDescribeContext(),
+            source: [entity, 'describe'],
+          });
+        }
+      }
+
+      objectEach(entity.transcoders, (transcoder, prop) => {
+        instances.push({
+          type: transcoder.encodedType,
+          source: [entity, prop, transcoder],
+        });
+      });
+    });
+
+    if (dynamic) {
+      objectEach(this.relations, (relation) => {
+        if (relation.morphs) {
+          instances.push({
+            type: relation.morphs[1],
+            source: relation,
+          });
+        }
+      });
+    }
+
+    return instances;
+  }
+
+  public getExpressionInstances(): DefinitionsExpressionInstance[]
+  {
+    const instances: DefinitionsExpressionInstance[] = [];
+
+    objectEach(this.programs, (program) => {
+      instances.push({
+        context: program.dataType,
+        expr: program.expression,
+        source: program,
+      });
+    });
+
+    objectEach(this.functions, (func) => {
+      instances.push({
+        context: func.params,
+        expr: func.expression,
+        source: func,
+      });
+    });
+
+    objectEach(this.entities, (entity) => {
+      objectEach(entity.methods, (method) => {
+        instances.push({
+          context: method.getParamTypes(),
+          expr: method.expression,
+          source: [entity, method],
+        });
+      });
+
+      if (entity.canStore()) {
+        instances.push({
+          context: entity.getKeyContext(),
+          expr: entity.key,
+          source: [entity, 'key'],
+        });
+
+        instances.push({
+          context: entity.getDescribeContext(),
+          expr: entity.describe,
+          source: [entity, 'describe'],
+        });
+
+        objectEach(entity.transcoders, (transcoder, prop) => {
+          instances.push({
+            context: entity.getEncodeContext(prop),
+            expr: transcoder.encode,
+            source: [entity, prop, transcoder, 'encode'],
+          });
+
+          instances.push({
+            context: entity.getDecodeContext(prop),
+            expr: transcoder.decode,
+            source: [entity, prop, transcoder, 'decode'],
+          });
+        });
+      }
+    });
+
+    return instances;
+  }
+
   public export(): DefinitionsImportOptions
   {
     return {
-      aliases: objectMap(this.aliased, a => a.encode()),
+      entities: objectMap(this.entities, e => e.encode()),
       functions: objectMap(this.functions, f => f.encode()),
-      storage: objectMap(this.storage, s => s.encode()),
       relations: objectMap(this.relations, r => r.encode()),
+      programs: objectMap(this.programs, p => p.encode()),
     };
   }
 
   public import(exported: DefinitionsImportOptions): void
   {
-    if (exported.aliases) 
+    if (exported.entities) 
     {
-      objectEach(exported.aliases, (instance, alias) => 
-        this.addAlias(alias, instance)
+      objectEach(exported.entities, (instance) => 
+        this.addEntity(instance)
       );
     }
 
     if (exported.functions)
     {
-      objectEach(exported.functions, (func, name) => 
-        this.setFunction(name, func)
+      objectEach(exported.functions, (func) => 
+        this.addFunction(func)
       );
     }
 
-    if (exported.storage)
+    if (exported.programs)
     {
-      objectEach(exported.storage, (options) => 
-        this.addStorage(options)
+      objectEach(exported.programs, (options) => 
+        this.addProgram(options)
       );
     }
 

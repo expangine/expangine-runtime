@@ -1,5 +1,3 @@
-import { Expression, ExpressionValue, ExpressionMap } from './Expression';
-import { ConstantExpression } from './exprs/Constant';
 
 export type RecordKey = string | number | symbol;
 
@@ -90,20 +88,6 @@ export function isEmpty(value: any): boolean
 export function clamp(x: number, min: number, max: number): number
 {
   return x < min ? min : x > max ? max : x;
-}
-
-export function toExpr(values: ExpressionValue[]): Expression[]
-export function toExpr(values: Record<string, ExpressionValue>): ExpressionMap
-export function toExpr(value: ExpressionValue): Expression
-export function toExpr(value: ExpressionValue | ExpressionValue[] | Record<string, ExpressionValue>): Expression | Expression[] | ExpressionMap
-{
-  return isArray(value)
-    ? value.map(toExpr)
-    : value instanceof Expression 
-      ? value
-      : isObject(value)
-        ? objectMap<Expression, ExpressionValue>(value, toExpr)
-        : new ConstantExpression(value);
 }
 
 export function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, V>

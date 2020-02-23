@@ -1,20 +1,18 @@
-// import { describe, it, expect } from 'jest';
-
-import { ExpressionBuilder, defs, BooleanType, TypeBuilder, ValidationType, ValidationSeverity } from '../../src';
-import { validate } from '../helpers';
-
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { BooleanType } from '../../src/types/Boolean';
+import { defs } from '../../src/def';
+import { ValidationType, ValidationSeverity } from '../../src/Validate';
 
 // tslint:disable: no-magic-numbers
 
 describe('And', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.null();
+  const context = Types.null();
 
   it('type', () =>
   {
-    const not = ex.and(ex.const(2), ex.const(false));
+    const not = Exprs.and(Exprs.const(2), Exprs.const(false));
     const notType = not.getType(defs, context);
 
     expect(notType).toBeInstanceOf(BooleanType);
@@ -23,28 +21,29 @@ describe('And', () => {
   it('validate', () =>
   {
     expect(
-      validate(
-        ex.and(), 
-        tp.object()
+      Exprs.and().validations(
+        defs, 
+        Types.object()
       )
     ).toEqual([]);
 
     expect(
-      validate(
-        ex.and(ex.get('x'), ex.get('y')),
-        tp.object({
-          x: tp.bool(),
-          y: tp.bool()
+      Exprs.and(Exprs.get('x'), Exprs.get('y')).validations(
+        defs,
+        Types.object({
+          x: Types.bool(),
+          y: Types.bool()
         })
       )
     ).toEqual([]);
 
-    const d0 = ex.const('x');
-    const a0 = ex.get(d0);
-    const b0 = ex.and(a0);
-    const c0 = tp.object();
+    const d0 = Exprs.const('x');
+    const a0 = Exprs.get(d0);
+    const b0 = Exprs.and(a0);
+    const c0 = Types.object();
+
     expect(
-      validate(b0, c0)
+      b0.validations(defs, c0)
     ).toEqual([{
       type: ValidationType.INCOMPATIBLE_TYPES,
       severity: ValidationSeverity.HIGH,

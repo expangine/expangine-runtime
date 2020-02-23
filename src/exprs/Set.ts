@@ -1,11 +1,12 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
-import { toExpr, isArray, isNumber } from '../fns';
+import { isArray, isNumber } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const INDEX_PATH = 1;
@@ -37,7 +38,7 @@ export class SetExpression extends Expression
 
   public static create(path: ExpressionValue[], value: ExpressionValue)
   {
-    return new SetExpression(toExpr(path), toExpr(value));
+    return new SetExpression(Exprs.parse(path), Exprs.parse(value));
   }
 
   public path: Expression[];
@@ -70,6 +71,11 @@ export class SetExpression extends Expression
     return SetExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new SetExpression(this.path.map((p) => p.clone()), this.value.clone());
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
@@ -80,10 +86,10 @@ export class SetExpression extends Expression
     return traverse.enter(this, () => {
       traverse.step(SetExpression.STEP_PATH, () => 
         this.path.forEach((expr, index) => 
-          traverse.step(index, expr)
+          traverse.step(index, expr, (replaceWith) => this.path.splice(index, 1, replaceWith), () => this.path.splice(index, 1))
         )
       );
-      traverse.step(SetExpression.STEP_VALUE, this.value);
+      traverse.step(SetExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
     });
   }
 
@@ -126,12 +132,12 @@ export class SetExpression extends Expression
       ? expr
       : [expr];
 
-    return new SetExpression(this.path.concat(toExpr(append)), this.value);
+    return new SetExpression(this.path.concat(Exprs.parse(append)), this.value);
   }
 
   public to(value: ExpressionValue): SetExpression
   {
-    return new SetExpression(this.path, toExpr(value));
+    return new SetExpression(this.path, Exprs.parse(value));
   }
 
 }

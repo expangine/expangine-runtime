@@ -1,13 +1,10 @@
-import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { Definitions } from '../Definitions';
 import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
-export interface NullOptions {
-    includeUndefined?: boolean;
-}
-export declare class NullType extends Type<NullOptions> {
+export declare class NullType extends Type<null> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -20,7 +17,7 @@ export declare class NullType extends Type<NullOptions> {
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
-    merge(type: NullType, describer: TypeDescribeProvider): void;
+    merge(type: NullType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

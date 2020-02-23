@@ -1,4 +1,4 @@
-import { Type, TypeDescribeProvider, TypeCompatibleOptions } from '../Type';
+import { Type, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
 import { Color } from '../util/color/Color';
@@ -32,7 +32,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     });
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: ColorType, describer: TypeDescribeProvider): void;
+    merge(type: ColorType): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;

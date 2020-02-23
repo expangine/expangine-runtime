@@ -1,5 +1,5 @@
 export declare const ID: {
-    Aliased: string;
+    Entity: string;
     Any: string;
     Boolean: string;
     Color: string;

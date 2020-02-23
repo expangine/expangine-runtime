@@ -6,6 +6,7 @@ import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ObjectType } from '../types/Object';
 import { ValidationHandler } from '../Validate';
+import { Types } from '../Types';
 
 
 const INDEX_PROPS = 1;
@@ -57,16 +58,21 @@ export class ObjectExpression extends Expression
     return ObjectExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new ObjectExpression(objectMap(this.props, (p) => p.clone()));
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
-    return new ObjectType({ props: objectMap(this.props, e => Type.simplify(e.getType(def, context))) });
+    return new ObjectType({ props: objectMap(this.props, e => Types.simplify(e.getType(def, context))) });
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
       objectEach(this.props, (expr, prop) =>
-        traverse.step(prop, expr)
+        traverse.step(prop, expr, (replaceWith) => this.props[prop] = replaceWith, () => delete this.props[prop])
       )
     );
   }

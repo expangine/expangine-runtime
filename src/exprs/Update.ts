@@ -2,11 +2,12 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { Definitions } from '../Definitions';
 import { AnyType } from '../types/Any';
-import { toExpr, isArray, isNumber } from '../fns';
+import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { Exprs } from '../Exprs';
 
 
 const DEFAULT_CURRENT = 'current';
@@ -44,7 +45,7 @@ export class UpdateExpression extends Expression
 
   public static create(path: ExpressionValue[], value: ExpressionValue, currentVariable: string = DEFAULT_CURRENT)
   {
-    return new UpdateExpression(toExpr(path), toExpr(value), currentVariable);
+    return new UpdateExpression(Exprs.parse(path), Exprs.parse(value), currentVariable);
   }
 
   public path: Expression[];
@@ -81,6 +82,11 @@ export class UpdateExpression extends Expression
     return UpdateExpression.encode(this);
   }
 
+  public clone(): Expression
+  {
+    return new UpdateExpression(this.path.map((p) => p.clone()), this.value.clone(), this.currentVariable);
+  }
+
   public getType(def: Definitions, context: Type): Type | null
   {
     return BooleanType.baseType;
@@ -91,10 +97,10 @@ export class UpdateExpression extends Expression
     return traverse.enter(this, () => {
       traverse.step(UpdateExpression.STEP_PATH, () => 
         this.path.forEach((expr, index) => 
-          traverse.step(index, expr)
+          traverse.step(index, expr, (replaceWith) => this.path.splice(index, 1, replaceWith), () => this.path.splice(index, 1))
         )
       );
-      traverse.step(UpdateExpression.STEP_VALUE, this.value);
+      traverse.step(UpdateExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
     });
   }
 
@@ -141,12 +147,12 @@ export class UpdateExpression extends Expression
       ? expr
       : [expr];
 
-    return new UpdateExpression(this.path.concat(toExpr(append)), this.value, this.currentVariable);
+    return new UpdateExpression(this.path.concat(Exprs.parse(append)), this.value, this.currentVariable);
   }
 
   public to(value: ExpressionValue, currentVariable?: string): UpdateExpression
   {
-    return new UpdateExpression(this.path, toExpr(value), currentVariable || this.currentVariable);
+    return new UpdateExpression(this.path, Exprs.parse(value), currentVariable || this.currentVariable);
   }
 
   public withVariable(name: string): UpdateExpression

@@ -19,7 +19,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
-    merge(type: BooleanType, describer: TypeDescribeProvider): void;
+    merge(type: BooleanType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

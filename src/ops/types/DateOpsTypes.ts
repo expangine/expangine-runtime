@@ -11,9 +11,9 @@ import { EnumType } from '../../types/Enum';
 import { ManyType } from '../../types/Many';
 
 import { DateOps } from '../DateOps';
-import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
+import { Types } from '../../Types';
 
 
 const ops = DateType.operations;
@@ -104,13 +104,13 @@ export const DateOpsTypes =
   // Operations
 
   maybe: ops.setTypes(DateOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, BooleanType),
+    (i, defs) => Types.maybe(i.value, BooleanType),
     { value: AnyType } 
   ),
 
-  parse: ops.setTypes(DateOps.parse, OptionalType.for(DateType), { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
+  parse: ops.setTypes(DateOps.parse, Types.optional(DateType), { value: new ManyType([DateType.baseType, NumberType.baseType, TextType.baseType]) }, { parseAsUTC: BooleanType }),
 
-  fromText: ops.setTypes(DateOps.fromText, OptionalType.for(DateType), { value: TextType }, { parseAsUTC: BooleanType }),
+  fromText: ops.setTypes(DateOps.fromText, Types.optional(DateType), { value: TextType }, { parseAsUTC: BooleanType }),
 
   fromTimestamp: ops.setTypes(DateOps.fromTimestamp, DateType, { value: NumberType }),
 

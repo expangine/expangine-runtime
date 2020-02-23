@@ -1,7 +1,7 @@
 
 import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { Exprs } from '../ExpressionBuilder';
+import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { NumberOps, NumberOperations, NumberComputeds } from '../ops/NumberOps';
 import { Definitions } from '../Definitions';
@@ -78,7 +78,7 @@ export class NumberType extends Type<NumberOptions>
     return NumberType.operations.map;
   }
 
-  public merge(type: NumberType, describer: TypeDescribeProvider): void
+  public merge(type: NumberType): void
   {
     const o1 = this.options;
     const o2 = type.options;

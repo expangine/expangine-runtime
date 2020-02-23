@@ -1,59 +1,83 @@
-import { Expression } from './Expression';
-import { Definitions } from './Definitions';
-import { Runtime } from './Runtime';
-import { Type, TypeMap, TypeProps } from './Type';
 import { ObjectType } from './types/Object';
+import { Definitions } from './Definitions';
+import { FuncOptions, Func } from './Func';
+import { Type, TypeMap } from './Type';
+import { Expression } from './Expression';
+import { Runtime } from './Runtime';
 import { EnumType } from './types/Enum';
-export interface TypeIndex {
+import { Relation } from './Relation';
+export interface EntityOptions {
+    name: string;
+    description: string;
+    meta: any;
+    type: any;
+    instances: any[];
+    key?: any;
+    describe?: any;
+    transcoders?: Record<string, EntityStorageTranscoderOptions>;
+    indexes?: Record<string, EntityIndexOptions>;
+    methods?: Record<string, Func | FuncOptions>;
+}
+export interface EntityIndex {
     name: string;
     props: string[];
     types?: Type[];
     unique?: boolean;
     primary?: boolean;
 }
-export interface TypeIndexOptions {
+export interface EntityIndexOptions {
     props: string[];
     unique?: boolean;
     primary?: boolean;
 }
-export interface TypeStorageOptions {
-    name: string;
-    key?: any;
-    describe?: any;
-    transcoders?: Record<string, TypeStorageTranscoderOptions>;
-    indexes?: Record<string, TypeIndexOptions>;
-}
-export interface TypeStorageTranscoder {
+export interface EntityStorageTranscoder {
     encode: Expression;
     decode: Expression;
     encodedType: Type;
 }
-export interface TypeStorageTranscoderOptions {
+export interface EntityStorageTranscoderOptions {
     encode: any;
     decode: any;
     encodedType: any;
 }
-export declare enum TypeStoragePrimaryType {
+export declare type EntityPropPair = [string, Type];
+export interface EntityProps {
+    type: EntityKeyType;
+    props: EntityPropPair[];
+    relation?: Relation;
+}
+export declare enum EntityKeyType {
+    PRIMARY = 0,
+    FOREIGN = 1,
+    NONE = 2
+}
+export declare enum EntityStoragePrimaryType {
     GIVEN = 0,
     AUTO_INCREMENT = 1,
     UUID = 2
 }
-export declare class TypeStorage {
-    static PRIMARY_TYPES: Record<TypeStoragePrimaryType, Type>;
+export declare class Entity {
+    static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
+    static PRIMARY_TYPES: Record<EntityStoragePrimaryType, Type>;
     name: string;
+    description: string;
+    meta: any;
     type: ObjectType;
+    instances: any[];
+    methods: Record<string, Func>;
     key: Expression;
     describe: Expression;
-    transcoders: Record<string, TypeStorageTranscoder>;
-    indexes: Record<string, TypeIndex>;
-    primaryType: TypeStoragePrimaryType;
-    constructor(options: TypeStorageOptions | TypeStorage, defs: Definitions);
+    transcoders: Record<string, EntityStorageTranscoder>;
+    indexes: Record<string, EntityIndex>;
+    primaryType: EntityStoragePrimaryType;
+    constructor(options: EntityOptions, defs: Definitions);
     private decodeTranscoders;
     private decodeIndexes;
-    encode(): TypeStorageOptions;
+    encode(): EntityOptions;
+    canStore(): boolean;
     renameProp(prop: string, newProp: string): void;
     removeProp(prop: string): void;
-    getTypeProps(): TypeProps;
+    getEntityProps(): EntityProps;
     getKey(run: Runtime, instance: any): any;
     getDescribe(run: Runtime, instance: any): any;
     getDecodedPropertyTypes(): TypeMap;
@@ -76,8 +100,8 @@ export declare class TypeStorage {
     getDecodeExpected(forProperty?: string): Type<any>;
     getIndexExpectedType(): import(".").SetType;
     getDynamicPrimaryKey(): string;
-    getPrimary(name?: string, returnDynamic?: boolean): TypeIndex | null;
-    getUniqueIndexes(): TypeIndex[];
+    getPrimary(name?: string, returnDynamic?: boolean): EntityIndex | null;
+    getUniqueIndexes(): EntityIndex[];
     addPrimary(props: string | string[]): this;
     addIndex(name: string, props: string[], unique?: boolean, primary?: boolean): this;
 }

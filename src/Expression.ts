@@ -2,6 +2,7 @@ import { Type, TypeMap } from './Type';
 import { Definitions } from './Definitions';
 import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity, Validation } from './Validate';
+import { Types } from './Types';
 
 
 export interface ExpressionProvider 
@@ -33,6 +34,8 @@ export abstract class Expression implements Traversable<Expression>
   public abstract getComplexity(def: Definitions): number;
 
   public abstract encode(): any;
+
+  public abstract clone(): Expression;
 
   public abstract getType(def: Definitions, context: Type): Type | null;
 
@@ -123,7 +126,7 @@ export abstract class Expression implements Traversable<Expression>
     {
       if (actual.isOptional() && !expected.isOptional())
       {
-        test = def.requiredType(test);
+        test = Types.required(test);
       }
 
       if (!expected.acceptsType(test))

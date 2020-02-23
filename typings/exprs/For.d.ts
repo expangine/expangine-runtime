@@ -26,6 +26,7 @@ export declare class ForExpression extends Expression {
         [x: string]: BooleanType | NumberType;
     };
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;

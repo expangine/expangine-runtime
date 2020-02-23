@@ -5,6 +5,14 @@ export type TraverseStep = string | number;
 
 export type TraverseCallback<T, R> = (value: T, stack: T[], path: TraverseStep[], traverser: Traverser<T, R>) => any;
 
+export type TraverseRemove = () => void;
+
+export const TraverseRemoveNoop: TraverseRemove = () => {};
+
+export type TraverseReplace<T> = (replaceWith: T) => void;
+
+export const TraverseReplaceNoop: TraverseReplace<any> = () => {};
+
 export interface Traversable<T>
 {
   traverse<R>(traverse: Traverser<T, R>): R;
@@ -30,6 +38,8 @@ export class Traverser<T, R = any>
   public path: TraverseStep[];
   public result: R;
   public stopped: boolean;
+  public remove: TraverseRemove = TraverseRemoveNoop;
+  public replace: TraverseReplace<T> = TraverseReplaceNoop;
 
   public constructor(callback: TraverseCallback<T, R>, initialResult?: R)
   {
@@ -49,6 +59,9 @@ export class Traverser<T, R = any>
     
     this.callback(value, this.stack, this.path, this);
 
+    this.remove = TraverseRemoveNoop;
+    this.replace = TraverseReplaceNoop;
+
     if (getInner && !this.stopped)
     {
       this.stack.push(value);
@@ -61,7 +74,7 @@ export class Traverser<T, R = any>
     return this.result;
   }
 
-  public step(step: TraverseStep, getStep: Traversable<T> | (() => any)): this
+  public step(step: TraverseStep, getStep: Traversable<T> | (() => any), replace: TraverseReplace<T> = TraverseReplaceNoop, remove: TraverseRemove = TraverseRemoveNoop): this
   {
     if (this.stopped)
     {
@@ -69,6 +82,9 @@ export class Traverser<T, R = any>
     }
 
     this.path.push(step);
+
+    this.remove = remove;
+    this.replace = replace;
 
     if (Traverser.isTraversable<T>(getStep))
     {
@@ -106,6 +122,32 @@ export class Traverser<T, R = any>
   public getResult(): R
   {
     return this.result;
+  }
+
+  public removeOrReplace(replaceWith: T | (() => T)): boolean
+  {
+    const remove = this.canRemove();
+    const replace = this.canReplace();
+
+    if (!remove && !replace) {
+      return false;
+    }
+
+    remove
+      ? this.remove()
+      : this.replace(isFunction(replaceWith) ? replaceWith() : replaceWith);
+
+    return true;
+  }
+
+  public canRemove(): boolean
+  {
+    return this.remove !== TraverseRemoveNoop;
+  }
+
+  public canReplace(): boolean
+  {
+    return this.replace !== TraverseReplaceNoop;
   }
 
   public filterClass(construct: { new (...args: any[]): T }, initialResult: R = this.result): Traverser<T, R>

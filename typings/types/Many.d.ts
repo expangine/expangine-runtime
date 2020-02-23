@@ -19,7 +19,7 @@ export declare class ManyType extends Type<Type[]> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     private forMany;
     getId(): string;
-    merge(type: ManyType, describer: TypeDescribeProvider): void;
+    merge(type: ManyType): void;
     getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
     getSubTypes(def: Definitions): TypeSub[];
     getExactType(value: any): Type;

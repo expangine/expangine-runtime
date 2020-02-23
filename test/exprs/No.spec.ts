@@ -1,19 +1,17 @@
-// import { describe, it, expect } from 'jest';
-
-import { ExpressionBuilder, defs, TypeBuilder, NullType } from '../../src';
-
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { NullType } from '../../src/types/Null';
+import { defs } from '../../src/def';
 
 // tslint:disable: no-magic-numbers
 
 describe('No', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.null();
+  const context = Types.null();
 
   it('type', () =>
   {
-    const no = ex.noop();
+    const no = Exprs.noop();
     const noType = no.getType(defs, context);
 
     expect(noType).toEqual(NullType.baseType);

@@ -1,25 +1,26 @@
-import { ExpressionBuilder, defs, TextType, NumberType, EnumType, TypeBuilder } from '../../src';
-
-// import { describe, it, expect } from 'jest';
+import { Types } from '../../src/Types';
+import { Exprs } from '../../src/Exprs';
+import { defs } from '../../src/def';
+import { EnumType } from '../../src/types/Enum';
+import { TextType } from '../../src/types/Text';
+import { NumberType } from '../../src/types/Number';
 
 
 // tslint:disable: no-magic-numbers
 
 describe('Define', () => {
 
-  const ex = new ExpressionBuilder();
-  const tp = new TypeBuilder();
-  const context = tp.object({
-    name: tp.text(),
-    age: tp.number(),
+  const context = Types.object({
+    name: Types.text(),
+    age: Types.number(),
   })
 
   it('type constant', () =>
   {
-    const def = ex.define({
-      a: ex.const(0)
+    const def = Exprs.define({
+      a: Exprs.const(0)
     }).run(
-      ex.const('')
+      Exprs.const('')
     );
     const defType = def.getType(defs, context);
 
@@ -29,10 +30,10 @@ describe('Define', () => {
 
   it('type dynamic', () =>
   {
-    const def = ex.define({
-      a: ex.const(0)
+    const def = Exprs.define({
+      a: Exprs.const(0)
     }).run(
-      ex.get('a')
+      Exprs.get('a')
     );
     const defType = def.getType(defs, context);
 

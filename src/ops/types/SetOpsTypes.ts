@@ -13,6 +13,7 @@ import { DateType } from '../../types/Date';
 import { TupleType } from '../../types/Tuple';
 import { ColorType } from '../../types/Color';
 import { MapType } from '../../types/Map';
+import { Types } from '../../Types';
 
 
 const ops = SetType.operations;
@@ -45,7 +46,7 @@ export const SetOpsTypes =
   // Operations
 
   maybe: ops.setTypes(SetOps.maybe, 
-    (i, defs) => defs.maybeType(i.value, SetType),
+    (i, defs) => Types.maybe(i.value, SetType),
     { value: AnyType } 
   ),
 

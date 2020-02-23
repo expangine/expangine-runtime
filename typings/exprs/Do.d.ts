@@ -22,6 +22,7 @@ export declare class DoExpression extends Expression {
         [x: string]: BooleanType;
     };
     encode(): any;
+    clone(): Expression;
     getType(def: Definitions, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
