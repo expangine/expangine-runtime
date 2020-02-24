@@ -5,7 +5,7 @@ import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { isSameClass, isNumber } from '../fns';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -102,7 +102,7 @@ export class ManyType extends Type<Type[]>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     for (const sub of this.options)
     {
@@ -117,7 +117,7 @@ export class ManyType extends Type<Type[]>
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     const subs: TypeSub[] = [];
 
@@ -156,6 +156,13 @@ export class ManyType extends Type<Type[]>
   {
     return this.options.length === 1
       ? this.options[0]
+      : this;
+  }
+
+  public getRequired(): Type
+  {
+    return this.isOptional()
+      ? new ManyType(this.options.map((o) => o.getRequired()))
       : this;
   }
 

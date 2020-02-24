@@ -20,7 +20,7 @@
     "start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/ --mode development",
     "build": "webpack --config webpack.config.js --mode production",
     "build:prod": "webpack --config webpack.config.js -p",
-    "test2": "jest",
+    "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "cleanup": "shx rm -rf umd lib lib-esm lib-fesm typings coverage ../expangine-runtime-pages/docs",
     "prebuild": "npm run cleanup && npm run verify",

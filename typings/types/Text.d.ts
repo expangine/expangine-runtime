@@ -1,7 +1,6 @@
 import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { NumberType } from './Number';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 export interface TextOptions {
     min?: number;
@@ -13,9 +12,6 @@ export interface TextOptions {
     matches?: RegExp;
 }
 export declare class TextType extends Type<TextOptions> {
-    static lengthType: NumberType;
-    static indexType: NumberType;
-    static charType: TextType;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -31,8 +27,8 @@ export declare class TextType extends Type<TextOptions> {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TextType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

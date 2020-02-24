@@ -3,7 +3,7 @@ import { isBoolean, isEmpty, copy } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { BooleanOps, BooleanOperations, BooleanComputeds } from '../ops/BooleanOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { Exprs } from '../Exprs';
@@ -70,12 +70,12 @@ export class BooleanType extends Type<BooleanOptions>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

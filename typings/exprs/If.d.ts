@@ -1,5 +1,5 @@
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -15,17 +15,17 @@ export declare class IfExpression extends Expression {
     otherwise: Expression;
     constructor(cases: [Expression, Expression][], otherwise: Expression);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
-    if(condition: Expression, body?: Expression): IfExpression;
-    than(body: Expression): IfExpression;
-    elseif(condition: Expression, body?: Expression): IfExpression;
-    else(body: Expression): IfExpression;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    if(condition: Expression, body?: Expression): this;
+    than(body: Expression): this;
+    elseif(condition: Expression, body?: Expression): this;
+    else(body: Expression): this;
 }

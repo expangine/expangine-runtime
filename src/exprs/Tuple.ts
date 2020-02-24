@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { TupleType } from '../types/Tuple';
@@ -43,7 +43,7 @@ export class TupleExpression extends Expression
     return TupleExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
@@ -63,7 +63,7 @@ export class TupleExpression extends Expression
     return new TupleExpression(this.expressions.map((e) => e.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return new TupleType(this.expressions.map((e) => Types.simplify(e.getType(def, context))));
   }
@@ -92,7 +92,7 @@ export class TupleExpression extends Expression
     this.expressions.forEach(e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.expressions.forEach(subject =>
     {

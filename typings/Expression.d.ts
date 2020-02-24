@@ -1,5 +1,5 @@
 import { Type, TypeMap } from './Type';
-import { Definitions } from './Definitions';
+import { DefinitionProvider } from './DefinitionProvider';
 import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, Validation } from './Validate';
 export interface ExpressionProvider {
@@ -17,18 +17,18 @@ export declare abstract class Expression implements Traversable<Expression> {
     parent: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;
-    abstract getComplexity(def: Definitions): number;
+    abstract getComplexity(def: DefinitionProvider): number;
     abstract encode(): any;
     abstract clone(): Expression;
-    abstract getType(def: Definitions, context: Type): Type | null;
+    abstract getType(def: DefinitionProvider, context: Type): Type | null;
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
     abstract setParent(parent?: Expression): void;
-    abstract validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+    abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     getPath(): TraverseStep[];
     getExpressionFromPath(path: TraverseStep[]): Expression | null;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     getRootExpression(): Expression;
-    validations(def: Definitions, context: Type): Validation[];
-    protected validateType(def: Definitions, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
-    protected validatePath(def: Definitions, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent?: Expression): void;
+    validations(def: DefinitionProvider, context: Type): Validation[];
+    protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
+    protected validatePath(def: DefinitionProvider, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent?: Expression): void;
 }

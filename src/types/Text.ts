@@ -6,7 +6,7 @@ import { Expression } from '../Expression';
 import { TextOps, TextOperations, TextComputeds } from '../ops/TextOps';
 import { ConstantExpression } from '../exprs/Constant';
 import { NumberType } from './Number';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { EnumType } from './Enum';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -31,12 +31,6 @@ export interface TextOptions
 
 export class TextType extends Type<TextOptions> 
 {
-
-  public static lengthType = new NumberType({min: 0, whole: true});
-
-  public static indexType = new NumberType({min: 0, whole: true});
-
-  public static charType = new TextType({});
 
   public static id = ID.Text;
 
@@ -122,35 +116,37 @@ export class TextType extends Type<TextOptions>
     o1.requireUpper = o1.requireUpper && o2.requireUpper;
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     if (ConstantExpression.is(expr))
     {
       if (expr.value === 'length')
       {
-        return TextType.lengthType;
+        return Types.LENGTH;
       }
 
       if (isNumber(expr.value))
       {
-        return TextType.charType;
+        return Types.CHAR;
       }
     }
 
-    const exprType = Types.required(expr.getType(def, context));
+    let exprType = expr.getType(def, context);
 
     if (exprType)
     {
+      exprType = exprType.getRequired();
+
       if (exprType instanceof NumberType)
       {
-        return TextType.charType;
+        return Types.CHAR;
       }
 
       if (exprType instanceof EnumType)
       {
         if (exprType.options.value instanceof NumberType)
         {
-          return TextType.charType;
+          return Types.CHAR;
         }
 
         if (exprType.options.value instanceof TextType)
@@ -159,18 +155,18 @@ export class TextType extends Type<TextOptions>
 
           if (values.length === 1 && values[0] === 'length')
           {
-            return TextType.lengthType;
+            return Types.LENGTH;
           }
         }
       }
     }
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [
-      { key: 'length', value: TextType.lengthType },
-      { key: TextType.indexType, value: Types.optional(TextType.charType) },
+      { key: 'length', value: Types.LENGTH },
+      { key: Types.INDEX, value: Types.optional(Types.CHAR) },
     ];
   }
 

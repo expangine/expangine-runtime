@@ -78,7 +78,6 @@ export enum EntityStoragePrimaryType
   UUID
 }
 
-
 export class Entity
 {
 
@@ -96,7 +95,7 @@ export class Entity
 
   public static PRIMARY_TYPES: Record<EntityStoragePrimaryType, Type> = {
     [EntityStoragePrimaryType.GIVEN]: null,
-    [EntityStoragePrimaryType.AUTO_INCREMENT]: Types.number(1, undefined, true),
+    [EntityStoragePrimaryType.AUTO_INCREMENT]: Types.int(1),
     [EntityStoragePrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
   };
 
@@ -107,6 +106,7 @@ export class Entity
   public instances: any[];
   public methods: Record<string, Func>;
   public key: Expression;
+  public keyType: Type;
   public describe: Expression;
   public transcoders: Record<string, EntityStorageTranscoder>;
   public indexes: Record<string, EntityIndex>;
@@ -126,11 +126,12 @@ export class Entity
     this.key = options.key 
       ? defs.getExpression(options.key)
       : Exprs.get('instance', this.getDynamicPrimaryKey());
+    this.keyType = this.key.getType(defs, this.getKeyContext());
     this.describe = options.describe
       ? defs.getExpression(options.describe)
       : Exprs.noop();
     this.transcoders = this.decodeTranscoders(defs, options.transcoders);
-    this.indexes = this.decodeIndexes(defs, options.indexes);
+    this.indexes = this.decodeIndexes(options.indexes);
     this.primaryType = EntityStoragePrimaryType.AUTO_INCREMENT;
   }
 
@@ -145,7 +146,7 @@ export class Entity
       : {};
   }
 
-  private decodeIndexes(defs: Definitions, indexes?: Record<string, EntityIndexOptions | EntityIndex>)
+  private decodeIndexes(indexes?: Record<string, EntityIndexOptions | EntityIndex>)
   {
     return indexes
       ? objectMap(indexes, ({ unique, primary, props }, name) => ({
@@ -281,7 +282,7 @@ export class Entity
 
   public getEncodedType(): ObjectType
   {
-    return ObjectType.from(this.getEncodedPropertyTypes());
+    return Types.object(this.getEncodedPropertyTypes());
   }
 
   public getDecodedType(): ObjectType
@@ -299,9 +300,9 @@ export class Entity
     return Types.enumForText(this.getProperties());
   }
 
-  public getKeyReturnType(defs: Definitions)
+  public getKeyReturnType()
   {
-    return this.key.getType(defs, this.getKeyContext());
+    return this.keyType;
   }
 
   public getKeyContext(): Type

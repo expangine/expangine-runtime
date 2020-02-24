@@ -1,6 +1,6 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 export interface ObjectOptions {
     props: TypeMap;
@@ -10,19 +10,20 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: ObjectType<ObjectOptions>;
+    static baseType: ObjectType<{
+        props: {};
+    }>;
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
-    static from(types?: TypeInputMap): ObjectType;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: Type<O>): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     traverse<R>(traverse: Traverser<Type, R>): R;

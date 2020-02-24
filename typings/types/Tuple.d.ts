@@ -1,11 +1,8 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
-import { NumberType } from './Number';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 export declare class TupleType extends Type<Type[]> {
-    static lengthType: NumberType;
-    static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -20,8 +17,8 @@ export declare class TupleType extends Type<Type[]> {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: TupleType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     getCreateExpression(): Expression;

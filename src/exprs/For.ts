@@ -2,12 +2,13 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
 import { BooleanType } from '../types/Boolean';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
 import { Exprs } from '../Exprs';
+import { isNumber } from '../fns';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -82,7 +83,7 @@ export class ForExpression extends Expression
     return ForExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return Math.max(this.start.getComplexity(def), this.end.getComplexity(def), this.body.getComplexity(def)) + 1;
   }
@@ -105,7 +106,7 @@ export class ForExpression extends Expression
     return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
   }
 
-  public getType(def: Definitions, original: Type): Type | null
+  public getType(def: DefinitionProvider, original: Type): Type | null
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
@@ -143,7 +144,7 @@ export class ForExpression extends Expression
     this.body.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validateType(def, context, NumberType.baseType, this.start, handler);
     this.validateType(def, context, NumberType.baseType, this.end, handler);
@@ -155,37 +156,76 @@ export class ForExpression extends Expression
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
   {
-    return new ForExpression(variable, Exprs.parse(start), Exprs.parse(end), body || this.body, breakVariable || this.breakVariable, maxIterations || this.maxIterations);
+    this.variable = variable;
+
+    this.start = Exprs.parse(start);
+    this.start.setParent(this);
+
+    this.end = Exprs.parse(end);
+    this.end.setParent(this);
+
+    if (body)
+    {
+      this.body = body;
+      this.body.setParent(this);
+    }
+
+    if (breakVariable)
+    {
+      this.breakVariable = breakVariable;
+    }
+
+    if (isNumber(maxIterations))
+    {
+      this.maxIterations = maxIterations;
+    }
+
+    return this;
   }
 
   public startAt(start: ExpressionValue): ForExpression
   {
-    return new ForExpression(this.variable, Exprs.parse(start), this.end, this.body, this.breakVariable, this.maxIterations);
+    this.start = Exprs.parse(start);
+    this.start.setParent(this);
+
+    return this;
   }
 
   public endAt(end: ExpressionValue): ForExpression
   {
-    return new ForExpression(this.variable, this.start, Exprs.parse(end), this.body, this.breakVariable, this.maxIterations);
+    this.end = Exprs.parse(end);
+    this.end.setParent(this);
+
+    return this;
   }
 
   public run(expr: Expression): ForExpression
   {
-    return new ForExpression(this.variable, this.start, this.end, expr, this.breakVariable, this.maxIterations);
+    this.body = expr;
+    this.body.setParent(this);
+
+    return this;
   }
 
   public withVariable(name: string)
   {
-    return new ForExpression(name, this.start, this.end, this.body, this.breakVariable, this.maxIterations);
+    this.variable = name;
+
+    return this;
   }
 
   public withBreak(name: string)
   {
-    return new ForExpression(this.variable, this.start, this.end, this.body, name, this.maxIterations);
+    this.breakVariable = name;
+
+    return this;
   }
 
   public withMax(iterations: number)
   {
-    return new ForExpression(this.variable, this.start, this.end, this.body, this.breakVariable, iterations);
+    this.maxIterations = iterations;
+
+    return this;
   }
 
 }

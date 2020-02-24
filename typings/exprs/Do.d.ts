@@ -1,6 +1,6 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -17,19 +17,19 @@ export declare class DoExpression extends Expression {
     maxIterations: number;
     constructor(condition: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): {
         [x: string]: BooleanType;
     };
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, original: Type): Type | null;
+    getType(def: DefinitionProvider, original: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     do(body: Expression, condition?: Expression): DoExpression;
     while(condition: Expression): DoExpression;
-    withBreak(name: string): DoExpression;
-    withMax(iterations: number): DoExpression;
+    withBreak(name: string): this;
+    withMax(iterations: number): this;
 }

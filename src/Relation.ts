@@ -27,7 +27,7 @@ export interface RelationOptions
   extension?: boolean;
 }
 
-export interface TypeRelation
+export interface EntityRelation
 {
   relation: Relation;
   name: string;
@@ -323,7 +323,7 @@ export class Relation
     return itemType;
   }
 
-  public getSubjectRelation(subjectName: string): TypeRelation | null
+  public getSubjectRelation(subjectName: string): EntityRelation | null
   {
     if (this.subject.name !== subjectName)
     {
@@ -346,7 +346,7 @@ export class Relation
       ? RelationKind.BELONGS_TO
       : this.kind; 
 
-    const relation: TypeRelation = {
+    const relation: EntityRelation = {
       relation: this,
       name,
       kind,
@@ -366,7 +366,7 @@ export class Relation
     return relation;
   }
 
-  public getRelatedRelation(relatedName: string): TypeRelation | null
+  public getRelatedRelation(relatedName: string): EntityRelation | null
   {
     const withName = this.getRelatedWithName(relatedName, this.related);
 
@@ -391,7 +391,7 @@ export class Relation
         ? RelationKind.ONE_POLYMORPHIC
         : RelationKind.ONE;
 
-    const relation: TypeRelation = {
+    const relation: EntityRelation = {
       relation: this,
       name,
       kind,

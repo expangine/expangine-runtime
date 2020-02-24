@@ -1,6 +1,6 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 export interface SetOptions {
     value: Type;
@@ -21,8 +21,8 @@ export declare class SetType extends Type<SetOptions> {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: SetType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

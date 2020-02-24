@@ -52,7 +52,7 @@ export const MapOpsTypes =
   // Operations
 
   maybe: ops.setTypes(MapOps.maybe, 
-    (i, defs) => Types.maybe(i.value, MapType),
+    (i) => Types.maybe(i.value, MapType),
     { value: AnyType } 
   ),
 
@@ -89,7 +89,7 @@ export const MapOpsTypes =
   ),
 
   entries: ops.setTypes(MapOps.entries, 
-    i => ObjectType.from({
+    i => Types.object({
       keys: ListType.forItem(GivenMapKey(i)),
       values: ListType.forItem(GivenMapValue(i)),
     }),
@@ -97,7 +97,7 @@ export const MapOpsTypes =
   ),
 
   pairs: ops.setTypes(MapOps.pairs, 
-    i => ListType.forItem(ObjectType.from({
+    i => ListType.forItem(Types.object({
       key: GivenMapKey(i),
       value: GivenMapValue(i)
     })),
@@ -141,7 +141,7 @@ export const MapOpsTypes =
   ),
 
   fromPlainObject: ops.setTypes(MapOps.fromPlainObject, 
-    (i, defs) => {
+    (i) => {
       if (!(i.object instanceof ObjectType)) {
         return MapType;
       }

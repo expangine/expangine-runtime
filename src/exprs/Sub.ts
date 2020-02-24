@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -56,7 +56,7 @@ export class SubExpression extends Expression
     return SubExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), this.value.getComplexity(def));
   }
@@ -76,7 +76,7 @@ export class SubExpression extends Expression
     return new SubExpression(this.value.clone(), this.path.map((p) => p.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const valueType = this.value.getType(def, context);
 
@@ -118,7 +118,7 @@ export class SubExpression extends Expression
     this.path.forEach(e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const type = this.value.getType(def, context);
 
@@ -129,7 +129,10 @@ export class SubExpression extends Expression
 
   public with(expr: ExpressionValue): SubExpression
   {
-    return new SubExpression(Exprs.parse(expr), this.path.slice());
+    this.value = Exprs.parse(expr);
+    this.value.setParent(this);
+
+    return this;
   }
 
   public sub(expr: ExpressionValue | ExpressionValue[]): SubExpression
@@ -138,7 +141,14 @@ export class SubExpression extends Expression
       ? expr
       : [expr];
 
-    return new SubExpression(this.value, this.path.concat(Exprs.parse(append)));
+    for (const nodeValue of append)
+    {
+      const node = Exprs.parse(nodeValue);
+      this.path.push(node);
+      node.setParent(this);
+    }
+
+    return this;
   }
 
 }

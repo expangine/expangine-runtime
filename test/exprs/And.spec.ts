@@ -1,8 +1,5 @@
-import { Types } from '../../src/Types';
-import { Exprs } from '../../src/Exprs';
-import { BooleanType } from '../../src/types/Boolean';
-import { defs } from '../../src/def';
-import { ValidationType, ValidationSeverity } from '../../src/Validate';
+import { Types, Exprs, defs, BooleanType, ValidationType, ValidationSeverity } from '../../src';
+
 
 // tslint:disable: no-magic-numbers
 

@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { isArray, isNumber } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
@@ -56,7 +56,7 @@ export class SetExpression extends Expression
     return SetExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), this.value.getComplexity(def));
   }
@@ -76,7 +76,7 @@ export class SetExpression extends Expression
     return new SetExpression(this.path.map((p) => p.clone()), this.value.clone());
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return BooleanType.baseType;
   }
@@ -114,7 +114,7 @@ export class SetExpression extends Expression
     this.value.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validatePath(def, context, context, this.path, handler);
 
@@ -132,12 +132,22 @@ export class SetExpression extends Expression
       ? expr
       : [expr];
 
-    return new SetExpression(this.path.concat(Exprs.parse(append)), this.value);
+    for (const nodeValue of append)
+    {
+      const node = Exprs.parse(nodeValue);
+      this.path.push(node);
+      node.setParent(this);
+    }
+
+    return this;
   }
 
   public to(value: ExpressionValue): SetExpression
   {
-    return new SetExpression(this.path, Exprs.parse(value));
+    this.value = Exprs.parse(value);
+    this.value.setParent(this);
+
+    return this;
   }
 
 }

@@ -46,7 +46,7 @@ export const SetOpsTypes =
   // Operations
 
   maybe: ops.setTypes(SetOps.maybe, 
-    (i, defs) => Types.maybe(i.value, SetType),
+    (i) => Types.maybe(i.value, SetType),
     { value: AnyType } 
   ),
 

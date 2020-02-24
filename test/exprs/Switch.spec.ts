@@ -1,11 +1,5 @@
-import { Types } from '../../src/Types';
-import { Exprs } from '../../src/Exprs';
-import { NumberOps } from '../../src/ops/NumberOps';
-import { defs } from '../../src/def';
-import { TextType } from '../../src/types/Text';
-import { EnumType } from '../../src/types/Enum';
-import { ManyType } from '../../src/types/Many';
-import { NumberType } from '../../src/types/Number';
+import { Types, Exprs, NumberOps, defs, TextType, EnumType, ManyType, NumberType } from '../../src';
+
 
 // tslint:disable: no-magic-numbers
 

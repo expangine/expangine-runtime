@@ -1,10 +1,4 @@
-import { Types } from '../../src/Types';
-import { Exprs } from '../../src/Exprs';
-import { OptionalType } from '../../src/types/Optional';
-import { BooleanType } from '../../src/types/Boolean';
-import { defs } from '../../src/def';
-import { TextType } from '../../src/types/Text';
-import { NumberType } from '../../src/types/Number';
+import { Types, Exprs, defs, OptionalType, BooleanType, TextType, NumberType } from '../../src';
 
 
 // tslint:disable: no-magic-numbers

@@ -1,7 +1,4 @@
-import { defs } from '../src/def';
-import { Exprs } from '../src/Exprs';
-import { Types } from '../src/Types';
-import { Relation } from '../src/Relation';
+import { defs, Types, Exprs, Relation } from '../src';
 
 // tslint:disable: no-magic-numbers
 

@@ -1,7 +1,5 @@
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
-import { AndExpression } from './And';
-import { OrExpression } from './Or';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -13,15 +11,13 @@ export declare class NotExpression extends Expression {
     expression: Expression;
     constructor(expression: Expression);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
-    and(exprs: Expression | Expression[]): AndExpression;
-    or(exprs: Expression | Expression[]): OrExpression;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
 }

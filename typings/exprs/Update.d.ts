@@ -1,5 +1,5 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { AnyType } from '../types/Any';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -16,17 +16,17 @@ export declare class UpdateExpression extends Expression {
     currentVariable: string;
     constructor(path: Expression[], value: Expression, currentVariable?: string);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): {
         [x: string]: AnyType;
     };
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     add(expr: ExpressionValue | ExpressionValue[]): UpdateExpression;
     to(value: ExpressionValue, currentVariable?: string): UpdateExpression;
     withVariable(name: string): UpdateExpression;

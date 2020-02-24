@@ -1,7 +1,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit } from '../util/date/DateFunctions';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 export interface DateOptions {
     parseAsUTC?: boolean;
@@ -29,8 +29,8 @@ export declare class DateType extends Type<DateOptions> {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: DateType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options?: TypeCompatibleOptions): boolean;

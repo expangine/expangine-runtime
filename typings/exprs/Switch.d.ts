@@ -1,5 +1,5 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -19,18 +19,17 @@ export declare class SwitchExpression extends Expression {
     defaultCase: Expression;
     constructor(value: Expression, op: string, cases: [Expression[], Expression][], defaultCase: Expression);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
-    private copyCases;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     val(value: ExpressionValue, op?: Operation): SwitchExpression;
-    case(test: ExpressionValue): SwitchExpression;
-    than(body: ExpressionValue): SwitchExpression;
-    default(body: ExpressionValue): SwitchExpression;
+    case(testValue: ExpressionValue): SwitchExpression;
+    than(bodyValue: ExpressionValue): SwitchExpression;
+    default(body: ExpressionValue): this;
 }

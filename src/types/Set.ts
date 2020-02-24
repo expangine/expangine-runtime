@@ -6,7 +6,7 @@ import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { SetOps, SetOperations, SetComputeds } from '../ops/SetOps';
 import { ListOps } from '../ops/ListOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Types } from '../Types';
@@ -127,12 +127,12 @@ export class SetType extends Type<SetOptions>
     o1.value = Types.merge(o1.value, o2.value);
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

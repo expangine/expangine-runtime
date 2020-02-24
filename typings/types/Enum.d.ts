@@ -1,7 +1,7 @@
 import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export interface EnumOptions {
@@ -25,10 +25,11 @@ export declare class EnumType extends Type<EnumOptions> {
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: EnumType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
+    isWrapper(): boolean;
     protected isDeepCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;

@@ -20,7 +20,7 @@ export interface RelationOptions {
     owns?: boolean;
     extension?: boolean;
 }
-export interface TypeRelation {
+export interface EntityRelation {
     relation: Relation;
     name: string;
     kind: RelationKind;
@@ -127,8 +127,8 @@ export declare class Relation {
     getPropTypes(related: RelationTypeKey[]): Type[];
     isEmpty(): boolean;
     private getItemType;
-    getSubjectRelation(subjectName: string): TypeRelation | null;
-    getRelatedRelation(relatedName: string): TypeRelation | null;
+    getSubjectRelation(subjectName: string): EntityRelation | null;
+    getRelatedRelation(relatedName: string): EntityRelation | null;
     getTypeProps(name: string): EntityProps[];
     static hasMany(defs: Definitions, options: {
         name?: string;

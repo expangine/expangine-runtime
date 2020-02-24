@@ -1,7 +1,7 @@
 
 import { objectMap, objectReduce, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionMap } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ObjectType } from '../types/Object';
@@ -43,7 +43,7 @@ export class ObjectExpression extends Expression
     return ObjectExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return objectReduce(this.props, (e, k, max) => Math.max(max, e.getComplexity(def)), 0);
   }
@@ -63,7 +63,7 @@ export class ObjectExpression extends Expression
     return new ObjectExpression(objectMap(this.props, (p) => p.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return new ObjectType({ props: objectMap(this.props, e => Types.simplify(e.getType(def, context))) });
   }
@@ -91,7 +91,7 @@ export class ObjectExpression extends Expression
     objectEach(this.props, e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     objectEach(this.props, e => e.validate(def, context, handler));
   }

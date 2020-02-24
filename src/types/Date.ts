@@ -4,7 +4,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
 import { Expression } from '../Expression';
 import { DateOps, DateOperations, DateComputeds } from '../ops/DateOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { AnyType } from './Any';
@@ -141,12 +141,12 @@ export class DateType extends Type<DateOptions>
     }
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

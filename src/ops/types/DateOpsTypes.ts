@@ -104,7 +104,7 @@ export const DateOpsTypes =
   // Operations
 
   maybe: ops.setTypes(DateOps.maybe, 
-    (i, defs) => Types.maybe(i.value, BooleanType),
+    (i) => Types.maybe(i.value, BooleanType),
     { value: AnyType } 
   ),
 

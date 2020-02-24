@@ -2,9 +2,9 @@
 import { isArray, objectMap, objectValues, objectEach } from './fns';
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
-import { Relation, RelationOptions, TypeRelation } from './Relation';
+import { Relation, RelationOptions, EntityRelation } from './Relation';
 import { Program, ProgramOptions, ProgramDataSet } from './Program';
 import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
 import { Func, FuncOptions, FuncTest } from './Func';
@@ -22,6 +22,7 @@ import { NoExpression } from './exprs/No';
 import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
+import { DefinitionProvider } from './DefinitionProvider';
 
 
 
@@ -115,7 +116,7 @@ export interface DefinitionsExpressionInstance
   source: DefinitionsReferenceSource;
 }
 
-export class Definitions 
+export class Definitions implements OperationTypeProvider, DefinitionProvider
 {
 
   public types: Record<string, TypeClass>;
@@ -254,9 +255,9 @@ export class Definitions
     return this;
   }
 
-  public getFunction(name: string): Func
+  public getFunction(name: string): Func | null
   {
-    return this.functions[name];
+    return this.functions[name] || null;
   }
 
   public addProgram(program: Program | Partial<ProgramOptions>): this
@@ -282,9 +283,14 @@ export class Definitions
     return this;
   }
 
-  public getEntity(name: string)
+  public getEntity(name: string): Entity | null
   {
-    return this.entities[name];
+    return this.entities[name] || null;
+  }
+
+  public getEntities(): Record<string, Entity>
+  {
+    return this.entities;
   }
 
   public addRelation(relation: Relation | RelationOptions): this
@@ -301,9 +307,9 @@ export class Definitions
     return this.relations[name];
   }
 
-  public getRelations(entityName: string): TypeRelation[]
+  public getRelations(entityName: string): EntityRelation[]
   {
-    const relations: TypeRelation[] = [];
+    const relations: EntityRelation[] = [];
 
     objectEach(this.relations, (relation) =>
     {
@@ -877,7 +883,7 @@ export class Definitions
     return { context, scope };
   }
 
-  public getContext(original: Type, scope: TypeMap)
+  public getContext(original: Type, scope: TypeMap): Type
   {
     return this.getContextWithScope(original, scope).context;
   }

@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from './Constant';
 import { Operation } from '../Operation';
 import { NoExpression } from './No';
@@ -74,7 +74,7 @@ export class SwitchExpression extends Expression
     return SwitchExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.cases.reduce(
       (max, [tests, result]) => Math.max(
@@ -107,7 +107,7 @@ export class SwitchExpression extends Expression
     return new SwitchExpression(this.value.clone(), this.op, this.cases.map(([tests, then]) => [tests.map((t) => t.clone()), then.clone()]), this.defaultCase.clone());
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const types = this.cases
       .map(([tests, value]) => value)
@@ -173,7 +173,7 @@ export class SwitchExpression extends Expression
     this.defaultCase.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.value.validate(def, context, handler);
 
@@ -187,44 +187,50 @@ export class SwitchExpression extends Expression
     this.defaultCase.validate(def, context, handler);
   }
 
-  private copyCases(): Array<[Expression[], Expression]>
-  {
-    return this.cases.map(([a, b]) => [a.slice(), b]);
-  }
-
   public val(value: ExpressionValue, op?: Operation): SwitchExpression
   {
-    return new SwitchExpression(Exprs.parse(value), op ? op.id : this.op, this.cases, this.defaultCase);
+    this.value = Exprs.parse(value);
+    this.value.setParent(this);
+    this.op = op ? op.id : this.op;
+
+    return this;
   }
 
-  public case(test: ExpressionValue): SwitchExpression
+  public case(testValue: ExpressionValue): SwitchExpression
   {
-    const cases = this.copyCases();
-    const n = cases.length - 1;
+    const n = this.cases.length - 1;
+    const test = Exprs.parse(testValue);
 
-    if (n >= 0 && cases[n][1] === NoExpression.instance)
+    test.setParent(this);
+
+    if (n >= 0 && this.cases[n][1] === NoExpression.instance)
     {
-      cases[n][0].push(Exprs.parse(test));
+      this.cases[n][0].push(test);
     }
     else
     {
-      cases.push([[Exprs.parse(test)], NoExpression.instance]);
+      this.cases.push([[test], NoExpression.instance]);
     }
 
-    return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
+    return this;
   }
 
-  public than(body: ExpressionValue): SwitchExpression
+  public than(bodyValue: ExpressionValue): SwitchExpression
   {
-    const cases = this.copyCases();
-    cases[cases.length - 1][1] = Exprs.parse(body);
+    const body = Exprs.parse(bodyValue);
 
-    return new SwitchExpression(this.value, this.op, cases, this.defaultCase);
+    this.cases[this.cases.length - 1][1] = body;
+    body.setParent(this);
+
+    return this;
   }
 
   public default(body: ExpressionValue)
   {
-    return new SwitchExpression(this.value, this.op, this.cases, Exprs.parse(body));
+    this.defaultCase = Exprs.parse(body);
+    this.defaultCase.setParent(this);
+
+    return this;
   }
 
 }

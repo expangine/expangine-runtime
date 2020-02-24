@@ -4,7 +4,7 @@ import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../T
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { NumberOps, NumberOperations, NumberComputeds } from '../ops/NumberOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 
@@ -88,12 +88,12 @@ export class NumberType extends Type<NumberOptions>
     o1.whole = o1.whole && o2.whole;
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

@@ -1,6 +1,6 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 export declare class EntityType extends Type<string> {
     static STEP_ENTITY: string;
@@ -21,8 +21,8 @@ export declare class EntityType extends Type<string> {
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     getId(): string;
     merge(type: EntityType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

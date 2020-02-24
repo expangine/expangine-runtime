@@ -28,7 +28,7 @@ export const BooleanOpsTypes =
   // Operations
 
   maybe: ops.setTypes(BooleanOps.maybe, 
-    (i, defs) => Types.maybe(i.value, BooleanType),
+    (i) => Types.maybe(i.value, BooleanType),
     { value: AnyType } 
   ),
 

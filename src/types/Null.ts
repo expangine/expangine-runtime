@@ -4,7 +4,7 @@ import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
@@ -60,12 +60,12 @@ export class NullType extends Type<null>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

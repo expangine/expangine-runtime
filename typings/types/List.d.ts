@@ -1,7 +1,6 @@
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
-import { NumberType } from './Number';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 export interface ListOptions {
     item: Type;
@@ -10,8 +9,6 @@ export interface ListOptions {
 }
 export declare class ListType extends Type<ListOptions> {
     static STEP_ITEM: string;
-    static lengthType: NumberType;
-    static indexType: NumberType;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -26,8 +23,8 @@ export declare class ListType extends Type<ListOptions> {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: ListType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

@@ -102,7 +102,7 @@ export const AnyOpsTypes =
   ),
 
   ternary: ops.setTypes(AnyOps.ternary, 
-    (i, defs) => {
+    (i) => {
       if (i.truthy && i.falsy) {
         return Types.mergeMany([i.truthy, i.falsy]);
       } else if (i.truthy) {

@@ -2,7 +2,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { isObject, isString } from '../fns';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { AnyOps, AnyOperations, AnyComputeds } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
@@ -86,12 +86,12 @@ export class AnyType extends Type
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
   }

@@ -1,7 +1,7 @@
 import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class NullType extends Type<null> {
@@ -18,8 +18,8 @@ export declare class NullType extends Type<null> {
     getId(): string;
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     merge(type: NullType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

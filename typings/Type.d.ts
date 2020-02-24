@@ -1,6 +1,6 @@
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
-import { Definitions } from './Definitions';
+import { DefinitionProvider } from './DefinitionProvider';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { Computeds } from './Computed';
 export declare type TypeInput = TypeClass | Type;
@@ -49,10 +49,12 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract getOperations(): Record<string, OperationGeneric>;
     abstract getId(): string;
     abstract merge(type: Type<O>): void;
-    abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    abstract getSubTypes(def: Definitions): TypeSub[];
+    abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    abstract getSubTypes(def: DefinitionProvider): TypeSub[];
     abstract getExactType(value: any): Type<O>;
     abstract getSimplifiedType(): Type;
+    getRequired(): Type;
+    isWrapper(): boolean;
     protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     protected acceptsOtherTypes(): boolean;

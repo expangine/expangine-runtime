@@ -17,7 +17,7 @@ import { Types } from '../../Types';
 
 const ops = TextType.operations;
 const TextListType = ListType.forItem(TextType);
-const RegexMatchType = ObjectType.from({
+const RegexMatchType = Types.object({
   index: NumberType,
   lastIndex: NumberType,
   input: TextType,
@@ -37,7 +37,7 @@ export const TextOpsTypes =
   // Operations
 
   maybe: ops.setTypes(TextOps.maybe, 
-    (i, defs) => Types.maybe(i.value, TextType),
+    (i) => Types.maybe(i.value, TextType),
     { value: AnyType } 
   ),
 

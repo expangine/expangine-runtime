@@ -29,7 +29,7 @@ export const TupleOpsTypes =
   // Operations
 
   maybe: ops.setTypes(TupleOps.maybe, 
-    (i, defs) => Types.maybe(i.value, TupleType),
+    (i) => Types.maybe(i.value, TupleType),
     { value: AnyType } 
   ),
 
@@ -38,7 +38,7 @@ export const TupleOpsTypes =
   copy: ops.setTypes(TupleOps.copy, TupleType, { value: TupleType }),
 
   build: ops.setTypes(TupleOps.build, 
-    (i, defs) => {
+    (i) => {
       const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
       let elements: Type[] = [];
       let list = false;

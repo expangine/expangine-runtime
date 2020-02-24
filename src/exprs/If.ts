@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from './Constant';
 import { NoExpression } from './No';
 import { Type } from '../Type';
@@ -59,7 +59,7 @@ export class IfExpression extends Expression
     return IfExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.cases.reduce(
       (max, [test, result]) => Math.max(
@@ -86,7 +86,7 @@ export class IfExpression extends Expression
     return new IfExpression(this.cases.map(([condition, then]) => [condition.clone(), then.clone()]), this.otherwise.clone());
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const types = this.cases
       .map(([test, value]) => value)
@@ -145,7 +145,7 @@ export class IfExpression extends Expression
     this.otherwise.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const expectedType = BooleanType.baseType;
 
@@ -161,31 +161,47 @@ export class IfExpression extends Expression
 
   public if(condition: Expression, body?: Expression)
   {
-    const cases = this.cases.slice();
-    cases.push([condition, body || NoExpression.instance]);
+    this.cases.push([condition, body || NoExpression.instance]);
 
-    return new IfExpression(cases, this.otherwise);
+    condition.setParent(this);
+
+    if (body)
+    {
+      body.setParent(this);
+    }
+
+    return this;
   }
 
   public than(body: Expression)
   {
-    const cases = this.cases.slice();
-    cases[cases.length - 1][1] = body;
+    this.cases[this.cases.length - 1][1] = body;
 
-    return new IfExpression(cases, this.otherwise);
+    body.setParent(this);
+
+    return this;
   }
 
   public elseif(condition: Expression, body?: Expression)
   {
-    const cases = this.cases.slice();
-    cases.push([condition, body || NoExpression.instance]);
+    this.cases.push([condition, body || NoExpression.instance]);
 
-    return new IfExpression(cases, this.otherwise);
+    condition.setParent(this);
+
+    if (body)
+    {
+      body.setParent(this);
+    }
+
+    return this;
   }
 
   public else(body: Expression)
   {
-    return new IfExpression(this.cases, body);
+    this.otherwise = body;
+    this.otherwise.setParent(this);
+
+    return this;
   }
 
 }

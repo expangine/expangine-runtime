@@ -3,7 +3,7 @@ import { EntityType } from '../../types/Entity';
 import { EntityOps } from '../EntityOps';
 import { Types } from '../../Types';
 import { objectValues, isArray } from '../../fns';
-import { OperationTypeInput } from '../../Operation';
+import { OperationTypeInput, OperationTypeProvider } from '../../Operation';
 import { ObjectType } from '../../types/Object';
 import { BooleanType } from '../../types/Boolean';
 import { NumberType } from '../../types/Number';
@@ -12,8 +12,7 @@ import { EnumType } from '../../types/Enum';
 import { NullType } from '../../types/Null';
 import { TextType } from '../../types/Text';
 import { Type } from '../../Type';
-import { TypeRelation } from '../../Relation';
-import { Definitions } from '../../Definitions';
+import { EntityRelation } from '../../Relation';
 
 const ops = EntityType.operations;
 
@@ -25,14 +24,14 @@ const GetNamedType: OperationTypeInput<'name'> = (i, defs) =>
 const GetName: OperationTypeInput<'name'> = (i, defs) => 
   i.name instanceof EntityType
     ? i.name
-    : Types.many(objectValues(defs.entities));
+    : Types.many(objectValues(defs.getEntities()));
 
-const GetTypeRelation = (i: {name?: Type, relation?: Type}, defs: Definitions): TypeRelation | TypeRelation[] | null => {
+const GetTypeRelation = (i: {name?: Type, relation?: Type}, provider: OperationTypeProvider): EntityRelation | EntityRelation[] | null => {
   if (!(i.name instanceof EntityType)) {
     return null;
   }
 
-  const relations = defs.getRelations(i.name.options);
+  const relations = provider.getRelations(i.name.options);
 
   if (i.relation instanceof EnumType) {
     const relationName = i.relation.options.constants.get('relation');
@@ -49,8 +48,8 @@ const GetTypeRelation = (i: {name?: Type, relation?: Type}, defs: Definitions): 
   return relations;
 };
 
-const GetRelation: OperationTypeInput<'name' | 'relation'> = (i, defs) => {
-  const typeRelation = GetTypeRelation(i, defs);
+const GetRelation: OperationTypeInput<'name' | 'relation'> = (i, provider) => {
+  const typeRelation = GetTypeRelation(i, provider);
 
   if (typeRelation === null) {
     return NullType.baseType;
@@ -81,8 +80,8 @@ const GetRelatedRelationType: OperationTypeInput<'name' | 'relation' | 'related'
   return NullType.baseType;
 };
 
-const GetRelatedItemType: OperationTypeInput<'name' | 'relation' | 'related'> = (i, defs) => {
-  const typeRelation = GetTypeRelation(i, defs);
+const GetRelatedItemType: OperationTypeInput<'name' | 'relation' | 'related'> = (i, provider) => {
+  const typeRelation = GetTypeRelation(i, provider);
 
   if (typeRelation !== null && !isArray(typeRelation)) {
     if (i.related && typeRelation.itemType.acceptsType(i.related)) {
@@ -105,16 +104,16 @@ export const EntityOpsTypes =
   ),
 
   getKey: ops.setTypes(EntityOps.getKey,
-    (i, defs) => {
+    (i, provider) => {
       if (!(i.name instanceof EntityType)) {
         return AnyType;
       }
-      const entity = defs.getEntity(i.name.options);
+      const entity = provider.getEntity(i.name.options);
       if (!entity || !entity.key) {
         return AnyType;
       }
 
-      return entity.getKeyReturnType(defs);
+      return entity.keyType;
     },
     { name: GetName, instance: GetNamedType }
   ),

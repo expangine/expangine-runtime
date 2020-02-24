@@ -1,15 +1,5 @@
-import { Types } from '../../src/Types';
-import { TextOps } from '../../src/ops/TextOps';
-import { Exprs } from '../../src/Exprs';
-import { TextType } from '../../src/types/Text';
-import { defs } from '../../src/def';
-import { BooleanType } from '../../src/types/Boolean';
-import { ListOps } from '../../src/ops/ListOps';
-import { ListType } from '../../src/types/List';
-import { NumberType } from '../../src/types/Number';
-import { MapType } from '../../src/types/Map';
-import { ObjectType } from '../../src/types/Object';
-import { NumberOps } from '../../src/ops/NumberOps';
+import { Types, Exprs, TextOps, defs, TextType, BooleanType, ListOps, ListType, NumberType, NumberOps, MapType, ObjectType } from '../../src';
+
 
 // tslint:disable: no-magic-numbers
 

@@ -1,10 +1,10 @@
 
 import { objectMap, isObject, objectValues, isString, objectEach, addCopier } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeInputMap, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
@@ -32,13 +32,13 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public static computeds = ObjectComputeds;
 
-  public static baseType = ObjectType.from();
+  public static baseType = new ObjectType({ props: {} });
 
   public static decode(data: any[], types: TypeProvider): ObjectType 
   {
     const props = objectMap(data[INDEX_PROPS], value => types.getType(value));
     
-    return ObjectType.from(props);
+    return new ObjectType({ props });
   }
 
   public static encode(type: ObjectType): any 
@@ -57,13 +57,8 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       return null;
     }
 
-    return ObjectType.from(objectMap(data, d => describer.describe(d)));
-  }
-
-  public static from(types?: TypeInputMap): ObjectType
-  {
     return new ObjectType({
-      props: types ? Types.resolve(types) : {}
+      props: objectMap(data, d => describer.describe(d))
     });
   }
 
@@ -135,7 +130,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     }
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     if (ConstantExpression.is(expr))
     {
@@ -145,10 +140,12 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       }
     }
 
-    const exprType = Types.required(expr.getType(def, context));
+    let exprType = expr.getType(def, context);
 
     if (exprType)
     {
+      exprType = exprType.getRequired();
+
       if (exprType instanceof TextType)
       {
         const types = objectValues(this.options.props);
@@ -168,7 +165,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return this.getWildcardType();
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [
       ...objectValues(this.options.props, (value, key) => ({ key, value })),

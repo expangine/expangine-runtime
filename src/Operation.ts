@@ -1,7 +1,8 @@
 
 import { Type, TypeInput } from './Type';
 import { isFunction } from './fns';
-import { Definitions } from './Definitions';
+import { Entity } from './Entity';
+import { Relation, EntityRelation } from './Relation';
 
 
 export interface OperationFlags
@@ -40,7 +41,15 @@ export type OperationResolved<
   string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
 >;
 
-export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, defs: Definitions) => TypeInput;
+export interface OperationTypeProvider
+{
+  getEntity(name: string): Entity;
+  getEntities(): Record<string, Entity>;
+  getRelation(name: string): Relation;
+  getRelations(entityName: string): EntityRelation[];
+}
+
+export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, provider: OperationTypeProvider) => TypeInput;
 
 export type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 

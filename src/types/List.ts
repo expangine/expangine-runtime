@@ -6,7 +6,7 @@ import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ListOps, ListOperations, ListComputeds } from '../ops/ListOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from '../exprs/Constant';
 import { EnumType } from './Enum';
 import { TextType } from './Text';
@@ -33,10 +33,6 @@ export class ListType extends Type<ListOptions>
 {
 
   public static STEP_ITEM = 'item';
-
-  public static lengthType = new NumberType({min: 0, whole: true});
-
-  public static indexType = new NumberType({min: 0, whole: true});
 
   public static id = ID.List;
 
@@ -147,13 +143,13 @@ export class ListType extends Type<ListOptions>
     o1.max = Math.max(o1.max, o2.max);
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     if (ConstantExpression.is(expr))
     {
       if (expr.value === 'length')
       {
-        return ListType.lengthType;
+        return Types.LENGTH;
       }
 
       if (isNumber(expr.value))
@@ -164,10 +160,12 @@ export class ListType extends Type<ListOptions>
       }
     }
 
-    const exprType = Types.required(expr.getType(def, context));
+    let exprType = expr.getType(def, context);
 
     if (exprType)
     {
+      exprType = exprType.getRequired();
+
       if (exprType instanceof NumberType)
       {
         return Types.optional(this.options.item);
@@ -191,7 +189,7 @@ export class ListType extends Type<ListOptions>
         {
           if (values.length === 1 && values[0] === 'length')
           {
-            return ListType.lengthType;
+            return Types.LENGTH;
           }
         }
       }
@@ -200,7 +198,7 @@ export class ListType extends Type<ListOptions>
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     const { min, item } = this.options;
     const requiredMin = isNumber(min) && min > 0 && min <= REQUIRED_SUB_MIN ? min : 0;
@@ -212,8 +210,8 @@ export class ListType extends Type<ListOptions>
 
     return [
       ...required,
-      { key: 'length', value: ListType.lengthType },
-      { key: ListType.indexType, value: Types.optional(item) },
+      { key: 'length', value: Types.LENGTH },
+      { key: Types.INDEX, value: Types.optional(item) },
     ];
   }
 

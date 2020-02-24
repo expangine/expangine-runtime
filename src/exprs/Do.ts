@@ -1,7 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { BooleanType } from '../types/Boolean';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -70,7 +70,7 @@ export class DoExpression extends Expression
     return DoExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return Math.max(this.condition.getComplexity(def), this.body.getComplexity(def)) + 1;
   }
@@ -92,7 +92,7 @@ export class DoExpression extends Expression
     return new DoExpression(this.condition.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
   }
 
-  public getType(def: Definitions, original: Type): Type | null
+  public getType(def: DefinitionProvider, original: Type): Type | null
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
@@ -126,7 +126,7 @@ export class DoExpression extends Expression
     this.body.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validateType(def, context, BooleanType.baseType, this.condition, handler);
 
@@ -137,22 +137,38 @@ export class DoExpression extends Expression
 
   public do(body: Expression, condition?: Expression): DoExpression
   {
-    return new DoExpression(condition || this.condition, body, this.breakVariable, this.maxIterations);
+    this.body = body;
+    this.body.setParent(this);
+
+    if (condition)
+    {
+      this.condition = condition;
+      this.condition.setParent(this);
+    }
+
+    return this;
   }
 
   public while(condition: Expression): DoExpression
   {
-    return new DoExpression(condition, this.body, this.breakVariable, this.maxIterations);
+    this.condition = condition;
+    this.condition.setParent(this);
+
+    return this;
   }
 
   public withBreak(name: string)
   {
-    return new DoExpression(this.condition, this.body, name, this.maxIterations);
+    this.breakVariable = name;
+
+    return this;
   }
 
   public withMax(iterations: number)
   {
-    return new DoExpression(this.condition, this.body, this.breakVariable, iterations);
+    this.maxIterations = iterations;
+
+    return this;
   }
 
 }

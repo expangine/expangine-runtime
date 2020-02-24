@@ -1,7 +1,7 @@
 
 import { objectMap, isString, objectEach } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { TextType } from '../types/Text';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -47,7 +47,7 @@ export class TemplateExpression extends Expression
     return TemplateExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     let complexity = 0;
 
@@ -74,7 +74,7 @@ export class TemplateExpression extends Expression
     return new TemplateExpression(this.template, objectMap(this.params, (p) => p.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return TextType.baseType.newInstance();
   }
@@ -102,7 +102,7 @@ export class TemplateExpression extends Expression
     objectEach(this.params, e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     objectEach(this.params, subject =>
     {
@@ -118,10 +118,14 @@ export class TemplateExpression extends Expression
       ? { [nameOrParams]: value }
       : nameOrParams;
 
-    return new TemplateExpression(this.template, {
-      ...this.params,
-      ...Exprs.parse(append),
-    });
+    for (const paramName in append)
+    {
+      const param = Exprs.parse(append[paramName]);
+      this.params[paramName] = param;
+      param.setParent(this);
+    }
+
+    return this;
   }
 
 }

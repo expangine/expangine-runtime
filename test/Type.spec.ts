@@ -1,4 +1,4 @@
-import { Types } from '../src/Types';
+import { Types } from '../src';
 
 
 describe('Type', () => 

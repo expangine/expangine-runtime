@@ -1,8 +1,8 @@
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
-import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping } from './Operation';
+import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
-import { Relation, RelationOptions, TypeRelation } from './Relation';
+import { Relation, RelationOptions, EntityRelation } from './Relation';
 import { Program, ProgramOptions, ProgramDataSet } from './Program';
 import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
 import { Func, FuncOptions, FuncTest } from './Func';
@@ -13,6 +13,7 @@ import { GetTypeExpression } from './exprs/GetType';
 import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
+import { DefinitionProvider } from './DefinitionProvider';
 export interface DefinitionsImportOptions {
     entities?: Record<string, Entity | EntityOptions>;
     functions?: Record<string, Func | FuncOptions>;
@@ -73,7 +74,7 @@ export interface DefinitionsExpressionInstance {
     context: Type;
     source: DefinitionsReferenceSource;
 }
-export declare class Definitions {
+export declare class Definitions implements OperationTypeProvider, DefinitionProvider {
     types: Record<string, TypeClass>;
     typeList: TypeClass[];
     describers: TypeClass[];
@@ -94,14 +95,15 @@ export declare class Definitions {
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
     findEntity(type: Type, options?: TypeCompatibleOptions): string | false;
     addFunction(func: Func | Partial<FuncOptions>): this;
-    getFunction(name: string): Func;
+    getFunction(name: string): Func | null;
     addProgram(program: Program | Partial<ProgramOptions>): this;
     getProgram(name: string): Program;
     addEntity(entity: Entity | Partial<EntityOptions>): this;
-    getEntity(name: string): Entity;
+    getEntity(name: string): Entity | null;
+    getEntities(): Record<string, Entity>;
     addRelation(relation: Relation | RelationOptions): this;
     getRelation(name: string): Relation;
-    getRelations(entityName: string): TypeRelation[];
+    getRelations(entityName: string): EntityRelation[];
     getEntityProps(name: string): EntityProps[];
     renameProgram(name: string, newName: string): boolean;
     renameEntity(name: string, newName: string): false | DefinitionsEntityReference[];
@@ -132,14 +134,12 @@ export declare class Definitions {
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes?: boolean): TypeMap;
     getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type;
     getContextWithScope(original: Type, scope?: TypeMap): {
-        context: ManyType | ObjectType<{
+        context: ObjectType<{
             props: any;
-        }>;
+        }> | ManyType;
         scope: Record<string, Type<any>>;
     };
-    getContext(original: Type, scope: TypeMap): ManyType | ObjectType<{
-        props: any;
-    }>;
+    getContext(original: Type, scope: TypeMap): Type;
     getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | null;
     getOperationInputType(input: OperationTypeInput<any>): Type | null;
     getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type;

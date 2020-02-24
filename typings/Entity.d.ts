@@ -66,6 +66,7 @@ export declare class Entity {
     instances: any[];
     methods: Record<string, Func>;
     key: Expression;
+    keyType: Type;
     describe: Expression;
     transcoders: Record<string, EntityStorageTranscoder>;
     indexes: Record<string, EntityIndex>;
@@ -87,7 +88,7 @@ export declare class Entity {
     getDecodedType(): ObjectType;
     getProperties(): string[];
     getPropertyType(): EnumType;
-    getKeyReturnType(defs: Definitions): Type<any>;
+    getKeyReturnType(): Type<any>;
     getKeyContext(): Type;
     getDescribeContext(): Type;
     getEncoded(run: Runtime, instance: any): any;

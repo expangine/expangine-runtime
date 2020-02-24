@@ -6,6 +6,7 @@ import { Types } from './Types';
 import { Exprs } from './Exprs';
 import { isEmpty, objectMap, copy } from './fns';
 import { Runtime } from './Runtime';
+import { DefinitionProvider } from './DefinitionProvider';
 
 
 export interface FuncOptions
@@ -59,7 +60,7 @@ export class Func
     this.params = defs.getTypeKind(options.params, ObjectType, Types.object());
     this.expression = defs.getExpression(options.expression);
     this.defaults = this.params.fromJson(options.defaults);
-    this.tests = this.tests.map((t) => ({ ...t, args: this.params.fromJson(t.args) }));
+    this.tests = options.tests.map((t) => ({ ...t, args: this.params.fromJson(t.args) }));
   }
 
   public encode(): FuncOptions 
@@ -77,7 +78,7 @@ export class Func
     };
   }
 
-  public getReturnType(defs: Definitions, paramsTypes: TypeMap = {}) 
+  public getReturnType(defs: DefinitionProvider, paramsTypes: TypeMap = {}) 
   {
     const context = Types.object({
       ...this.params.options.props,
@@ -99,7 +100,7 @@ export class Func
     const propType = this.params.options.props[param];
 
     return propType.isOptional() && param in this.defaults && propType.isValid(this.defaults[param])
-      ? Types.required(propType)
+      ? propType.getRequired()
       : propType;
   }
 
@@ -111,7 +112,7 @@ export class Func
     {
       const propType = this.params.options.props[prop];
 
-      if (!Types.required(propType).isValid(target[prop]))
+      if (!propType.getRequired().isValid(target[prop]))
       {
         target[prop] = copy(this.defaults[prop]);
       }

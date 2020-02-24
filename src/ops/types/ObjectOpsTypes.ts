@@ -33,7 +33,7 @@ export const ObjectOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ObjectOps.maybe, 
-    (i, defs) => Types.maybe(i.value, ObjectType),
+    (i) => Types.maybe(i.value, ObjectType),
     { value: AnyType } 
   ),
 
@@ -70,7 +70,7 @@ export const ObjectOpsTypes =
   ),
 
   merge: ops.setTypes(ObjectOps.merge, 
-    (i, defs) => {
+    (i) => {
       const props: TypeMap = {};
       const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
 

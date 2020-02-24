@@ -1,12 +1,5 @@
-import { AnyOpsTypes } from '../src/ops/types/AnyOpsTypes';
-import { isOperationTypeFunction } from '../src/Operation';
-import { Type } from '../src/Type';
-import { Types } from '../src/TypeBuilder';
-import { defs } from '../src/def';
-import { NumberType } from '../src/types/Number';
-import { NullType } from '../src/types/Null';
-import { ManyType } from '../src/types/Many';
-import { TextType } from '../src/types/Text';
+import { Types, AnyOpsTypes, isOperationTypeFunction, Type, defs, NumberType, NullType, ManyType, TextType } from '../src';
+
 
 // tslint:disable: no-magic-numbers
 
@@ -19,38 +12,38 @@ describe('AnyOps', () => {
       ? coalesce.returnType
       : (): Type => { throw new Error('Why?') };
 
-    const r0 = Type.fromInput(getReturnType({
+    const r0 = Types.parse(getReturnType({
       a: Types.optional(Types.number()),
       b: Types.number(),
     }, defs));
 
     expect(r0).toBeInstanceOf(NumberType);
 
-    const r1 = Type.fromInput(getReturnType({}, defs));
+    const r1 = Types.parse(getReturnType({}, defs));
 
     expect(r1).toBeInstanceOf(NullType);
 
-    const r2 = Type.fromInput(getReturnType({
+    const r2 = Types.parse(getReturnType({
       a: Types.number(),
     }, defs));
 
     expect(r2).toBeInstanceOf(NumberType);
 
-    const r3 = Type.fromInput(getReturnType({
+    const r3 = Types.parse(getReturnType({
       a: Types.number(),
       b: Types.number(),
     }, defs));
 
     expect(r3).toBeInstanceOf(NumberType);
 
-    const r4 = Type.fromInput(getReturnType({
+    const r4 = Types.parse(getReturnType({
       a: Types.number(),
       b: Types.text(),
     }, defs));
 
     expect(r4).toBeInstanceOf(NumberType);
 
-    const r5 = Type.fromInput(getReturnType({
+    const r5 = Types.parse(getReturnType({
       a: Types.optional(Types.number()),
       b: Types.text(),
     }, defs));

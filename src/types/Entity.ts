@@ -2,7 +2,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { EntityOperations, EntityComputeds } from '../ops/EntityOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { NullType } from './Null';
@@ -86,12 +86,12 @@ export class EntityType extends Type<string>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return this.getType().getSubType(expr, def, context);
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.getType().getSubTypes(def);
   }

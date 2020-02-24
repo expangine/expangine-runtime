@@ -2,7 +2,7 @@
 import { isArray, isString, isNumber, copy } from '../fns';
 import { Expression, ExpressionProvider } from '../Expression';
 import { Type } from '../Type';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { EnumType } from '../types/Enum';
 import { TextType } from '../types/Text';
 import { NumberType } from '../types/Number';
@@ -77,7 +77,7 @@ export class ConstantExpression extends Expression
     return new ConstantExpression(copy(this.value));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const value = this.value;
 
@@ -119,7 +119,7 @@ export class ConstantExpression extends Expression
     this.parent = parent;
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     
   }

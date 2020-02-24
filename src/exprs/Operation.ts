@@ -1,16 +1,16 @@
 
-import { objectMap, isEmpty, isArray, objectEach } from '../fns';
+import { objectMap, isEmpty, objectEach, isArray } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
-import { AndExpression } from './And';
-import { OrExpression } from './Or';
-import { NotExpression } from './Not';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Types } from '../Types';
 import { Exprs } from '../Exprs';
+import { AndExpression } from './And';
+import { OrExpression } from './Or';
+import { NotExpression } from './Not';
 
 
 const INDEX_NAME = 1;
@@ -65,7 +65,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return OperationExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     const op = def.getOperation(this.name);
     let complexity = op ? op.complexity : 0;
@@ -93,7 +93,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return new OperationExpression(this.name, objectMap(this.params, (p) => p.clone()), { ...this.scopeAlias });
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
   }
@@ -121,7 +121,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     objectEach(this.params, e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const { name, params, scopeAlias } = this;
     const operation = def.getOperation(name);
@@ -181,18 +181,19 @@ export class OperationExpression<P extends string = never, O extends string = ne
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>
   {
-    return new OperationExpression<P, O, S>(this.name, {
-      ...this.params,
-      [name]: Exprs.parse(value),
-    }, this.scopeAlias);
+    const param = Exprs.parse(value);
+
+    this.params[name] = param;
+    param.setParent(this);
+
+    return this;
   }
 
   public alias(scoped: S, alias: string): OperationExpression<P, O, S>
   {
-    return new OperationExpression<P, O, S>(this.name, this.params, {
-      ...this.scopeAlias,
-      [scoped]: alias
-    });
+    this.scopeAlias[scoped] = alias;
+
+    return this;
   }
 
   public and(exprs: Expression | Expression[]): AndExpression

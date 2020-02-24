@@ -1,8 +1,8 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { isString, objectEach } from '../fns';
+import { isString } from '../fns';
 import { AnyType } from '../types/Any';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -51,7 +51,7 @@ export class DefineExpression extends Expression
     return DefineExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def)), this.body.getComplexity(def));
   }
@@ -75,7 +75,7 @@ export class DefineExpression extends Expression
     return new DefineExpression(this.define.map(([name, variable]) => [name, variable.clone()]), this.body.clone());
   }
 
-  public getType(def: Definitions, original: Type): Type | null
+  public getType(def: DefinitionProvider, original: Type): Type | null
   {
     const { scope, context } = def.getContextWithScope(original);
 
@@ -115,7 +115,7 @@ export class DefineExpression extends Expression
     this.body.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const defineContext = def.getContextWithScope(context);
 
@@ -133,20 +133,33 @@ export class DefineExpression extends Expression
   public with(defines: Record<string, ExpressionValue>): DefineExpression
   public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression
   {
-    const define = this.define.slice();
-
     const append = isString(nameOrDefines)
       ? { [nameOrDefines]: value }
       : nameOrDefines;
 
-    objectEach(append, (defined, name) => define.push([name, Exprs.parse(defined)]));
+    for (const name in append)
+    {
+      const expr = Exprs.parse(append[name]);
+      const existing = this.define.find(([varName]) => varName === name);
 
-    return new DefineExpression(define, this.body.clone());
+      if (existing) {
+        existing[1] = expr;
+      } else {
+        this.define.push([name, expr]);
+      }
+
+      expr.setParent(this);
+    }
+
+    return this;
   }
 
   public run(expr: Expression): DefineExpression
   {
-    return new DefineExpression(this.define.slice(), expr);
+    this.body = expr;
+    this.body.setParent(this);
+
+    return this;
   }
 
 }

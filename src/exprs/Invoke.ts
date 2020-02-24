@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { objectMap, isString, objectEach } from '../fns';
 import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -46,7 +46,7 @@ export class InvokeExpression extends Expression
     return InvokeExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     const func = def.getFunction(this.name);
 
@@ -73,7 +73,7 @@ export class InvokeExpression extends Expression
     return new InvokeExpression(this.name, objectMap(this.args, (a) => a.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const func = def.getFunction(this.name);
     const argTypes = objectMap(this.args, (a) => a.getType(def, context));
@@ -106,7 +106,7 @@ export class InvokeExpression extends Expression
     objectEach(this.args, e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const func = def.getFunction(this.name);
     
@@ -135,13 +135,15 @@ export class InvokeExpression extends Expression
         }
       });
 
-      // func.options.expression.validate(def, ObjectType.from(params), handler);
+      // func.options.expression.validate(def, Types.object(params), handler);
     }
   }
 
   public named(name: string): InvokeExpression
   {
-    return new InvokeExpression(name, this.args);
+    this.name = name;
+
+    return this;
   }
 
   public arg(name: string, value: ExpressionValue): InvokeExpression
@@ -152,10 +154,16 @@ export class InvokeExpression extends Expression
       ? { [nameOrArgs]: value }
       : nameOrArgs;
 
-    return new InvokeExpression(this.name, {
-      ...this.args,
-      ...Exprs.parse(append),
-    });
+    for (const argName in append)
+    {
+      const arg = Exprs.parse(append[argName]);
+
+      this.args[argName] = arg;
+
+      arg.setParent(this);
+    }
+
+    return this;
   }
 
 }

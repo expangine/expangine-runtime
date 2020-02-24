@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -47,7 +47,7 @@ export class GetExpression extends Expression
     return GetExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
@@ -67,7 +67,7 @@ export class GetExpression extends Expression
     return new GetExpression(this.path.map((p) => p.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return def.getPathType(this.path, context);
   }
@@ -95,7 +95,7 @@ export class GetExpression extends Expression
     this.path.forEach(e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validatePath(def, context, context, this.path, handler);
   }
@@ -106,7 +106,14 @@ export class GetExpression extends Expression
       ? expr
       : [expr];
 
-    return new GetExpression(this.path.concat(Exprs.parse(append)));
+    for (const nodeValue of append)
+    {
+      const node = Exprs.parse(nodeValue);
+      this.path.push(node);
+      node.setParent(this);
+    }
+
+    return this;
   }
 
 }

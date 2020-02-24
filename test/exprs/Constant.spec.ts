@@ -1,14 +1,4 @@
-import { Types } from '../../src/Types';
-import { Exprs } from '../../src/Exprs';
-import { defs } from '../../src/def';
-import { EnumType } from '../../src/types/Enum';
-import { NumberType } from '../../src/types/Number';
-import { TextType } from '../../src/types/Text';
-import { ListType } from '../../src/types/List';
-import { MapType } from '../../src/types/Map';
-import { DateType } from '../../src/types/Date';
-import { ObjectType } from '../../src/types/Object';
-import { BooleanType } from '../../src/types/Boolean';
+import { Types, Exprs, defs, EnumType, NumberType, TextType, ListType, DateType, MapType, ObjectType, BooleanType } from '../../src';
 
 // tslint:disable: no-magic-numbers
 

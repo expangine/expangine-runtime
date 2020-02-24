@@ -5,7 +5,7 @@ import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { TupleOps, TupleOperations, TupleComputeds } from '../ops/TupleOps';
 import { NumberOps } from '../ops/NumberOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from '../exprs/Constant';
 import { NumberType } from './Number';
 import { EnumType } from './Enum';
@@ -21,10 +21,6 @@ const INDEX_ELEMENTS = 1;
 
 export class TupleType extends Type<Type[]>
 {
-
-  public static lengthType = new NumberType({min: 0, whole: true});
-
-  public static indexType = new NumberType({min: 0, whole: true});
 
   public static id = ID.Tuple;
 
@@ -82,13 +78,13 @@ export class TupleType extends Type<Type[]>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     if (ConstantExpression.is(expr))
     {
       if (expr.value === 'length')
       {
-        return TupleType.lengthType;
+        return Types.LENGTH;
       }
 
       if (isNumber(expr.value))
@@ -97,10 +93,12 @@ export class TupleType extends Type<Type[]>
       }
     }
 
-    const exprType = Types.required(expr.getType(def, context));
+    let exprType = expr.getType(def, context);
 
     if (exprType)
     {
+      exprType = exprType.getRequired();
+
       if (exprType instanceof NumberType)
       {
         return Types.mergeMany(this.options);
@@ -122,18 +120,18 @@ export class TupleType extends Type<Type[]>
 
           if (values.length === 1 && values[0] === 'length')
           {
-            return TupleType.lengthType;
+            return Types.LENGTH;
           }
         }
       }
     }
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [
       ...this.options.map((value, key) => ({ key, value })),
-      { key: 'length', value: TupleType.lengthType },
+      { key: 'length', value: Types.LENGTH },
       {
         key: new EnumType({
           key: NumberType.baseType,
@@ -145,7 +143,7 @@ export class TupleType extends Type<Type[]>
         value: Types.mergeMany(this.options),
       },
       { 
-        key: TupleType.indexType, 
+        key: Types.INDEX, 
         value: Types.optional(
           Types.mergeMany(this.options)
         ),

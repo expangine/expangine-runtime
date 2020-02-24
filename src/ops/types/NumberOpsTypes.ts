@@ -98,7 +98,7 @@ export const NumberOpsTypes =
   // Unary Operations
 
   maybe: ops.setTypes(NumberOps.maybe, 
-    (i, defs) => Types.maybe(i.value, NumberType),
+    (i) => Types.maybe(i.value, NumberType),
     { value: AnyType } 
   ),
   

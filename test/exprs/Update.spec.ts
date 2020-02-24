@@ -1,7 +1,5 @@
-import { Types } from '../../src/Types';
-import { Exprs } from '../../src/Exprs';
-import { BooleanType } from '../../src/types/Boolean';
-import { defs } from '../../src/def';
+import { Types, Exprs, defs, BooleanType } from '../../src';
+
 
 // tslint:disable: no-magic-numbers
 

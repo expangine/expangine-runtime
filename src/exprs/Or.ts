@@ -1,8 +1,7 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
-import { isArray, isNumber } from '../fns';
-import { AndExpression } from './And';
+import { DefinitionProvider } from '../DefinitionProvider';
+import { isNumber } from '../fns';
 import { Type } from '../Type';
 import { BooleanType } from '../types/Boolean';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -44,7 +43,7 @@ export class OrExpression extends Expression
     return OrExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
@@ -64,7 +63,7 @@ export class OrExpression extends Expression
     return new OrExpression(this.expressions.map((e) => e.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     const types: Type[] = this.expressions
       .map(e => e.getType(def, context))
@@ -98,7 +97,7 @@ export class OrExpression extends Expression
     this.expressions.forEach(e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const expectedType = BooleanType.baseType;
 
@@ -106,20 +105,6 @@ export class OrExpression extends Expression
     {
       this.validateType(def, context, expectedType, subject, handler);
     });
-  }
-
-  public or(exprs: Expression | Expression[]): OrExpression
-  {
-    const append = isArray(exprs) ? exprs : [exprs];
-
-    return new OrExpression(this.expressions.concat(append));
-  }
-
-  public and(exprs: Expression | Expression[]): AndExpression
-  {
-    const append = isArray(exprs) ? exprs : [exprs];
-
-    return new AndExpression([this as Expression].concat(append));
   }
 
 }

@@ -1,13 +1,5 @@
-import { Types } from '../src/Types';
-import { TypeClass, Type } from '../src/Type';
-import { TraverseStep, Traverser, TraverseResult } from '../src/Traverser';
-import { ObjectType } from '../src/types/Object';
-import { NumberType } from '../src/types/Number';
-import { ListType } from '../src/types/List';
-import { DateType } from '../src/types/Date';
-import { MapType } from '../src/types/Map';
-import { TextType } from '../src/types/Text';
-import { BooleanType } from '../src/types/Boolean';
+import { Types, TypeClass, TraverseStep, ObjectType, NumberType, ListType, DateType, MapType, TextType, BooleanType, Traverser, Type, TraverseResult } from '../src';
+
 
 // tslint:disable: no-magic-numbers
 

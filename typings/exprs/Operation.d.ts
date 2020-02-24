@@ -1,12 +1,12 @@
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
-import { AndExpression } from './And';
-import { OrExpression } from './Or';
-import { NotExpression } from './Not';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { AndExpression } from './And';
+import { OrExpression } from './Or';
+import { NotExpression } from './Not';
 export declare class OperationExpression<P extends string = never, O extends string = never, S extends string = never> extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): OperationExpression;
@@ -17,15 +17,15 @@ export declare class OperationExpression<P extends string = never, O extends str
     scopeAlias: Record<string, string>;
     constructor(name: string, params: ExpressionMap, scopeAlias?: Record<string, string>);
     getId(): string;
-    getComplexity(def: Definitions): number;
+    getComplexity(def: DefinitionProvider): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
-    getType(def: Definitions, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
-    validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+    validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>;
     alias(scoped: S, alias: string): OperationExpression<P, O, S>;
     and(exprs: Expression | Expression[]): AndExpression;

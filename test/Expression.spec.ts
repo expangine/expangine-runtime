@@ -1,5 +1,4 @@
-import { Exprs } from '../src/Exprs';
-import { NumberOps } from '../src/ops/NumberOps';
+import { Exprs, NumberOps } from '../src';
 
 
 describe('Expression', () => 
@@ -30,7 +29,9 @@ describe('Expression', () =>
     const g = Exprs.const('Hello');
     const h = Exprs.op(NumberOps.abs, { value: b });
     const i = Exprs.object({ g, h });
-    const j = Exprs.if(c, f).elseif(a, i)
+    const j = Exprs.if(c, f).elseif(a, i);
+
+    j.setParent();
 
     return { a, b, c, d, e, f, g, h, i, j };
   }
@@ -51,16 +52,16 @@ describe('Expression', () =>
      *   }
      * }
      */
-    expect(a.getRootExpression()).toStrictEqual(j);
-    expect(b.getRootExpression()).toStrictEqual(j);
-    expect(c.getRootExpression()).toStrictEqual(j);
-    expect(d.getRootExpression()).toStrictEqual(j);
-    expect(e.getRootExpression()).toStrictEqual(j);
-    expect(f.getRootExpression()).toStrictEqual(j);
-    expect(g.getRootExpression()).toStrictEqual(j);
-    expect(h.getRootExpression()).toStrictEqual(j);
-    expect(i.getRootExpression()).toStrictEqual(j);
-    expect(j.getRootExpression()).toStrictEqual(j);
+    expect(a.getRootExpression() === j).toBeTruthy();
+    expect(b.getRootExpression() === j).toBeTruthy();
+    expect(c.getRootExpression() === j).toBeTruthy();
+    expect(d.getRootExpression() === j).toBeTruthy();
+    expect(e.getRootExpression() === j).toBeTruthy();
+    expect(f.getRootExpression() === j).toBeTruthy();
+    expect(g.getRootExpression() === j).toBeTruthy();
+    expect(h.getRootExpression() === j).toBeTruthy();
+    expect(i.getRootExpression() === j).toBeTruthy();
+    expect(j.getRootExpression() === j).toBeTruthy();
   });
 
   it('getPath', () =>

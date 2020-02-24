@@ -18,12 +18,12 @@ export function isColorHSL(x: any): x is ColorHSL
 
 
 export const ColorSpaceHSL = new ColorSpace<ColorHSL>('hsl', 'HSL')
-  .setType(ObjectType.from({
+  .setType(new ObjectType({props: {
     h: new NumberType({ min: 0, max: 360, whole: true }),
     s: new NumberType({ min: 0, max: 100, whole: true }),
     l: new NumberType({ min: 0, max: 100, whole: true }),
     a: new NumberType({ min: 0, max: 255, whole: true }),
-  }))
+  }}))
   .setToColor((color) => {
     const H = normalizeHue(color.h);
     const L = clampPercent(color.l) / 100;

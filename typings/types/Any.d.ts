@@ -1,6 +1,6 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 export declare type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
 export declare type AnyTypeJsonWriter = (value: any, writer: (innerValue: any) => any) => any;
@@ -28,8 +28,8 @@ export declare class AnyType extends Type {
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
     merge(type: AnyType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isCompatible(other: Type): boolean;

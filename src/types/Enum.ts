@@ -5,7 +5,7 @@ import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { Expression } from '../Expression';
 import { Exprs } from '../Exprs';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
@@ -104,12 +104,12 @@ export class EnumType extends Type<EnumOptions>
     }
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return this.options.value.getSubType(expr, def, context);
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.options.value.getSubTypes(def);
   }
@@ -122,6 +122,11 @@ export class EnumType extends Type<EnumOptions>
   public getSimplifiedType(): Type
   {
     return this.options.value;
+  }
+
+  public isWrapper(): boolean
+  {
+    return true;
   }
 
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean 

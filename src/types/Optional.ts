@@ -4,7 +4,7 @@ import { Operations } from '../Operation';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { AnyOps } from '../ops/AnyOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
@@ -73,12 +73,12 @@ export class OptionalType extends Type<Type>
     
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     return this.options.getSubType(expr, def, context);
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.options.getSubTypes(def);
   }
@@ -91,6 +91,11 @@ export class OptionalType extends Type<Type>
   public getSimplifiedType(): Type
   {
     return this;
+  }
+
+  public getRequired(): Type
+  {
+    return this.options;
   }
 
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 

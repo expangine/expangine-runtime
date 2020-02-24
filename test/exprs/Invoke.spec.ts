@@ -1,7 +1,4 @@
-import { Types } from '../../src/Types';
-import { defs } from '../../src/def';
-import { Exprs } from '../../src/Exprs';
-import { NumberType } from '../../src/types/Number';
+import { Types, defs, Exprs, NumberType } from '../../src';
 
 // tslint:disable: no-magic-numbers
 

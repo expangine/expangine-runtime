@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler, ValidationSeverity, ValidationType } from '../Validate';
@@ -42,7 +42,7 @@ export class GetRelationExpression extends Expression
     return GetRelationExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return 0;
   }
@@ -62,7 +62,7 @@ export class GetRelationExpression extends Expression
     return new GetRelationExpression(this.name);
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return new EnumType({
       key: TextType.baseType,
@@ -83,7 +83,7 @@ export class GetRelationExpression extends Expression
     this.parent = parent;
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     if (!this.name)
     {
@@ -94,7 +94,7 @@ export class GetRelationExpression extends Expression
         parent: this,
       });
     }
-    else if (!def.relations[this.name])
+    else if (!def.getRelation(this.name))
     {
       handler({
         type: ValidationType.MISSING_RELATION,

@@ -3,6 +3,7 @@ import { TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Runtime } from './Runtime';
+import { DefinitionProvider } from './DefinitionProvider';
 export interface FuncOptions {
     name: string;
     description: string;
@@ -29,7 +30,7 @@ export declare class Func {
     tests: FuncTest[];
     constructor(options: FuncOptions, defs: Definitions);
     encode(): FuncOptions;
-    getReturnType(defs: Definitions, paramsTypes?: TypeMap): import("./Type").Type<any>;
+    getReturnType(defs: DefinitionProvider, paramsTypes?: TypeMap): import("./Type").Type<any>;
     getParamTypes(): ObjectType;
     getParamType(param: string): import("./Type").Type<any>;
     getArguments(args: any, returnNew?: boolean): any;

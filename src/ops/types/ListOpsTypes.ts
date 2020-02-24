@@ -50,7 +50,7 @@ export const ListOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ListOps.maybe, 
-    (i, defs) => Types.maybe(i.value, ListType),
+    (i) => Types.maybe(i.value, ListType),
     { value: AnyType } 
   ),
 
@@ -301,7 +301,7 @@ export const ListOpsTypes =
   ),
 
   split: ops.setTypes(ListOps.split,
-    i => ObjectType.from({ pass: GivenList(i), fail: GivenList(i) }),
+    i => Types.object({ pass: GivenList(i), fail: GivenList(i) }),
     { list: GivenList, pass: BooleanType },
     {},
     GivenListIterationScope
@@ -322,7 +322,7 @@ export const ListOpsTypes =
   ),
 
   group: ops.setTypes(ListOps.group, 
-    i => ListType.forItem(ObjectType.from({
+    i => ListType.forItem(Types.object({
       by: i.by || AnyType,
       group: ListType.forItem(i.getValue || GivenListItem(i)),
     })),

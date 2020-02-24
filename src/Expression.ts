@@ -1,8 +1,7 @@
 import { Type, TypeMap } from './Type';
-import { Definitions } from './Definitions';
+import { DefinitionProvider } from './DefinitionProvider';
 import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity, Validation } from './Validate';
-import { Types } from './Types';
 
 
 export interface ExpressionProvider 
@@ -31,19 +30,19 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract getScope(): TypeMap | null;
 
-  public abstract getComplexity(def: Definitions): number;
+  public abstract getComplexity(def: DefinitionProvider): number;
 
   public abstract encode(): any;
 
   public abstract clone(): Expression;
 
-  public abstract getType(def: Definitions, context: Type): Type | null;
+  public abstract getType(def: DefinitionProvider, context: Type): Type | null;
 
   public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
 
   public abstract setParent(parent?: Expression): void;
 
-  public abstract validate(def: Definitions, context: Type, handler: ValidationHandler): void;
+  public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
   
   public getPath(): TraverseStep[]
   {
@@ -92,7 +91,7 @@ export abstract class Expression implements Traversable<Expression>
     return node;
   }
 
-  public validations(def: Definitions, context: Type): Validation[]
+  public validations(def: DefinitionProvider, context: Type): Validation[]
   {
     const validations: Validation[] = [];
 
@@ -101,7 +100,7 @@ export abstract class Expression implements Traversable<Expression>
     return validations;
   }
 
-  protected validateType(def: Definitions, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
+  protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
   {
     const expected = expectedComplex ? expectedComplex.getSimplifiedType() : null;
     const actualComplete = subject ? subject.getType(def, context) : null;
@@ -126,7 +125,7 @@ export abstract class Expression implements Traversable<Expression>
     {
       if (actual.isOptional() && !expected.isOptional())
       {
-        test = Types.required(test);
+        test = test.getRequired();
       }
 
       if (!expected.acceptsType(test))
@@ -163,7 +162,7 @@ export abstract class Expression implements Traversable<Expression>
     }
   }
 
-  protected validatePath(def: Definitions, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent: Expression = this): void
+  protected validatePath(def: DefinitionProvider, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent: Expression = this): void
   {
     let node = start;
 

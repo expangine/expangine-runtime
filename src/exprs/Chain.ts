@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -41,7 +41,7 @@ export class ChainExpression extends Expression
     return ChainExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.chain.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
   }
@@ -61,7 +61,7 @@ export class ChainExpression extends Expression
     return new ChainExpression(this.chain.map(c => c.clone()));
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return this.chain[this.chain.length - 1].getType(def, context);
   }
@@ -89,7 +89,7 @@ export class ChainExpression extends Expression
     this.chain.forEach(e => e.setParent(this));
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.chain.forEach(subject => 
     {
@@ -101,7 +101,13 @@ export class ChainExpression extends Expression
   {
     const append = isArray(exprs) ? exprs : [exprs];
 
-    return new ChainExpression(this.chain.concat(append));
+    for (const expr of append)
+    {
+      this.chain.push(expr);
+      expr.setParent(this);
+    }
+
+    return this;
   }
 
 }

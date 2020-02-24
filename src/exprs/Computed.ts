@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
@@ -44,7 +44,7 @@ export class ComputedExpression extends Expression
     return ComputedExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     const comp = def.getComputed(this.name);
 
@@ -73,7 +73,7 @@ export class ComputedExpression extends Expression
     return new ComputedExpression(this.expression.encode(), this.name);
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return def.getComputedReturnType(this.name, this.expression.getType(def, context));
   }
@@ -98,7 +98,7 @@ export class ComputedExpression extends Expression
     this.expression.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     const baseType = this.expression.getType(def, context);
 

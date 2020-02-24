@@ -1,6 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { AnyType } from '../types/Any';
 import { isArray, isNumber } from '../fns';
 import { Type } from '../Type';
@@ -65,7 +65,7 @@ export class UpdateExpression extends Expression
     return UpdateExpression.id;
   }
 
-  public getComplexity(def: Definitions): number
+  public getComplexity(def: DefinitionProvider): number
   {
     return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), this.value.getComplexity(def));
   }
@@ -87,7 +87,7 @@ export class UpdateExpression extends Expression
     return new UpdateExpression(this.path.map((p) => p.clone()), this.value.clone(), this.currentVariable);
   }
 
-  public getType(def: Definitions, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return BooleanType.baseType;
   }
@@ -125,7 +125,7 @@ export class UpdateExpression extends Expression
     this.value.setParent(this);
   }
 
-  public validate(def: Definitions, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validatePath(def, context, context, this.path, handler);
 
@@ -147,17 +147,31 @@ export class UpdateExpression extends Expression
       ? expr
       : [expr];
 
-    return new UpdateExpression(this.path.concat(Exprs.parse(append)), this.value, this.currentVariable);
+    for (const nodeValue of append)
+    {
+      const node = Exprs.parse(nodeValue);
+      this.path.push(node);
+      node.setParent(this);
+    }
+
+
+    return this;
   }
 
   public to(value: ExpressionValue, currentVariable?: string): UpdateExpression
   {
-    return new UpdateExpression(this.path, Exprs.parse(value), currentVariable || this.currentVariable);
+    this.value = Exprs.parse(value);
+    this.value.setParent(this);
+    this.currentVariable = currentVariable || this.currentVariable;
+
+    return this;
   }
 
   public withVariable(name: string): UpdateExpression
   {
-    return new UpdateExpression(this.path, this.value, name);
+    this.currentVariable = name;
+
+    return this;
   }
 
 }

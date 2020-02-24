@@ -233,7 +233,7 @@ export const ColorOpsTypes =
   // Operations
 
   maybe: ops.setTypes(ColorOps.maybe, 
-    (i, defs) => Types.maybe(i.value, ColorType),
+    (i) => Types.maybe(i.value, ColorType),
     { value: AnyType } 
   ),
 

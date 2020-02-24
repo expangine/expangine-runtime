@@ -7,7 +7,7 @@ import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { MapOps, MapOperations, MapComputeds } from '../ops/MapOps';
 import { ListOps } from '../ops/ListOps';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { ConstantExpression } from '../exprs/Constant';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -141,7 +141,7 @@ export class MapType extends Type<MapOptions>
     o1.value = Types.merge(o1.value, o2.value);
   }
 
-  public getSubType(expr: Expression, def: Definitions, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
   {
     if (ConstantExpression.is(expr))
     {
@@ -151,10 +151,12 @@ export class MapType extends Type<MapOptions>
       }
     }
 
-    const exprType = Types.required(expr.getType(def, context));
+    let exprType = expr.getType(def, context);
 
     if (exprType)
     {
+      exprType = exprType.getRequired();
+
       if (isSameClass(exprType, this.options.key))
       {
         return this.options.value;
@@ -164,7 +166,7 @@ export class MapType extends Type<MapOptions>
     return null;
   }
 
-  public getSubTypes(def: Definitions): TypeSub[]
+  public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [
       { key: this.options.key, value: this.options.value },

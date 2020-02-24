@@ -2,9 +2,8 @@
 import { isSameClass } from './fns';
 import { Operations, OperationGeneric } from './Operation';
 import { Expression } from './Expression';
-import { Definitions } from './Definitions';
+import { DefinitionProvider } from './DefinitionProvider';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
-import { EnumType } from './types/Enum';
 import { Computeds } from './Computed';
 
 
@@ -89,13 +88,23 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract merge(type: Type<O>): void;
 
-  public abstract getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
+  public abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
 
-  public abstract getSubTypes(def: Definitions): TypeSub[];
+  public abstract getSubTypes(def: DefinitionProvider): TypeSub[];
 
   public abstract getExactType(value: any): Type<O>;
 
   public abstract getSimplifiedType(): Type;
+
+  public getRequired(): Type
+  {
+    return this;
+  }
+
+  public isWrapper(): boolean
+  {
+    return false;
+  }
 
   protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
 
@@ -106,9 +115,7 @@ export abstract class Type<O = any> implements Traversable<Type>
       return true;
     }
 
-    if (!options.exact && 
-      other instanceof EnumType && 
-      this.isCompatible(other.options.value, options))
+    if (!options.exact && other.isWrapper() && this.isCompatible(other.getSimplifiedType(), options))
     {
       return true;
     }

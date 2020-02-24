@@ -1,7 +1,7 @@
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
-import { Definitions } from '../Definitions';
+import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class OptionalType extends Type<Type> {
@@ -20,10 +20,11 @@ export declare class OptionalType extends Type<Type> {
     getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
     getId(): string;
     merge(type: OptionalType): void;
-    getSubType(expr: Expression, def: Definitions, context: Type): Type | null;
-    getSubTypes(def: Definitions): TypeSub[];
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
+    getRequired(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
