@@ -35,7 +35,7 @@ export class NullType extends Type<null>
   
   public static describe(data: any): Type | null
   {
-    return data === null || data === undefined ? this.baseType : null;
+    return data === null ? this.baseType : null;
   }
 
   public static registered: boolean = false;

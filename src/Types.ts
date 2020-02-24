@@ -314,18 +314,18 @@ export class Types
       {
         let matched = false;
         const koptional = ktype instanceof OptionalType;
-        const krequired = koptional ? ktype.options : ktype;
+        const krequired: Type = koptional ? ktype.options : ktype;
 
         for (let i = 0; i < an; i++)
         {
           const itype = atypes[i];
           const ioptional = itype instanceof OptionalType;
-          const irequired = ioptional ? itype.options : itype;
+          const irequired: Type = ioptional ? itype.options : itype;
 
           if (isSameClass(irequired, krequired))
           {
             matched = true;
-            irequired.merge(krequired, this);
+            irequired.merge(krequired);
 
             if (koptional && !ioptional) 
             {

@@ -74,7 +74,7 @@ export class ListType extends Type<ListOptions>
 
     for (let i = 1; i < data.length; i++)
     {
-      item = Types.merge(item, data[i]);
+      item = describer.merge(item, data[i]);
     }
 
     return new ListType({ 
