@@ -1,12 +1,12 @@
 
-import { isArray, objectMap, objectValues, objectEach } from './fns';
+import { isArray, objectMap, objectValues, objectEach, isString } from './fns';
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
 import { Relation, RelationOptions, EntityRelation } from './Relation';
 import { Program, ProgramOptions, ProgramDataSet } from './Program';
-import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
+import { Entity, EntityOptions, EntityProps, EntityTranscoder } from './Entity';
 import { Func, FuncOptions, FuncTest } from './Func';
 import { Types } from './Types';
 import { Traverser } from './Traverser';
@@ -23,6 +23,7 @@ import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
+import { ReferenceDataOptions, ReferenceData } from './ReferenceData';
 
 
 
@@ -32,6 +33,7 @@ export interface DefinitionsImportOptions
   functions?: Record<string, Func | FuncOptions>;
   relations?: Record<string, RelationOptions>;
   programs?: Record<string, Program | ProgramOptions>;
+  data?: Record<string, ReferenceData | ReferenceDataOptions>;
 }
 
 export interface DefinitionsOptions extends DefinitionsImportOptions
@@ -45,15 +47,16 @@ export type DefinitionsReferenceSource =
   [Program, ProgramDataSet] |
   Entity | 
   [Entity, 'key' | 'describe'] |
-  [Entity, string, EntityStorageTranscoder] |
-  [Entity, string, EntityStorageTranscoder, 'encode' | 'decode'] |
+  [Entity, string, EntityTranscoder] |
+  [Entity, string, EntityTranscoder, 'encode' | 'decode'] |
   [Entity, Func] |
   [Entity, Func, 'params' | 'returnType'] |
   [Entity, Func, FuncTest, 'args' | 'expected'] |
   Func | 
   [Func, 'params' | 'returnType'] |
   [Func, FuncTest, 'args' | 'expected'] |
-  Relation;
+  Relation |
+  ReferenceData;
 
 export type DefinitionsEntityReference = (
   { value: EntityType, root: Type } |
@@ -130,6 +133,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
   public programs: Record<string, Program>;
   public entities: Record<string, Entity>;
   public functions: Record<string, Func>;
+  public data: Record<string, ReferenceData>;
+
+  public keyExpectedType: Type;
+  public describeExpectedType: Type;
 
   public constructor(initial?: DefinitionsOptions)
   { 
@@ -144,6 +151,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     this.functions = Object.create(null);
     this.relations = Object.create(null);
     this.programs = Object.create(null);
+    this.data = Object.create(null);
+
+    this.keyExpectedType = Types.many(Types.text(), Types.number());
+    this.describeExpectedType = Types.text();
 
     if (initial) 
     {
@@ -160,6 +171,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       functions: objectMap(this.functions, f => deepCopy ? f.encode() : f),
       relations: objectMap(this.relations, r => r.encode()),
       programs: objectMap(this.programs, p => deepCopy ? p.encode() : p),
+      data: objectMap(this.data, d => deepCopy ? d.encode() : d),
     });
 
     if (initial)
@@ -246,6 +258,34 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return false;
   }
 
+  public addData(data: ReferenceData | Partial<ReferenceDataOptions>): this
+  {
+    this.data[data.name] = data instanceof ReferenceData
+      ? data
+      : ReferenceData.create(this, data);
+
+    return this;
+  }
+
+  public getData(name: string): ReferenceData | null
+  {
+    return this.data[name] || null;
+  }
+
+  public removeData(data: string | ReferenceData): boolean
+  {
+    const name = isString(data) ? data : data.name;
+
+    if (!(name in this.data))
+    {
+      return true;
+    }
+
+    delete this.data[name];
+
+    return true;
+  }
+
   public addFunction(func: Func | Partial<FuncOptions>): this
   {
     this.functions[func.name] = func instanceof Func
@@ -258,7 +298,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
   public getFunction(name: string): Func | null
   {
     return this.functions[name] || null;
-  }
+  }  
 
   public addProgram(program: Program | Partial<ProgramOptions>): this
   {
@@ -272,6 +312,20 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
   public getProgram(name: string): Program
   {
     return this.programs[name];
+  }
+
+  public removeProgram(program: string | Program): boolean
+  {
+    const name = isString(program) ? program : program.name;
+
+    if (!(name in this.programs))
+    {
+      return true;
+    }
+
+    delete this.programs[name];
+
+    return true;
   }
   
   public addEntity(entity: Entity | Partial<EntityOptions>): this
@@ -347,6 +401,20 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     }
 
     return keys;
+  }
+
+  public removeRelation(relation: string | Relation): boolean
+  {
+    const name = isString(relation) ? relation : relation.name;
+
+    if (!(name in this.relations))
+    {
+      return true;
+    }
+
+    delete this.relations[name];
+
+    return true;
   }
 
   public renameProgram(name: string, newName: string): boolean
@@ -439,8 +507,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     } 
   }
 
-  public removeEntity(name: string, stopWithReferences: boolean = true): boolean
+  public removeEntity(entity: string | Entity, stopWithReferences: boolean = true): boolean
   {
+    const name = isString(entity) ? entity : entity.name;
+
     if (!(name in this.entities))
     {
       return true;
@@ -583,8 +653,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return refs;
   }
 
-  public removeFunction(name: string, stopWithReferences: boolean = true): boolean
+  public removeFunction(func: string | Func, stopWithReferences: boolean = true): boolean
   {
+    const name = isString(func) ? func : func.name;
+
     if (!(name in this.entities))
     {
       return true;
@@ -1290,6 +1362,14 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       });
     });
 
+    objectEach(this.data, (data) => {
+      instances.push({
+        data: data.data,
+        type: data.dataType,
+        source: data,
+      });
+    });
+
     objectEach(this.entities, (entity) => {
       if (entity.instances && entity.instances.length > 0) {
         instances.push({
@@ -1344,6 +1424,13 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
           source: [func, 'returnType'],
         });
       }
+    });
+
+    objectEach(this.data, (data) => {
+      instances.push({
+        type: data.dataType,
+        source: data,
+      });
     });
 
     objectEach(this.entities, (entity) => {
@@ -1433,7 +1520,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
         });
       });
 
-      if (entity.canStore()) {
+      if (entity.canStore(this)) {
         instances.push({
           context: entity.getKeyContext(),
           expr: entity.key,
@@ -1472,6 +1559,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       functions: objectMap(this.functions, f => f.encode()),
       relations: objectMap(this.relations, r => r.encode()),
       programs: objectMap(this.programs, p => p.encode()),
+      data: objectMap(this.data, d => d.encode()),
     };
   }
 
@@ -1502,6 +1590,13 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     {
       objectEach(exported.relations, (options) => 
         this.addRelation(options)
+      );
+    }
+
+    if (exported.data)
+    {
+      objectEach(exported.data, (data) => 
+        this.addData(data)
       );
     }
   }

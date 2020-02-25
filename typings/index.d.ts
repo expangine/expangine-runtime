@@ -10,6 +10,7 @@ export * from './Locale';
 export * from './Operation';
 export * from './Computed';
 export * from './Program';
+export * from './ReferenceData';
 export * from './Relation';
 export * from './Runtime';
 export * from './Type';

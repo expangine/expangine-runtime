@@ -5,6 +5,7 @@ import { Expression } from './Expression';
 import { DefinitionProvider } from './DefinitionProvider';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { Computeds } from './Computed';
+import { ReferenceData } from './ReferenceData';
 
 
 
@@ -36,6 +37,7 @@ export interface TypeProvider
 {
   getType(data: any, otherwise?: Type): Type;
   getExpression(data: any): Expression;
+  getData(name: string): ReferenceData | null;
 }
 
 export interface TypeDescribeProvider

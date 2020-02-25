@@ -20,7 +20,7 @@ export interface EntityOptions
   instances: any[];
   key?: any;
   describe?: any;
-  transcoders?: Record<string, EntityStorageTranscoderOptions>;
+  transcoders?: Record<string, EntityTranscoderOptions>;
   indexes?: Record<string, EntityIndexOptions>;
   methods?: Record<string, Func | FuncOptions>;
 }
@@ -41,14 +41,14 @@ export interface EntityIndexOptions
   primary?: boolean;
 }
 
-export interface EntityStorageTranscoder
+export interface EntityTranscoder
 {
   encode: Expression;
   decode: Expression;
   encodedType: Type;
 }
 
-export interface EntityStorageTranscoderOptions
+export interface EntityTranscoderOptions
 {
   encode: any;
   decode: any;
@@ -71,7 +71,7 @@ export enum EntityKeyType
   NONE
 }
 
-export enum EntityStoragePrimaryType
+export enum EntityPrimaryType
 {
   GIVEN,
   AUTO_INCREMENT,
@@ -93,10 +93,10 @@ export class Entity
     }, defs);
   }
 
-  public static PRIMARY_TYPES: Record<EntityStoragePrimaryType, Type> = {
-    [EntityStoragePrimaryType.GIVEN]: null,
-    [EntityStoragePrimaryType.AUTO_INCREMENT]: Types.int(1),
-    [EntityStoragePrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
+  public static PRIMARY_TYPES: Record<EntityPrimaryType, Type> = {
+    [EntityPrimaryType.GIVEN]: null,
+    [EntityPrimaryType.AUTO_INCREMENT]: Types.int(1),
+    [EntityPrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
   };
 
   public name: string;
@@ -108,11 +108,12 @@ export class Entity
   public key: Expression;
   public keyType: Type;
   public describe: Expression;
-  public transcoders: Record<string, EntityStorageTranscoder>;
+  public transcoders: Record<string, EntityTranscoder>;
   public indexes: Record<string, EntityIndex>;
-  public primaryType: EntityStoragePrimaryType;
+  public primaryType: EntityPrimaryType;
 
-  public constructor(options: EntityOptions, defs: Definitions) {
+  public constructor(options: EntityOptions, defs: Definitions) 
+  {
     this.name = options.name;
     this.description = options.description;
     this.meta = options.meta;
@@ -132,10 +133,10 @@ export class Entity
       : Exprs.noop();
     this.transcoders = this.decodeTranscoders(defs, options.transcoders);
     this.indexes = this.decodeIndexes(options.indexes);
-    this.primaryType = EntityStoragePrimaryType.AUTO_INCREMENT;
+    this.primaryType = EntityPrimaryType.AUTO_INCREMENT;
   }
 
-  private decodeTranscoders(defs: Definitions, transcoders?: Record<string, EntityStorageTranscoderOptions>)
+  private decodeTranscoders(defs: Definitions, transcoders?: Record<string, EntityTranscoderOptions>)
   {
     return transcoders
       ? objectMap(transcoders, (t) => ({
@@ -184,9 +185,34 @@ export class Entity
     };
   }
 
-  public canStore(): boolean
+  public canStore(defs: Definitions): boolean
   {
-    return this.key !== Exprs.noop() && this.describe !== Exprs.noop();
+    if (this.primaryType === EntityPrimaryType.GIVEN)
+    {
+      if (!this.keyType || !defs.keyExpectedType.acceptsType(this.keyType))
+      {
+        return false;
+      }
+    }
+
+    const describeType = this.describe.getType(defs, this.getDescribeContext());
+
+    if (!describeType || !defs.describeExpectedType.acceptsType(describeType))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public updateKeyType(defs: Definitions)
+  {
+    const keyType = this.key.getType(defs, this.getKeyContext());
+
+    if (keyType)
+    {
+      this.keyType = keyType;
+    }
   }
 
   public renameProp(prop: string, newProp: string)
@@ -468,7 +494,7 @@ export class Entity
 
     this.addIndex('primary', key, true, true);
 
-    this.primaryType = EntityStoragePrimaryType.GIVEN;
+    this.primaryType = EntityPrimaryType.GIVEN;
 
     return this;
   }

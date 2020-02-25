@@ -5,6 +5,7 @@ import { OperationTypes, OperationGeneric, OperationMapping, OperationTypeInput,
 import { Func } from './Func';
 import { Entity } from './Entity';
 import { Relation } from './Relation';
+import { ReferenceData } from './ReferenceData';
 export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
     describe(data: any): Type;
     merge(type: Type, data: any): Type;
@@ -22,6 +23,7 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
         scope: TypeMap;
     };
     getContext(original: Type, scope: TypeMap): Type;
+    getData(name: string): ReferenceData;
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;

@@ -3,6 +3,7 @@ import { Expression } from './Expression';
 import { DefinitionProvider } from './DefinitionProvider';
 import { Traverser, Traversable, TraverseStep } from './Traverser';
 import { Computeds } from './Computed';
+import { ReferenceData } from './ReferenceData';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
@@ -16,6 +17,7 @@ export declare type TypeResolved<T> = T extends (null | undefined) ? undefined :
 export interface TypeProvider {
     getType(data: any, otherwise?: Type): Type;
     getExpression(data: any): Expression;
+    getData(name: string): ReferenceData | null;
 }
 export interface TypeDescribeProvider {
     describe(data: any): Type;

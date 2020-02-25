@@ -4,7 +4,7 @@ import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, Opera
 import { Computeds, Computed } from './Computed';
 import { Relation, RelationOptions, EntityRelation } from './Relation';
 import { Program, ProgramOptions, ProgramDataSet } from './Program';
-import { Entity, EntityOptions, EntityProps, EntityStorageTranscoder } from './Entity';
+import { Entity, EntityOptions, EntityProps, EntityTranscoder } from './Entity';
 import { Func, FuncOptions, FuncTest } from './Func';
 import { EntityType } from './types/Entity';
 import { ManyType } from './types/Many';
@@ -14,17 +14,19 @@ import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
+import { ReferenceDataOptions, ReferenceData } from './ReferenceData';
 export interface DefinitionsImportOptions {
     entities?: Record<string, Entity | EntityOptions>;
     functions?: Record<string, Func | FuncOptions>;
     relations?: Record<string, RelationOptions>;
     programs?: Record<string, Program | ProgramOptions>;
+    data?: Record<string, ReferenceData | ReferenceDataOptions>;
 }
 export interface DefinitionsOptions extends DefinitionsImportOptions {
     types?: TypeClass[];
     expressions?: ExpressionClass[];
 }
-export declare type DefinitionsReferenceSource = Program | [Program, ProgramDataSet] | Entity | [Entity, 'key' | 'describe'] | [Entity, string, EntityStorageTranscoder] | [Entity, string, EntityStorageTranscoder, 'encode' | 'decode'] | [Entity, Func] | [Entity, Func, 'params' | 'returnType'] | [Entity, Func, FuncTest, 'args' | 'expected'] | Func | [Func, 'params' | 'returnType'] | [Func, FuncTest, 'args' | 'expected'] | Relation;
+export declare type DefinitionsReferenceSource = Program | [Program, ProgramDataSet] | Entity | [Entity, 'key' | 'describe'] | [Entity, string, EntityTranscoder] | [Entity, string, EntityTranscoder, 'encode' | 'decode'] | [Entity, Func] | [Entity, Func, 'params' | 'returnType'] | [Entity, Func, FuncTest, 'args' | 'expected'] | Func | [Func, 'params' | 'returnType'] | [Func, FuncTest, 'args' | 'expected'] | Relation | ReferenceData;
 export declare type DefinitionsEntityReference = ({
     value: EntityType;
     root: Type;
@@ -86,6 +88,9 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     programs: Record<string, Program>;
     entities: Record<string, Entity>;
     functions: Record<string, Func>;
+    data: Record<string, ReferenceData>;
+    keyExpectedType: Type;
+    describeExpectedType: Type;
     constructor(initial?: DefinitionsOptions);
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     add(options: DefinitionsOptions): void;
@@ -94,10 +99,14 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
     findEntity(type: Type, options?: TypeCompatibleOptions): string | false;
+    addData(data: ReferenceData | Partial<ReferenceDataOptions>): this;
+    getData(name: string): ReferenceData | null;
+    removeData(data: string | ReferenceData): boolean;
     addFunction(func: Func | Partial<FuncOptions>): this;
     getFunction(name: string): Func | null;
     addProgram(program: Program | Partial<ProgramOptions>): this;
     getProgram(name: string): Program;
+    removeProgram(program: string | Program): boolean;
     addEntity(entity: Entity | Partial<EntityOptions>): this;
     getEntity(name: string): Entity | null;
     getEntities(): Record<string, Entity>;
@@ -105,17 +114,18 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     getRelation(name: string): Relation;
     getRelations(entityName: string): EntityRelation[];
     getEntityProps(name: string): EntityProps[];
+    removeRelation(relation: string | Relation): boolean;
     renameProgram(name: string, newName: string): boolean;
     renameEntity(name: string, newName: string): false | DefinitionsEntityReference[];
     renameEntityProp(name: string, prop: string, newProp: string): void;
     removeEntityProp(name: string, prop: string): void;
-    removeEntity(name: string, stopWithReferences?: boolean): boolean;
+    removeEntity(entity: string | Entity, stopWithReferences?: boolean): boolean;
     refactorEntity(name: string, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[];
     renameRelation(oldName: string, newName: string): false | DefinitionsRelationReference[];
     renameFunction(oldName: string, newName: string): false | DefinitionsFunctionReference[];
     renameFunctionParameter(functionName: string, oldName: string, newName: string): false | DefinitionsFunctionReference[];
     removeFunctionParameter(functionName: string, name: string): false | DefinitionsFunctionReference[];
-    removeFunction(name: string, stopWithReferences?: boolean): boolean;
+    removeFunction(func: string | Func, stopWithReferences?: boolean): boolean;
     getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
     getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];

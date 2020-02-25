@@ -14,7 +14,7 @@ export interface EntityOptions {
     instances: any[];
     key?: any;
     describe?: any;
-    transcoders?: Record<string, EntityStorageTranscoderOptions>;
+    transcoders?: Record<string, EntityTranscoderOptions>;
     indexes?: Record<string, EntityIndexOptions>;
     methods?: Record<string, Func | FuncOptions>;
 }
@@ -30,12 +30,12 @@ export interface EntityIndexOptions {
     unique?: boolean;
     primary?: boolean;
 }
-export interface EntityStorageTranscoder {
+export interface EntityTranscoder {
     encode: Expression;
     decode: Expression;
     encodedType: Type;
 }
-export interface EntityStorageTranscoderOptions {
+export interface EntityTranscoderOptions {
     encode: any;
     decode: any;
     encodedType: any;
@@ -51,14 +51,14 @@ export declare enum EntityKeyType {
     FOREIGN = 1,
     NONE = 2
 }
-export declare enum EntityStoragePrimaryType {
+export declare enum EntityPrimaryType {
     GIVEN = 0,
     AUTO_INCREMENT = 1,
     UUID = 2
 }
 export declare class Entity {
     static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
-    static PRIMARY_TYPES: Record<EntityStoragePrimaryType, Type>;
+    static PRIMARY_TYPES: Record<EntityPrimaryType, Type>;
     name: string;
     description: string;
     meta: any;
@@ -68,14 +68,15 @@ export declare class Entity {
     key: Expression;
     keyType: Type;
     describe: Expression;
-    transcoders: Record<string, EntityStorageTranscoder>;
+    transcoders: Record<string, EntityTranscoder>;
     indexes: Record<string, EntityIndex>;
-    primaryType: EntityStoragePrimaryType;
+    primaryType: EntityPrimaryType;
     constructor(options: EntityOptions, defs: Definitions);
     private decodeTranscoders;
     private decodeIndexes;
     encode(): EntityOptions;
-    canStore(): boolean;
+    canStore(defs: Definitions): boolean;
+    updateKeyType(defs: Definitions): void;
     renameProp(prop: string, newProp: string): void;
     removeProp(prop: string): void;
     getEntityProps(): EntityProps;

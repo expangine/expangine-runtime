@@ -15,6 +15,7 @@ export const ID = {
   Number: 'num',
   Object: 'obj',
   Optional: '?',
+  Reference: 'ref',
   Relation: 'rel',
   Set: 'set',
   Text: 'text',
