@@ -12,7 +12,7 @@ export declare const ColorOpsTypes: {
     copy: import("../..").OperationTypes<"value", never, never>;
     build: import("../..").OperationTypes<"b" | "r" | "g", "a", never>;
     map: import("../..").OperationTypes<"value" | "b" | "r" | "g", "a", "value" | "component">;
-    op: import("../..").OperationTypes<"value" | "b" | "test" | "r" | "g", "a", "value" | "test" | "component">;
+    op: import("../..").OperationTypes<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component">;
     clamp: import("../..").OperationTypes<"value", never, never>;
     add: import("../..").OperationTypes<"value" | "addend", "alpha", never>;
     adds: import("../..").OperationTypes<"value" | "addend" | "addendScale", "alpha", never>;

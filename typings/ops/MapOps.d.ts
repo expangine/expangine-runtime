@@ -8,7 +8,7 @@ export declare const MapOps: {
     createFor: import("../Operation").Operation<"value", "key", never, never, "value" | "key">;
     maybe: import("../Operation").Operation<"value", never, never, never, never>;
     get: import("../Operation").Operation<"map" | "key", never, never, never, "map">;
-    set: import("../Operation").Operation<"map" | "value" | "key", never, "existingValue", "value", "map">;
+    set: import("../Operation").Operation<"value" | "map" | "key", never, "existingValue", "value", "map">;
     has: import("../Operation").Operation<"map" | "key", never, never, never, never>;
     delete: import("../Operation").Operation<"map" | "key", never, never, never, never>;
     keys: import("../Operation").Operation<"map", never, never, never, "map">;
@@ -18,8 +18,8 @@ export declare const MapOps: {
     clear: import("../Operation").Operation<"map", never, never, never, "map">;
     count: import("../Operation").Operation<"map", never, never, never, never>;
     cmp: import("../Operation").Operation<"value" | "test" | "compare", never, "value" | "key" | "test", "compare", never>;
-    copy: import("../Operation").Operation<"map", "deepCopy" | "deepCopyKey", "map" | "value" | "key", "deepCopy" | "deepCopyKey", "map">;
-    map: import("../Operation").Operation<"map", "transform" | "transformKey", "map" | "value" | "key", "transform" | "transformKey", "map">;
+    copy: import("../Operation").Operation<"map", "deepCopy" | "deepCopyKey", "value" | "map" | "key", "deepCopy" | "deepCopyKey", "map">;
+    map: import("../Operation").Operation<"map", "transform" | "transformKey", "value" | "map" | "key", "transform" | "transformKey", "map">;
     toPlainObject: import("../Operation").Operation<"map", never, never, never, never>;
     fromPlainObject: import("../Operation").Operation<"object", never, never, never, "object">;
     isValid: import("../Operation").Operation<"value", never, never, never, never>;

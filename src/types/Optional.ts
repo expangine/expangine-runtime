@@ -9,6 +9,7 @@ import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 import { Types } from '../Types';
+import { AnyType } from './Any';
 
 
 const INDEX_TYPE = 1;
@@ -25,7 +26,7 @@ export class OptionalType extends Type<Type>
 
   public static computeds = new Computeds(ID.Optional + ID.Delimiter);
 
-  public static baseType = new OptionalType(null);
+  public static baseType = new OptionalType(AnyType.baseType);
 
   public static decode(data: any[], types: TypeProvider): OptionalType 
   {
