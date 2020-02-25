@@ -43,9 +43,9 @@ export type OperationResolved<
 
 export interface OperationTypeProvider
 {
-  getEntity(name: string): Entity;
+  getEntity(name: string): Entity | null;
   getEntities(): Record<string, Entity>;
-  getRelation(name: string): Relation;
+  getRelation(name: string): Relation | null;
   getRelations(entityName: string): EntityRelation[];
 }
 
