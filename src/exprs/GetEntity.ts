@@ -9,21 +9,21 @@ import { NullType } from '../types/Null';
 
 const INDEX_NAME = 1;
 
-export class GetTypeExpression extends Expression 
+export class GetEntityExpression extends Expression 
 {
 
-  public static id = 'type';
+  public static id = 'entity';
 
-  public static readonly instance = new GetTypeExpression('');
+  public static readonly instance = new GetEntityExpression('');
 
-  public static decode(data: any[], exprs: ExpressionProvider): GetTypeExpression 
+  public static decode(data: any[], exprs: ExpressionProvider): GetEntityExpression 
   {
     const name = data[INDEX_NAME];
 
-    return new GetTypeExpression(name);
+    return new GetEntityExpression(name);
   }
 
-  public static encode(expr: GetTypeExpression): any 
+  public static encode(expr: GetEntityExpression): any 
   {
     return [this.id, expr.name];
   }
@@ -38,7 +38,7 @@ export class GetTypeExpression extends Expression
 
   public getId(): string
   {
-    return GetTypeExpression.id;
+    return GetEntityExpression.id;
   }
 
   public getComplexity(def: DefinitionProvider): number
@@ -53,12 +53,12 @@ export class GetTypeExpression extends Expression
 
   public encode(): any 
   {
-    return GetTypeExpression.encode(this);
+    return GetEntityExpression.encode(this);
   }
 
   public clone(): Expression
   {
-    return new GetTypeExpression(this.name);
+    return new GetEntityExpression(this.name);
   }
 
   public getType(def: DefinitionProvider, context: Type): Type | null

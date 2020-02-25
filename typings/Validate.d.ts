@@ -16,7 +16,9 @@ export declare enum ValidationType {
     MISSING_TYPE_NAME = 8,
     MISSING_TYPE = 9,
     MISSING_RELATION_NAME = 10,
-    MISSING_RELATION = 11
+    MISSING_RELATION = 11,
+    MISSING_DATA_NAME = 12,
+    MISSING_DATA = 13
 }
 export interface Validation {
     type: ValidationType;

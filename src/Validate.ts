@@ -23,6 +23,8 @@ export enum ValidationType
   MISSING_TYPE = 9,           // HIGH
   MISSING_RELATION_NAME = 10, // HIGH
   MISSING_RELATION = 11,      // HIGH
+  MISSING_DATA_NAME = 12,     // HIGH
+  MISSING_DATA = 13,          // HIGH
 }
 
 export interface Validation 

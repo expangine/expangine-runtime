@@ -4,6 +4,7 @@ export declare const EntityOperations: Operations;
 export declare const EntityComputeds: Computeds;
 export declare const EntityOps: {
     newInstance: import("../Operation").Operation<"name", never, never, never, "name">;
+    get: import("../Operation").Operation<"name", "where", "instance", "where", "name">;
     getKey: import("../Operation").Operation<"name" | "instance", never, never, never, "name">;
     save: import("../Operation").Operation<"name" | "instance", never, never, never, "name">;
     remove: import("../Operation").Operation<"name" | "instance", never, never, never, "name">;

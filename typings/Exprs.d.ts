@@ -10,7 +10,7 @@ import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
 import { GetExpression } from './exprs/Get';
-import { GetTypeExpression } from './exprs/GetType';
+import { GetEntityExpression } from './exprs/GetEntity';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
 import { InvokeExpression } from './exprs/Invoke';
@@ -69,6 +69,6 @@ export declare class Exprs {
     static compareGreater(): ConstantExpression;
     static string(): ConstantExpression;
     static comment(comment: string): CommentExpression;
-    static type(name: string): GetTypeExpression;
+    static type(name: string): GetEntityExpression;
     static relation(name: string): GetRelationExpression;
 }

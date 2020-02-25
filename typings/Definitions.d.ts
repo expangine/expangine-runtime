@@ -9,7 +9,7 @@ import { Func, FuncOptions, FuncTest } from './Func';
 import { EntityType } from './types/Entity';
 import { ManyType } from './types/Many';
 import { ObjectType } from './types/Object';
-import { GetTypeExpression } from './exprs/GetType';
+import { GetEntityExpression } from './exprs/GetEntity';
 import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
@@ -31,7 +31,7 @@ export declare type DefinitionsEntityReference = ({
     value: EntityType;
     root: Type;
 } | {
-    value: GetTypeExpression;
+    value: GetEntityExpression;
     root: Expression;
 }) & {
     source: DefinitionsReferenceSource;

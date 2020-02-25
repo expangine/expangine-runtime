@@ -1,5 +1,6 @@
 export declare const EntityOpsTypes: {
     newInstance: import("../../Operation").OperationTypes<"name", never, never>;
+    get: import("../../Operation").OperationTypes<"name", "where", "instance">;
     getKey: import("../../Operation").OperationTypes<"name" | "instance", never, never>;
     save: import("../../Operation").OperationTypes<"name" | "instance", never, never>;
     remove: import("../../Operation").OperationTypes<"name" | "instance", never, never>;

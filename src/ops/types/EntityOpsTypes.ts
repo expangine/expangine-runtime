@@ -103,6 +103,23 @@ export const EntityOpsTypes =
     { name: GetName }
   ),
 
+  get: ops.setTypes(EntityOps.get, 
+    (i, provider) => {
+      if (!(i.name instanceof EntityType)) {
+        return AnyType;
+      }
+      const entity = provider.getEntity(i.name.options);
+      if (!entity) {
+        return AnyType;
+      }
+
+      return Types.list(entity.type);
+    },
+    { name: GetName },
+    { where: BooleanType },
+    { instance: GetNamedType },
+  ),
+
   getKey: ops.setTypes(EntityOps.getKey,
     (i, provider) => {
       if (!(i.name instanceof EntityType)) {

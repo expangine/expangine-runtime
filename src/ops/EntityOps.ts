@@ -15,6 +15,8 @@ export const EntityOps =
 
   newInstance: ops.set('newInstance', {}, ['name'], [], [], [], ['name']),
 
+  get: ops.set('get', {}, ['name'], ['where'], ['instance'], ['where'], ['name']),
+
   getKey: ops.set('getKey', {}, ['name', 'instance'], [], [], [], ['name']),
 
   save: ops.set('save', { mutates: ['instance'] }, ['name', 'instance'], [], [], [], ['name']),

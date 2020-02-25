@@ -3,11 +3,11 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler } from '../Validate';
-export declare class GetTypeExpression extends Expression {
+export declare class GetDataExpression extends Expression {
     static id: string;
-    static readonly instance: GetTypeExpression;
-    static decode(data: any[], exprs: ExpressionProvider): GetTypeExpression;
-    static encode(expr: GetTypeExpression): any;
+    static readonly instance: GetDataExpression;
+    static decode(data: any[], exprs: ExpressionProvider): GetDataExpression;
+    static encode(expr: GetDataExpression): any;
     name: string;
     constructor(name: string);
     getId(): string;

@@ -17,7 +17,7 @@ import { ManyType } from './types/Many';
 import { ObjectType } from './types/Object';
 import { NullType } from './types/Null';
 import { ConstantExpression } from './exprs/Constant';
-import { GetTypeExpression } from './exprs/GetType';
+import { GetEntityExpression } from './exprs/GetEntity';
 import { NoExpression } from './exprs/No';
 import { InvokeExpression } from './exprs/Invoke';
 import { GetRelationExpression } from './exprs/GetRelation';
@@ -60,7 +60,7 @@ export type DefinitionsReferenceSource =
 
 export type DefinitionsEntityReference = (
   { value: EntityType, root: Type } |
-  { value: GetTypeExpression, root: Expression }
+  { value: GetEntityExpression, root: Expression }
 ) & { source: DefinitionsReferenceSource };
 
 export interface DefinitionsRelationReference
@@ -1244,7 +1244,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       return (!name || name === match.value.options);
     });
 
-    const exprs = this.getExpressionClassReferences(GetTypeExpression).filter((match) => {
+    const exprs = this.getExpressionClassReferences(GetEntityExpression).filter((match) => {
       return (!name || name === match.value.name);
     });
 
