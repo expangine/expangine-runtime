@@ -10,6 +10,7 @@ import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
 import { GetExpression } from './exprs/Get';
+import { GetDataExpression } from './exprs/GetData';
 import { GetEntityExpression } from './exprs/GetEntity';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
@@ -246,7 +247,7 @@ export class Exprs
     return new CommentExpression(comment);
   }
 
-  public static type(name: string)
+  public static entity(name: string)
   {
     return new GetEntityExpression(name);
   }
@@ -254,6 +255,11 @@ export class Exprs
   public static relation(name: string)
   {
     return new GetRelationExpression(name);
+  }
+
+  public static data(name: string)
+  {
+    return new GetDataExpression(name);
   }
 
 }
