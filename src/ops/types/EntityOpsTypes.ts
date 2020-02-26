@@ -21,10 +21,18 @@ const GetNamedType: OperationTypeInput<'name'> = (i, defs) =>
     ? i.name
     : ObjectType.baseType;
 
-const GetName: OperationTypeInput<'name'> = (i, defs) => 
-  i.name instanceof EntityType
-    ? i.name
-    : Types.many(objectValues(defs.getEntities()));
+const GetName: OperationTypeInput<'name'> = (i, defs) => {
+  if (i.name instanceof EntityType) {
+    return i.name;
+  }
+  const entities = objectValues(defs.getEntities(), (entity) => new EntityType(entity.name, defs));
+
+  return entities.length === 0
+    ? NullType.baseType
+    : entities.length === 1
+      ? entities[0]
+      : Types.many(entities);
+};
 
 const GetTypeRelation = (i: {name?: Type, relation?: Type}, provider: OperationTypeProvider): EntityRelation | EntityRelation[] | null => {
   if (!(i.name instanceof EntityType)) {
@@ -178,6 +186,7 @@ export const EntityOpsTypes =
 };
 
 EntityOpsTypes.newInstance.rawTypes = true;
+EntityOpsTypes.get.rawTypes = true;
 EntityOpsTypes.getKey.rawTypes = true;
 EntityOpsTypes.save.rawTypes = true;
 EntityOpsTypes.remove.rawTypes = true;

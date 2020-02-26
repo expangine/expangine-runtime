@@ -1,5 +1,5 @@
 
-import { Type, TypeInput } from './Type';
+import { Type, TypeInput, TypeProvider } from './Type';
 import { isFunction } from './fns';
 import { Entity } from './Entity';
 import { Relation, EntityRelation } from './Relation';
@@ -41,7 +41,7 @@ export type OperationResolved<
   string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never
 >;
 
-export interface OperationTypeProvider
+export interface OperationTypeProvider extends TypeProvider
 {
   getEntity(name: string): Entity | null;
   getEntities(): Record<string, Entity>;

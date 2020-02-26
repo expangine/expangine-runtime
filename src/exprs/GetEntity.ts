@@ -4,7 +4,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser } from '../Traverser';
 import { ValidationHandler, ValidationSeverity, ValidationType } from '../Validate';
-import { NullType } from '../types/Null';
+import { EntityType } from '../types/Entity';
 
 
 const INDEX_NAME = 1;
@@ -63,7 +63,7 @@ export class GetEntityExpression extends Expression
 
   public getType(def: DefinitionProvider, context: Type): Type | null
   {
-    return def.getType(this.name, NullType.baseType);
+    return new EntityType(this.name, def);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R

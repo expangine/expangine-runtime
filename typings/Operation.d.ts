@@ -1,4 +1,4 @@
-import { Type, TypeInput } from './Type';
+import { Type, TypeInput, TypeProvider } from './Type';
 import { Entity } from './Entity';
 import { Relation, EntityRelation } from './Relation';
 export interface OperationFlags {
@@ -15,7 +15,7 @@ export interface Operation<P extends string = never, O extends string = never, S
     resultDependency: R[];
 }
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
-export interface OperationTypeProvider {
+export interface OperationTypeProvider extends TypeProvider {
     getEntity(name: string): Entity | null;
     getEntities(): Record<string, Entity>;
     getRelation(name: string): Relation | null;
