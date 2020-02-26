@@ -23,7 +23,7 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
         scope: TypeMap;
     };
     getContext(original: Type, scope: TypeMap): Type;
-    getData(name: string): ReferenceData;
+    getData(name: string): ReferenceData | null;
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
