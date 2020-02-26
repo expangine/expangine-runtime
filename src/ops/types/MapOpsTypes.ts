@@ -148,9 +148,7 @@ export const MapOpsTypes =
 
       const propTypes = objectValues((i.object as ObjectType).options.props);
       
-      return propTypes.length > 0
-        ? MapType.forItem(Types.mergeMany(propTypes))
-        : MapType; 
+      return MapType.forItem(Types.mergeMany(propTypes, TextType.baseType));
     },
     { object: i => i.object || ObjectType }
   ),

@@ -10,6 +10,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
 import { Exprs } from '../Exprs';
+import { NullType } from '../types/Null';
 
 
 const INDEX_VALUE = 1;
@@ -117,7 +118,7 @@ export class SwitchExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return Types.mergeMany(types);
+    return Types.mergeMany(types, NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R

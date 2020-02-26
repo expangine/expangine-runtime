@@ -266,11 +266,13 @@ export class Types
     return this.optional(maybe);
   }
 
-  public static mergeMany(readonlyTypes: Type[]): Type | null
+  public static mergeMany(readonlyTypes: Type[]): Type | null;
+  public static mergeMany(readonlyTypes: Type[], noTypes: Type): Type;
+  public static mergeMany(readonlyTypes: Type[], noTypes: Type | null = null): Type | null
   {
     if (readonlyTypes.length === 0)
     {
-      return null;
+      return noTypes;
     }
 
     if (readonlyTypes.find(t => t instanceof AnyType))

@@ -9,6 +9,7 @@ import { ValidationHandler } from '../Validate';
 import { BooleanType } from '../types/Boolean';
 import { isNumber } from '../fns';
 import { Types } from '../Types';
+import { NullType } from '../types/Null';
 
 
 const INDEX_CASES = 1;
@@ -96,7 +97,7 @@ export class IfExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return Types.mergeMany(types);
+    return Types.mergeMany(types, NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R

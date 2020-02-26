@@ -56,5 +56,6 @@ export declare class Types {
     static explode(outerType: Type): Type[];
     static maybe<M extends Type>(type: Type, maybe: TypeClass<M>): Type<any>;
     static mergeMany(readonlyTypes: Type[]): Type | null;
+    static mergeMany(readonlyTypes: Type[], noTypes: Type): Type;
     static merge(a: Type, b: Type): Type;
 }

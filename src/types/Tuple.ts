@@ -15,6 +15,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ListType } from './List';
 import { ListOps } from '../ops/ListOps';
 import { Types } from '../Types';
+import { NullType } from './Null';
 
 
 const INDEX_ELEMENTS = 1;
@@ -101,7 +102,7 @@ export class TupleType extends Type<Type[]>
 
       if (exprType instanceof NumberType)
       {
-        return Types.mergeMany(this.options);
+        return Types.mergeMany(this.options, NullType.baseType);
       }
 
       if (exprType instanceof EnumType)
@@ -111,7 +112,7 @@ export class TupleType extends Type<Type[]>
           const values = Array.from(exprType.options.constants.values());
           const types = values.map((i: number) => this.options[i]).filter(t => !!t);
           
-          return Types.mergeMany(types);
+          return Types.mergeMany(types, NullType.baseType);
         }
 
         if (exprType.options.value instanceof TextType)
@@ -140,12 +141,12 @@ export class TupleType extends Type<Type[]>
             this.options.map((prop, key) => [key, key]),
           ),
         }),
-        value: Types.mergeMany(this.options),
+        value: Types.mergeMany(this.options, NullType.baseType),
       },
       { 
         key: Types.INDEX, 
         value: Types.optional(
-          Types.mergeMany(this.options)
+          Types.mergeMany(this.options, NullType.baseType)
         ),
       },
     ];

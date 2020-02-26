@@ -12,6 +12,7 @@ import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { AnyType } from './Any';
 import { Types } from '../Types';
+import { NullType } from './Null';
 
 
 const INDEX_PROPS = 1;
@@ -150,7 +151,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       {
         const types = objectValues(this.options.props);
 
-        return Types.mergeMany(types);
+        return Types.mergeMany(types, NullType.baseType);
       }
 
       if (exprType instanceof EnumType)
@@ -158,7 +159,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         const values = Array.from(exprType.options.constants.values());
         const types = values.map((p) => this.options.props[p]).filter(t => !!t);
 
-        return Types.mergeMany(types);
+        return Types.mergeMany(types, NullType.baseType);
       }
     }
 
@@ -167,6 +168,8 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
+    const props = objectValues(this.options.props);
+
     return [
       ...objectValues(this.options.props, (value, key) => ({ key, value })),
       {
@@ -177,17 +180,11 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
             objectValues(this.options.props, (prop, key) => [key, key]),
           ),
         }),
-        value: Types.mergeMany(
-          objectValues(this.options.props)
-        ),
+        value: Types.mergeMany(props, NullType.baseType),
       },
       { 
         key: TextType.baseType, 
-        value: Types.optional(
-          Types.mergeMany(
-            objectValues(this.options.props)
-          )
-        ),
+        value: Types.optional(Types.mergeMany(props, NullType.baseType)),
       }
     ];
   }

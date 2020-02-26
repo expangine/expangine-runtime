@@ -14,6 +14,7 @@ import { ColorType } from '../../types/Color';
 import { Type } from '../../Type';
 import { SetType } from '../../types/Set';
 import { Types } from '../../Types';
+import { NullType } from '../../types/Null';
 
 
 const ops = TupleType.operations;
@@ -66,7 +67,7 @@ export const TupleOpsTypes =
       }
 
       return list
-        ? ListType.forItem(Types.mergeMany(elements))
+        ? ListType.forItem(Types.mergeMany(elements, NullType.baseType))
         : new TupleType(elements);
     },
     { a: AnyType, b: AnyType },

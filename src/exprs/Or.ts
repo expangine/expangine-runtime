@@ -7,6 +7,7 @@ import { BooleanType } from '../types/Boolean';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
+import { NullType } from '../types/Null';
 
 
 const INDEX_EXPRESSIONS = 1;
@@ -71,7 +72,7 @@ export class OrExpression extends Expression
       .filter(t => !!t)
     ;
     
-    return Types.mergeMany(types);
+    return Types.mergeMany(types, NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
