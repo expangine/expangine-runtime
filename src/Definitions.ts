@@ -24,6 +24,8 @@ import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { ReferenceDataOptions, ReferenceData } from './ReferenceData';
+import { GetDataExpression } from './exprs/GetData';
+import { ReferenceType } from './types/Reference';
 
 
 
@@ -61,6 +63,11 @@ export type DefinitionsReferenceSource =
 export type DefinitionsEntityReference = (
   { value: EntityType, root: Type } |
   { value: GetEntityExpression, root: Expression }
+) & { source: DefinitionsReferenceSource };
+
+export type DefinitionsDataReference = (
+  { value: ReferenceType, root: Type } |
+  { value: GetDataExpression, root: Expression }
 ) & { source: DefinitionsReferenceSource };
 
 export interface DefinitionsRelationReference
@@ -272,7 +279,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return this.data[name] || null;
   }
 
-  public removeData(data: string | ReferenceData): boolean
+  public removeData(data: string | ReferenceData, stopWithReferences: boolean = true): boolean
   {
     const name = isString(data) ? data : data.name;
 
@@ -281,9 +288,46 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       return true;
     }
 
+    if (stopWithReferences && this.getDataReferences(name).length > 0)
+    {
+      return false;
+    }
+
     delete this.data[name];
 
     return true;
+  }
+
+  public renameData(name: string, newName: string): false | DefinitionsDataReference[]
+  {
+    const data = this.data[name];
+
+    if (name === newName || !newName || !data)
+    {
+      return false;
+    }
+
+    data.name = name;
+
+    this.data[newName] = data;
+    
+    delete this.data[name];
+
+    const refs = this.getDataReferences(name);
+
+    refs.forEach((ref) => 
+    {
+      if (ref.value instanceof ReferenceType) 
+      {
+        ref.value.options = newName;
+      } 
+      else 
+      {
+        ref.value.name = newName;
+      }
+    });
+
+    return refs;
   }
 
   public addFunction(func: Func | Partial<FuncOptions>): this
@@ -403,13 +447,18 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return keys;
   }
 
-  public removeRelation(relation: string | Relation): boolean
+  public removeRelation(relation: string | Relation, stopWithReferences: boolean = true): boolean
   {
     const name = isString(relation) ? relation : relation.name;
 
     if (!(name in this.relations))
     {
       return true;
+    }
+
+    if (stopWithReferences && this.getRelationReferences(name).length > 0)
+    {
+      return false;
     }
 
     delete this.relations[name];
@@ -1249,6 +1298,19 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     });
 
     return (types as DefinitionsEntityReference[]).concat(exprs);
+  }
+
+  public getDataReferences(name?: string): DefinitionsDataReference[]
+  {
+    const types = this.getTypeClassReferences(ReferenceType).filter((match) => {
+      return (!name || name === match.value.options);
+    });
+
+    const exprs = this.getExpressionClassReferences(GetDataExpression).filter((match) => {
+      return (!name || name === match.value.name);
+    });
+
+    return (types as DefinitionsDataReference[]).concat(exprs);
   }
 
   public getEntityDataReferences(name?: string): DefinitionsDataTypeReference<EntityType>[]

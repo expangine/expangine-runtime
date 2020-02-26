@@ -15,6 +15,8 @@ import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { ReferenceDataOptions, ReferenceData } from './ReferenceData';
+import { GetDataExpression } from './exprs/GetData';
+import { ReferenceType } from './types/Reference';
 export interface DefinitionsImportOptions {
     entities?: Record<string, Entity | EntityOptions>;
     functions?: Record<string, Func | FuncOptions>;
@@ -32,6 +34,15 @@ export declare type DefinitionsEntityReference = ({
     root: Type;
 } | {
     value: GetEntityExpression;
+    root: Expression;
+}) & {
+    source: DefinitionsReferenceSource;
+};
+export declare type DefinitionsDataReference = ({
+    value: ReferenceType;
+    root: Type;
+} | {
+    value: GetDataExpression;
     root: Expression;
 }) & {
     source: DefinitionsReferenceSource;
@@ -101,7 +112,8 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     findEntity(type: Type, options?: TypeCompatibleOptions): string | false;
     addData(data: ReferenceData | Partial<ReferenceDataOptions>): this;
     getData(name: string): ReferenceData | null;
-    removeData(data: string | ReferenceData): boolean;
+    removeData(data: string | ReferenceData, stopWithReferences?: boolean): boolean;
+    renameData(name: string, newName: string): false | DefinitionsDataReference[];
     addFunction(func: Func | Partial<FuncOptions>): this;
     getFunction(name: string): Func | null;
     addProgram(program: Program | Partial<ProgramOptions>): this;
@@ -114,7 +126,7 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     getRelation(name: string): Relation;
     getRelations(entityName: string): EntityRelation[];
     getEntityProps(name: string): EntityProps[];
-    removeRelation(relation: string | Relation): boolean;
+    removeRelation(relation: string | Relation, stopWithReferences?: boolean): boolean;
     renameProgram(name: string, newName: string): boolean;
     renameEntity(name: string, newName: string): false | DefinitionsEntityReference[];
     renameEntityProp(name: string, prop: string, newProp: string): void;
@@ -165,6 +177,7 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
     getExpression(value: any): Expression;
     getEntityReferences(name?: string): DefinitionsEntityReference[];
+    getDataReferences(name?: string): DefinitionsDataReference[];
     getEntityDataReferences(name?: string): DefinitionsDataTypeReference<EntityType>[];
     getRelationReferences(relation?: string): DefinitionsRelationReference[];
     getFunctionReferences(name?: string, param?: string): DefinitionsFunctionReference[];
