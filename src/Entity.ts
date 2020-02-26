@@ -2,13 +2,15 @@ import { ObjectType } from './types/Object';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { FuncOptions, Func } from './Func';
-import { objectMap, objectReduce, isArray, objectEach } from './fns';
+import { objectMap, objectReduce, isArray, objectEach, isNumber } from './fns';
 import { Type, TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Exprs } from './Exprs';
 import { Runtime } from './Runtime';
 import { EnumType } from './types/Enum';
 import { Relation } from './Relation';
+import { ListOps } from './ops/ListOps';
+import { AnyOps } from './ops/AnyOps';
 
 
 export interface EntityOptions
@@ -18,6 +20,7 @@ export interface EntityOptions
   meta: any;
   type: any;
   instances: any[];
+  primaryType?: EntityPrimaryType,
   key?: any;
   describe?: any;
   transcoders?: Record<string, EntityTranscoderOptions>;
@@ -93,6 +96,17 @@ export class Entity
     }, defs);
   }
 
+  public static uuid(): string {
+    // tslint:disable: no-magic-numbers no-bitwise
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+
+      return v.toString(16);
+    });
+    // tslint:enable: no-magic-numbers no-bitwise
+  }
+
   public static PRIMARY_TYPES: Record<EntityPrimaryType, Type> = {
     [EntityPrimaryType.GIVEN]: null,
     [EntityPrimaryType.AUTO_INCREMENT]: Types.int(1),
@@ -124,16 +138,18 @@ export class Entity
     this.methods = options.methods 
       ? objectMap(options.methods, (funcOptions) => funcOptions instanceof Func ? funcOptions : new Func(funcOptions, defs))
       : Object.create(null);
+    this.primaryType = isNumber(options.primaryType)
+        ? options.primaryType
+        : EntityPrimaryType.AUTO_INCREMENT;
+    this.transcoders = this.decodeTranscoders(defs, options.transcoders);
+    this.indexes = this.decodeIndexes(options.indexes);
     this.key = options.key 
       ? defs.getExpression(options.key)
-      : Exprs.get('instance', this.getDynamicPrimaryKey());
+      : this.getPrimaryKeyExpression();
     this.keyType = this.key.getType(defs, this.getKeyContext());
     this.describe = options.describe
       ? defs.getExpression(options.describe)
       : Exprs.noop();
-    this.transcoders = this.decodeTranscoders(defs, options.transcoders);
-    this.indexes = this.decodeIndexes(options.indexes);
-    this.primaryType = EntityPrimaryType.AUTO_INCREMENT;
   }
 
   private decodeTranscoders(defs: Definitions, transcoders?: Record<string, EntityTranscoderOptions>)
@@ -276,6 +292,31 @@ export class Entity
     const { type, key } = this;
 
     return run.run(key, { instance, type });
+  }
+
+  public setKey(instance: any)
+  {
+    if (this.primaryType === EntityPrimaryType.GIVEN)
+    {
+      return;
+    }
+
+    const prop = this.getDynamicPrimaryKey();
+
+    if (instance[prop])
+    {
+      return;
+    }
+
+    switch (this.primaryType)
+    {
+      case EntityPrimaryType.AUTO_INCREMENT:
+        instance[prop] = this.instances.reduce((a, b) => Math.max(a, b[prop]), 0) + 1;
+        break;
+      case EntityPrimaryType.UUID:
+        instance[prop] = Entity.uuid();
+        break;
+    }
   }
 
   public getDescribe(run: Runtime, instance: any): any
@@ -445,6 +486,23 @@ export class Entity
       : !('_id' in existing)
         ? '_id'
         : '__id';
+  }
+
+  public getPrimaryKeyExpression(separator: string = '/', name: string = 'primary')
+  {
+    const primary = this.getPrimary(name);
+
+    return primary.props.length > 1
+      ? Exprs.op(ListOps.join, {
+          list: primary.props.map((prop) => 
+            Exprs.get('instance', prop)
+          ),
+          delimiter: Exprs.const(separator),
+          toText: Exprs.op(AnyOps.asText, {
+            value: Exprs.get('item'),
+          }),
+        })
+      : Exprs.get('instance', primary.props[0]);
   }
 
   public getPrimary(name: string = 'primary', returnDynamic: boolean = true): EntityIndex | null

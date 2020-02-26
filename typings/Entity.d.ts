@@ -12,6 +12,7 @@ export interface EntityOptions {
     meta: any;
     type: any;
     instances: any[];
+    primaryType?: EntityPrimaryType;
     key?: any;
     describe?: any;
     transcoders?: Record<string, EntityTranscoderOptions>;
@@ -58,6 +59,7 @@ export declare enum EntityPrimaryType {
 }
 export declare class Entity {
     static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
+    static uuid(): string;
     static PRIMARY_TYPES: Record<EntityPrimaryType, Type>;
     name: string;
     description: string;
@@ -81,6 +83,7 @@ export declare class Entity {
     removeProp(prop: string): void;
     getEntityProps(): EntityProps;
     getKey(run: Runtime, instance: any): any;
+    setKey(instance: any): void;
     getDescribe(run: Runtime, instance: any): any;
     getDecodedPropertyTypes(): TypeMap;
     getPropertyTypeFor(forProperty?: string): EnumType;
@@ -102,6 +105,7 @@ export declare class Entity {
     getDecodeExpected(forProperty?: string): Type<any>;
     getIndexExpectedType(): import(".").SetType;
     getDynamicPrimaryKey(): string;
+    getPrimaryKeyExpression(separator?: string, name?: string): import(".").GetExpression | import(".").OperationExpression<"list", "delimiter" | "toText" | "prefix" | "suffix", "list" | "item" | "index">;
     getPrimary(name?: string, returnDynamic?: boolean): EntityIndex | null;
     getUniqueIndexes(): EntityIndex[];
     addPrimary(props: string | string[]): this;
