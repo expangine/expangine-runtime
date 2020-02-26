@@ -6,6 +6,7 @@ import { Func } from './Func';
 import { Entity } from './Entity';
 import { Relation } from './Relation';
 import { ReferenceData } from './ReferenceData';
+import { Program } from './Program';
 
 
 export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider
@@ -26,8 +27,6 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider
 
   getContextWithScope(original: Type, scope?: TypeMap): { context: Type, scope: TypeMap };
   getContext(original: Type, scope: TypeMap): Type;
-
-  getData(name: string): ReferenceData | null;
 
   getOperation(id: string): OperationGeneric | null;
   getOperationTypes(id: string): OperationTypes<any, any, any> | null;
@@ -53,6 +52,10 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider
   getComputedReturnType(id: string, valueType?: Type | null): Type | null;
   getComputedsFor(valueType: Type): Computed[];
   hasComputed(valueType: Type, id: string): boolean;
+
+  getProgram(name: string): Program | null;
+
+  getData(name: string): ReferenceData | null;
   
   getFunction(name: string): Func | null;
 

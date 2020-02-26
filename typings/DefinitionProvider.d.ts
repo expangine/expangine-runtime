@@ -6,6 +6,7 @@ import { Func } from './Func';
 import { Entity } from './Entity';
 import { Relation } from './Relation';
 import { ReferenceData } from './ReferenceData';
+import { Program } from './Program';
 export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
     describe(data: any): Type;
     merge(type: Type, data: any): Type;
@@ -23,7 +24,6 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
         scope: TypeMap;
     };
     getContext(original: Type, scope: TypeMap): Type;
-    getData(name: string): ReferenceData | null;
     getOperation(id: string): OperationGeneric | null;
     getOperationTypes(id: string): OperationTypes<any, any, any> | null;
     getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null;
@@ -46,6 +46,8 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
     getComputedReturnType(id: string, valueType?: Type | null): Type | null;
     getComputedsFor(valueType: Type): Computed[];
     hasComputed(valueType: Type, id: string): boolean;
+    getProgram(name: string): Program | null;
+    getData(name: string): ReferenceData | null;
     getFunction(name: string): Func | null;
     getEntity(name: string): Entity | null;
     getRelation(name: string): Relation | null;

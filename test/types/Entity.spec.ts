@@ -3,6 +3,9 @@ import { EntityOps, defs, Exprs, Types, EntityType, Relation } from '../../src';
 
 describe('types / Entity', () => {
 
+  defs.clearEntities();
+  defs.clearRelations();
+
   defs.addEntity({
     name: 'Person',
     type: Types.object({

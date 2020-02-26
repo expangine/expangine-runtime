@@ -3,6 +3,7 @@ import { Type, TypeInput, TypeProvider } from './Type';
 import { isFunction } from './fns';
 import { Entity } from './Entity';
 import { Relation, EntityRelation } from './Relation';
+import { NamedMap } from './maps/NamedMap';
 
 
 export interface OperationFlags
@@ -44,7 +45,7 @@ export type OperationResolved<
 export interface OperationTypeProvider extends TypeProvider
 {
   getEntity(name: string): Entity | null;
-  getEntities(): Record<string, Entity>;
+  getEntities(): NamedMap<Entity>;
   getRelation(name: string): Relation | null;
   getRelations(entityName: string): EntityRelation[];
 }

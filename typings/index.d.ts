@@ -17,6 +17,8 @@ export * from './Type';
 export * from './Types';
 export * from './Traverser';
 export * from './Validate';
+export * from './maps/FastMap';
+export * from './maps/NamedMap';
 export * from './types/ID';
 export * from './types/Entity';
 export * from './types/Any';

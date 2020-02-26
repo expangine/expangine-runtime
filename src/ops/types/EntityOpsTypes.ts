@@ -2,7 +2,7 @@
 import { EntityType } from '../../types/Entity';
 import { EntityOps } from '../EntityOps';
 import { Types } from '../../Types';
-import { objectValues, isArray } from '../../fns';
+import { isArray } from '../../fns';
 import { OperationTypeInput, OperationTypeProvider } from '../../Operation';
 import { ObjectType } from '../../types/Object';
 import { BooleanType } from '../../types/Boolean';
@@ -25,8 +25,8 @@ const GetName: OperationTypeInput<'name'> = (i, defs) => {
   if (i.name instanceof EntityType) {
     return i.name;
   }
-  const entities = objectValues(defs.getEntities(), (entity) => new EntityType(entity.name, defs));
-
+  const entities = defs.getEntities().values.map((entity) => new EntityType(entity.name, defs));
+  
   return entities.length === 0
     ? NullType.baseType
     : entities.length === 1

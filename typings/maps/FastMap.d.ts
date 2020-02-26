@@ -1,0 +1,34 @@
+export declare type FastMapOptions<T> = Map<string, T> | Record<string, T> | Array<[string, T]> | FastMap<T>;
+export declare class FastMap<T> {
+    indexes: Record<string, number>;
+    keys: string[];
+    values: T[];
+    constructor(options?: FastMapOptions<T>);
+    reset(options: FastMapOptions<T>): void;
+    merge(options: FastMapOptions<T>): void;
+    clear(): void;
+    length(): number;
+    valueAt(i: number): T | undefined;
+    keyAt(i: number): string | undefined;
+    pairAt(i: number): [string, T] | [undefined, undefined];
+    has(key: string | T): boolean;
+    set(key: string, value: T): void;
+    rekey(old: string | T, newKey: string): boolean;
+    sort(cmp: (a: T, b: T) => number): void;
+    sortByKey(cmp?: (a: string, b: string) => number): void;
+    reindex(): void;
+    swap(i: number, k: number): boolean;
+    get<O = undefined>(key: string | T, otherwise?: O): T | O;
+    remove(key: string | T, respectOrder?: boolean): T | undefined;
+    removeAt(i: number): boolean;
+    move(from: number, to: number): boolean;
+    moveToFront(key: string | T): boolean;
+    moveToBack(key: string | T): boolean;
+    indexOf(key: string | T): number;
+    keyOf(value: T): string | undefined;
+    toPairs(): Array<[string, T]>;
+    toMap(): Map<string, T>;
+    toObject(): Record<string, T>;
+    clone(): FastMap<T>;
+    forEach(iterator: (value: T, key: string) => void): void;
+}

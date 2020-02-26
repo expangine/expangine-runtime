@@ -1,6 +1,7 @@
 import { Type, TypeInput, TypeProvider } from './Type';
 import { Entity } from './Entity';
 import { Relation, EntityRelation } from './Relation';
+import { NamedMap } from './maps/NamedMap';
 export interface OperationFlags {
     complexity: number;
     mutates: string[];
@@ -17,7 +18,7 @@ export interface Operation<P extends string = never, O extends string = never, S
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
 export interface OperationTypeProvider extends TypeProvider {
     getEntity(name: string): Entity | null;
-    getEntities(): Record<string, Entity>;
+    getEntities(): NamedMap<Entity>;
     getRelation(name: string): Relation | null;
     getRelations(entityName: string): EntityRelation[];
 }
