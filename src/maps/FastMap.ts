@@ -180,7 +180,8 @@ export class FastMap<T>
 
     if (i !== -1)
     {
-      const removing = this.values[i];
+      const { keys, values } = this;
+      const removing = values[i];
 
       if (respectOrder)
       {
@@ -188,14 +189,14 @@ export class FastMap<T>
       }
       else
       {
-        delete this.indexes[this.keys[i]];
-        const lastKey = this.keys.pop();
-        const lastValue = this.values.pop();
+        delete this.indexes[keys[i]];
+        const lastKey = keys.pop();
+        const lastValue = values.pop();
 
-        if (i !== this.keys.length - 1)
+        if (i !== keys.length)
         {
-          this.keys.splice(i, 1, lastKey);
-          this.values.splice(i, 1, lastValue);
+          keys.splice(i, 1, lastKey);
+          values.splice(i, 1, lastValue);
           this.indexes[lastKey] = i;
         }
       }
@@ -206,18 +207,20 @@ export class FastMap<T>
 
   public removeAt(i: number): boolean
   {
-    if (i >= this.keys.length)
+    const { keys, values } = this;
+
+    if (i < 0 || i >= keys.length)
     {
       return false;
     }
 
-    delete this.indexes[this.keys[i]];
-    this.keys.splice(i, 1);
-    this.values.splice(i, 1);
+    delete this.indexes[keys[i]];
+    keys.splice(i, 1);
+    values.splice(i, 1);
 
-    while (++i < this.keys.length)
+    while (++i < keys.length)
     {
-      this.indexes[this.keys[i]]--;
+      this.indexes[keys[i]]--;
     }
 
     return true;
