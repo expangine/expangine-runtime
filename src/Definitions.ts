@@ -540,7 +540,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     } 
   }
 
-  public removeEntity(entity: string | Entity, stopWithReferences: boolean = true): boolean
+  public removeEntity(entity: string | Entity, stopWithReferences: boolean = true, respectOrder: boolean = false): boolean
   {
     if (!this.entities.has(entity))
     {
@@ -552,7 +552,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       return false;
     }
 
-    this.entities.remove(entity);
+    this.entities.remove(entity, respectOrder);
 
     this.relations.forEach((relation) =>
     {
@@ -560,7 +560,7 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
 
       if (relation.isEmpty())
       {
-        this.relations.remove(relation);
+        this.relations.remove(relation, respectOrder);
       }
     });
 

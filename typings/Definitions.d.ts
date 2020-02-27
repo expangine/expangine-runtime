@@ -139,7 +139,7 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     renameEntity(entity: string | Entity, newName: string): false | DefinitionsEntityReference[];
     renameEntityProp(name: string | Entity, prop: string, newProp: string): void;
     removeEntityProp(name: string | Entity, prop: string): void;
-    removeEntity(entity: string | Entity, stopWithReferences?: boolean): boolean;
+    removeEntity(entity: string | Entity, stopWithReferences?: boolean, respectOrder?: boolean): boolean;
     clearEntities(): void;
     refactorEntity(entity: string | Entity, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[];
     renameRelation(relation: string | Relation, newName: string): false | DefinitionsRelationReference[];
