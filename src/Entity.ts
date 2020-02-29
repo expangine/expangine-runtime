@@ -423,11 +423,11 @@ export class Entity
     return Types.object({ name, instance, property, value });
   }
 
-  public getEncodeExpected(forProperty?: string)
+  public getEncodeExpected(forProperty?: string, defaultType: Type = Types.any())
   {
     return forProperty && forProperty in this.transcoders
       ? this.transcoders[forProperty].encodedType
-      : Types.any();
+      : defaultType;
   }
 
   public getDecoded(run: Runtime, encoded: any): any
@@ -455,12 +455,12 @@ export class Entity
       : value;
   }
 
-  public getDecodeContext(forProperty?: string): ObjectType
+  public getDecodeContext(forProperty?: string, overrideValueType?: Type): ObjectType
   {
     const name = Types.enumForText([this.name]);
     const instance = this.getEncodedType();
     const property = this.getPropertyTypeFor(forProperty);
-    const value = this.getEncodeExpected(forProperty);
+    const value = this.getEncodeExpected(forProperty, overrideValueType);
 
     return Types.object({ name, instance, property, value });
   }

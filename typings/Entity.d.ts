@@ -98,10 +98,10 @@ export declare class Entity {
     getEncoded(run: Runtime, instance: any): any;
     getEncodedValue(run: Runtime, instance: any, property: string): any;
     getEncodeContext(forProperty?: string): ObjectType;
-    getEncodeExpected(forProperty?: string): Type<any>;
+    getEncodeExpected(forProperty?: string, defaultType?: Type): Type<any>;
     getDecoded(run: Runtime, encoded: any): any;
     getDecodedValue(run: Runtime, instance: any, property: string): any;
-    getDecodeContext(forProperty?: string): ObjectType;
+    getDecodeContext(forProperty?: string, overrideValueType?: Type): ObjectType;
     getDecodeExpected(forProperty?: string): Type<any>;
     getIndexExpectedType(): import(".").SetType;
     getDynamicPrimaryKey(): string;
