@@ -245,10 +245,21 @@ export function compare (a: any, b: any): number
     case 'object':
       const ad = a instanceof Date;
       const bd = b instanceof Date;
-  
       if (ad !== bd) return (ad ? 1 : 0) - (bd ? 1 : 0);
-  
       if (ad) return a.getTime() - b.getTime();
+
+      const aset = a instanceof Set;
+      const bset = b instanceof Set;  
+      if (aset !== bset) return (aset ? 1 : 0) - (bset ? 1 : 0);
+      if (aset) return compare(Array.from(a.entries()), Array.from(b.entries()));
+
+      const amap = a instanceof Map;
+      const bmap = b instanceof Map;  
+      if (amap !== bmap) return (amap ? 1 : 0) - (bmap ? 1 : 0);
+      if (amap) return compare(Array.from(a.entries()), Array.from(b.entries()));
+
+      if (a === null) return 1;
+      if (b === null) return -1;
 
       let less = 0;
       let more = 0;
