@@ -140,48 +140,80 @@ export class DataTypeRegistry
     return this.addToPriorityList(this.equalsMap[equals.type], equals);
   }
 
-  public copy<T>(x: T): T
+  public copy<T>(x: T, containsCycles: boolean = false): T
   {
     if (!x) return x; // null, undefined, 0, '', NaN, false
 
     if (typeof x === 'object')
     {
-      const copied = new Map();
       const copiers = this.copyList;
 
-      const setObjectCopy = (original: any, copy: any) => 
+      if (containsCycles)
       {
-        copied.set(original, copy);
-      };
-
-      const copyObject = (a: any): any =>
-      {
-        if (!a) return a;
-
-        if (typeof a === 'object')
-        {
-          const existing = copied.get(a);
-
-          if (existing !== undefined)
-          {
-            return existing;
-          }
-
-          for (const copier of copiers)
-          {
-            const copierCopy = copier.copy(x, copyObject, setObjectCopy);
+        const copied = new Map();
   
-            if (copierCopy !== undefined)
+        const setObjectCopy = (original: any, copy: any) => 
+        {
+          copied.set(original, copy);
+        };
+  
+        const copyObject = (a: any): any =>
+        {
+          if (!a) return a;
+  
+          if (typeof a === 'object')
+          {
+            const existing = copied.get(a);
+  
+            if (existing !== undefined)
             {
-              return copierCopy;
+              return existing;
+            }
+  
+            for (const copier of copiers)
+            {
+              const copierCopy = copier.copy(a, copyObject, setObjectCopy);
+    
+              if (copierCopy !== undefined)
+              {
+                return copierCopy;
+              }
             }
           }
-        }
+  
+          return a;
+        };
+  
+        return copyObject(x);
+      }
+      else
+      {
+        const setObjectCopy = (original: any, copy: any) => {};
 
-        return a;
-      };
+        const copyValue = (a: any): any =>
+        {
+          if (!a) return a;
+  
+          if (typeof a === 'object')
+          {
+            for (const copier of copiers)
+            {
+              const copierCopy = copier.copy(a, copyValue, setObjectCopy);
+    
+              if (copierCopy !== undefined)
+              {
+                return copierCopy;
+              }
+            }
+          }
+  
+          return a;
+        };
+  
+        return copyValue(x);
+      }
 
-      return copyObject(x);
+      
     }
   
     return x;

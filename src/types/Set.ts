@@ -159,12 +159,9 @@ export class SetType extends Type<SetOptions>
             return false
           }
 
-          const avalues = Array.from(a);
-          const bvalues = Array.from(b);
-
-          for (let i = 0; i < avalues.length; i++) 
+          for (const value of a)
           {
-            if (!equals(avalues[i], bvalues[i]))
+            if (!b.has(value))
             {
               return false;
             }

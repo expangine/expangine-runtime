@@ -36,7 +36,7 @@ export declare class DataTypeRegistry {
     addCompare(compare: DataTypeComparator): this;
     equals(a: any, b: any): boolean;
     addEquals(equals: DataTypeEquality): this;
-    copy<T>(x: T): T;
+    copy<T>(x: T, containsCycles?: boolean): T;
     addCopier(copier: DataTypeCopier): this;
     toJson<T>(value: T): any;
     fromJson<T>(json: any): T;
