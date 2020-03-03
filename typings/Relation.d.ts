@@ -52,9 +52,9 @@ export declare enum RelationCascade {
 export interface RelationEvents {
     changed(relation: Relation): void;
     renamed(relation: Relation, oldName: string): void;
-    sync(relation: Relation, options: RelationOptions, defs: Definitions): void;
+    sync(relation: Relation, options: RelationOptions | Relation, defs: Definitions): void;
 }
-export declare class Relation extends EventBase<RelationEvents> implements RelationOptions {
+export declare class Relation extends EventBase<RelationEvents> {
     /**
      * A unique name for the relationship between the subject type and related types.
      */
@@ -118,8 +118,8 @@ export declare class Relation extends EventBase<RelationEvents> implements Relat
      */
     protected defs: Definitions;
     constructor(defs: Definitions, options: RelationOptions);
-    sync(options: RelationOptions, defs: Definitions): void;
-    hasChanges(options: RelationOptions): boolean;
+    sync(options: RelationOptions | Relation, defs: Definitions): void;
+    hasChanges(options: RelationOptions | Relation): boolean;
     changed(): void;
     private decodeTypePair;
     private encodeTypePair;

@@ -67,10 +67,10 @@ export interface RelationEvents
 {
   changed(relation: Relation): void;
   renamed(relation: Relation, oldName: string): void;
-  sync(relation: Relation, options: RelationOptions, defs: Definitions): void;
+  sync(relation: Relation, options: RelationOptions | Relation, defs: Definitions): void;
 }
 
-export class Relation extends EventBase<RelationEvents> implements RelationOptions
+export class Relation extends EventBase<RelationEvents>
 {
 
   /**
@@ -172,7 +172,7 @@ export class Relation extends EventBase<RelationEvents> implements RelationOptio
     this.extension = !!options.extension;
   }
 
-  public sync(options: RelationOptions, defs: Definitions)
+  public sync(options: RelationOptions | Relation, defs: Definitions)
   {
     if (this.hasChanges(options))
     {
@@ -197,7 +197,7 @@ export class Relation extends EventBase<RelationEvents> implements RelationOptio
     }
   }
 
-  public hasChanges(options: RelationOptions): boolean
+  public hasChanges(options: RelationOptions | Relation): boolean
   {
     return !DataTypes.equals(options instanceof Relation ? options.encode() : options, this.encode());
   }
