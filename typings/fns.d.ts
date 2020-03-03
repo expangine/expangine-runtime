@@ -16,32 +16,15 @@ export declare function isEmpty(value: any): boolean;
 export declare function clamp(x: number, min: number, max: number): number;
 export declare function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, V>;
 export declare function reverseMap<K, V>(map: Map<K, V>): Map<V, K>;
+export declare function arraySync<V, W = V>(target: V[], source: W[], matches: (target: V, source: W) => boolean, add: (target: V[], value: W) => void, remove: (target: V[], index: number, value: V) => void, update: (target: V[], index: number, value: V, newValue: W) => void): V[];
+export declare function objectSync<V, K extends RecordKey = string>(target: Record<K, V>, source: Record<K, V>, add: (target: Record<K, V>, key: K, value: V) => void, remove: (target: Record<K, V>, key: K, value: V) => void, update: (target: Record<K, V>, key: K, value: V, withValue: V) => void): Record<K, V>;
 export declare function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(map: Record<K, V>, getValue: (value: V, key: K) => R, getKey?: (key: K, value: V) => J): Record<J, R>;
 export declare function objectEach<V, K extends RecordKey = string>(map: Record<K, V>, onEach: (value: V, key: K, map: Record<K, V>) => any): void;
 export declare function objectValues<V, M = V, K extends RecordKey = string>(map: Record<K, V>, transform?: (value: V, key: K) => M): M[];
 export declare function objectReduce<R, V, K extends RecordKey = string>(map: Record<K, V>, reduce: (value: V, key: K, reduced: R) => R, initial: R): R;
 export declare function objectFromProps<P extends string, V>(props: P[], getValue: (prop: P, index: number) => V): Record<P, V>;
 export declare function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getItem: (value: V, key: K) => T): T[];
-export declare function getCompare(less: number, more: number): number;
 export declare function coalesce<T>(x?: T, y?: T): T;
-export declare const COMPARE_TYPE_ORDER: {
-    'boolean': number;
-    'number': number;
-    'bigint': number;
-    'string': number;
-    'symbol': number;
-    'object': number;
-    'undefined': number;
-    'function': number;
-};
-export declare function compare(a: any, b: any): number;
-export interface Copier {
-    priority: number;
-    tryCopy(x: any, copyAny: (x: any, copied: Map<any, any>) => any, copied: Map<any, any>): any;
-}
-export declare const copiers: Copier[];
-export declare function addCopier(priority: number, tryCopy: Copier['tryCopy']): void;
-export declare function copy(x: any, copied?: Map<any, any>): any;
 export declare function padNumber(x: number, length: number, first?: number): string;
 export declare function pad(x: string, length: number, padding: string, before: boolean): string;
 export declare function toString(x: any): string;

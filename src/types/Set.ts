@@ -1,5 +1,5 @@
 
-import { isObject, isArray, isSet, isString, addCopier } from '../fns';
+import { isObject, isArray, isSet, isString } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
@@ -10,6 +10,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Types } from '../Types';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_VALUE = 1;
@@ -71,34 +72,107 @@ export class SetType extends Type<SetOptions>
 
   public static register(): void
   {
-    const ANY_TYPE_PRIORITY = 11;
+    const priority = 11;
+    const type: DataTypeRaw = 'object';
 
-    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-      if (isObject(json) && isString(json.$any) && json.$any === 'set') {
-        return new Set(json.value.map((v: any) => reader(v)));
-      }
-    });
-
-    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-      if (isSet(json)) {
-        return {
-          $any: 'set',
-          value: Array.from(json.entries()).map((v) => writer(v)),
-        };
-      }
-    });
-
-    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
-      if (isSet(x)) {
-        const newSet = new Set();
-        copied.set(x, newSet);
-
-        for (const [value] of x.entries()) {
-          newSet.add(copyAny(value, copied));
+    DataTypes.addJson({
+      priority,
+      fromJson: (json, reader) => {
+        if (isObject(json) && isString(json.$any) && json.$any === 'set') {
+          return new Set(json.value.map(reader));
         }
+      },
+      toJson: (json, writer) => {
+        if (isSet(json)) {
+          return {
+            $any: 'set',
+            value: Array.from(json.entries()).map(writer),
+          };
+        }
+      },
+    });
 
-        return newSet;
-      }
+    DataTypes.addCopier({
+      priority,
+      copy: (x, copy, setObjectCopy) => {
+        if (isSet(x)) {
+          const newSet = new Set();
+
+          setObjectCopy(x, newSet);
+  
+          for (const [value] of x.entries()) {
+            newSet.add(copy(value));
+          }
+  
+          return newSet;
+        }
+      },
+    });
+
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b, compare) => {
+        const at = isSet(a);
+        const bt = isSet(b);
+
+        if (at !== bt) return (at ? 1 : 0) - (bt ? 1 : 0);
+        
+        if (isSet(a) && isSet(b)) {
+          let dl = a.size - b.size;
+
+          if (dl === 0) {
+            let less = 0;
+            let more = 0;
+
+            const avalues = Array.from(a);
+            const bvalues = Array.from(b);
+
+            for (let i = 0; i < avalues.length; i++) {
+              const c = compare(avalues[i], bvalues[i]);
+
+              if (c < 0) less++;
+              if (c > 0) more++;
+            }
+
+            dl = DataTypes.getCompare(less, more);
+          }
+
+          return dl;
+        }
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b, equals) => {
+        const al = isSet(a);
+        const bl = isSet(b);
+
+        if (al !== bl) return false;
+        
+        if (isSet(a) && isSet(b))
+        {
+          if (a.size !== b.size)
+          {
+            return false
+          }
+
+          const avalues = Array.from(a);
+          const bvalues = Array.from(b);
+
+          for (let i = 0; i < avalues.length; i++) 
+          {
+            if (!equals(avalues[i], bvalues[i]))
+            {
+              return false;
+            }
+          }
+
+          return true;
+        }
+      },
     });
   }
 

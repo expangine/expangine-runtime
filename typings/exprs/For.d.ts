@@ -23,7 +23,7 @@ export declare class ForExpression extends Expression {
     getId(): string;
     getComplexity(def: DefinitionProvider): number;
     getScope(): {
-        [x: string]: NumberType | BooleanType;
+        [x: string]: BooleanType | NumberType;
     };
     encode(): any;
     clone(): Expression;

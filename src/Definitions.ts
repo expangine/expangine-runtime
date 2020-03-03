@@ -28,6 +28,7 @@ import { GetDataExpression } from './exprs/GetData';
 import { ReferenceType } from './types/Reference';
 import { NamedMap } from './maps/NamedMap';
 import { FastMap } from './maps/FastMap';
+import { EventBase } from './EventBase';
 
 
 
@@ -128,7 +129,43 @@ export interface DefinitionsExpressionInstance
   source: DefinitionsReferenceSource;
 }
 
-export class Definitions implements OperationTypeProvider, DefinitionProvider
+export interface DefinitionsEvents
+{
+  changed(defs: Definitions): void;
+  sync(defs: Definitions, options: DefinitionsOptions): void;
+
+  addRelation(defs: Definitions, relation: Relation): void;
+  removeRelation(defs: Definitions, relation: Relation): void;
+  updateRelation(defs: Definitions, relation: Relation): void;
+  renameRelation(defs: Definitions, relation: Relation, oldName: string): void;
+  clearRelations(defs: Definitions, relations: Relation[]): void;
+  
+  addProgram(defs: Definitions, program: Program): void;
+  removeProgram(defs: Definitions, program: Program): void;
+  updateProgram(defs: Definitions, program: Program): void;
+  renameProgram(defs: Definitions, program: Program, oldName: string): void;
+  clearPrograms(defs: Definitions, programs: Program[]): void;
+  
+  addEntity(defs: Definitions, entity: Entity): void;
+  removeEntity(defs: Definitions, entity: Entity): void;
+  updateEntity(defs: Definitions, entity: Entity): void;
+  renameEntity(defs: Definitions, entity: Entity, oldName: string): void;
+  clearEntities(defs: Definitions, entities: Entity[]): void;
+  
+  addFunction(defs: Definitions, func: Func): void;
+  removeFunction(defs: Definitions, func: Func): void;
+  updateFunction(defs: Definitions, func: Func): void;
+  renameFunction(defs: Definitions, func: Func, oldName: string): void;
+  clearFunctions(defs: Definitions, functions: Func[]): void;
+  
+  addData(defs: Definitions, data: ReferenceData): void;
+  removeData(defs: Definitions, data: ReferenceData): void;
+  updateData(defs: Definitions, data: ReferenceData): void;
+  renameData(defs: Definitions, data: ReferenceData, oldName: string): void;
+  clearData(defs: Definitions, data: ReferenceData[]): void;
+}
+
+export class Definitions extends EventBase<DefinitionsEvents> implements OperationTypeProvider, DefinitionProvider
 {
 
   public types: Record<string, TypeClass>;
@@ -150,6 +187,8 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
 
   public constructor(initial?: DefinitionsOptions)
   { 
+    super();
+
     this.types = Object.create(null);
     this.typeList = [];
     this.describers = [];
@@ -199,6 +238,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     }
 
     return copy;
+  }
+  
+  public changed()
+  {
+    this.trigger('changed', this);
   }
 
   public add(options: DefinitionsOptions)
@@ -269,9 +313,38 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return found ? found.name : false;
   }
 
-  public addData(data: ReferenceData | Partial<ReferenceDataOptions>): this
+  public addData(dataOptions: ReferenceData | Partial<ReferenceDataOptions>, sync: boolean = true, delayChange: boolean = false): this
   {
-    this.data.add(data instanceof ReferenceData ? data : ReferenceData.create(this, data));
+    const data = dataOptions instanceof ReferenceData 
+      ? dataOptions 
+      : ReferenceData.create(this, dataOptions);
+
+    const existing = this.data.get(data.name);
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(data, this);
+      }
+      else
+      {
+        this.data.add(data);
+      }
+      
+      this.trigger('updateData', this, data);
+    }
+    else
+    {
+      this.data.add(data);
+
+      this.trigger('addData', this, data);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return this;
   }
@@ -286,9 +359,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return this.data;
   }
 
-  public removeData(data: string | ReferenceData, stopWithReferences: boolean = true, respectOrder: boolean = false): boolean
+  public removeData(dataInput: string | ReferenceData, stopWithReferences: boolean = true, respectOrder: boolean = false, delayChange: boolean = false): boolean
   {
-    if (!this.data.has(data))
+    const data = this.data.valueOf(dataInput);
+
+    if (!data)
     {
       return true;
     }
@@ -300,16 +375,35 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
 
     this.data.remove(data, respectOrder);
 
+    this.trigger('removeData', this, data);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
     return true;
   }
 
-  public clearData()
+  public clearData(delayChange: boolean = false)
   {
+    const data = this.data.values.slice();
+
     this.data.clear();
+
+    this.trigger('clearData', this, data);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
   }
 
-  public renameData(data: string | ReferenceData, newName: string): false | DefinitionsDataReference[]
+  public renameData(dataInput: string | ReferenceData, newName: string, delayChange: boolean = false): false | DefinitionsDataReference[]
   {
+    const data = this.data.valueOf(dataInput);
+    const oldName = data.name;
+    
     if (!this.data.rename(data, newName))
     {
       return false;
@@ -329,12 +423,51 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       }
     });
 
+    data.trigger('renamed', data, oldName);
+    data.changed();
+
+    this.trigger('renameData', this, data, oldName);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
     return refs;
   }
 
-  public addFunction(func: Func | Partial<FuncOptions>): this
+  public addFunction(funcOptions: Func | Partial<FuncOptions>, sync: boolean = true, delayChange: boolean = false): this
   {
-    this.functions.add(func instanceof Func ? func : Func.create(this, func));
+    const func = funcOptions instanceof Func 
+      ? funcOptions 
+      : Func.create(this, funcOptions);
+
+    const existing = this.functions.get(func.name);
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(func, this);
+      }
+      else
+      {
+        this.functions.add(func);
+      }
+      
+      this.trigger('updateFunction', this, func);
+    }
+    else
+    {
+      this.functions.add(func);
+
+      this.trigger('addFunction', this, func);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return this;
   }
@@ -349,9 +482,38 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return this.functions;
   }
 
-  public addProgram(program: Program | Partial<ProgramOptions>): this
+  public addProgram(programOptions: Program | Partial<ProgramOptions>, sync: boolean = true, delayChange: boolean = false): this
   {
-    this.programs.add(program instanceof Program ? program : Program.create(this, program));
+    const program = programOptions instanceof Program 
+      ? programOptions 
+      : Program.create(this, programOptions);
+
+    const existing = this.programs.get(program.name);
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(program, this);
+      }
+      else
+      {
+        this.programs.add(program);
+      }
+      
+      this.trigger('updateProgram', this, program);
+    }
+    else
+    {
+      this.programs.add(program);
+
+      this.trigger('addProgram', this, program);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return this;
   }
@@ -366,21 +528,73 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return this.programs;
   }
 
-  public removeProgram(program: string | Program, respectOrder: boolean = false): boolean
+  public removeProgram(programInput: string | Program, respectOrder: boolean = false, delayChange: boolean = false): boolean
   {
+    const program = this.programs.valueOf(programInput);
+
+    if (!program)
+    {
+      return true;
+    }
+
     this.programs.remove(program, respectOrder);
+
+    this.trigger('removeProgram', this, program);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return true;
   }
 
-  public clearPrograms()
+  public clearPrograms(delayChange: boolean = false)
   {
+    const programs = this.programs.values.slice();
+
     this.programs.clear();
+
+    this.trigger('clearPrograms', this, programs);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
   }
   
-  public addEntity(entity: Entity | Partial<EntityOptions>): this
+  public addEntity(entityOptions: Entity | Partial<EntityOptions>, sync: boolean = true, delayChange: boolean = false): this
   {
-    this.entities.add(entity instanceof Entity ? entity : Entity.create(this, entity));
+    const entity = entityOptions instanceof Entity
+      ? entityOptions
+      : Entity.create(this, entityOptions);
+
+    const existing = this.entities.get(entity.name);
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(entity, this);
+      }
+      else
+      {
+        this.entities.add(entity);
+      }
+      
+      this.trigger('updateEntity', this, entity);
+    }
+    else
+    {
+      this.entities.add(entity);
+
+      this.trigger('addEntity', this, entity);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return this;
   }
@@ -395,9 +609,38 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return this.entities;
   }
 
-  public addRelation(relation: Relation | RelationOptions): this
+  public addRelation(relationOptions: Relation | RelationOptions, sync: boolean = true, delayChange: boolean = false): this
   {
-    this.relations.add(relation instanceof Relation ? relation : new Relation(this, relation));
+    const relation = relationOptions instanceof Relation 
+      ? relationOptions 
+      : new Relation(this, relationOptions);
+
+    const existing = this.relations.get(relation.name);
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(relation, this);
+      }
+      else
+      {
+        this.relations.add(relation);
+      }
+      
+      this.trigger('updateRelation', this, relation);
+    }
+    else
+    {
+      this.relations.add(relation);
+
+      this.trigger('addRelation', this, relation);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return this;
   }
@@ -449,9 +692,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return keys;
   }
 
-  public removeRelation(relation: string | Relation, stopWithReferences: boolean = true, respectOrder: boolean = false): boolean
+  public removeRelation(relationInput: string | Relation, stopWithReferences: boolean = true, respectOrder: boolean = false, delayChange: boolean = false): boolean
   {
-    if (!this.relations.has(relation))
+    const relation = this.relations.valueOf(relationInput);
+
+    if (!relation)
     {
       return true;
     }
@@ -463,21 +708,58 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
 
     this.relations.remove(relation, respectOrder);
 
+    this.trigger('removeRelation', this, relation);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
     return true;
   }
 
-  public clearRelations()
+  public clearRelations(delayChange: boolean = false)
   {
+    const relations = this.relations.values.slice();
+
     this.relations.clear();
+
+    this.trigger('clearRelations', this, relations);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
   }
 
-  public renameProgram(program: string | Program, newName: string): boolean
+  public renameProgram(programInput: string | Program, newName: string, delayChange: boolean = false): boolean
   {
-    return this.programs.rename(program, newName);
+    const program = this.programs.valueOf(programInput);
+    const oldName = program.name;
+
+    if (!this.programs.rename(program, newName))
+    {
+      return false;
+    }
+
+    program.trigger('renamed', program, oldName);
+    program.changed();
+
+    this.trigger('renameProgram', this, program, oldName);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+    
+    return true;
   }
 
-  public renameEntity(entity: string | Entity, newName: string): false | DefinitionsEntityReference[]
+  public renameEntity(entityInput: string | Entity, newName: string, delayChange: boolean = false): false | DefinitionsEntityReference[]
   {
+    const entity = this.entities.valueOf(entityInput);
+    const oldName = entity.name;
+
     if (!this.entities.rename(entity, newName))
     {
       return false;
@@ -501,6 +783,16 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
         ref.value.name = newName;
       }
     });
+
+    entity.trigger('renamed', entity, oldName);
+    entity.changed();
+
+    this.trigger('renameEntity', this, entity, oldName);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return refs;
   }
@@ -540,9 +832,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     } 
   }
 
-  public removeEntity(entity: string | Entity, stopWithReferences: boolean = true, respectOrder: boolean = false): boolean
+  public removeEntity(entityInput: string | Entity, stopWithReferences: boolean = true, respectOrder: boolean = false, delayChange: boolean = false): boolean
   {
-    if (!this.entities.has(entity))
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity)
     {
       return true;
     }
@@ -564,12 +858,29 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       }
     });
 
+    this.trigger('removeEntity', this, entity);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+
     return true;
   }
 
-  public clearEntities()
+  public clearEntities(delayChange: boolean = false)
   {
+    const entities = this.entities.values.slice();
+
     this.entities.clear();
+
+    this.trigger('clearEntities', this, entities);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
   }
 
   public refactorEntity(entity: string | Entity, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[]
@@ -588,8 +899,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return refs;
   }
 
-  public renameRelation(relation: string | Relation, newName: string): false | DefinitionsRelationReference[]
+  public renameRelation(relationInput: string | Relation, newName: string, delayChange: boolean = false): false | DefinitionsRelationReference[]
   {
+    const relation = this.relations.valueOf(relationInput);
+    const oldName = relation.name;
+
     if (!this.relations.rename(relation, newName))
     {
       return false;
@@ -602,11 +916,24 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       ref.value.name = newName;
     });
 
+    relation.trigger('renamed', relation, oldName);
+    relation.changed();
+
+    this.trigger('renameRelation', this, relation, oldName);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
     return refs;
   }
 
-  public renameFunction(func: string | Func, newName: string): false | DefinitionsFunctionReference[]
+  public renameFunction(funcInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsFunctionReference[]
   {
+    const func = this.functions.valueOf(funcInput);
+    const oldName = func.name;
+
     if (!this.functions.rename(func, newName))
     {
       return false;
@@ -618,6 +945,16 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     {
       ref.value.name = newName;
     });
+
+    func.trigger('renamed', func, oldName);
+    func.changed();
+
+    this.trigger('renameFunction', this, func, oldName);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
 
     return refs;
   }
@@ -631,13 +968,9 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       return false;
     }
 
-    func.params.options[newName] = func.params.options[oldName];
-    delete func.params.options[oldName];
-
-    if (oldName in func.defaults)
+    if (!func.renameParameter(oldName, newName))
     {
-      func.defaults[newName] = func.defaults[oldName];
-      delete func.defaults[oldName];
+      return false;
     }
 
     const refs = this.getFunctionReferences(funcInput, oldName);
@@ -660,8 +993,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       return false;
     }
 
-    delete func.params.options[name];
-    delete func.defaults[name];
+    if (!func.removeParameter(name))
+    {
+      return false;
+    }
 
     const refs = this.getFunctionReferences(funcInput, name);
 
@@ -673,9 +1008,11 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     return refs;
   }
 
-  public removeFunction(func: string | Func, stopWithReferences: boolean = true, respectOrder: boolean = false): boolean
+  public removeFunction(funcInput: string | Func, stopWithReferences: boolean = true, respectOrder: boolean = false, delayChange: boolean = false): boolean
   {
-    if (!this.functions.has(func))
+    const func = this.functions.valueOf(funcInput);
+
+    if (!func)
     {
       return true;
     }
@@ -687,12 +1024,28 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
 
     this.functions.remove(func, respectOrder);
 
+    this.trigger('removeFunction', this, func);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
     return true;
   }
 
-  public clearFunctions()
+  public clearFunctions(delayChange: boolean = false)
   {
+    const functions = this.functions.values.slice();
+    
     this.functions.clear();
+
+    this.trigger('clearFunctions', this, functions);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
   }
   
   public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T | null = null): T | null 
@@ -1610,12 +1963,65 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
     };
   }
 
+  public sync(exported: DefinitionsImportOptions): void
+  {
+    if (exported.data)
+    {
+      this.data.syncManual(
+        exported.data,
+        (map, value) => this.addData(value, false, true),
+        (map, value) => this.removeData(value, false, true, true),
+        (map, value, newValue) => this.addData(newValue, true, true),
+      );
+    }
+
+    if (exported.functions)
+    {
+      this.functions.syncManual(
+        exported.functions,
+        (map, value) => this.addFunction(value, false, true),
+        (map, value) => this.removeFunction(value, false, true, true),
+        (map, value, newValue) => this.addFunction(newValue, true, true),
+      );
+    }
+
+    if (exported.entities)
+    {
+      this.entities.syncManual(
+        exported.entities,
+        (map, value) => this.addEntity(value, false, true),
+        (map, value) => this.removeEntity(value, false, true, true),
+        (map, value, newValue) => this.addEntity(newValue, true, true),
+      );
+    }
+
+    if (exported.relations)
+    {
+      this.relations.syncManual(
+        exported.relations,
+        (map, value) => this.addRelation(value, false, true),
+        (map, value) => this.removeRelation(value, false, true, true),
+        (map, value, newValue) => this.addRelation(newValue, true, true),
+      );
+    }
+
+    if (exported.programs)
+    {
+      this.programs.syncManual(
+        exported.programs,
+        (map, value) => this.addProgram(value, false, true),
+        (map, value) => this.removeProgram(value, true, true),
+        (map, value, newValue) => this.addProgram(newValue, true, true),
+      );
+    }
+  }
+
   public import(exported: DefinitionsImportOptions): void
   {
-    if (exported.entities) 
+    if (exported.data)
     {
-      objectEach(exported.entities, (instance) => 
-        this.addEntity(instance)
+      objectEach(exported.data, (data) => 
+        this.addData(data)
       );
     }
 
@@ -1626,10 +2032,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       );
     }
 
-    if (exported.programs)
+    if (exported.entities) 
     {
-      objectEach(exported.programs, (options) => 
-        this.addProgram(options)
+      objectEach(exported.entities, (instance) => 
+        this.addEntity(instance)
       );
     }
 
@@ -1640,10 +2046,10 @@ export class Definitions implements OperationTypeProvider, DefinitionProvider
       );
     }
 
-    if (exported.data)
+    if (exported.programs)
     {
-      objectEach(exported.data, (data) => 
-        this.addData(data)
+      objectEach(exported.programs, (options) => 
+        this.addProgram(options)
       );
     }
   }

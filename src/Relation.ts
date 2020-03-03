@@ -3,6 +3,8 @@ import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { MapInput, toMap, reverseMap } from './fns';
 import { EntityPropPair, EntityProps, EntityKeyType } from './Entity';
+import { EventBase } from './EventBase';
+import { DataTypes } from './DataTypes';
 
 
 export interface RelationTypeKey
@@ -61,7 +63,14 @@ export enum RelationCascade
   RESTRICT
 }
 
-export class Relation
+export interface RelationEvents
+{
+  changed(relation: Relation): void;
+  renamed(relation: Relation, oldName: string): void;
+  sync(relation: Relation, options: RelationOptions, defs: Definitions): void;
+}
+
+export class Relation extends EventBase<RelationEvents> implements RelationOptions
 {
 
   /**
@@ -143,6 +152,8 @@ export class Relation
   
   public constructor(defs: Definitions, options: RelationOptions)
   {
+    super();
+
     this.defs = defs;
     this.name = options.name;
     this.kind = options.kind;
@@ -159,6 +170,41 @@ export class Relation
     this.required = !!options.required;
     this.owns = !!options.owns;
     this.extension = !!options.extension;
+  }
+
+  public sync(options: RelationOptions, defs: Definitions)
+  {
+    if (this.hasChanges(options))
+    {
+      this.name = options.name;
+      this.kind = options.kind;
+      this.subject = options.subject;
+      this.subjectRelationName = options.subjectRelationName || options.related[0].name;
+      this.morphs = options.morphs
+        ? this.decodeTypePair(options.morphs)
+        : null;
+      this.morphsToRelated = toMap(options.morphsToRelated);
+      this.related = options.related;
+      this.relatedRelationName = options.relatedRelationName || options.subject.name;
+      this.relatedToMorphs = reverseMap(this.morphsToRelated);
+      this.multiple = !!options.multiple;
+      this.required = !!options.required;
+      this.owns = !!options.owns;
+      this.extension = !!options.extension;
+      
+      this.trigger('sync', this, options, defs);
+      this.changed();
+    }
+  }
+
+  public hasChanges(options: RelationOptions): boolean
+  {
+    return !DataTypes.equals(options instanceof Relation ? options.encode() : options, this.encode());
+  }
+
+  public changed()
+  {
+    this.trigger('changed', this);
   }
 
   private decodeTypePair([prop, propType]: [string, any]): EntityPropPair
@@ -204,6 +250,8 @@ export class Relation
   {
     this.renameReference(name, newName, [this.subject]);
     this.renameReference(name, newName, this.related);
+
+    this.changed();
   }
 
   private renameReference(name: string, newName: string, related: RelationTypeKey[])
@@ -220,6 +268,8 @@ export class Relation
   {
     this.removeReference(name, [this.subject]);
     this.removeReference(name, this.related);
+
+    this.changed();
   }
 
   private removeReference(name: string, related: RelationTypeKey[])
@@ -237,6 +287,8 @@ export class Relation
   {
     this.renamePropReference(name, prop, newProp, [this.subject]);
     this.renamePropReference(name, prop, newProp, this.related);
+
+    this.changed();
   }
 
   private renamePropReference(name: string, prop: string, newProp: string, related: RelationTypeKey[])
@@ -258,6 +310,8 @@ export class Relation
   {
     this.removePropReference(name, prop, [this.subject]);
     this.removePropReference(name, prop, this.related);
+
+    this.changed();
   }
 
   private removePropReference(name: string, prop: string, related: RelationTypeKey[])

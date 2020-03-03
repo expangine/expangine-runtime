@@ -6,6 +6,7 @@ export declare class FastMap<T> {
     constructor(options?: FastMapOptions<T>);
     reset(options: FastMapOptions<T>): void;
     merge(options: FastMapOptions<T>): void;
+    sync(options: FastMapOptions<T>, combine?: (original: T, given: T) => void): void;
     clear(): void;
     length(): number;
     valueAt(i: number): T | undefined;
@@ -31,4 +32,5 @@ export declare class FastMap<T> {
     toObject(): Record<string, T>;
     clone(): FastMap<T>;
     forEach(iterator: (value: T, key: string) => void): void;
+    filter(pass: (value: T, key: string) => boolean): void;
 }

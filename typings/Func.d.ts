@@ -4,6 +4,7 @@ import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
+import { EventBase } from './EventBase';
 export interface FuncOptions {
     name: string;
     description: string;
@@ -19,7 +20,17 @@ export interface FuncTest {
     args: any;
     expected: any;
 }
-export declare class Func {
+export interface FuncEvents {
+    changed(func: Func): void;
+    renamed(func: Func, oldName: string): void;
+    renameParameter(func: Func, param: string, oldParam: string): void;
+    removeParameter(func: Func, param: string): void;
+    sync(func: Func, options: FuncOptions, defs: Definitions): void;
+    addTest(func: Func, test: FuncTest): void;
+    removeTest(func: Func, test: FuncTest): void;
+    updateTest(func: Func, test: FuncTest): void;
+}
+export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     static create(defs: Definitions, defaults?: Partial<FuncOptions>): Func;
     name: string;
     description: string;
@@ -29,7 +40,15 @@ export declare class Func {
     defaults: any;
     tests: FuncTest[];
     constructor(options: FuncOptions, defs: Definitions);
+    sync(options: FuncOptions, defs: Definitions): void;
+    hasChanges(options: FuncOptions): boolean;
+    changed(): void;
     encode(): FuncOptions;
+    renameParameter(name: string, newName: string): boolean;
+    removeParameter(name: string): boolean;
+    addTest(test: FuncTest, delayChange?: boolean): void;
+    updateTest(test: FuncTest | number, newTest: FuncTest, delayChange?: boolean): boolean;
+    removeTest(test: FuncTest | number, delayChange?: boolean): boolean;
     getReturnType(defs: DefinitionProvider, paramsTypes?: TypeMap): import("./Type").Type<any>;
     getParamTypes(): ObjectType;
     getParamType(param: string): import("./Type").Type<any>;

@@ -7,11 +7,7 @@ import { AnyOps, AnyOperations, AnyComputeds } from '../ops/AnyOps';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { Exprs } from '../Exprs';
-
-
-export type AnyTypeJsonReader = (value: any, reader: (innerValue: any) => any) => any;
-
-export type AnyTypeJsonWriter = (value: any, writer: (innerValue: any) => any) => any;
+import { DataTypes } from '../DataTypes';
 
 
 export class AnyType extends Type 
@@ -53,23 +49,6 @@ export class AnyType extends Type
   {
 
   }
-
-  public static jsonReaders: Array<{ priority: number, reader: AnyTypeJsonReader }> = [];
-
-  public static jsonWriters: Array<{ priority: number, writer: AnyTypeJsonWriter }> = [];
-
-  public static addJsonReader(priority: number, reader: AnyTypeJsonReader)
-  {
-    this.jsonReaders.push({ priority, reader });
-    this.jsonReaders.sort((a, b) => b.priority - a.priority);
-  }
-
-  public static addJsonWriter(priority: number, writer: AnyTypeJsonWriter)
-  {
-    this.jsonWriters.push({ priority, writer });
-    this.jsonWriters.sort((a, b) => b.priority - a.priority);
-  }
-
 
   public getId(): string
   {
@@ -194,38 +173,14 @@ export class AnyType extends Type
     return null;
   }
 
-  public fromJson(json: any | { $any: string, value: any }): any
+  public fromJson(json: any): any
   {
-    const reader = (value: any) => this.fromJson(value);
-
-    for (const jsonReader of AnyType.jsonReaders)
-    {
-      const read = jsonReader.reader(json, reader);
-
-      if (read !== undefined)
-      {
-        return read;
-      }
-    }
-
-    return json;
+    return DataTypes.fromJson(json);
   }
 
-  public toJson(value: any): any | { $any: string, value: any }
+  public toJson(value: any): any
   {
-    const writer = (json: any) => this.toJson(json);
-
-    for (const jsonWriter of AnyType.jsonWriters)
-    {
-      const written = jsonWriter.writer(value, writer);
-
-      if (written !== undefined)
-      {
-        return written;
-      }
-    }
-
-    return value;
+    return DataTypes.toJson(value);
   }
 
 }

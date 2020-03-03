@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, isArray, coalesce, addCopier } from '../fns';
+import { isNumber, isEmpty, isArray, coalesce } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
@@ -14,6 +14,7 @@ import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { TupleType } from './Tuple';
 import { Types } from '../Types';
+import { DataTypes, DataTypeRaw } from '../DataTypes';
 
 
 const INDEX_ITEM = 1;
@@ -88,31 +89,98 @@ export class ListType extends Type<ListOptions>
 
   public static register(): void
   {
-    const ANY_TYPE_PRIORITY = 8;
+    const priority = 8;
+    const type: DataTypeRaw = 'object';
 
-    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-      if (isArray(json)) {
-        return json.map((item) => reader(item));
-      }
-    });
-
-    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-      if (isArray(json)) {
-        return json.map((item) => writer(item));
-      }
-    });
-
-    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
-      if (isArray(x)) {
-        const newArray: any[] = [];
-        copied.set(x, newArray);
-
-        for (const item of x) {
-          newArray.push(copyAny(item, copied));
+    DataTypes.addJson({
+      priority,
+      toJson: (json, writer) => {
+        if (isArray(json)) {
+          return json.map(writer);
         }
+      },
+      fromJson: (json, reader) => {
+        if (isArray(json)) {
+          return json.map(reader);
+        }
+      },
+    });
 
-        return newArray;
-      }
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b, compare) => {
+        const at = isArray(a);
+        const bt = isArray(b);
+
+        if (at !== bt) return (at ? 1 : 0) - (bt ? 1 : 0);
+        
+        if (at) {
+          let dl = a.length - b.length;
+
+          if (dl === 0) {
+            let less = 0;
+            let more = 0;
+
+            for (let i = 0; i < a.length; i++) {
+              const c = compare(a[i], b[i]);
+
+              if (c < 0) less++;
+              if (c > 0) more++;
+            }
+
+            dl = DataTypes.getCompare(less, more);
+          }
+
+          return dl;
+        }
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b, equals) => {
+        const al = isArray(a);
+        const bl = isArray(b);
+
+        if (al !== bl) return false;
+        
+        if (al)
+        {
+          if (a.length !== b.length)
+          {
+            return false
+          }
+
+          for (let i = 0; i < a.length; i++)
+          {
+            if (!equals(a[i], b[i]))
+            {
+              return false
+            }
+          }
+
+          return true;
+        }
+      },
+    });
+
+    DataTypes.addCopier({
+      priority,
+      copy: (x, copy, setObjectCopy) => {
+        if (isArray(x)) {
+          const newArray: any[] = [];
+
+          setObjectCopy(x, newArray);
+
+          for (const item of x) {
+            newArray.push(copy(item));
+          }
+
+          return newArray;
+        }
+      },
     });
   }
 

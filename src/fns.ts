@@ -113,6 +113,76 @@ export function reverseMap<K, V>(map: Map<K, V>): Map<V, K>
   return new Map(Array.from(map.entries()).map(([k, v]) => [v, k]));
 }
 
+export function arraySync<V, W = V>(
+  target: V[],
+  source: W[],
+  matches: (target: V, source: W) => boolean,
+  add: (target: V[], value: W) => void,
+  remove: (target: V[], index: number, value: V) => void,
+  update: (target: V[], index: number, value: V, newValue: W) => void,
+): V[]
+{
+  const taken = source.map(() => false);
+
+  for (let i = target.length - 1; i >= 0; i--)
+  {
+    const targetValue = target[i];
+    const matchIndex = source.findIndex((sourceValue) => matches(targetValue, sourceValue));
+
+    if (matchIndex !== -1)
+    {
+      update(target, i, targetValue, source[matchIndex]);
+
+      taken[matchIndex] = true;
+    }
+    else
+    {
+      remove(target, i, targetValue);
+    }
+  }
+
+  for (let i = 0; i < source.length; i++)
+  {
+    if (!taken[i])
+    {
+      add(target, source[i]);
+    }
+  }
+
+  return target;
+}
+
+export function objectSync<V, K extends RecordKey = string>(
+  target: Record<K, V>,
+  source: Record<K, V>,
+  add: (target: Record<K, V>, key: K, value: V) => void,
+  remove: (target: Record<K, V>, key: K, value: V) => void,
+  update: (target: Record<K, V>, key: K, value: V, withValue: V) => void,
+): Record<K, V> 
+{
+ for (const key in target)
+ {
+   if (!(key in source))
+   {
+     remove(target, key, target[key]);
+   }
+ }
+
+ for (const key in source)
+ {
+   if (key in target)
+   {
+     update(target, key, target[key], source[key]);
+   }
+   else
+   {
+     add(target, key, source[key]);
+   }
+ }
+
+  return target;
+}
+
 export function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(
   map: Record<K, V>, 
   getValue: (value: V, key: K) => R, 
@@ -180,167 +250,10 @@ export function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getI
   return arr;
 }
 
-export function getCompare(less: number, more: number): number
-{
-  return less === 0 && more === 0
-    ? 0
-    : less < more ? 1 : -1;
-}
 
 export function coalesce<T>(x?: T, y?: T): T
 {
   return x === undefined ? y : x;
-}
-
-export const COMPARE_TYPE_ORDER = {
-  'boolean':    0,
-  'number':     1,
-  'bigint':     2,
-  'string':     3,
-  'symbol':     4,
-  'object':     5,
-  'undefined':  6,
-  'function':   7
-};
-
-export function compare (a: any, b: any): number
-{
-  if (a === b) return 0;
-
-  const at = typeof a;
-  const bt = typeof b;
-
-  if (at !== bt) return COMPARE_TYPE_ORDER[at] - COMPARE_TYPE_ORDER[bt];
-
-  const al = isArray(a);
-  const bl = isArray(b);
-
-  if (al !== bl) return (al ? 1 : 0) - (bl ? 1 : 0);
-  
-  if (al)
-  {
-    let dl = a.length - b.length;
-
-    if (dl === 0)
-    {
-      let less = 0;
-      let more = 0;
-
-      for (let i = 0; i < a.length; i++)
-      {
-        const c = compare(a[i], b[i]);
-
-        if (c < 0) less++;
-        if (c > 0) more++;
-      }
-
-      dl = getCompare(less, more);
-    }
-
-    return dl;
-  }
-
-  switch (at)
-  {
-    case 'object':
-      const ad = a instanceof Date;
-      const bd = b instanceof Date;
-      if (ad !== bd) return (ad ? 1 : 0) - (bd ? 1 : 0);
-      if (ad) return a.getTime() - b.getTime();
-
-      const aset = a instanceof Set;
-      const bset = b instanceof Set;  
-      if (aset !== bset) return (aset ? 1 : 0) - (bset ? 1 : 0);
-      if (aset) return compare(Array.from(a.entries()), Array.from(b.entries()));
-
-      const amap = a instanceof Map;
-      const bmap = b instanceof Map;  
-      if (amap !== bmap) return (amap ? 1 : 0) - (bmap ? 1 : 0);
-      if (amap) return compare(Array.from(a.entries()), Array.from(b.entries()));
-
-      if (a === null) return 1;
-      if (b === null) return -1;
-
-      let less = 0;
-      let more = 0;
-
-      for (const prop in a) {
-        if (!(prop in b)) {
-          less++;
-        }
-      }
-
-      for (const prop in b) {
-        if (!(prop in a)) {
-          more++;
-        }
-      }
-
-      for (const prop in a) {
-        if (prop in b)
-        {
-          const c = compare(a[prop], b[prop]);
-
-          if (c < 0) less++;
-          if (c > 0) more++;
-        }
-      }
-
-      return getCompare(less, more);
-
-    case 'bigint':
-    case 'number':
-      return a - b;
-    
-    case 'boolean':
-      return (a ? 1 : 0) - (b ? 1 : 0);
-
-    case 'string':
-      return a.localeCompare(b);
-  }
-
-  return 0;
-}
-
-export interface Copier 
-{
-  priority: number;
-  tryCopy (x: any, copyAny: (x: any, copied: Map<any, any>) => any, copied: Map<any, any>): any;
-}
-
-export const copiers: Copier[] = [];
-
-export function addCopier(priority: number, tryCopy: Copier['tryCopy'])
-{
-  copiers.push({ priority, tryCopy });
-  copiers.sort((a, b) => b.priority - a.priority);
-}
-
-export function copy(x: any, copied: Map<any, any> = new Map()): any
-{
-  if (!x) return x; // null, undefined, 0, '', NaN, false
-
-  if (typeof x === 'object')
-  {
-    const existing = copied.get(x);
-    
-    if (existing !== undefined)
-    {
-      return existing;
-    }
-
-    for (const copier of copiers)
-    {
-      const copierCopy = copier.tryCopy(x, copy, copied);
-
-      if (copierCopy !== undefined)
-      {
-        return copierCopy;
-      }
-    }
-  }
-
-  return x;
 }
 
 export function padNumber(x: number, length: number, first: number = length)

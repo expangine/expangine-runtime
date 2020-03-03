@@ -2,7 +2,7 @@ import { ObjectType } from './types/Object';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { FuncOptions, Func } from './Func';
-import { objectMap, objectReduce, isArray, objectEach, isNumber } from './fns';
+import { objectMap, objectReduce, isArray, objectEach, isNumber, objectSync } from './fns';
 import { Type, TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Exprs } from './Exprs';
@@ -11,6 +11,8 @@ import { EnumType } from './types/Enum';
 import { Relation } from './Relation';
 import { ListOps } from './ops/ListOps';
 import { AnyOps } from './ops/AnyOps';
+import { EventBase } from './EventBase';
+import { DataTypes } from './DataTypes';
 
 
 export interface EntityOptions
@@ -81,7 +83,25 @@ export enum EntityPrimaryType
   UUID
 }
 
-export class Entity
+export interface EntityEvents
+{
+  change(entity: Entity): void;
+  renamed(entity: Entity, oldName: string): void;
+  renameProp(entity: Entity, prop: string, oldProp: string): void;
+  removeProp(entity: Entity, prop: string): void;
+  sync(entity: Entity, options: EntityOptions, defs: Definitions): void;  
+  addTranscoder(entity: Entity, prop: string, transcoder: EntityTranscoder): void;
+  removeTranscoder(entity: Entity, prop: string, transcoder: EntityTranscoder): void;
+  updateTranscoder(enitty: Entity, prop: string, transcoder: EntityTranscoder, oldTranscoder: EntityTranscoder): void;
+  addIndex(entity: Entity, index: EntityIndex): void;
+  removeIndex(entity: Entity, index: EntityIndex): void;
+  updateIndex(entity: Entity, index: EntityIndex, oldIndex: EntityIndex): void;
+  addMethod(entity: Entity, method: Func): void;
+  removeMethod(entity: Entity, method: Func): void;
+  updateMethod(entity: Entity, method: Func, oldMethod: Func): void;
+}
+
+export class Entity extends EventBase<EntityEvents> implements EntityOptions
 {
 
   public static create(defs: Definitions, defaults: Partial<EntityOptions> = {}) {
@@ -128,6 +148,8 @@ export class Entity
 
   public constructor(options: EntityOptions, defs: Definitions) 
   {
+    super();
+
     this.name = options.name;
     this.description = options.description;
     this.meta = options.meta;
@@ -135,14 +157,12 @@ export class Entity
     this.instances = options.instances && options.instances.length
       ? options.instances.map((i) => this.type.fromJson(i))
       : [];
-    this.methods = options.methods 
-      ? objectMap(options.methods, (funcOptions) => funcOptions instanceof Func ? funcOptions : new Func(funcOptions, defs))
-      : Object.create(null);
+    this.methods = this.decodeMethods(defs, options.methods);
+    this.transcoders = this.decodeTranscoders(defs, options.transcoders);
+    this.indexes = this.decodeIndexes(options.indexes);
     this.primaryType = isNumber(options.primaryType)
         ? options.primaryType
         : EntityPrimaryType.AUTO_INCREMENT;
-    this.transcoders = this.decodeTranscoders(defs, options.transcoders);
-    this.indexes = this.decodeIndexes(options.indexes);
     this.key = options.key 
       ? defs.getExpression(options.key)
       : this.getPrimaryKeyExpression();
@@ -152,15 +172,101 @@ export class Entity
       : Exprs.noop();
   }
 
+  public sync(options: EntityOptions, defs: Definitions)
+  {
+    if (this.hasChanges(options))
+    {
+      this.name = options.name;
+      this.description = options.description;
+      this.meta = options.meta;
+      this.type = defs.getTypeKind(options.type, ObjectType, Types.object());
+
+      this.instances = options instanceof Entity
+        ? options.instances
+        : options.instances && options.instances.length
+          ? options.instances.map((i) => this.type.fromJson(i))
+          : [];
+
+      objectSync(
+        this.methods, 
+        this.decodeMethods(defs, options.methods),
+        (target, prop, method) => this.addMethod(method, true),
+        (target, prop) => this.removeMethod(prop, true),
+        (target, prop, existing, updated) => existing.sync(updated, defs),
+      ),
+      
+      objectSync(
+        this.transcoders,
+        this.decodeTranscoders(defs, options.transcoders),
+        (target, prop, transcoder) => this.addTranscoder(defs, prop, transcoder, true),
+        (target, prop) => this.removeTranscoder(prop, true),
+        (target, prop, existing, updated) => this.addTranscoder(defs, prop, updated, true),
+      );
+
+      objectSync(
+        this.indexes,
+        this.decodeIndexes(options.indexes),
+        (target, name, index) => this.addIndex(name, index, true),
+        (target, name) => this.removeIndex(name, true),
+        (target, name, existing, updated) => this.addIndex(name, updated, true),
+      );
+
+      this.primaryType = isNumber(options.primaryType)
+          ? options.primaryType
+          : EntityPrimaryType.AUTO_INCREMENT;
+      this.key = options.key 
+        ? defs.getExpression(options.key)
+        : this.getPrimaryKeyExpression();
+      this.keyType = this.key.getType(defs, this.getKeyContext());
+      this.describe = options.describe
+        ? defs.getExpression(options.describe)
+        : Exprs.noop();
+
+      this.trigger('sync', this, options, defs);
+      this.trigger('change', this);
+    }
+  }
+
+  public hasChanges(options: EntityOptions): boolean
+  {
+    return !DataTypes.equals(options instanceof Entity ? options.encode() : options, this.encode());
+  }
+
+  public changed()
+  {
+    this.trigger('change', this);
+  }
+
+  private decodeMethods(defs: Definitions, methods?: Record<string, FuncOptions | Func>)
+  {
+    return methods
+      ? objectMap(methods, (method) => this.decodeMethod(defs, method))
+      : {};
+  }
+
+  private decodeMethod(defs: Definitions, method: FuncOptions | Func): Func
+  {
+    return method instanceof Func
+      ? method
+      : Func.create(defs, method);
+  }
+
   private decodeTranscoders(defs: Definitions, transcoders?: Record<string, EntityTranscoderOptions>)
   {
     return transcoders
-      ? objectMap(transcoders, (t) => ({
-          encode: defs.getExpression(t.encode),
-          decode: defs.getExpression(t.decode),
-          encodedType: defs.getType(t.encodedType),
-        }))
+      ? objectMap(transcoders, (t) => this.decodeTranscoder(defs, t))
       : {};
+  }
+
+  private decodeTranscoder(defs: Definitions, options: EntityTranscoderOptions)
+  {
+    return options.encode instanceof Expression
+      ? options
+      : {
+          encode: defs.getExpression(options.encode),
+          decode: defs.getExpression(options.decode),
+          encodedType: defs.getType(options.encodedType),
+        };
   }
 
   private decodeIndexes(indexes?: Record<string, EntityIndexOptions | EntityIndex>)
@@ -233,11 +339,16 @@ export class Entity
 
   public renameProp(prop: string, newProp: string)
   {
-    if (prop in this.transcoders)
-    {
-      this.transcoders[newProp] = this.transcoders[prop];
+    let changed = false;
+    const transcoder = this.transcoders[prop];
 
+    if (transcoder)
+    {
       delete this.transcoders[prop];
+
+      this.transcoders[newProp] = transcoder;
+
+      changed = true;
     }
 
     objectEach(this.indexes, (index) =>
@@ -247,13 +358,30 @@ export class Entity
       if (i !== -1)
       {
         index.props[i] = newProp;
+
+        this.updateIndex(index.name, true);
+        changed = true;
       }
     });
+
+    this.trigger('renameProp', this, newProp, prop);
+
+    if (changed)
+    {
+      this.changed();
+    }
   }
 
   public removeProp(prop: string)
   {
-    delete this.transcoders[prop];
+    let changed = false;
+
+    if (prop in this.transcoders)
+    {
+      this.removeTranscoder(prop, true);
+
+      changed = true;
+    }
 
     objectEach(this.indexes, (index, indexName) =>
     {
@@ -262,13 +390,25 @@ export class Entity
       if (i !== -1)
       {
         index.props.splice(i, 1);
+        changed = true;
 
         if (index.props.length === 0)
         {
-          delete this.indexes[indexName];
+          this.removeIndex(indexName, true);
+        }
+        else
+        {
+          this.updateIndex(indexName, true);
         }
       }
     });
+
+    this.trigger('removeProp', this, prop);
+
+    if (changed)
+    {
+      this.changed();
+    }
   }
 
   public getEntityProps(): EntityProps
@@ -548,23 +688,213 @@ export class Entity
 
   public addPrimary(props: string | string[]): this
   {
-    const key = isArray(props) ? props : [props];
-
-    this.addIndex('primary', key, true, true);
+    this.addIndex('primary', {
+      props: isArray(props) ? props : [props], 
+      unique: true, 
+      primary: true
+    });
 
     this.primaryType = EntityPrimaryType.GIVEN;
 
     return this;
   }
 
-  public addIndex(name: string, props: string[], unique: boolean = false, primary: boolean = false): this
+  public addIndex(name: string, options: EntityIndexOptions, delayChange: boolean = false): this
   {
-    this.indexes[name] = {
-      name, 
-      props,
-      unique,
-      primary,
-    };
+    const previous = this.indexes[name];
+    const index: EntityIndex = { ...options, name };
+
+    this.indexes[name] = index;
+
+    if (previous)
+    {
+      this.trigger('updateIndex', this, index, previous);
+    }
+    else
+    {
+      this.trigger('addIndex', this, index);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public updateIndex(name: string, delayChange: boolean = false): this
+  {
+    const index = this.indexes[name];
+
+    this.trigger('updateIndex', this, index, index);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public removeIndex(name: string, delayChange: boolean = false): this
+  {
+    const index = this.indexes[name];
+
+    delete this.indexes[name];
+
+    this.trigger('removeIndex', this, index);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public renameIndex(name: string, newName: string): this
+  {
+    const index = this.indexes[name];
+
+    if (index && name !== newName)
+    {
+      const previous = { ...index, props: index.props.slice() };
+
+      index.name = newName;
+
+      delete this.indexes[name];
+
+      this.indexes[newName] = index;
+
+      this.trigger('updateIndex', this, index, previous);
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public addTranscoder(defs: Definitions, prop: string, options: EntityTranscoderOptions | EntityTranscoder, delayChange: boolean = false): this
+  {
+    const previous = this.transcoders[prop];
+    const transcoder: EntityTranscoderOptions = this.decodeTranscoder(defs, options);
+
+    this.transcoders[prop] = transcoder;
+
+    if (previous)
+    {
+      this.trigger('updateTranscoder', this, name, transcoder, previous);
+    }
+    else
+    {
+      this.trigger('addTranscoder', this, name, transcoder);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public removeTranscoder(name: string, delayChange: boolean = false): this
+  {
+    const transcoder = this.transcoders[name];
+
+    if (transcoder)
+    {
+      delete this.transcoders[name];
+
+      this.trigger('removeTranscoder', this, name, transcoder);
+
+      if (!delayChange)
+      {
+        this.changed();
+      }
+    }
+
+    return this;
+  }
+
+  public updateTranscoder(name: string, delayChange: boolean = false): this
+  {
+    const transcoder = this.transcoders[name];
+
+    if (transcoder)
+    {
+      this.trigger('updateTranscoder', this, name, transcoder, transcoder);
+
+      if (!delayChange)
+      {
+        this.changed();
+      }
+    }
+
+    return this;
+  }
+
+  public addMethod(method: Func, delayChange: boolean = false): this
+  {
+    const existing = this.methods[method.name];
+
+    this.methods[method.name] = method;
+
+    if (existing)
+    {
+      this.trigger('updateMethod', this, method, existing);
+    }
+    else
+    {
+      this.trigger('addMethod', this, method);
+    }
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return this;
+  }
+
+  public renameMethod(name: string, newName: string, delayChange: boolean = false): this
+  {
+    const method = this.methods[name];
+
+    if (method && name !== newName)
+    {
+      method.name = newName;
+
+      delete this.methods[name];
+
+      this.methods[newName] = method;
+
+      this.trigger('updateMethod', this, method, method);
+
+      if (!delayChange)
+      {
+        this.changed();
+      }
+    }
+
+    return this;
+  }
+
+  public removeMethod(name: string, delayChange: boolean = false): this
+  {
+    const method = this.methods[name];
+
+    if (method)
+    {
+      delete this.methods[name];
+
+      this.trigger('removeMethod', this, method);
+
+      if (!delayChange)
+      {
+        this.changed();
+      }
+    }
 
     return this;
   }

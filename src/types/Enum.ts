@@ -1,5 +1,4 @@
 
-import { compare } from '../fns';
 import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
@@ -11,6 +10,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 import { MapOps } from '../ops/MapOps';
 import { Types } from '../Types';
+import { DataTypes } from '../DataTypes';
 
 
 const INDEX_KEY = 1;
@@ -237,7 +237,7 @@ export class EnumType extends Type<EnumOptions>
 
     for (const constantValue of constants.values())
     {
-      if (compare(constantValue, test) === 0)
+      if (DataTypes.compare(constantValue, test) === 0)
       {
         return true;
       }

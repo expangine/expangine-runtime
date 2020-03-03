@@ -18,6 +18,7 @@ import { ReferenceDataOptions, ReferenceData } from './ReferenceData';
 import { GetDataExpression } from './exprs/GetData';
 import { ReferenceType } from './types/Reference';
 import { NamedMap } from './maps/NamedMap';
+import { EventBase } from './EventBase';
 export interface DefinitionsImportOptions {
     entities?: Record<string, Entity | EntityOptions>;
     functions?: Record<string, Func | FuncOptions>;
@@ -88,7 +89,36 @@ export interface DefinitionsExpressionInstance {
     context: Type;
     source: DefinitionsReferenceSource;
 }
-export declare class Definitions implements OperationTypeProvider, DefinitionProvider {
+export interface DefinitionsEvents {
+    changed(defs: Definitions): void;
+    sync(defs: Definitions, options: DefinitionsOptions): void;
+    addRelation(defs: Definitions, relation: Relation): void;
+    removeRelation(defs: Definitions, relation: Relation): void;
+    updateRelation(defs: Definitions, relation: Relation): void;
+    renameRelation(defs: Definitions, relation: Relation, oldName: string): void;
+    clearRelations(defs: Definitions, relations: Relation[]): void;
+    addProgram(defs: Definitions, program: Program): void;
+    removeProgram(defs: Definitions, program: Program): void;
+    updateProgram(defs: Definitions, program: Program): void;
+    renameProgram(defs: Definitions, program: Program, oldName: string): void;
+    clearPrograms(defs: Definitions, programs: Program[]): void;
+    addEntity(defs: Definitions, entity: Entity): void;
+    removeEntity(defs: Definitions, entity: Entity): void;
+    updateEntity(defs: Definitions, entity: Entity): void;
+    renameEntity(defs: Definitions, entity: Entity, oldName: string): void;
+    clearEntities(defs: Definitions, entities: Entity[]): void;
+    addFunction(defs: Definitions, func: Func): void;
+    removeFunction(defs: Definitions, func: Func): void;
+    updateFunction(defs: Definitions, func: Func): void;
+    renameFunction(defs: Definitions, func: Func, oldName: string): void;
+    clearFunctions(defs: Definitions, functions: Func[]): void;
+    addData(defs: Definitions, data: ReferenceData): void;
+    removeData(defs: Definitions, data: ReferenceData): void;
+    updateData(defs: Definitions, data: ReferenceData): void;
+    renameData(defs: Definitions, data: ReferenceData, oldName: string): void;
+    clearData(defs: Definitions, data: ReferenceData[]): void;
+}
+export declare class Definitions extends EventBase<DefinitionsEvents> implements OperationTypeProvider, DefinitionProvider {
     types: Record<string, TypeClass>;
     typeList: TypeClass[];
     describers: TypeClass[];
@@ -106,48 +136,49 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     constructor(initial?: DefinitionsOptions);
     private encodeMap;
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
+    changed(): void;
     add(options: DefinitionsOptions): void;
     describe(data: any): Type;
     merge(type: Type, data: any): Type;
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;
     findEntity(type: Type, options?: TypeCompatibleOptions): string | false;
-    addData(data: ReferenceData | Partial<ReferenceDataOptions>): this;
+    addData(dataOptions: ReferenceData | Partial<ReferenceDataOptions>, sync?: boolean, delayChange?: boolean): this;
     getData(name: string): ReferenceData | null;
     getDatas(): NamedMap<ReferenceData>;
-    removeData(data: string | ReferenceData, stopWithReferences?: boolean, respectOrder?: boolean): boolean;
-    clearData(): void;
-    renameData(data: string | ReferenceData, newName: string): false | DefinitionsDataReference[];
-    addFunction(func: Func | Partial<FuncOptions>): this;
+    removeData(dataInput: string | ReferenceData, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
+    clearData(delayChange?: boolean): void;
+    renameData(dataInput: string | ReferenceData, newName: string, delayChange?: boolean): false | DefinitionsDataReference[];
+    addFunction(funcOptions: Func | Partial<FuncOptions>, sync?: boolean, delayChange?: boolean): this;
     getFunction(name: string): Func | null;
     getFunctions(): NamedMap<Func>;
-    addProgram(program: Program | Partial<ProgramOptions>): this;
+    addProgram(programOptions: Program | Partial<ProgramOptions>, sync?: boolean, delayChange?: boolean): this;
     getProgram(name: string): Program | null;
     getPrograms(): NamedMap<Program>;
-    removeProgram(program: string | Program, respectOrder?: boolean): boolean;
-    clearPrograms(): void;
-    addEntity(entity: Entity | Partial<EntityOptions>): this;
+    removeProgram(programInput: string | Program, respectOrder?: boolean, delayChange?: boolean): boolean;
+    clearPrograms(delayChange?: boolean): void;
+    addEntity(entityOptions: Entity | Partial<EntityOptions>, sync?: boolean, delayChange?: boolean): this;
     getEntity(name: string): Entity | null;
     getEntities(): NamedMap<Entity>;
-    addRelation(relation: Relation | RelationOptions): this;
+    addRelation(relationOptions: Relation | RelationOptions, sync?: boolean, delayChange?: boolean): this;
     getRelation(name: string): Relation | null;
     getRelations(entityName: string): EntityRelation[];
     getEntityProps(name: string): EntityProps[];
-    removeRelation(relation: string | Relation, stopWithReferences?: boolean, respectOrder?: boolean): boolean;
-    clearRelations(): void;
-    renameProgram(program: string | Program, newName: string): boolean;
-    renameEntity(entity: string | Entity, newName: string): false | DefinitionsEntityReference[];
+    removeRelation(relationInput: string | Relation, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
+    clearRelations(delayChange?: boolean): void;
+    renameProgram(programInput: string | Program, newName: string, delayChange?: boolean): boolean;
+    renameEntity(entityInput: string | Entity, newName: string, delayChange?: boolean): false | DefinitionsEntityReference[];
     renameEntityProp(name: string | Entity, prop: string, newProp: string): void;
     removeEntityProp(name: string | Entity, prop: string): void;
-    removeEntity(entity: string | Entity, stopWithReferences?: boolean, respectOrder?: boolean): boolean;
-    clearEntities(): void;
+    removeEntity(entityInput: string | Entity, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
+    clearEntities(delayChange?: boolean): void;
     refactorEntity(entity: string | Entity, transform: Expression, runtime: Runtime): DefinitionsDataTypeReference<EntityType>[];
-    renameRelation(relation: string | Relation, newName: string): false | DefinitionsRelationReference[];
-    renameFunction(func: string | Func, newName: string): false | DefinitionsFunctionReference[];
+    renameRelation(relationInput: string | Relation, newName: string, delayChange?: boolean): false | DefinitionsRelationReference[];
+    renameFunction(funcInput: string | Func, newName: string, delayChange?: boolean): false | DefinitionsFunctionReference[];
     renameFunctionParameter(funcInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[];
     removeFunctionParameter(funcInput: string | Func, name: string): false | DefinitionsFunctionReference[];
-    removeFunction(func: string | Func, stopWithReferences?: boolean, respectOrder?: boolean): boolean;
-    clearFunctions(): void;
+    removeFunction(funcInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
+    clearFunctions(delayChange?: boolean): void;
     getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
     getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];
@@ -166,9 +197,9 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes?: boolean): TypeMap;
     getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type;
     getContextWithScope(original: Type, scope?: TypeMap): {
-        context: ObjectType<{
+        context: ManyType | ObjectType<{
             props: any;
-        }> | ManyType;
+        }>;
         scope: Record<string, Type<any>>;
     };
     getContext(original: Type, scope: TypeMap): Type;
@@ -198,5 +229,6 @@ export declare class Definitions implements OperationTypeProvider, DefinitionPro
     getTypeInstances(dynamic?: boolean): DefinitionsTypeInstance[];
     getExpressionInstances(): DefinitionsExpressionInstance[];
     export(): DefinitionsImportOptions;
+    sync(exported: DefinitionsImportOptions): void;
     import(exported: DefinitionsImportOptions): void;
 }

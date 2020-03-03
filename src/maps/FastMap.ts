@@ -59,6 +59,21 @@ export class FastMap<T>
     }
   }
 
+  public sync(options: FastMapOptions<T>, combine?: (original: T, given: T) => void)
+  {
+    const all = new FastMap(options);
+
+    this.filter((_, key) => all.has(key));
+    
+    all.forEach((value, key) => {
+      if (this.has(key) && combine) {
+        combine(this.get(key), value);
+      } else {
+        this.set(key, value);
+      }
+    });
+  }
+
   public clear()
   {
     this.indexes = Object.create(null);
@@ -335,6 +350,36 @@ export class FastMap<T>
       {
         i++;
       }
+    }
+  }
+
+  public filter(pass: (value: T, key: string) => boolean)
+  {
+    const { values, keys, indexes } = this;
+    let passed = 0; 
+    
+    for (let i = 0; i < values.length; i++) 
+    {
+      const value = values[i];
+      const key = keys[i];
+
+      if (pass(value, key))
+      {
+        values[passed] = value;
+        keys[passed] = key;
+        indexes[key] = passed;
+        passed++;
+      }
+      else
+      {
+        delete indexes[key];
+      }
+    }
+
+    if (passed < values.length)
+    {
+      values.splice(passed, values.length - passed);
+      keys.splice(passed, keys.length - passed);
     }
   }
 

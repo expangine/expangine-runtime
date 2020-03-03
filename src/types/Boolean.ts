@@ -1,5 +1,5 @@
 
-import { isBoolean, isEmpty, copy } from '../fns';
+import { isBoolean, isEmpty } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Expression } from '../Expression';
 import { BooleanOps, BooleanOperations, BooleanComputeds } from '../ops/BooleanOps';
@@ -7,6 +7,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { Exprs } from '../Exprs';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_OPTIONS = 1;
@@ -52,7 +53,22 @@ export class BooleanType extends Type<BooleanOptions>
 
   public static register(): void
   {
+    const priority = 0;
+    const type: DataTypeRaw = 'boolean';
 
+    DataTypes.addCompare({
+      priority, 
+      type,
+      compare: (a, b) => {
+        return (a ? 1 : 0) - (b ? 1 : 0);
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b) => a === b,
+    });
   }
 
   public getId(): string
@@ -194,7 +210,7 @@ export class BooleanType extends Type<BooleanOptions>
 
   public clone(): BooleanType
   {
-    return new BooleanType(copy(this.options));
+    return new BooleanType(DataTypes.copy(this.options));
   }
 
   public encode(): any 

@@ -1,5 +1,5 @@
 
-import { isString, isNumber, isEmpty, coalesce, copy } from '../fns';
+import { isString, isNumber, isEmpty, coalesce } from '../fns';
 import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -11,6 +11,7 @@ import { EnumType } from './Enum';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
 import { Types } from '../Types';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_OPTIONS = 1;
@@ -92,7 +93,24 @@ export class TextType extends Type<TextOptions>
 
   public static register(): void
   {
+    const priority = 4;
+    const type: DataTypeRaw = 'string';
 
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b) => {
+        return a.localeCompare(b);
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b) => {
+        return a === b;
+      },
+    });
   }
 
   public getId(): string
@@ -341,7 +359,7 @@ export class TextType extends Type<TextOptions>
 
   public clone(): TextType
   {
-    return new TextType(copy(this.options));
+    return new TextType(DataTypes.copy(this.options));
   }
 
   public encode(): any 

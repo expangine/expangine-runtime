@@ -1,5 +1,5 @@
 
-import { objectMap, isObject, objectValues, isString, objectEach, addCopier } from '../fns';
+import { objectMap, isObject, objectValues, isString, objectEach } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -10,9 +10,9 @@ import { EnumType } from './Enum';
 import { TextType } from './Text';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
-import { AnyType } from './Any';
 import { Types } from '../Types';
 import { NullType } from './Null';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_PROPS = 1;
@@ -67,31 +67,98 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public static register(): void
   {
-    const ANY_TYPE_PRIORITY = 7;
+    const priority = 7;
+    const type: DataTypeRaw = 'object';
 
-    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-      if (isObject(json)) {
-        return objectMap(json, (prop) => reader(prop));
-      }
+    DataTypes.addJson({
+      priority,
+      fromJson: (json, reader) => {
+        if (isObject(json)) {
+          return objectMap(json, reader);
+        }
+      },
+      toJson: (json, writer) => {
+        if (isObject(json)) {
+          return objectMap(json, writer);
+        }
+      },
     });
 
-    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-      if (isObject(json)) {
-        return objectMap(json, (prop) => writer(prop));
-      }
+    DataTypes.addCopier({
+      priority,
+      copy: (x, copy, setObjectCopy) => {
+        if (isObject(x)) {
+          const newObject: any = {};
+
+          setObjectCopy(x, newObject);
+  
+          for (const prop in x) {
+            newObject[copy(prop)] = copy(x[prop]);
+          }
+  
+          return newObject;
+        }
+      },
     });
 
-    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
-      if (isObject(x)) {
-        const newObject: any = {};
-        copied.set(x, newObject);
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b, compare) => {
+        if (a === null) return 1;
+        if (b === null) return -1;
 
-        for (const prop in x) {
-          newObject[copyAny(prop, copied)] = copyAny(x[prop], copied);
+        let less = 0;
+        let more = 0;
+
+        for (const prop in a) {
+          if (!(prop in b)) {
+            less++;
+          }
         }
 
-        return newObject;
-      }
+        for (const prop in b) {
+          if (!(prop in a)) {
+            more++;
+          }
+        }
+
+        for (const prop in a) {
+          if (prop in b)
+          {
+            const c = compare(a[prop], b[prop]);
+
+            if (c < 0) less++;
+            if (c > 0) more++;
+          }
+        }
+
+        return DataTypes.getCompare(less, more);
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b, equals) => {
+        if ((a === null) !== (b === null)) return false;
+
+        for (const prop in a) {
+          if (!(prop in b)) {
+            return false;
+          }
+        }
+
+        for (const prop in b) {
+          if (!(prop in a)) {
+            return false;
+          } else if (!equals(a[prop], b[prop])) {
+            return false;
+          }
+        }
+
+        return true;
+      },
     });
   }
 

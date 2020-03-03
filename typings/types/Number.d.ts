@@ -18,6 +18,8 @@ export declare class NumberType extends Type<NumberOptions> {
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider): Type | null;
     static registered: boolean;
+    static EQUALS_EPSILON: number;
+    static COMPARES_EPSILON: number;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;

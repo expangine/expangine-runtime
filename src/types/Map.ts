@@ -1,5 +1,5 @@
 
-import { isObject, isMap, isSameClass, isString, addCopier } from '../fns';
+import { isObject, isMap, isSameClass, isString } from '../fns';
 import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
@@ -12,6 +12,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Types } from '../Types';
+import { DataTypes, DataTypeRaw } from '../DataTypes';
 
 
 const INDEX_VALUE = 1;
@@ -82,35 +83,104 @@ export class MapType extends Type<MapOptions>
 
   public static register(): void
   {
-    const ANY_TYPE_PRIORITY = 10;
+    const priority = 10;
+    const type: DataTypeRaw = 'object';
 
-    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-      if (isObject(json) && isString(json.$any) && json.$any === 'map') {
-        return new Map(json.value.map(([key, value]: [any, any]) => [reader(key), reader(value)]));
-      }
-    });
-
-    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-      if (isMap(json)) {
-        return {
-          $any: 'map',
-          value: Array.from(json.entries())
-            .map(([k, v]: [any, any]) => [writer(k), writer(v)])
-        };
-      }
-    });
-
-    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
-      if (isMap(x)) {
-        const newMap = new Map();
-        copied.set(x, newMap);
-
-        for (const [key, value] of x.entries()) {
-          newMap.set(copyAny(key, copied), copyAny(value, copied));
+    DataTypes.addJson({
+      priority,
+      fromJson: (json, reader) => {
+        if (isObject(json) && isString(json.$any) && json.$any === 'map') {
+          return new Map(json.value.map(([key, value]: [any, any]) => [reader(key), reader(value)]));
         }
+      },
+      toJson: (json, writer) => {
+        if (isMap(json)) {
+          return {
+            $any: 'map',
+            value: Array.from(json.entries())
+              .map(([k, v]: [any, any]) => [writer(k), writer(v)])
+          };
+        }
+      },
+    });
 
-        return newMap;
-      }
+    DataTypes.addCopier({
+      priority,
+      copy: (x, copy, setObjectCopy) => {
+        if (isMap(x)) {
+          const newMap = new Map();
+
+          setObjectCopy(x, newMap);
+  
+          for (const [key, value] of x.entries()) {
+            newMap.set(copy(key), copy(value));
+          }
+  
+          return newMap;
+        }
+      },
+    });
+
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b, compare) => {
+        const at = isMap(a);
+        const bt = isMap(b);
+
+        if (at !== bt) return (at ? 1 : 0) - (bt ? 1 : 0);
+        
+        if (isMap(a) && isMap(b)) {
+          let less = 0;
+          let more = 0;
+
+          for (const key of a.keys()) {
+            if (!b.has(key)) {
+              less++;
+            }
+          }
+
+          for (const key of b.keys()) {
+            if (!a.has(key)) {
+              more++;
+            } else {
+              const c = compare(a.get(key), b.get(key));
+
+              if (c < 0) less++;
+              if (c > 0) more++;
+            }
+          }
+
+          return DataTypes.getCompare(less, more);
+        }
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b, equals) => {
+        const at = isMap(a);
+        const bt = isMap(b);
+
+        if (at !== bt) return false;
+        
+        if (isMap(a) && isMap(b)) {
+          if (a.size !== b.size) {
+            return false;
+          }
+
+          for (const [key, value] of a.entries()) {
+            if (!b.has(key)) {
+              return false;
+            } else if (!equals(value, b.get(key))) {
+              return false;
+            }
+          }
+
+          return true;
+        }
+      },
     });
   }
 

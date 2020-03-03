@@ -1,5 +1,5 @@
 
-import { isDate, isEmpty, copy, isObject, isString, addCopier } from '../fns';
+import { isDate, isEmpty, isObject, isString } from '../fns';
 import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Unit, parse, startOf, endOf } from '../util/date/DateFunctions';
 import { Expression } from '../Expression';
@@ -7,8 +7,8 @@ import { DateOps, DateOperations, DateComputeds } from '../ops/DateOps';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
-import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_OPTIONS = 1;
@@ -89,27 +89,64 @@ export class DateType extends Type<DateOptions>
 
   public static register(): void
   {
-    const ANY_TYPE_PRIORITY = 9;
+    const priority = 9;
+    const type: DataTypeRaw = 'object';
 
-    AnyType.addJsonReader(ANY_TYPE_PRIORITY, (json, reader) => {
-      if (isObject(json) && isString(json.$any) && json.$any === 'date') {
-        return new Date(json.value);
-      }
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b) => {
+        const at = isDate(a);
+        const bt = isDate(b);
+
+        if (at !== bt) return (at ? 1 : 0) - (bt ? 1 : 0);
+
+        if (at) {
+          return a.getTime() - b.getTime();
+        }
+      },
     });
 
-    AnyType.addJsonWriter(ANY_TYPE_PRIORITY, (json, writer) => {
-      if (isDate(json)) {
-        return { $any: 'date', value: json.toISOString() };
-      }
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b) => {
+        const at = isDate(a);
+        const bt = isDate(b);
+
+        if (at !== bt) return false;
+
+        if (at) {
+          return a.getTime() === b.getTime();
+        }
+      },
     });
 
-    addCopier(ANY_TYPE_PRIORITY, (x, copyAny, copied) => {
-      if (isDate(x)) {
-        const newDate = new Date(x.getTime());
-        copied.set(x, newDate);
+    DataTypes.addJson({
+      priority,
+      fromJson: (json) => {
+        if (isObject(json) && isString(json.$any) && json.$any === 'date') {
+          return new Date(json.value);
+        }
+      },
+      toJson: (json: Date) => {
+        if (isDate(json)) {
+          return { $any: 'date', value: json.toISOString() };
+        }
+      },
+    });
 
-        return newDate;
-      }
+    DataTypes.addCopier({
+      priority,
+      copy: (x, _, setObjectCopy) => {
+        if (isDate(x)) {
+          const newDate = new Date(x.getTime());
+
+          setObjectCopy(x, newDate);
+  
+          return newDate;
+        }
+      },
     });
   }
 
@@ -317,7 +354,7 @@ export class DateType extends Type<DateOptions>
 
   public clone(): DateType
   {
-    return new DateType(copy(this.options));
+    return new DateType(DataTypes.copy(this.options));
   }
 
   public encode(): any 

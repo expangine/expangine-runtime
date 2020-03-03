@@ -1,5 +1,5 @@
 
-import { isNumber, isEmpty, isWhole, coalesce, copy } from '../fns';
+import { isNumber, isEmpty, isWhole, coalesce } from '../fns';
 import { Type, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -7,6 +7,7 @@ import { NumberOps, NumberOperations, NumberComputeds } from '../ops/NumberOps';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser } from '../Traverser';
+import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 
 const INDEX_OPTIONS = 1;
@@ -63,9 +64,52 @@ export class NumberType extends Type<NumberOptions>
 
   public static registered: boolean = false;
 
+  public static EQUALS_EPSILON = 0.000001;
+
+  public static COMPARES_EPSILON = 0.000001;
+
   public static register(): void
   {
+    const priority = 0;
+    const type: DataTypeRaw = 'number';
 
+    DataTypes.addCompare({
+      priority,
+      type,
+      compare: (a, b) => {
+        return a < b
+          ? (b - a) < this.COMPARES_EPSILON
+            ? 0
+            : -1
+          : (a - b) < this.COMPARES_EPSILON
+            ? 0
+            : 1;
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type,
+      equals: (a, b) => {
+        return Math.abs(a - b) < this.EQUALS_EPSILON;
+      },
+    });
+
+    DataTypes.addCompare({
+      priority,
+      type: 'bigint',
+      compare: (a, b) => {
+        return a - b;
+      },
+    });
+
+    DataTypes.addEquals({
+      priority,
+      type: 'bigint',
+      equals: (a, b) => {
+        return a === b;
+      },
+    });
   }
 
   public getId(): string
@@ -221,7 +265,7 @@ export class NumberType extends Type<NumberOptions>
 
   public clone(): NumberType
   {
-    return new NumberType(copy(this.options));
+    return new NumberType(DataTypes.copy(this.options));
   }
 
   public encode(): any 

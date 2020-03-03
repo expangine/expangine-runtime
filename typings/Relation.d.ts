@@ -2,6 +2,7 @@ import { Type } from './Type';
 import { Definitions } from './Definitions';
 import { MapInput } from './fns';
 import { EntityPropPair, EntityProps } from './Entity';
+import { EventBase } from './EventBase';
 export interface RelationTypeKey {
     name: string;
     props: string[];
@@ -48,7 +49,12 @@ export declare enum RelationCascade {
     SET_NULL = 2,
     RESTRICT = 3
 }
-export declare class Relation {
+export interface RelationEvents {
+    changed(relation: Relation): void;
+    renamed(relation: Relation, oldName: string): void;
+    sync(relation: Relation, options: RelationOptions, defs: Definitions): void;
+}
+export declare class Relation extends EventBase<RelationEvents> implements RelationOptions {
     /**
      * A unique name for the relationship between the subject type and related types.
      */
@@ -112,6 +118,9 @@ export declare class Relation {
      */
     protected defs: Definitions;
     constructor(defs: Definitions, options: RelationOptions);
+    sync(options: RelationOptions, defs: Definitions): void;
+    hasChanges(options: RelationOptions): boolean;
+    changed(): void;
     private decodeTypePair;
     private encodeTypePair;
     encode(): RelationOptions;
