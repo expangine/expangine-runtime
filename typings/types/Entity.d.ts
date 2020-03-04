@@ -18,7 +18,7 @@ export declare class EntityType extends Type<string> {
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
     getType(): Type<any>;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     getId(): string;
     merge(type: EntityType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;

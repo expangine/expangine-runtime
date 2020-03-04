@@ -27,7 +27,7 @@ export declare class DateType extends Type<DateOptions> {
     static registered: boolean;
     static register(): void;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: DateType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

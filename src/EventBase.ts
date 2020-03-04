@@ -30,11 +30,11 @@ export type EventTypeArgs<E, K extends keyof E> =
 export class EventBase<E> 
 {
 
-  private listeners: EventCallbackMap<E> = Object.create(null);
+  #listeners: EventCallbackMap<E> = Object.create(null);
 
   public trigger<K extends keyof E, A extends EventTypeArgs<E, K>, R extends EventTypeResult<E, K>>(event: K, ...payload: A): R[] 
   {
-    const listeners = this.getListeners(event);
+    const listeners = this.getListeners(event, false);
     const results: R[] = [];
 
     if (listeners) 
@@ -54,11 +54,11 @@ export class EventBase<E>
   public getListeners<K extends keyof E>(event: K, create: true): LinkedNode<EventCallback<E, K>>;
   public getListeners<K extends keyof E>(event: K, create: boolean = true): LinkedNode<EventCallback<E, K>> | null 
   {
-    let listeners: LinkedNode<EventCallback<E, K>> | undefined = this.listeners[event];
+    let listeners: LinkedNode<EventCallback<E, K>> | undefined = this.#listeners[event];
 
     if (!listeners && create) 
     {
-      listeners = this.listeners[event] = new LinkedNode<EventCallback<E, K>>(() => undefined as EventTypeResult<E, K>);
+      listeners = this.#listeners[event] = new LinkedNode<EventCallback<E, K>>(() => undefined as EventTypeResult<E, K>);
     }
 
     return listeners || null;
@@ -93,7 +93,7 @@ export class EventBase<E>
       } 
       else 
       {
-        const listeners = this.listeners[event];
+        const listeners = this.#listeners[event];
 
         if (listeners) 
         {
@@ -114,7 +114,7 @@ export class EventBase<E>
     } 
     else 
     {
-      this.listeners = Object.create(null);
+      this.#listeners = Object.create(null);
     }
 
     return this;

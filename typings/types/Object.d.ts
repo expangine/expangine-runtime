@@ -20,7 +20,7 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static registered: boolean;
     static register(): void;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: Type<O>): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

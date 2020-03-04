@@ -19,7 +19,7 @@ export declare class SetType extends Type<SetOptions> {
     static register(): void;
     static forItem(valueOrClass: TypeInput): SetType;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: SetType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

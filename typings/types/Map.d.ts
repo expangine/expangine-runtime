@@ -21,7 +21,7 @@ export declare class MapType extends Type<MapOptions> {
     static register(): void;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: MapType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

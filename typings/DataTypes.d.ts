@@ -18,11 +18,6 @@ export interface DataTypeJson<T = any> {
     toJson(value: T, toJson: (value: any) => any): any | undefined;
     fromJson(json: any, fromJson: (json: any) => any): T;
 }
-export declare enum CycleOption {
-    IGNORE = 0,
-    ERROR = 1,
-    ATTEMPT = 2
-}
 export declare class DataTypeRegistry {
     static TYPES: DataTypeRaw[];
     private compareTypes;

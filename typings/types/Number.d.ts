@@ -22,7 +22,7 @@ export declare class NumberType extends Type<NumberOptions> {
     static COMPARES_EPSILON: number;
     static register(): void;
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: NumberType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

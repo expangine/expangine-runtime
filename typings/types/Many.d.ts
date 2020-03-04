@@ -16,7 +16,7 @@ export declare class ManyType extends Type<Type[]> {
     static registered: boolean;
     static register(): void;
     operations?: Record<string, OperationGeneric>;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, OperationGeneric>;
     private forMany;
     getId(): string;
     merge(type: ManyType): void;

@@ -16,7 +16,7 @@ export declare class NullType extends Type<null> {
     static registered: boolean;
     static register(): void;
     getId(): string;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("../Operation").OperationGeneric>;
     merge(type: NullType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];

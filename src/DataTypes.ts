@@ -29,13 +29,6 @@ export interface DataTypeJson<T = any>
   fromJson(json: any, fromJson: (json: any) => any): T;
 }
 
-export enum CycleOption
-{
-  IGNORE,
-  ERROR,
-  ATTEMPT,
-}
-
 export class DataTypeRegistry
 {
 

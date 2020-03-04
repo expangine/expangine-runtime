@@ -31,7 +31,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
         hasAlpha?: boolean;
     });
     getId(): string;
-    getOperations(): Record<string, import("..").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: ColorType): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;

@@ -19,7 +19,7 @@ export declare class ReferenceType extends Type<string> {
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
     getType(): Type<any>;
-    getOperations(): Record<string, import("../Operation").Operation<any, any, any, any, any>>;
+    getOperations(): Record<string, import("../Operation").OperationGeneric>;
     getId(): string;
     merge(type: ReferenceType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;

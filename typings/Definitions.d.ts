@@ -97,26 +97,31 @@ export interface DefinitionsEvents {
     updateRelation(defs: Definitions, relation: Relation): void;
     renameRelation(defs: Definitions, relation: Relation, oldName: string): void;
     clearRelations(defs: Definitions, relations: Relation[]): void;
+    changedRelations(defs: Definitions): void;
     addProgram(defs: Definitions, program: Program): void;
     removeProgram(defs: Definitions, program: Program): void;
     updateProgram(defs: Definitions, program: Program): void;
     renameProgram(defs: Definitions, program: Program, oldName: string): void;
     clearPrograms(defs: Definitions, programs: Program[]): void;
+    changedPrograms(defs: Definitions): void;
     addEntity(defs: Definitions, entity: Entity): void;
     removeEntity(defs: Definitions, entity: Entity): void;
     updateEntity(defs: Definitions, entity: Entity): void;
     renameEntity(defs: Definitions, entity: Entity, oldName: string): void;
     clearEntities(defs: Definitions, entities: Entity[]): void;
+    changedEntities(defs: Definitions): void;
     addFunction(defs: Definitions, func: Func): void;
     removeFunction(defs: Definitions, func: Func): void;
     updateFunction(defs: Definitions, func: Func): void;
     renameFunction(defs: Definitions, func: Func, oldName: string): void;
     clearFunctions(defs: Definitions, functions: Func[]): void;
+    changedFunctions(defs: Definitions): void;
     addData(defs: Definitions, data: ReferenceData): void;
     removeData(defs: Definitions, data: ReferenceData): void;
     updateData(defs: Definitions, data: ReferenceData): void;
     renameData(defs: Definitions, data: ReferenceData, oldName: string): void;
     clearData(defs: Definitions, data: ReferenceData[]): void;
+    changedData(defs: Definitions): void;
 }
 export declare class Definitions extends EventBase<DefinitionsEvents> implements OperationTypeProvider, DefinitionProvider {
     types: Record<string, TypeClass>;

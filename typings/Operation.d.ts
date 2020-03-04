@@ -52,7 +52,7 @@ export declare class Operations {
     constructor(prefix: string);
     get(id: string): OperationGeneric;
     getTypes(id: string): OperationTypes<any, any, any>;
-    set<P extends string, O extends string, S extends string, H extends (P | O) = never, R extends (P | O) = never>(localId: string, flags?: Partial<OperationFlags>, params?: P[], optional?: O[], scope?: S[], hasScope?: H[], resultDependency?: R[]): OperationResolved<P, O, S, H, R>;
+    set<P extends string = never, O extends string = never, S extends string = never, H extends (P | O) = never, R extends (P | O) = never>(localId: string, flags?: Partial<OperationFlags>, params?: P[], optional?: O[], scope?: S[], hasScope?: H[], resultDependency?: R[]): OperationResolved<P, O, S, H, R>;
     setTypes(op: Operation<never, never, never, never, never>, returnType: OperationTypeInput<never>): OperationTypes<never, never, never>;
     setTypes<P extends string>(op: Operation<P, never, never, any, any>, returnType: OperationTypeInput<P>, params: Record<P, OperationTypeInput<P>>): OperationTypes<P, never, never>;
     setTypes<P extends string, O extends string>(op: Operation<P, O, never, any, any>, returnType: OperationTypeInput<P | O>, params: Record<P, OperationTypeInput<P | O>>, optional: Record<O, OperationTypeInput<P | O>>): OperationTypes<P, O, never>;

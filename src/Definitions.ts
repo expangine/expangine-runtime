@@ -139,30 +139,35 @@ export interface DefinitionsEvents
   updateRelation(defs: Definitions, relation: Relation): void;
   renameRelation(defs: Definitions, relation: Relation, oldName: string): void;
   clearRelations(defs: Definitions, relations: Relation[]): void;
+  changedRelations(defs: Definitions): void;
   
   addProgram(defs: Definitions, program: Program): void;
   removeProgram(defs: Definitions, program: Program): void;
   updateProgram(defs: Definitions, program: Program): void;
   renameProgram(defs: Definitions, program: Program, oldName: string): void;
   clearPrograms(defs: Definitions, programs: Program[]): void;
+  changedPrograms(defs: Definitions): void;
   
   addEntity(defs: Definitions, entity: Entity): void;
   removeEntity(defs: Definitions, entity: Entity): void;
   updateEntity(defs: Definitions, entity: Entity): void;
   renameEntity(defs: Definitions, entity: Entity, oldName: string): void;
   clearEntities(defs: Definitions, entities: Entity[]): void;
+  changedEntities(defs: Definitions): void;
   
   addFunction(defs: Definitions, func: Func): void;
   removeFunction(defs: Definitions, func: Func): void;
   updateFunction(defs: Definitions, func: Func): void;
   renameFunction(defs: Definitions, func: Func, oldName: string): void;
   clearFunctions(defs: Definitions, functions: Func[]): void;
+  changedFunctions(defs: Definitions): void;
   
   addData(defs: Definitions, data: ReferenceData): void;
   removeData(defs: Definitions, data: ReferenceData): void;
   updateData(defs: Definitions, data: ReferenceData): void;
   renameData(defs: Definitions, data: ReferenceData, oldName: string): void;
   clearData(defs: Definitions, data: ReferenceData[]): void;
+  changedData(defs: Definitions): void;
 }
 
 export class Definitions extends EventBase<DefinitionsEvents> implements OperationTypeProvider, DefinitionProvider
@@ -341,6 +346,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       this.trigger('addData', this, data);
     }
 
+    this.trigger('changedData', this);
+
     if (!delayChange)
     {
       this.changed();
@@ -376,6 +383,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.data.remove(data, respectOrder);
 
     this.trigger('removeData', this, data);
+    this.trigger('changedData', this);
 
     if (!delayChange)
     {
@@ -392,6 +400,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.data.clear();
 
     this.trigger('clearData', this, data);
+    this.trigger('changedData', this);
 
     if (!delayChange)
     {
@@ -427,6 +436,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     data.changed();
 
     this.trigger('renameData', this, data, oldName);
+    this.trigger('changedData', this);
 
     if (!delayChange)
     {
@@ -463,6 +473,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       this.trigger('addFunction', this, func);
     }
+
+    this.trigger('changedFunctions', this);
 
     if (!delayChange)
     {
@@ -510,6 +522,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       this.trigger('addProgram', this, program);
     }
 
+    this.trigger('changedPrograms', this);
+
     if (!delayChange)
     {
       this.changed();
@@ -540,6 +554,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.programs.remove(program, respectOrder);
 
     this.trigger('removeProgram', this, program);
+    this.trigger('changedPrograms', this);
 
     if (!delayChange)
     {
@@ -556,6 +571,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.programs.clear();
 
     this.trigger('clearPrograms', this, programs);
+    this.trigger('changedPrograms', this);
 
     if (!delayChange)
     {
@@ -590,6 +606,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       this.trigger('addEntity', this, entity);
     }
+
+    this.trigger('changedEntities', this);
 
     if (!delayChange)
     {
@@ -636,6 +654,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       this.trigger('addRelation', this, relation);
     }
+
+    this.trigger('changedRelations', this);
 
     if (!delayChange)
     {
@@ -709,6 +729,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.relations.remove(relation, respectOrder);
 
     this.trigger('removeRelation', this, relation);
+    this.trigger('changedRelations', this);
 
     if (!delayChange)
     {
@@ -725,6 +746,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.relations.clear();
 
     this.trigger('clearRelations', this, relations);
+    this.trigger('changedRelations', this);
 
     if (!delayChange)
     {
@@ -746,6 +768,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     program.changed();
 
     this.trigger('renameProgram', this, program, oldName);
+    this.trigger('changedPrograms', this);
 
     if (!delayChange)
     {
@@ -788,6 +811,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     entity.changed();
 
     this.trigger('renameEntity', this, entity, oldName);
+    this.trigger('changedEntities', this);
 
     if (!delayChange)
     {
@@ -859,6 +883,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     });
 
     this.trigger('removeEntity', this, entity);
+    this.trigger('changedEntities', this);
 
     if (!delayChange)
     {
@@ -876,6 +901,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.entities.clear();
 
     this.trigger('clearEntities', this, entities);
+    this.trigger('changedEntities', this);
 
     if (!delayChange)
     {
@@ -920,6 +946,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     relation.changed();
 
     this.trigger('renameRelation', this, relation, oldName);
+    this.trigger('changedRelations', this);
 
     if (!delayChange)
     {
@@ -950,6 +977,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     func.changed();
 
     this.trigger('renameFunction', this, func, oldName);
+    this.trigger('changedFunctions', this);
 
     if (!delayChange)
     {
@@ -1025,6 +1053,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.functions.remove(func, respectOrder);
 
     this.trigger('removeFunction', this, func);
+    this.trigger('changedFunctions', this);
 
     if (!delayChange)
     {
@@ -1041,6 +1070,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.functions.clear();
 
     this.trigger('clearFunctions', this, functions);
+    this.trigger('changedFunctions', this);
 
     if (!delayChange)
     {
