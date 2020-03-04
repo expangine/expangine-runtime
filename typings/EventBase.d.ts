@@ -7,7 +7,7 @@ export declare type EventCallbackMap<E> = {
 export declare type EventTypeResult<E, K extends keyof E> = E[K] extends EventDefinition<any, infer R> ? R : never;
 export declare type EventTypeArgs<E, K extends keyof E> = E[K] extends EventDefinition<infer A, any> ? A : never;
 export declare class EventBase<E> {
-    #private;
+    private listeners;
     trigger<K extends keyof E, A extends EventTypeArgs<E, K>, R extends EventTypeResult<E, K>>(event: K, ...payload: A): R[];
     hasListeners<K extends keyof E>(event: K): boolean;
     getListeners<K extends keyof E>(event: K, create?: false): LinkedNode<EventCallback<E, K>> | null;
