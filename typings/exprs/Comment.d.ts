@@ -19,4 +19,5 @@ export declare class CommentExpression extends Expression {
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    isPathWritable(defs: DefinitionProvider): boolean;
 }

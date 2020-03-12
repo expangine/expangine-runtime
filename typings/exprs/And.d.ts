@@ -10,7 +10,7 @@ export declare class AndExpression extends Expression {
     expressions: Expression[];
     constructor(expressions: Expression[]);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

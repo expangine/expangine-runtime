@@ -1,18 +1,17 @@
-import { Expression, ExpressionProvider } from '../Expression';
+import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
-import { PathExpression } from './Path';
-export declare class ComputedExpression extends Expression {
-    static STEP_EXPRESSION: string;
+export declare class MethodExpression extends Expression {
     static id: string;
-    static decode(data: any[], exprs: ExpressionProvider): PathExpression | ComputedExpression;
-    static encode(expr: ComputedExpression): any;
+    static decode(data: any[], exprs: ExpressionProvider): MethodExpression;
+    static encode(expr: MethodExpression): any;
     name: string;
-    constructor(name: string);
+    args: ExpressionMap;
+    constructor(name: string, args: ExpressionMap);
     getId(): string;
-    getComplexity(def: DefinitionProvider, context: Type): number;
+    getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
@@ -21,6 +20,7 @@ export declare class ComputedExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
-    isPathNode(): boolean;
-    isPathWritable(defs: DefinitionProvider): boolean;
+    named(name: string): MethodExpression;
+    arg(name: string, value: ExpressionValue): MethodExpression;
+    arg(args: Record<string, ExpressionValue>): MethodExpression;
 }

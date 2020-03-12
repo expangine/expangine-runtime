@@ -3,11 +3,18 @@ import { Operation } from './Operation';
 
 
 
-export interface Computed {
+export interface Computed 
+{
   id: string;
   op: string;
   value: string;
   params: Record<string, any>;
+  writeable?: {
+    op: string;
+    value: string;
+    newValue: string;
+    params: Record<string, any>;
+  };
 }
 
 export class Computeds
@@ -37,6 +44,21 @@ export class Computeds
 
     this.map[id] = comp;
     this.list.push(comp);
+
+    return comp;
+  }
+
+  public setWritable<P extends string = never, O extends string = never, V extends P = never, N extends P = never>(localId: string, op: Operation<P, O, any, any, any>, value: V, newValue: N, params?: Partial<Record<P | O, any>>): Computed 
+  {
+    const id = this.prefix + localId;
+    const comp = this.map[id];
+
+    comp.writeable = { 
+      op: op.id,
+      value,
+      newValue,
+      params: params || {},
+    };
 
     return comp;
   }

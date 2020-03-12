@@ -85,6 +85,11 @@ export function isEmpty(value: any): boolean
   return value === null || value === undefined;
 }
 
+export function now(): number
+{
+  return new Date().getTime();
+}
+
 export function clamp(x: number, min: number, max: number): number
 {
   return x < min ? min : x > max ? max : x;

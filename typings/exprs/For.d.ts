@@ -21,7 +21,7 @@ export declare class ForExpression extends Expression {
     maxIterations: number;
     constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): {
         [x: string]: BooleanType | NumberType;
     };

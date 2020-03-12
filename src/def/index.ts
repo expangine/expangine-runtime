@@ -34,11 +34,13 @@ import { GetEntityExpression } from '../exprs/GetEntity';
 import { GetRelationExpression } from '../exprs/GetRelation';
 import { IfExpression } from '../exprs/If';
 import { InvokeExpression } from '../exprs/Invoke';
+import { MethodExpression } from '../exprs/Method';
 import { NoExpression } from '../exprs/No';
 import { NotExpression } from '../exprs/Not';
 import { ObjectExpression } from '../exprs/Object';
 import { OperationExpression } from '../exprs/Operation';
 import { OrExpression } from '../exprs/Or';
+import { PathExpression } from '../exprs/Path';
 import { ReturnExpression } from '../exprs/Return';
 import { SetExpression } from '../exprs/Set';
 import { SubExpression } from '../exprs/Sub';
@@ -86,11 +88,13 @@ export const defs = new Definitions({
     GetRelationExpression,
     IfExpression,
     InvokeExpression,
+    MethodExpression,
     NoExpression,
     NotExpression,
     ObjectExpression,
     OperationExpression,
     OrExpression,
+    PathExpression,
     ReturnExpression,
     SetExpression,
     SubExpression,    

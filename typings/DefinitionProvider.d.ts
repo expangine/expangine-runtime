@@ -8,6 +8,8 @@ import { Relation } from './Relation';
 import { ReferenceData } from './ReferenceData';
 import { Program } from './Program';
 export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider {
+    setLegacy(): void;
+    isLegacy(): boolean;
     describe(data: any): Type;
     merge(type: Type, data: any): Type;
     getExpression(data: any): Expression;

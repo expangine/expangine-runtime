@@ -190,6 +190,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public keyExpectedType: Type;
   public describeExpectedType: Type;
 
+  private legacy: boolean = false;
+
   public constructor(initial?: DefinitionsOptions)
   { 
     super();
@@ -215,6 +217,16 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     {
       this.add(initial);
     }
+  }
+
+  public isLegacy(): boolean
+  {
+    return this.legacy;
+  }
+
+  public setLegacy(): void
+  {
+    this.legacy = true;
   }
 
   private encodeMap<O, V extends { encode(): O }>(map: FastMap<V>): Record<string, O>;
@@ -1600,22 +1612,32 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
   public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null
   {
-    let optional = false;
-    let node = context;
+    let thisType = path[0].getType(this, context);
 
-    for (let i = 0; i < stopBefore; i++)
+    if (!thisType)
     {
-      node = node.getSubType(path[i], this, context);
+      return null;
+    }
 
-      if (!node)
+    let optional = thisType.isOptional();
+
+    for (let i = 1; i < stopBefore; i++)
+    {
+      const node = path[i];
+
+      thisType = node.isPathNode()
+        ? node.getType(this, context, thisType)
+        : thisType.getSubType(node, this, context);
+
+      if (!thisType)
       {
         return null;
       }
 
-      optional = optional || node.isOptional();
+      optional = optional || thisType.isOptional();
     }
 
-    return optional && !node.isOptional() ? Types.optional(node) : node;
+    return optional && !thisType.isOptional() ? Types.optional(thisType) : thisType;
   }
 
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 

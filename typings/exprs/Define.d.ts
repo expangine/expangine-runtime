@@ -13,7 +13,7 @@ export declare class DefineExpression extends Expression {
     body: Expression;
     constructor(define: [string, Expression][], body: Expression);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): {};
     encode(): any;
     clone(): Expression;

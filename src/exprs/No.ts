@@ -29,7 +29,7 @@ export class NoExpression extends Expression
     return NoExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return 0;
   }

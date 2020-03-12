@@ -11,7 +11,7 @@ export declare class GetDataExpression extends Expression {
     name: string;
     constructor(name: string);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
@@ -19,4 +19,6 @@ export declare class GetDataExpression extends Expression {
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    isPathStart(): boolean;
+    isPathNode(): boolean;
 }

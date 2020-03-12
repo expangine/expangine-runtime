@@ -13,6 +13,7 @@ export declare function isUndefined(value: any): value is undefined;
 export declare function isSameClass(a: any, b: any): boolean;
 export declare function isWhole(x: number, epsilon?: number): boolean;
 export declare function isEmpty(value: any): boolean;
+export declare function now(): number;
 export declare function clamp(x: number, min: number, max: number): number;
 export declare function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, V>;
 export declare function reverseMap<K, V>(map: Map<K, V>): Map<V, K>;

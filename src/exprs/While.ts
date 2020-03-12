@@ -70,9 +70,9 @@ export class WhileExpression extends Expression
     return WhileExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return Math.max(this.condition.getComplexity(def), this.body.getComplexity(def)) + 1;
+    return Math.max(this.condition.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
   }
 
   public getScope()

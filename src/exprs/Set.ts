@@ -1,12 +1,12 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { isArray, isNumber } from '../fns';
 import { BooleanType } from '../types/Boolean';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
-import { ValidationHandler } from '../Validate';
+import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
+import { PathExpression } from './Path';
 
 
 const INDEX_PATH = 1;
@@ -23,7 +23,7 @@ export class SetExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): SetExpression 
   {
-    const path: Expression[] = data[INDEX_PATH].map((part: any) => exprs.getExpression(part));
+    const path = PathExpression.decode(data[INDEX_PATH], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
 
     return new SetExpression(path, value);
@@ -31,22 +31,21 @@ export class SetExpression extends Expression
 
   public static encode(expr: SetExpression): any 
   {
-    const path = expr.path.map(e => e.encode());
-
-    return [this.id, path, expr.value.encode()];
+    return [this.id, expr.path.encode(), expr.value.encode()];
   }
 
   public static create(path: ExpressionValue[], value: ExpressionValue)
   {
-    return new SetExpression(Exprs.parse(path), Exprs.parse(value));
+    return new SetExpression(Exprs.path(path), Exprs.parse(value));
   }
 
-  public path: Expression[];
+  public path: PathExpression;
   public value: Expression;
 
-  public constructor(path: Expression[], value: Expression) 
+  public constructor(path: PathExpression, value: Expression) 
   {
     super();
+
     this.path = path;
     this.value = value;
   }
@@ -56,9 +55,9 @@ export class SetExpression extends Expression
     return SetExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.path.reduce((max, e) => Math.max(max, e.getComplexity(def)), this.value.getComplexity(def));
+    return Math.max(this.path.getComplexity(def, context), this.value.getComplexity(def, context));
   }
 
   public getScope(): null
@@ -73,7 +72,7 @@ export class SetExpression extends Expression
 
   public clone(): Expression
   {
-    return new SetExpression(this.path.map((p) => p.clone()), this.value.clone());
+    return new SetExpression(this.path.clone(), this.value.clone());
   }
 
   public getType(def: DefinitionProvider, context: Type): Type | null
@@ -84,11 +83,7 @@ export class SetExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(SetExpression.STEP_PATH, () => 
-        this.path.forEach((expr, index) => 
-          traverse.step(index, expr, (replaceWith) => this.path.splice(index, 1, replaceWith), () => this.path.splice(index, 1))
-        )
-      );
+      traverse.step(SetExpression.STEP_PATH, this.path, (replaceWith) => this.path = Exprs.path(replaceWith));
       traverse.step(SetExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
     });
   }
@@ -97,9 +92,7 @@ export class SetExpression extends Expression
   public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
   {
     return steps[0] === SetExpression.STEP_PATH
-      ? isNumber(steps[1]) && steps[1] < this.path.length
-        ? [2, this.path[steps[1]]]
-        : null
+      ? [1, this.path]
       : steps[0] === SetExpression.STEP_VALUE
         ? [1, this.value]
         : null;
@@ -110,36 +103,41 @@ export class SetExpression extends Expression
   {
     this.parent = parent;
 
-    this.path.forEach(e => e.setParent(this));
+    this.path.setParent(this);
     this.value.setParent(this);
   }
 
   public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
-    this.validatePath(def, context, context, this.path, handler);
+    this.path.validate(def, context, handler);
 
-    const expectedType = def.getPathType(this.path, context);
+    const expectedType = this.path.getType(def, context);
+
+    if (!this.path.isWritable(def))
+    {
+      handler({
+        type: ValidationType.READONLY,
+        severity: ValidationSeverity.HIGH,
+        context,
+        subject: this.path,
+        parent: this,
+      });
+    }
 
     if (expectedType)
     {
       this.validateType(def, context, expectedType, this.value, handler);
     }
-  }
-
-  public add(expr: ExpressionValue | ExpressionValue[]): SetExpression
-  {
-    const append = isArray(expr)
-      ? expr
-      : [expr];
-
-    for (const nodeValue of append)
+    else
     {
-      const node = Exprs.parse(nodeValue);
-      this.path.push(node);
-      node.setParent(this);
+      handler({
+        type: ValidationType.INVALID_EXPRESSION,
+        severity: ValidationSeverity.HIGH,
+        context,
+        subject: this.path,
+        parent: this,
+      });
     }
-
-    return this;
   }
 
   public to(value: ExpressionValue): SetExpression

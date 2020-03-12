@@ -5,11 +5,14 @@ import { Expression } from './Expression';
 import { Runtime } from './Runtime';
 import { EventBase } from './EventBase';
 import { DataTypes } from './DataTypes';
+import { now } from './fns';
 
 
 export interface ReferenceDataOptions
 {
   name: string;
+  created: number;
+  updated: number;
   dataType: any;
   data: any;
   meta: any;
@@ -28,6 +31,8 @@ export class ReferenceData extends EventBase<ReferenceDataEvents> implements Ref
   public static create(defs: Definitions, defaults: Partial<ReferenceDataOptions> = {}) {
     return new ReferenceData({
       name: '',
+      created: now(),
+      updated: now(),
       dataType: Types.object(),
       data: Object.create(null),
       meta: null,
@@ -36,6 +41,8 @@ export class ReferenceData extends EventBase<ReferenceDataEvents> implements Ref
   }
 
   public name: string;
+  public created: number;
+  public updated: number;
   public dataType: Type;
   public data: any;
   public meta: any;
@@ -45,6 +52,8 @@ export class ReferenceData extends EventBase<ReferenceDataEvents> implements Ref
     super();
 
     this.name = options.name;
+    this.created = options.created || now();
+    this.updated = options.updated || now();
     this.meta = options.meta;
     this.dataType = defs.getType(options.dataType);
     this.data = this.dataType.fromJson(options.data);
@@ -55,6 +64,8 @@ export class ReferenceData extends EventBase<ReferenceDataEvents> implements Ref
     if (this.hasChanges(options))
     {
       this.name = options.name;
+      this.created = options.created || now();
+      this.updated = options.updated || now();
       this.meta = options.meta;
       this.dataType = options instanceof ReferenceData
         ? options.dataType
@@ -75,15 +86,19 @@ export class ReferenceData extends EventBase<ReferenceDataEvents> implements Ref
 
   public changed()
   {
+    this.updated = now();
+
     this.trigger('changed', this);
   }
 
   public encode(): ReferenceDataOptions
   {
-    const { name, meta, dataType, data } = this;
+    const { name, created, updated, meta, dataType, data } = this;
 
     return {
       name,
+      created,
+      updated,
       meta,
       dataType: dataType.encode(),
       data: dataType.toJson(data),

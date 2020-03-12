@@ -20,7 +20,6 @@ import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
 import { ReturnExpression } from './exprs/Return';
 import { SetExpression } from './exprs/Set';
-import { SubExpression } from './exprs/Sub';
 import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
 import { UpdateExpression } from './exprs/Update';
@@ -29,6 +28,7 @@ import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { isArray, isObject, objectMap } from './fns';
 import { Type } from './Type';
+import { PathExpression } from './exprs/Path';
 
 
 export class Exprs
@@ -104,19 +104,19 @@ export class Exprs
     return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, breakVariable, maxIterations));
   }
 
-  public static get(...path: ExpressionValue[]): GetExpression
+  public static get(...path: ExpressionValue[]): PathExpression
   {
-    return this.setParent(new GetExpression(this.parse(path)));
+    return this.setParent(new PathExpression([new GetExpression(), ...this.parse(path)]));
   }
 
-  public static sub(value: ExpressionValue, ...path: ExpressionValue[]): SubExpression
+  public static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression
   {
-    return this.setParent(new SubExpression(this.parse(value), this.parse(path)));
+    return this.setParent(new PathExpression([this.parse(value), ...this.parse(path)]));
   }
 
-  public static computed(name: string, value: ExpressionValue): ComputedExpression
+  public static computed(name: string, value: ExpressionValue): PathExpression
   {
-    return this.setParent(new ComputedExpression(this.parse(value), name));
+    return this.setParent(new PathExpression([this.parse(value), new ComputedExpression(name)]));
   }
 
   public static if(condition: Expression, body: Expression = NoExpression.instance, otherwise: Expression = NoExpression.instance): IfExpression
@@ -157,6 +157,13 @@ export class Exprs
     return this.setParent(new OrExpression(exprs));
   }
 
+  public static path(...exprs: ExpressionValue[]): PathExpression
+  {
+    return this.setParent(exprs.length === 1 && exprs[0] instanceof PathExpression
+      ? exprs[0]
+      : new PathExpression(this.parse(exprs)));
+  }
+
   public static return(value: ExpressionValue = NoExpression.instance): ReturnExpression
   {
     return this.setParent(new ReturnExpression(this.parse(value)));
@@ -164,7 +171,7 @@ export class Exprs
 
   public static set(...path: ExpressionValue[]): SetExpression
   {
-    return this.setParent(new SetExpression(this.parse(path), NoExpression.instance));
+    return this.setParent(new SetExpression(this.path(...path), NoExpression.instance));
   }
 
   public static switch<P extends string, O extends string, S extends string>(value: Expression, op: Operation<P, O, S, any, any>): SwitchExpression
@@ -184,7 +191,7 @@ export class Exprs
 
   public static update(...path: ExpressionValue[]): UpdateExpression
   {
-    return this.setParent(new UpdateExpression(this.parse(path), NoExpression.instance));
+    return this.setParent(new UpdateExpression(this.path(...path), NoExpression.instance));
   }
 
   public static while(condition: Expression, body: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): WhileExpression

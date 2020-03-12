@@ -6,7 +6,7 @@ import { NoExpression } from './exprs/No';
 import { Runtime } from './Runtime';
 import { EventBase } from './EventBase';
 import { DataTypes } from './DataTypes';
-import { arraySync, isNumber } from './fns';
+import { arraySync, isNumber, now } from './fns';
 
 
 export interface ProgramOptions
@@ -45,21 +45,19 @@ export class Program extends EventBase<ProgramEvents> implements ProgramOptions
 {
 
   public static create(defs: Definitions, defaults: Partial<ProgramOptions> = {}): Program {
-    const now = new Date().getTime();
-
     return new Program({
       name,
       author: '',
       description: '',
       meta: null,
-      created: now,
-      updated: now,
+      created: now(),
+      updated: now(),
       dataType: Types.object(),
       datasets: [{
         name: 'Data Set #1',
         data: Object.create(null),
-        created: now,
-        updated: now,
+        created: now(),
+        updated: now(),
         meta: null,
       }],
       expression: NoExpression.instance,
@@ -97,6 +95,8 @@ export class Program extends EventBase<ProgramEvents> implements ProgramOptions
     if (this.hasChanges(options))
     {
       this.name = options.name;
+      this.created = options.created || now();
+      this.updated = options.updated || now();
       this.author = options.author;
       this.description = options.description;
       this.meta = options.meta;
@@ -132,6 +132,8 @@ export class Program extends EventBase<ProgramEvents> implements ProgramOptions
 
   public changed()
   {
+    this.updated = now();
+
     this.trigger('changed', this);
   }
 

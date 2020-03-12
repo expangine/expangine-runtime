@@ -19,7 +19,7 @@ export declare class SwitchExpression extends Expression {
     defaultCase: Expression;
     constructor(value: Expression, op: string, cases: [Expression[], Expression][], defaultCase: Expression);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

@@ -11,7 +11,7 @@ export declare class GetEntityExpression extends Expression {
     name: string;
     constructor(name: string);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

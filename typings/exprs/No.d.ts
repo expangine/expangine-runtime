@@ -9,7 +9,7 @@ export declare class NoExpression extends Expression {
     static decode(data: any[], exprs: ExpressionProvider): NoExpression;
     static encode(expr: NoExpression): any;
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

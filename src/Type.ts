@@ -38,6 +38,7 @@ export interface TypeProvider
   getType(data: any, otherwise?: Type): Type;
   getExpression(data: any): Expression;
   getData(name: string): ReferenceData | null;
+  setLegacy(): void;
 }
 
 export interface TypeDescribeProvider

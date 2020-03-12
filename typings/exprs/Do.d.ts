@@ -17,7 +17,7 @@ export declare class DoExpression extends Expression {
     maxIterations: number;
     constructor(condition: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): {
         [x: string]: BooleanType;
     };

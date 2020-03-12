@@ -11,7 +11,7 @@ export declare class TemplateExpression extends Expression {
     params: ExpressionMap;
     constructor(template: string, params: ExpressionMap);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

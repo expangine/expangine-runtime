@@ -7,12 +7,13 @@ import { ValidationHandler, ValidationType, ValidationSeverity, Validation } fro
 export interface ExpressionProvider 
 { 
   getExpression(value: any): Expression;
+  setLegacy(): void;
 }
 
 export interface ExpressionClass<T extends Expression = any> 
 {
   id: string;
-  decode(this: ExpressionClass<T>, data: any[], exprs: ExpressionProvider): T;
+  decode(this: ExpressionClass<T>, data: any[], exprs: ExpressionProvider): Expression;
   encode(this: ExpressionClass<T>, expr: T): any;
   new(...args: any[]): T;
 }
@@ -30,19 +31,34 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract getScope(): TypeMap | null;
 
-  public abstract getComplexity(def: DefinitionProvider): number;
+  public abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
 
   public abstract encode(): any;
 
   public abstract clone(): Expression;
 
-  public abstract getType(def: DefinitionProvider, context: Type): Type | null;
+  public abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
 
   public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
 
   public abstract setParent(parent?: Expression): void;
 
-  public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+  public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
+  
+  public isPathStart(): boolean
+  {
+    return false;
+  }
+
+  public isPathNode(): boolean
+  {
+    return false;
+  }
+
+  public isPathWritable(defs: DefinitionProvider): boolean
+  {
+    return true;
+  }
   
   public getPath(): TraverseStep[]
   {
@@ -160,32 +176,6 @@ export abstract class Expression implements Traversable<Expression>
     {
       subject.validate(def, context, handler);
     }
-  }
-
-  protected validatePath(def: DefinitionProvider, context: Type, start: Type, subjects: Expression[], handler: ValidationHandler, parent: Expression = this): void
-  {
-    let node = start;
-
-    subjects.forEach(subject => 
-    {
-      if (node)
-      {
-        node = node.getSubType(subject, def, context);
-      }
-
-      if (!node)
-      {
-        handler({
-          type: ValidationType.INVALID_EXPRESSION,
-          severity: ValidationSeverity.HIGH,
-          subject,
-          context,
-          parent,
-        });
-      }
-
-      subject.validate(def, context, handler);
-    });
   }
 
 }

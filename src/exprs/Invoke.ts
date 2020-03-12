@@ -46,7 +46,7 @@ export class InvokeExpression extends Expression
     return InvokeExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     const func = def.getFunction(this.name);
 
@@ -55,7 +55,7 @@ export class InvokeExpression extends Expression
       return 0;
     }
 
-    return func.expression.getComplexity(def);
+    return func.expression.getComplexity(def, context);
   }
 
   public getScope(): null

@@ -9,6 +9,8 @@ export interface RelationTypeKey {
 }
 export interface RelationOptions {
     name: string;
+    created: number;
+    updated: number;
     kind: RelationKind;
     subject: RelationTypeKey;
     subjectRelationName?: string;
@@ -59,6 +61,14 @@ export declare class Relation extends EventBase<RelationEvents> {
      * A unique name for the relationship between the subject type and related types.
      */
     name: string;
+    /**
+     * When the relation was created.
+     */
+    created: number;
+    /**
+     * When the relation was last updated.
+     */
+    updated: number;
     /**
      * A name-props pair for the type that has the foreign key. The name is the
      * aliased type name and the props are the properties on it that reference
@@ -147,6 +157,8 @@ export declare class Relation extends EventBase<RelationEvents> {
         manyRelationName?: string;
         foreignKeyPrefix?: string;
         owns?: boolean;
+        created?: number;
+        updated?: number;
     }): Relation;
     static belongsTo(defs: Definitions, options: {
         name?: string;
@@ -156,6 +168,8 @@ export declare class Relation extends EventBase<RelationEvents> {
         belongsToRelationName?: string;
         foreignKeyPrefix?: string;
         owns?: boolean;
+        created?: number;
+        updated?: number;
     }): Relation;
     static hasOne(defs: Definitions, options: {
         name?: string;
@@ -166,6 +180,8 @@ export declare class Relation extends EventBase<RelationEvents> {
         hasOneRelationName?: string;
         oneRelationName?: string;
         foreignKeyPrefix?: string;
+        created?: number;
+        updated?: number;
     }): Relation;
     static belongsToOne(defs: Definitions, options: {
         name?: string;
@@ -176,6 +192,8 @@ export declare class Relation extends EventBase<RelationEvents> {
         oneRelationName?: string;
         belongsToRelationName?: string;
         foreignKeyPrefix?: string;
+        created?: number;
+        updated?: number;
     }): Relation;
     static hasOnePolymorphic(defs: Definitions, options: {
         name?: string;
@@ -188,5 +206,7 @@ export declare class Relation extends EventBase<RelationEvents> {
         hasOneRelationName: string;
         polyRelationName?: string;
         foreignKeyPrefix?: string;
+        created?: number;
+        updated?: number;
     }): Relation;
 }

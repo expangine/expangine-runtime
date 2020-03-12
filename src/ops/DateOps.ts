@@ -124,35 +124,95 @@ export const DateOps =
 };
 
 DateComputeds.set('timestamp', DateOps.get, 'value', { property: 'timestamp' });
+DateComputeds.setWritable('timestamp', DateOps.set, 'value', 'set', { property: 'timestamp' });
+
 DateComputeds.set('timestampSeconds', DateOps.get, 'value', { property: 'timestampSeconds' });
+DateComputeds.setWritable('timestampSeconds', DateOps.set, 'value', 'set', { property: 'timestampSeconds' });
+
 DateComputeds.set('millis', DateOps.get, 'value', { property: 'millis' });
+DateComputeds.setWritable('millis', DateOps.set, 'value', 'set', { property: 'millis' });
+
 DateComputeds.set('second', DateOps.get, 'value', { property: 'second' });
+DateComputeds.setWritable('second', DateOps.set, 'value', 'set', { property: 'second' });
+
 DateComputeds.set('minute', DateOps.get, 'value', { property: 'minute' });
+DateComputeds.setWritable('minute', DateOps.set, 'value', 'set', { property: 'minute' });
+
 DateComputeds.set('hour', DateOps.get, 'value', { property: 'hour' });
+DateComputeds.setWritable('hour', DateOps.set, 'value', 'set', { property: 'hour' });
+
 DateComputeds.set('day', DateOps.get, 'value', { property: 'day' });
+DateComputeds.setWritable('day', DateOps.set, 'value', 'set', { property: 'day' });
+
 DateComputeds.set('dayOfMonth', DateOps.get, 'value', { property: 'dayOfMonth' });
+DateComputeds.setWritable('dayOfMonth', DateOps.set, 'value', 'set', { property: 'dayOfMonth' });
+
 DateComputeds.set('lastDayOfMonth', DateOps.get, 'value', { property: 'lastDayOfMonth' });
+DateComputeds.setWritable('lastDayOfMonth', DateOps.set, 'value', 'set', { property: 'lastDayOfMonth' });
+
 DateComputeds.set('dayOfYear', DateOps.get, 'value', { property: 'dayOfYear' });
+DateComputeds.setWritable('dayOfYear', DateOps.set, 'value', 'set', { property: 'dayOfYear' });
+
 DateComputeds.set('dayOfWeek', DateOps.get, 'value', { property: 'dayOfWeek' });
+DateComputeds.setWritable('dayOfWeek', DateOps.set, 'value', 'set', { property: 'dayOfWeek' });
+
 DateComputeds.set('week', DateOps.get, 'value', { property: 'week' });
+DateComputeds.setWritable('week', DateOps.set, 'value', 'set', { property: 'week' });
+
 DateComputeds.set('weekOfMonth', DateOps.get, 'value', { property: 'weekOfMonth' });
+DateComputeds.setWritable('weekOfMonth', DateOps.set, 'value', 'set', { property: 'weekOfMonth' });
+
 DateComputeds.set('weekspanOfMonth', DateOps.get, 'value', { property: 'weekspanOfMonth' });
+DateComputeds.setWritable('weekspanOfMonth', DateOps.set, 'value', 'set', { property: 'weekspanOfMonth' });
+
 DateComputeds.set('fullWeekOfMonth', DateOps.get, 'value', { property: 'fullWeekOfMonth' });
+DateComputeds.setWritable('fullWeekOfMonth', DateOps.set, 'value', 'set', { property: 'fullWeekOfMonth' });
+
 DateComputeds.set('lastWeekspanOfMonth', DateOps.get, 'value', { property: 'lastWeekspanOfMonth' });
+DateComputeds.setWritable('lastWeekspanOfMonth', DateOps.set, 'value', 'set', { property: 'lastWeekspanOfMonth' });
+
 DateComputeds.set('lastFullWeekOfMonth', DateOps.get, 'value', { property: 'lastFullWeekOfMonth' });
+DateComputeds.setWritable('lastFullWeekOfMonth', DateOps.set, 'value', 'set', { property: 'lastFullWeekOfMonth' });
+
 DateComputeds.set('weekOfYear', DateOps.get, 'value', { property: 'weekOfYear' });
+DateComputeds.setWritable('weekOfYear', DateOps.set, 'value', 'set', { property: 'weekOfYear' });
+
 DateComputeds.set('weekspanOfYear', DateOps.get, 'value', { property: 'weekspanOfYear' });
+DateComputeds.setWritable('weekspanOfYear', DateOps.set, 'value', 'set', { property: 'weekspanOfYear' });
+
 DateComputeds.set('fullWeekOfYear', DateOps.get, 'value', { property: 'fullWeekOfYear' });
+DateComputeds.setWritable('fullWeekOfYear', DateOps.set, 'value', 'set', { property: 'fullWeekOfYear' });
+
 DateComputeds.set('lastWeekspanOfYear', DateOps.get, 'value', { property: 'lastWeekspanOfYear' });
+DateComputeds.setWritable('lastWeekspanOfYear', DateOps.set, 'value', 'set', { property: 'lastWeekspanOfYear' });
+
 DateComputeds.set('lastFullWeekOfYear', DateOps.get, 'value', { property: 'lastFullWeekOfYear' });
+DateComputeds.setWritable('lastFullWeekOfYear', DateOps.set, 'value', 'set', { property: 'lastFullWeekOfYear' });
+
 DateComputeds.set('month', DateOps.get, 'value', { property: 'month' });
+DateComputeds.setWritable('month', DateOps.set, 'value', 'set', { property: 'month' });
+
 DateComputeds.set('quarter', DateOps.get, 'value', { property: 'quarter' });
+DateComputeds.setWritable('quarter', DateOps.set, 'value', 'set', { property: 'quarter' });
+
 DateComputeds.set('year', DateOps.get, 'value', { property: 'year' });
+DateComputeds.setWritable('year', DateOps.set, 'value', 'set', { property: 'year' });
+
 DateComputeds.set('timeIdentifier', DateOps.get, 'value', { property: 'timeIdentifier' });
+DateComputeds.setWritable('timeIdentifier', DateOps.set, 'value', 'set', { property: 'timeIdentifier' });
+
 DateComputeds.set('dayIdentifier', DateOps.get, 'value', { property: 'dayIdentifier' });
+DateComputeds.setWritable('dayIdentifier', DateOps.set, 'value', 'set', { property: 'dayIdentifier' });
+
 DateComputeds.set('weekIdentifier', DateOps.get, 'value', { property: 'weekIdentifier' });
+DateComputeds.setWritable('weekIdentifier', DateOps.set, 'value', 'set', { property: 'weekIdentifier' });
+
 DateComputeds.set('monthIdentifier', DateOps.get, 'value', { property: 'monthIdentifier' });
+DateComputeds.setWritable('monthIdentifier', DateOps.set, 'value', 'set', { property: 'monthIdentifier' });
+
 DateComputeds.set('quarterIdentifier', DateOps.get, 'value', { property: 'quarterIdentifier' });
+DateComputeds.setWritable('quarterIdentifier', DateOps.set, 'value', 'set', { property: 'quarterIdentifier' });
+
 
 DateComputeds.set('startOfSecond', DateOps.startOf, 'value', { unit: 'second' });
 DateComputeds.set('startOfMinute', DateOps.startOf, 'value', { unit: 'minute' });

@@ -4,7 +4,7 @@ import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { Exprs } from './Exprs';
-import { isEmpty, objectMap, arraySync, isNumber } from './fns';
+import { isEmpty, objectMap, arraySync, isNumber, now } from './fns';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { DataTypes } from './DataTypes';
@@ -14,6 +14,8 @@ import { EventBase } from './EventBase';
 export interface FuncOptions
 {
   name: string;
+  created: number;
+  updated: number;
   description: string;
   meta: any;
   params: any;
@@ -48,6 +50,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
   public static create(defs: Definitions, defaults: Partial<FuncOptions> = {}) {
     return new Func({
       name: '',
+      created: now(),
+      updated: now(),
       description: '',
       meta: null,
       params: Types.object(),
@@ -59,6 +63,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
   }
 
   public name: string;
+  public created: number;
+  public updated: number;
   public description: string;
   public meta: any;
   public params: ObjectType<ObjectOptions>;
@@ -71,6 +77,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     super();
 
     this.name = options.name;
+    this.created = options.created || now();
+    this.updated = options.updated || now();
     this.description = options.description;
     this.meta = options.meta;
     this.params = defs.getTypeKind(options.params, ObjectType, Types.object());
@@ -84,6 +92,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     if (this.hasChanges(options))
     {
       this.name = options.name;
+      this.created = options.created || now();
+      this.updated = options.updated || now();
       this.description = options.description;
       this.meta = options.meta;
       this.params = options instanceof Func
@@ -119,15 +129,19 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
   public changed()
   {
+    this.updated = now();
+
     this.trigger('changed', this);
   }
 
   public encode(): FuncOptions 
   {
-    const { name, description, meta, params, expression, defaults, tests } = this;
+    const { name, created, updated, description, meta, params, expression, defaults, tests } = this;
 
     return {
       name,
+      created,
+      updated,
       description, 
       meta,
       params: params.encode(),

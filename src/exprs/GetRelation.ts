@@ -42,7 +42,7 @@ export class GetRelationExpression extends Expression
     return GetRelationExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return 0;
   }

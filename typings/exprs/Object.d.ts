@@ -10,7 +10,7 @@ export declare class ObjectExpression extends Expression {
     props: ExpressionMap;
     constructor(props: ExpressionMap);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

@@ -9,6 +9,8 @@ import { Relation } from './Relation';
 import { EventBase } from './EventBase';
 export interface EntityOptions {
     name: string;
+    created: number;
+    updated: number;
     description: string;
     meta: any;
     type: any;
@@ -76,9 +78,12 @@ export interface EntityEvents {
 }
 export declare class Entity extends EventBase<EntityEvents> implements EntityOptions {
     static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
+    static METHOD_THIS: string;
     static uuid(): string;
     static PRIMARY_TYPES: Record<EntityPrimaryType, Type>;
     name: string;
+    created: number;
+    updated: number;
     description: string;
     meta: any;
     type: ObjectType;
@@ -128,7 +133,7 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     getDecodeExpected(forProperty?: string): Type<any>;
     getIndexExpectedType(): import(".").SetType;
     getDynamicPrimaryKey(): string;
-    getPrimaryKeyExpression(separator?: string, name?: string): import(".").GetExpression | import(".").OperationExpression<"list", "toText" | "prefix" | "suffix" | "delimiter", "list" | "item" | "index">;
+    getPrimaryKeyExpression(separator?: string, name?: string): import(".").PathExpression | import(".").OperationExpression<"list", "toText" | "prefix" | "suffix" | "delimiter", "list" | "item" | "index">;
     getPrimary(name?: string, returnDynamic?: boolean): EntityIndex | null;
     getUniqueIndexes(): EntityIndex[];
     addPrimary(props: string | string[]): this;

@@ -44,9 +44,9 @@ export class ReturnExpression extends Expression
     return ReturnExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.value.getComplexity(def);
+    return this.value.getComplexity(def, context);
   }
 
   public getScope(): null
@@ -95,6 +95,11 @@ export class ReturnExpression extends Expression
   public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.value.validate(def, context, handler);
+  }
+
+  public isPathWritable(defs: DefinitionProvider): boolean
+  {
+    return false;
   }
 
 }

@@ -75,20 +75,20 @@ export class SwitchExpression extends Expression
     return SwitchExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return this.cases.reduce(
       (max, [tests, result]) => Math.max(
         max, 
-        result.getComplexity(def), 
+        result.getComplexity(def, context), 
         tests.reduce((tmax, t) => Math.max(
           tmax, 
-          t.getComplexity(def)
+          t.getComplexity(def, context)
         ), 0)
       ), 
       Math.max(
-        this.value.getComplexity(def), 
-        this.defaultCase.getComplexity(def)
+        this.value.getComplexity(def, context), 
+        this.defaultCase.getComplexity(def, context)
       )
     );
   }

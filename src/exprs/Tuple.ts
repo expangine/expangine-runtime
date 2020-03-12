@@ -43,9 +43,9 @@ export class TupleExpression extends Expression
     return TupleExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def)), 0);
+    return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def, context)), 0);
   }
 
   public getScope(): null

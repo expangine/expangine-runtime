@@ -51,9 +51,9 @@ export class DefineExpression extends Expression
     return DefineExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def)), this.body.getComplexity(def));
+    return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def, context)), this.body.getComplexity(def, context));
   }
 
   public getScope()

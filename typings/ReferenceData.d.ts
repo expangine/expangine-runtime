@@ -5,6 +5,8 @@ import { Runtime } from './Runtime';
 import { EventBase } from './EventBase';
 export interface ReferenceDataOptions {
     name: string;
+    created: number;
+    updated: number;
     dataType: any;
     data: any;
     meta: any;
@@ -17,6 +19,8 @@ export interface ReferenceDataEvents {
 export declare class ReferenceData extends EventBase<ReferenceDataEvents> implements ReferenceDataOptions {
     static create(defs: Definitions, defaults?: Partial<ReferenceDataOptions>): ReferenceData;
     name: string;
+    created: number;
+    updated: number;
     dataType: Type;
     data: any;
     meta: any;

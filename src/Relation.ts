@@ -1,7 +1,7 @@
 import { Type } from './Type';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
-import { MapInput, toMap, reverseMap } from './fns';
+import { MapInput, toMap, reverseMap, now } from './fns';
 import { EntityPropPair, EntityProps, EntityKeyType } from './Entity';
 import { EventBase } from './EventBase';
 import { DataTypes } from './DataTypes';
@@ -16,6 +16,8 @@ export interface RelationTypeKey
 export interface RelationOptions
 {
   name: string;
+  created: number;
+  updated: number;
   kind: RelationKind;
   subject: RelationTypeKey;
   subjectRelationName?: string;
@@ -77,6 +79,16 @@ export class Relation extends EventBase<RelationEvents>
    * A unique name for the relationship between the subject type and related types.
    */
   public name: string;
+
+  /**
+   * When the relation was created.
+   */
+  public created: number;
+
+  /**
+   * When the relation was last updated.
+   */
+  public updated: number;
   
   /**
    * A name-props pair for the type that has the foreign key. The name is the
@@ -156,6 +168,8 @@ export class Relation extends EventBase<RelationEvents>
 
     this.defs = defs;
     this.name = options.name;
+    this.updated = options.updated || now();
+    this.created = options.created || now();
     this.kind = options.kind;
     this.subject = options.subject;
     this.subjectRelationName = options.subjectRelationName || options.related[0].name;
@@ -177,6 +191,8 @@ export class Relation extends EventBase<RelationEvents>
     if (this.hasChanges(options))
     {
       this.name = options.name;
+      this.updated = options.updated || now();
+      this.created = options.created || now();
       this.kind = options.kind;
       this.subject = options.subject;
       this.subjectRelationName = options.subjectRelationName || options.related[0].name;
@@ -204,6 +220,8 @@ export class Relation extends EventBase<RelationEvents>
 
   public changed()
   {
+    this.updated = now();
+
     this.trigger('changed', this);
   }
 
@@ -222,7 +240,8 @@ export class Relation extends EventBase<RelationEvents>
   public encode(): RelationOptions
   {
     const { 
-      name, kind, subject, subjectRelationName, 
+      name, created, updated,
+      kind, subject, subjectRelationName, 
       morphs, morphsToRelated, 
       related, relatedRelationName, 
       multiple, required, owns, extension 
@@ -230,6 +249,8 @@ export class Relation extends EventBase<RelationEvents>
 
     return {
       name,
+      updated,
+      created,
       kind,
       subject,
       subjectRelationName,
@@ -503,6 +524,8 @@ export class Relation extends EventBase<RelationEvents>
     manyRelationName?: string,
     foreignKeyPrefix?: string,
     owns?: boolean,
+    created?: number,
+    updated?: number,
   }): Relation
   {
     const relatedRelationName = options.oneRelationName || options.many;
@@ -514,6 +537,8 @@ export class Relation extends EventBase<RelationEvents>
 
     return new Relation(defs, {
       name,
+      created: options.created || now(),
+      updated: options.updated || now(),
       kind: RelationKind.HAS_MANY,
       subject: { 
         name: options.many,
@@ -540,6 +565,8 @@ export class Relation extends EventBase<RelationEvents>
     belongsToRelationName?: string, 
     foreignKeyPrefix?: string, 
     owns?: boolean,
+    created?: number,
+    updated?: number,
   }): Relation 
   {
     return this.hasMany(defs, {
@@ -563,6 +590,8 @@ export class Relation extends EventBase<RelationEvents>
     hasOneRelationName?: string,
     oneRelationName?: string,
     foreignKeyPrefix?: string,
+    created?: number,
+    updated?: number,
   }): Relation
   {
     const relatedRelationName = options.oneRelationName || options.hasOne;
@@ -574,6 +603,8 @@ export class Relation extends EventBase<RelationEvents>
 
     return new Relation(defs, {
       name,
+      created: options.created || now(),
+      updated: options.updated || now(),
       kind: RelationKind.HAS_ONE,
       subject: {
         name: options.hasOne,
@@ -600,6 +631,8 @@ export class Relation extends EventBase<RelationEvents>
     oneRelationName?: string,
     belongsToRelationName?: string,
     foreignKeyPrefix?: string,
+    created?: number,
+    updated?: number,
   }): Relation
   {
     return this.hasOne(defs, {
@@ -626,6 +659,8 @@ export class Relation extends EventBase<RelationEvents>
     hasOneRelationName: string,
     polyRelationName?: string,
     foreignKeyPrefix?: string,
+    created?: number,
+    updated?: number,
   }): Relation
   {
     const subjectRelationName = options.hasOneRelationName;
@@ -640,6 +675,8 @@ export class Relation extends EventBase<RelationEvents>
 
     return new Relation(defs, {
       name,
+      created: options.created || now(),
+      updated: options.updated || now(),
       kind: RelationKind.HAS_ONE_POLYMORPHIC,
       subject: {
         name: options.hasOne,

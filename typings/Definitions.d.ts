@@ -138,7 +138,10 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     data: NamedMap<ReferenceData>;
     keyExpectedType: Type;
     describeExpectedType: Type;
+    private legacy;
     constructor(initial?: DefinitionsOptions);
+    isLegacy(): boolean;
+    setLegacy(): void;
     private encodeMap;
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     changed(): void;

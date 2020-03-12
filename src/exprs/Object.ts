@@ -43,9 +43,9 @@ export class ObjectExpression extends Expression
     return ObjectExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return objectReduce(this.props, (e, k, max) => Math.max(max, e.getComplexity(def)), 0);
+    return objectReduce(this.props, (e, k, max) => Math.max(max, e.getComplexity(def, context)), 0);
   }
 
   public getScope(): null

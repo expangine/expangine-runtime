@@ -81,4 +81,9 @@ export class CommentExpression extends Expression
     
   }
 
+  public isPathWritable(defs: DefinitionProvider): boolean
+  {
+    return false;
+  }
+
 }

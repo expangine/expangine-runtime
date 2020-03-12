@@ -83,9 +83,9 @@ export class ForExpression extends Expression
     return ForExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return Math.max(this.start.getComplexity(def), this.end.getComplexity(def), this.body.getComplexity(def)) + 1;
+    return Math.max(this.start.getComplexity(def, context), this.end.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
   }
 
   public getScope()

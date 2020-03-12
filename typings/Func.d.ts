@@ -7,6 +7,8 @@ import { DefinitionProvider } from './DefinitionProvider';
 import { EventBase } from './EventBase';
 export interface FuncOptions {
     name: string;
+    created: number;
+    updated: number;
     description: string;
     meta: any;
     params: any;
@@ -33,6 +35,8 @@ export interface FuncEvents {
 export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     static create(defs: Definitions, defaults?: Partial<FuncOptions>): Func;
     name: string;
+    created: number;
+    updated: number;
     description: string;
     meta: any;
     params: ObjectType<ObjectOptions>;

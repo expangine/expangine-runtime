@@ -47,13 +47,13 @@ export class TemplateExpression extends Expression
     return TemplateExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     let complexity = 0;
 
     for (const prop in this.params)
     {
-      complexity = Math.max(complexity, this.params[prop].getComplexity(def));
+      complexity = Math.max(complexity, this.params[prop].getComplexity(def, context));
     }
 
     return complexity;

@@ -11,7 +11,7 @@ export declare class ReturnExpression extends Expression {
     value: Expression;
     constructor(value: Expression);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
@@ -20,4 +20,5 @@ export declare class ReturnExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    isPathWritable(defs: DefinitionProvider): boolean;
 }

@@ -1,4 +1,4 @@
-import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
+import { Expression, ExpressionProvider } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -7,11 +7,8 @@ export declare class GetExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): GetExpression;
     static encode(expr: GetExpression): any;
-    static create(path: ExpressionValue[]): GetExpression;
-    path: Expression[];
-    constructor(path: Expression[]);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
@@ -20,5 +17,6 @@ export declare class GetExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
-    add(expr: ExpressionValue | ExpressionValue[]): GetExpression;
+    isPathStart(): boolean;
+    isPathNode(): boolean;
 }

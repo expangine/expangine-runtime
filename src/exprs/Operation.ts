@@ -65,14 +65,14 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return OperationExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     const op = def.getOperation(this.name);
     let complexity = op ? op.complexity : 0;
 
     for (const prop in this.params)
     {
-      complexity = Math.max(complexity, this.params[prop].getComplexity(def));
+      complexity = Math.max(complexity, this.params[prop].getComplexity(def, context));
     }
 
     return complexity;

@@ -41,7 +41,7 @@ export class GetDataExpression extends Expression
     return GetDataExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return 0;
   }
@@ -98,6 +98,16 @@ export class GetDataExpression extends Expression
         parent: this,
       });
     }
+  }  
+
+  public isPathStart(): boolean
+  {
+    return true;
+  }
+
+  public isPathNode(): boolean
+  {
+    return true;
   }
 
 }

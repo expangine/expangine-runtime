@@ -11,7 +11,7 @@ export declare class NotExpression extends Expression {
     expression: Expression;
     constructor(expression: Expression);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

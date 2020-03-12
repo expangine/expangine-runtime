@@ -17,7 +17,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     scopeAlias: Record<string, string>;
     constructor(name: string, params: ExpressionMap, scopeAlias?: Record<string, string>);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

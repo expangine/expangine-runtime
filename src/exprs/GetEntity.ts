@@ -41,7 +41,7 @@ export class GetEntityExpression extends Expression
     return GetEntityExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return 0;
   }

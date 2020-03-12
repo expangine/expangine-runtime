@@ -2,7 +2,7 @@ import { ObjectType } from './types/Object';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { FuncOptions, Func } from './Func';
-import { objectMap, objectReduce, isArray, objectEach, isNumber, objectSync } from './fns';
+import { objectMap, objectReduce, isArray, objectEach, isNumber, objectSync, now } from './fns';
 import { Type, TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Exprs } from './Exprs';
@@ -18,6 +18,8 @@ import { DataTypes } from './DataTypes';
 export interface EntityOptions
 {
   name: string;
+  created: number;
+  updated: number;
   description: string;
   meta: any;
   type: any;
@@ -107,6 +109,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
   public static create(defs: Definitions, defaults: Partial<EntityOptions> = {}) {
     return new Entity({
       name: '',
+      created: now(),
+      updated: now(),
       description: '',
       meta: null,
       type: Types.object(),
@@ -115,6 +119,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
       ...defaults,
     }, defs);
   }
+
+  public static METHOD_THIS = 'this';
 
   public static uuid(): string {
     // tslint:disable: no-magic-numbers no-bitwise
@@ -134,6 +140,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
   };
 
   public name: string;
+  public created: number;
+  public updated: number;
   public description: string;
   public meta: any;
   public type: ObjectType;
@@ -151,6 +159,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     super();
 
     this.name = options.name;
+    this.created = options.created || now();
+    this.updated = options.updated || now();
     this.description = options.description;
     this.meta = options.meta;
     this.type = defs.getTypeKind(options.type, ObjectType, Types.object());
@@ -177,6 +187,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     if (this.hasChanges(options))
     {
       this.name = options.name;
+      this.created = options.created || now();
+      this.updated = options.updated || now();
       this.description = options.description;
       this.meta = options.meta;
       this.type = defs.getTypeKind(options.type, ObjectType, Types.object());
@@ -234,6 +246,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
   public changed()
   {
+    this.updated = now();
+
     this.trigger('change', this);
   }
 
@@ -283,10 +297,12 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
   public encode(): EntityOptions 
   {
-    const { name, description, meta, type, instances, methods, key, describe, transcoders, indexes } = this;
+    const { name, created, updated, description, meta, type, instances, methods, key, describe, transcoders, indexes } = this;
 
     return {
       name,
+      created, 
+      updated,
       description,
       meta,
       type: type.encode(),

@@ -43,9 +43,9 @@ export class NotExpression extends Expression
     return NotExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.expression.getComplexity(def);
+    return this.expression.getComplexity(def, context);
   }
 
   public getScope(): null

@@ -15,7 +15,7 @@ export declare class IfExpression extends Expression {
     otherwise: Expression;
     constructor(cases: [Expression, Expression][], otherwise: Expression);
     getId(): string;
-    getComplexity(def: DefinitionProvider): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;

@@ -60,15 +60,15 @@ export class IfExpression extends Expression
     return IfExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
     return this.cases.reduce(
       (max, [test, result]) => Math.max(
         max, 
-        test.getComplexity(def),
-        result.getComplexity(def)
+        test.getComplexity(def, context),
+        result.getComplexity(def, context)
       ), 
-      this.otherwise.getComplexity(def)
+      this.otherwise.getComplexity(def, context)
     );
   }
 
