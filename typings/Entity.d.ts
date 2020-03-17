@@ -78,7 +78,6 @@ export interface EntityEvents {
 }
 export declare class Entity extends EventBase<EntityEvents> implements EntityOptions {
     static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
-    static METHOD_THIS: string;
     static uuid(): string;
     static PRIMARY_TYPES: Record<EntityPrimaryType, Type>;
     name: string;

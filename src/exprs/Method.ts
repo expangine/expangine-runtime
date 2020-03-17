@@ -7,7 +7,6 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
 import { EntityType } from '../types/Entity';
-import { Entity } from '../Entity';
 
 
 const INDEX_ENTITY = 1;
@@ -102,7 +101,7 @@ export class MethodExpression extends Expression
     
     const argTypes = objectMap(this.args, (a) => a.getType(def, context));
 
-    argTypes[Entity.METHOD_THIS] = entity.type;
+    argTypes[Expression.THIS] = entity.type;
     
     return method.getReturnType(def, argTypes);
   }
@@ -174,7 +173,7 @@ export class MethodExpression extends Expression
 
     const params: TypeMap = {};
 
-    params[Entity.METHOD_THIS] = entity.type;
+    params[Expression.THIS] = entity.type;
 
     objectEach(method.params.options.props, (param, paramName) =>
     {

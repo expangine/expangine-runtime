@@ -15,9 +15,11 @@ import { GetEntityExpression } from './exprs/GetEntity';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
 import { InvokeExpression } from './exprs/Invoke';
+import { MethodExpression } from './exprs/Method';
 import { OperationExpression } from './exprs/Operation';
 import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
+import { PathExpression } from './exprs/Path';
 import { ReturnExpression } from './exprs/Return';
 import { SetExpression } from './exprs/Set';
 import { SwitchExpression } from './exprs/Switch';
@@ -28,7 +30,6 @@ import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { isArray, isObject, objectMap } from './fns';
 import { Type } from './Type';
-import { PathExpression } from './exprs/Path';
 
 
 export class Exprs
@@ -114,9 +115,9 @@ export class Exprs
     return this.setParent(new PathExpression([this.parse(value), ...this.parse(path)]));
   }
 
-  public static computed(name: string, value: ExpressionValue): PathExpression
+  public static computed(name: string): ComputedExpression
   {
-    return this.setParent(new PathExpression([this.parse(value), new ComputedExpression(name)]));
+    return this.setParent(new ComputedExpression(name));
   }
 
   public static if(condition: Expression, body: Expression = NoExpression.instance, otherwise: Expression = NoExpression.instance): IfExpression
@@ -127,6 +128,11 @@ export class Exprs
   public static invoke(name: string, args: Record<string, ExpressionValue> = {}): InvokeExpression
   {
     return this.setParent(new InvokeExpression(name, this.parse(args)));
+  }
+
+  public static method(entity: string, name: string, args: Record<string, ExpressionValue> = {}): InvokeExpression
+  {
+    return this.setParent(new MethodExpression(entity, name, this.parse(args)));
   }
 
   public static noop(): NoExpression

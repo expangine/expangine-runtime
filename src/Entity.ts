@@ -120,8 +120,6 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     }, defs);
   }
 
-  public static METHOD_THIS = 'this';
-
   public static uuid(): string {
     // tslint:disable: no-magic-numbers no-bitwise
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
