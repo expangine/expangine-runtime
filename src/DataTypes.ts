@@ -29,6 +29,14 @@ export interface DataTypeJson<T = any>
   fromJson(json: any, fromJson: (json: any) => any): T;
 }
 
+export interface DataTypeAccessor<T = any>
+{
+  priority: number;
+  isValid(value: any, step: any): boolean;
+  set(value: T, step: any, stepValue: any): void;
+  get(value: T, step: any): any;
+}
+
 export class DataTypeRegistry
 {
 
@@ -41,6 +49,18 @@ export class DataTypeRegistry
   private equalsMap: Record<DataTypeRaw, DataTypeEquality[]>;
   private copyList: DataTypeCopier[];
   private jsonList: DataTypeJson[];
+  private accessorList: DataTypeAccessor[];
+
+  public objectSet: <O extends object, K extends keyof O>(obj: O, prop: K, value: O[K]) => void 
+    = (obj, prop, value) => obj[prop] = value;
+  public objectRemove: <O extends object, K extends keyof O>(obj: O, prop: K) => void
+    = (obj, prop) => delete obj[prop];
+  public arrayAdd: <T>(arr: T[], item: T) => void
+    = (arr, item) => arr.push(item);
+  public arrayRemove: <T>(arr: T[], index: number) => T
+    = (arr, index) => arr.splice(index, 1)[0];
+  public arraySet: <T>(arr: T[], index: number, item: T) => T
+    = (arr, index, item) => arr.splice(index, 1, item)[0];
 
   public constructor()
   {
@@ -49,6 +69,7 @@ export class DataTypeRegistry
     this.equalsMap = this.createTypeMap(() => []);
     this.copyList = [];
     this.jsonList = [];
+    this.accessorList = [];
   }
 
   public compare(a: any, b: any): number
@@ -288,6 +309,41 @@ export class DataTypeRegistry
   public addJson<T>(json: DataTypeJson<T>): this
   {
     return this.addToPriorityList(this.jsonList, json);
+  }
+
+  public get(value: any, step: any): any
+  {
+    const accessors = this.accessorList;
+
+    for (const access of accessors)
+    {
+      if (access.isValid(value, step))
+      {
+        return access.get(value, step);
+      }
+    }
+  }
+
+  public set(value: any, step: any, stepValue: any): boolean
+  {
+    const accessors = this.accessorList;
+
+    for (const access of accessors)
+    {
+      if (access.isValid(value, step))
+      {
+        access.set(value, step, stepValue);
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public addAccessor<T>(accessor: DataTypeAccessor<T>): this
+  {
+    return this.addToPriorityList(this.accessorList, accessor);
   }
 
   private createTypeMap<V>(create: (type: DataTypeRaw, index: number) => V): Record<DataTypeRaw, V>

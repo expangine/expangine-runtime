@@ -182,6 +182,13 @@ export class MapType extends Type<MapOptions>
         }
       },
     });
+
+    DataTypes.addAccessor<Map<any, any>>({
+      priority,
+      isValid: (value) => isMap(value),
+      get: (value, step) => value.get(step),
+      set: (value, step, stepValue) => value.set(step, stepValue),
+    });
   }
 
   public static forItem(valueOrClass: TypeInput, keyOrClass: TypeInput = TextType)

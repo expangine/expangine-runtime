@@ -182,6 +182,13 @@ export class ListType extends Type<ListOptions>
         }
       },
     });
+
+    DataTypes.addAccessor<any[]>({
+      priority,
+      isValid: (value) => isArray(value),
+      get: (value, step) => value[step],
+      set: (value, step, stepValue) => DataTypes.arraySet(value, step, stepValue),
+    });
   }
 
   public static forItem(itemOrClass: TypeInput)

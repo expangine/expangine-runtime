@@ -160,6 +160,13 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         return true;
       },
     });
+
+    DataTypes.addAccessor<object>({
+      priority,
+      isValid: (value) => isObject(value),
+      get: (value, step) => value[step],
+      set: (value, step, stepValue) => DataTypes.objectSet(value, step as keyof typeof value, stepValue as never),
+    });
   }
 
   public getId(): string
