@@ -21,6 +21,7 @@ export declare class MethodExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
+    isPathNode(): boolean;
     named(name: string): MethodExpression;
     arg(name: string, value: ExpressionValue): MethodExpression;
     arg(args: Record<string, ExpressionValue>): MethodExpression;

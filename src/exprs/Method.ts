@@ -189,6 +189,11 @@ export class MethodExpression extends Expression
     });
   }
 
+  public isPathNode(): boolean
+  {
+    return true;
+  }
+
   public named(name: string): MethodExpression
   {
     this.name = name;
