@@ -26,7 +26,7 @@ export class UpdateExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): UpdateExpression 
   {
-    const path = PathExpression.decode(data[INDEX_PATH], exprs);
+    const path = PathExpression.decode(['path', data[INDEX_PATH]], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
     const currentVariable = data[INDEX_CURRENT] || DEFAULT_CURRENT;
 
