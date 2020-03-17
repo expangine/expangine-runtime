@@ -31,7 +31,7 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract getScope(): TypeMap | null;
 
-  public abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
+  public abstract getComplexity(def: DefinitionProvider, context: Type): number;
 
   public abstract encode(): any;
 

@@ -10,8 +10,9 @@ import { EntityType } from '../types/Entity';
 import { Entity } from '../Entity';
 
 
-const INDEX_NAME = 1;
-const INDEX_ARGS = 2;
+const INDEX_ENTITY = 1;
+const INDEX_NAME = 2;
+const INDEX_ARGS = 3;
 
 export class MethodExpression extends Expression 
 {
@@ -20,25 +21,28 @@ export class MethodExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): MethodExpression 
   {
+    const entity = data[INDEX_ENTITY];
     const name = data[INDEX_NAME];
     const args = objectMap(data[INDEX_ARGS], e => exprs.getExpression(e));
     
-    return new MethodExpression(name, args);
+    return new MethodExpression(entity, name, args);
   }
 
   public static encode(expr: MethodExpression): any 
   {
     const args = objectMap(expr.args, a => a.encode());
 
-    return [this.id, expr.name, args];
+    return [this.id, expr.entity, expr.name, args];
   }
 
+  public entity: string;
   public name: string;
   public args: ExpressionMap;
 
-  public constructor(name: string, args: ExpressionMap) 
+  public constructor(entity: string, name: string, args: ExpressionMap) 
   {
     super();
+    this.entity = entity;
     this.name = name;
     this.args = args;
   }
@@ -48,14 +52,9 @@ export class MethodExpression extends Expression
     return MethodExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number
+  public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    if (!thisType || !(thisType instanceof EntityType))
-    {
-      return 0;
-    }
-
-    const entity = def.getEntity(thisType.options);
+    const entity = def.getEntity(this.entity);
 
     if (!entity || !entity.methods[this.name])
     {
@@ -77,17 +76,17 @@ export class MethodExpression extends Expression
 
   public clone(): Expression
   {
-    return new MethodExpression(this.name, objectMap(this.args, (a) => a.clone()));
+    return new MethodExpression(this.entity, this.name, objectMap(this.args, (a) => a.clone()));
   }
 
   public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
   {
-    if (!thisType || !(thisType instanceof EntityType))
+    if (!thisType || !(thisType instanceof EntityType) || thisType.options !== this.entity)
     {
       return null;
     }
 
-    const entity = def.getEntity(thisType.options);
+    const entity = def.getEntity(this.entity);
 
     if (!entity)
     {
@@ -133,7 +132,7 @@ export class MethodExpression extends Expression
 
   public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void
   {
-    if (!thisType || !(thisType instanceof EntityType))
+    if (!thisType || !(thisType instanceof EntityType) || thisType.options !== this.entity)
     {
       handler({
         type: ValidationType.INVALID_THIS,
@@ -145,7 +144,7 @@ export class MethodExpression extends Expression
       return;
     }
 
-    const entity = def.getEntity(thisType.options);
+    const entity = def.getEntity(this.entity);
 
     if (!entity)
     {

@@ -18,7 +18,7 @@ export declare abstract class Expression implements Traversable<Expression> {
     parent: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;
-    abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
+    abstract getComplexity(def: DefinitionProvider, context: Type): number;
     abstract encode(): any;
     abstract clone(): Expression;
     abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;

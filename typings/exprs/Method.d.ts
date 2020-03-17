@@ -7,11 +7,12 @@ export declare class MethodExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): MethodExpression;
     static encode(expr: MethodExpression): any;
+    entity: string;
     name: string;
     args: ExpressionMap;
-    constructor(name: string, args: ExpressionMap);
+    constructor(entity: string, name: string, args: ExpressionMap);
     getId(): string;
-    getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
+    getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
     encode(): any;
     clone(): Expression;
