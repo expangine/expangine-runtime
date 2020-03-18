@@ -9,6 +9,7 @@ import { CommentExpression } from './exprs/Comment';
 import { ComputedExpression } from './exprs/Computed';
 import { ConstantExpression } from './exprs/Constant';
 import { ForExpression } from './exprs/For';
+import { GetExpression } from './exprs/Get';
 import { GetDataExpression } from './exprs/GetData';
 import { GetEntityExpression } from './exprs/GetEntity';
 import { GetRelationExpression } from './exprs/GetRelation';
@@ -41,7 +42,7 @@ export declare class Exprs {
     static define(vars?: Record<string, ExpressionValue>, body?: Expression): DefineExpression;
     static do(body: Expression, condition?: Expression, breakVariable?: string, maxIterations?: number): DoExpression;
     static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
-    static get(...path: ExpressionValue[]): PathExpression;
+    static get(...path: ExpressionValue[]): PathExpression | GetExpression;
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;
     static computed(name: string): ComputedExpression;
     static if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;

@@ -105,9 +105,11 @@ export class Exprs
     return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, breakVariable, maxIterations));
   }
 
-  public static get(...path: ExpressionValue[]): PathExpression
+  public static get(...path: ExpressionValue[]): PathExpression | GetExpression
   {
-    return this.setParent(new PathExpression([new GetExpression(), ...this.parse(path)]));
+    return path.length === 0
+      ? new GetExpression()
+      : this.setParent(new PathExpression([new GetExpression(), ...this.parse(path)]));
   }
 
   public static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression
