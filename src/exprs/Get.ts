@@ -30,7 +30,7 @@ export class GetExpression extends Expression
 
   public static encode(expr: GetExpression): any 
   {
-    return this.id;
+    return [this.id];
   }
 
   public getId(): string

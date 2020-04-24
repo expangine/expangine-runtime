@@ -205,9 +205,9 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes?: boolean): TypeMap;
     getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type;
     getContextWithScope(original: Type, scope?: TypeMap): {
-        context: ManyType | ObjectType<{
+        context: ObjectType<{
             props: any;
-        }>;
+        }> | ManyType;
         scope: Record<string, Type<any>>;
     };
     getContext(original: Type, scope: TypeMap): Type;

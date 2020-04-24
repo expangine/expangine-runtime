@@ -10,7 +10,7 @@ export declare const TextOps: {
     prepend: import("../Operation").OperationResolved<"value" | "prepend", never, never, never, never>;
     lower: import("../Operation").OperationResolved<"value", never, never, never, never>;
     upper: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    char: import("../Operation").OperationResolved<"value" | "index", "outside", never, never, never>;
+    char: import("../Operation").OperationResolved<"index" | "value", "outside", never, never, never>;
     replace: import("../Operation").OperationResolved<"replace" | "value" | "find", never, never, never, never>;
     repeat: import("../Operation").OperationResolved<"value" | "times", never, never, never, never>;
     split: import("../Operation").OperationResolved<"value" | "by", "limit", never, never, never>;
@@ -27,7 +27,7 @@ export declare const TextOps: {
     length: import("../Operation").OperationResolved<"value", never, never, never, never>;
     compare: import("../Operation").OperationResolved<"value" | "test", "ignoreCase", never, never, never>;
     like: import("../Operation").OperationResolved<"value" | "pattern", "ignoreCase", never, never, never>;
-    pad: import("../Operation").OperationResolved<"value" | "min" | "padding", "max" | "append", never, never, never>;
+    pad: import("../Operation").OperationResolved<"value" | "min" | "padding", "append" | "max", never, never, never>;
     regexTest: import("../Operation").OperationResolved<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;
     regexSplit: import("../Operation").OperationResolved<"value" | "regex", "limit" | "ignoreCase" | "multiline", never, never, never>;
     regexMatch: import("../Operation").OperationResolved<"value" | "regex", "ignoreCase" | "multiline", never, never, never>;

@@ -6,7 +6,7 @@ export declare const TextOpsTypes: {
     prepend: import("../..").OperationTypes<"value" | "prepend", never, never>;
     lower: import("../..").OperationTypes<"value", never, never>;
     upper: import("../..").OperationTypes<"value", never, never>;
-    char: import("../..").OperationTypes<"value" | "index", "outside", never>;
+    char: import("../..").OperationTypes<"index" | "value", "outside", never>;
     replace: import("../..").OperationTypes<"replace" | "value" | "find", never, never>;
     repeat: import("../..").OperationTypes<"value" | "times", never, never>;
     split: import("../..").OperationTypes<"value" | "by", "limit", never>;
@@ -23,7 +23,7 @@ export declare const TextOpsTypes: {
     length: import("../..").OperationTypes<"value", never, never>;
     compare: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     like: import("../..").OperationTypes<"value" | "pattern", "ignoreCase", never>;
-    pad: import("../..").OperationTypes<"value" | "min" | "padding", "max" | "append", never>;
+    pad: import("../..").OperationTypes<"value" | "min" | "padding", "append" | "max", never>;
     regexTest: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
     regexSplit: import("../..").OperationTypes<"value" | "regex", "limit" | "ignoreCase" | "multiline", never>;
     regexMatch: import("../..").OperationTypes<"value" | "regex", "ignoreCase" | "multiline", never>;
