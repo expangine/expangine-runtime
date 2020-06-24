@@ -111,6 +111,13 @@ export class TextType extends Type<TextOptions>
         return a === b;
       },
     });
+
+    DataTypes.addAccessor({
+      priority,
+      isValid: isString,
+      get: (x, step) => x[step],
+      set: (x, step, value) => x[step] = value,
+    });
   }
 
   public getId(): string
