@@ -1104,6 +1104,51 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     }
   }
 
+  public addMethod(entityInput: string | Entity, methodOptions: Func | Partial<FuncOptions>, sync: boolean = true, delayChange: boolean = false): boolean
+  {
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity) 
+    {
+      return false;
+    }
+
+    const method = methodOptions instanceof Func 
+      ? methodOptions 
+      : Func.create(this, methodOptions);
+
+    const existing = entity.methods[method.name];
+
+    if (existing)
+    {
+      if (sync)
+      {
+        existing.sync(method, this);
+      }
+      else
+      {
+        entity.addMethod(method);
+      }
+      
+      this.trigger('updateMethod', this, method, entity);
+    }
+    else
+    {
+      entity.addMethod(method);
+
+      this.trigger('addMethod', this, method, entity);
+    }
+
+    this.trigger('changedMethods', this);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return true;
+  }
+
   public renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsFunctionReference[]
   {
     const entity = this.entities.valueOf(entityInput);

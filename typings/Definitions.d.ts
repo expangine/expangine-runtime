@@ -192,6 +192,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     removeFunctionParameter(funcInput: string | Func, name: string): false | DefinitionsFunctionReference[];
     removeFunction(funcInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
     clearFunctions(delayChange?: boolean): void;
+    addMethod(entityInput: string | Entity, methodOptions: Func | Partial<FuncOptions>, sync?: boolean, delayChange?: boolean): boolean;
     renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange?: boolean): false | DefinitionsFunctionReference[];
     renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[];
     removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsFunctionReference[];
