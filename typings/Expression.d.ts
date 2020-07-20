@@ -16,6 +16,7 @@ export declare type ExpressionValue = any | Expression;
 export declare type ExpressionMap = Record<string, Expression>;
 export declare abstract class Expression implements Traversable<Expression> {
     static THIS: string;
+    static INSTANCE: string;
     parent: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;

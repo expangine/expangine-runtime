@@ -101,7 +101,7 @@ export class MethodExpression extends Expression
     
     const argTypes = objectMap(this.args, (a) => a.getType(def, context));
 
-    argTypes[Expression.THIS] = entity.type;
+    argTypes[Expression.INSTANCE] = entity.type;
     
     return method.getReturnType(def, argTypes);
   }
@@ -173,7 +173,7 @@ export class MethodExpression extends Expression
 
     const params: TypeMap = {};
 
-    params[Expression.THIS] = entity.type;
+    params[Expression.INSTANCE] = entity.type;
 
     objectEach(method.params.options.props, (param, paramName) =>
     {
