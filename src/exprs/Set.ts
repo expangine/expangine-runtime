@@ -23,8 +23,15 @@ export class SetExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): SetExpression 
   {
-    const path = PathExpression.decode(['path', data[INDEX_PATH]], exprs);
+    const pathData: any[] = data[INDEX_PATH];
+    const path = pathData[0] === PathExpression.id
+      ? PathExpression.decode(pathData, exprs)
+      : PathExpression.decode(['path', ['get', ...pathData]], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
+
+    if (pathData[0] !== PathExpression.id) {
+      exprs.setLegacy();
+    }
 
     return new SetExpression(path, value);
   }
