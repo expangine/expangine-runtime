@@ -7,6 +7,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
 import { PathExpression } from './Path';
+import { GetExpression } from './Get';
 
 
 const INDEX_PATH = 1;
@@ -26,7 +27,7 @@ export class SetExpression extends Expression
     const pathData: any[] = data[INDEX_PATH];
     const path = pathData[0] === PathExpression.id
       ? PathExpression.decode(pathData, exprs)
-      : PathExpression.decode(['path', [['get'], ...pathData]], exprs);
+      : PathExpression.decode(['path', [new GetExpression(), ...pathData]], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
 
     if (pathData[0] !== PathExpression.id) {
