@@ -103,7 +103,8 @@ export class EntityType extends Type<string>
 
   public getSimplifiedType(): Type
   {
-    return this.getType().getSimplifiedType();
+    return this;
+    // return this.getType().getSimplifiedType();
   }
 
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
