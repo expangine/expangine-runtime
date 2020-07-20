@@ -5,6 +5,7 @@ import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { isNumber } from '../fns';
+import { GetExpression } from './Get';
 
 
 const INDEX_PATH = 1;
@@ -42,6 +43,20 @@ export class PathExpression extends Expression
     }
 
     return new PathExpression(path);
+  }
+
+  public static fromPartial(pathData: any[], exprs: ExpressionProvider)
+  {
+    const isPath = pathData[0] === PathExpression.id;
+    const path = isPath
+      ? PathExpression.decode(pathData, exprs)
+      : PathExpression.decode(['path', [new GetExpression(), ...pathData]], exprs);
+
+    if (isPath) {
+      exprs.setLegacy();
+    }
+
+    return path;
   }
 
   public expressions: Expression[];

@@ -8,6 +8,7 @@ export declare class PathExpression extends Expression {
     static decode(data: any[], exprs: ExpressionProvider): PathExpression;
     static encode(expr: PathExpression): any;
     static createForLegacy(path: Expression[]): PathExpression;
+    static fromPartial(pathData: any[], exprs: ExpressionProvider): PathExpression;
     expressions: Expression[];
     constructor(expressions: Expression[]);
     getId(): string;
