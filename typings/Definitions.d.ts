@@ -116,6 +116,11 @@ export interface DefinitionsEvents {
     renameFunction(defs: Definitions, func: Func, oldName: string): void;
     clearFunctions(defs: Definitions, functions: Func[]): void;
     changedFunctions(defs: Definitions): void;
+    addMethod(defs: Definitions, method: Func, entity: Entity): void;
+    removeMethod(defs: Definitions, method: Func, entity: Entity): void;
+    updateMethod(defs: Definitions, method: Func, entity: Entity): void;
+    renameMethod(defs: Definitions, method: Func, entity: Entity, oldName: string): void;
+    changedMethods(defs: Definitions): void;
     addData(defs: Definitions, data: ReferenceData): void;
     removeData(defs: Definitions, data: ReferenceData): void;
     updateData(defs: Definitions, data: ReferenceData): void;
@@ -187,6 +192,10 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     removeFunctionParameter(funcInput: string | Func, name: string): false | DefinitionsFunctionReference[];
     removeFunction(funcInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
     clearFunctions(delayChange?: boolean): void;
+    renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange?: boolean): false | DefinitionsFunctionReference[];
+    renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[];
+    removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsFunctionReference[];
+    removeMethod(entityInput: string | Entity, methodInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
     getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
     getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];
@@ -230,6 +239,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     getEntityDataReferences(entity?: string | Entity): DefinitionsDataTypeReference<EntityType>[];
     getRelationReferences(relation?: string | Relation): DefinitionsRelationReference[];
     getFunctionReferences(func?: string | Func, param?: string): DefinitionsFunctionReference[];
+    getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsFunctionReference[];
     getTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsTypeReference<T>[];
     getDataTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsDataTypeReference<T>[];
     getExpressionClassReferences<E extends Expression>(exprClass: ExpressionClass<E>): DefinitionsExpressionReference<E>[];

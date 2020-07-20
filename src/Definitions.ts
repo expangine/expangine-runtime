@@ -20,6 +20,7 @@ import { ConstantExpression } from './exprs/Constant';
 import { GetEntityExpression } from './exprs/GetEntity';
 import { NoExpression } from './exprs/No';
 import { InvokeExpression } from './exprs/Invoke';
+import { MethodExpression } from './exprs/Method';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
@@ -161,6 +162,12 @@ export interface DefinitionsEvents
   renameFunction(defs: Definitions, func: Func, oldName: string): void;
   clearFunctions(defs: Definitions, functions: Func[]): void;
   changedFunctions(defs: Definitions): void;
+
+  addMethod(defs: Definitions, method: Func, entity: Entity): void;
+  removeMethod(defs: Definitions, method: Func, entity: Entity): void;
+  updateMethod(defs: Definitions, method: Func, entity: Entity): void;
+  renameMethod(defs: Definitions, method: Func, entity: Entity, oldName: string): void;
+  changedMethods(defs: Definitions): void;
   
   addData(defs: Definitions, data: ReferenceData): void;
   removeData(defs: Definitions, data: ReferenceData): void;
@@ -819,6 +826,13 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       }
     });
 
+    const methods = this.getMethodReferences(name);
+
+    methods.forEach((ref) =>
+    {
+      ref.value.name = newName;
+    });
+
     entity.trigger('renamed', entity, oldName);
     entity.changed();
 
@@ -1089,6 +1103,147 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       this.changed();
     }
   }
+
+  public renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsFunctionReference[]
+  {
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity) 
+    {
+      return false;
+    }
+
+    const method = entity.methods[this.functions.nameOf(methodInput)];
+
+    if (!method) 
+    {
+      return false;
+    }
+
+    const oldName = method.name;
+
+    entity.renameMethod(oldName, newName);
+
+    const refs = this.getMethodReferences(entity, method);
+
+    refs.forEach((ref) =>
+    {
+      ref.value.name = newName;
+    });
+
+    method.trigger('renamed', method, oldName);
+    method.changed();
+
+    this.trigger('renameMethod', this, method, entity, oldName);
+    this.trigger('changedMethods', this);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return refs;
+  }
+
+  public renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[]
+  {
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity) 
+    {
+      return false;
+    }
+
+    const method = entity.methods[this.functions.nameOf(methodInput)];
+
+    if (!method) 
+    {
+      return false;
+    }
+
+    if (!method.renameParameter(oldName, newName))
+    {
+      return false;
+    }
+
+    const refs = this.getMethodReferences(entityInput, methodInput, oldName);
+
+    refs.forEach((ref) =>
+    {
+      ref.value.args[newName] = ref.value.args[oldName];
+      delete ref.value.args[oldName];
+    });
+
+    return refs;
+  }
+
+  public removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsFunctionReference[]
+  {
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity) 
+    {
+      return false;
+    }
+
+    const method = entity.methods[this.functions.nameOf(methodInput)];
+
+    if (!method) 
+    {
+      return false;
+    }
+
+    if (!method.removeParameter(name))
+    {
+      return false;
+    }
+
+    const refs = this.getMethodReferences(entityInput, methodInput, name);
+
+    refs.forEach((ref) =>
+    {
+      delete ref.value.args[name];
+    });
+
+    return refs;
+  }
+
+  public removeMethod(entityInput: string | Entity, methodInput: string | Func, stopWithReferences: boolean = true, respectOrder: boolean = false, delayChange: boolean = false): boolean
+  {
+    const entity = this.entities.valueOf(entityInput);
+
+    if (!entity) 
+    {
+      return false;
+    }
+
+    const method = entity.methods[this.functions.nameOf(methodInput)];
+
+    if (!method) 
+    {
+      return false;
+    }
+
+    if (stopWithReferences && this.getMethodReferences(entityInput, methodInput).length > 0)
+    {
+      return false;
+    }
+
+    entity.removeMethod(method.name);
+
+
+    this.trigger('removeMethod', this, method, entity);
+    this.trigger('changedMethods', this);
+
+    if (!delayChange)
+    {
+      this.changed();
+    }
+
+    return true;
+  }
+
+
   
   public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T | null = null): T | null 
   {
@@ -1720,6 +1875,16 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     return this.getExpressionClassReferences(InvokeExpression).filter((match) => {
       return (!name || name === match.value.name) && (!param || param in match.value.args);
+    });
+  }
+
+  public getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsFunctionReference[]
+  {
+    const entityName = entity ? this.entities.nameOf(entity) : undefined;
+    const methodName = func ? this.functions.nameOf(func) : undefined;
+
+    return this.getExpressionClassReferences(MethodExpression).filter((match) => {
+      return (!entityName || entityName === match.value.entity) && (!methodName || methodName === match.value.name) && (!param || param in match.value.args);
     });
   }
 
