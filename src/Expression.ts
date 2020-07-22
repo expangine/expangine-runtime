@@ -49,6 +49,11 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
   
+  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  {
+    return false;
+  }
+
   public isPathStart(): boolean
   {
     return false;

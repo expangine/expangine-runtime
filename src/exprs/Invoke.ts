@@ -139,6 +139,18 @@ export class InvokeExpression extends Expression
     }
   }
 
+  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  {
+    const func = def.getFunction(this.name);
+
+    if (!func)
+    {
+      return `Function "${this.name}" does not exist`;
+    }
+
+    return func.expression;
+  }
+
   public named(name: string): InvokeExpression
   {
     this.name = name;

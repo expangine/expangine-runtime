@@ -20,6 +20,7 @@ export declare class InvokeExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    getInnerExpression(def: DefinitionProvider): Expression | string | false;
     named(name: string): InvokeExpression;
     arg(name: string, value: ExpressionValue): InvokeExpression;
     arg(args: Record<string, ExpressionValue>): InvokeExpression;

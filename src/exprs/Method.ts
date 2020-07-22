@@ -188,6 +188,25 @@ export class MethodExpression extends Expression
     });
   }
 
+  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  {
+    const entity = def.getEntity(this.entity);
+
+    if (!entity)
+    {
+      return `Entity "${this.entity}" does not exist`;
+    }
+
+    const method = entity.methods[this.name];
+
+    if (!method)
+    {
+      return `Method "${this.name}" on Entity "${this.entity}" does not exist`;
+    }
+
+    return method.expression;
+  }
+
   public isPathNode(): boolean
   {
     return true;
