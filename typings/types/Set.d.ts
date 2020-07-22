@@ -14,7 +14,7 @@ export declare class SetType extends Type<SetOptions> {
     static decode(data: any[], types: TypeProvider): SetType;
     static encode(type: SetType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     static forItem(valueOrClass: TypeInput): SetType;

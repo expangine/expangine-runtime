@@ -11,7 +11,7 @@ export declare class EntityType extends Type<string> {
     static decode(data: any[], types: TypeProvider): EntityType;
     static encode(type: EntityType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     static for(name: string, provider: TypeProvider): EntityType;

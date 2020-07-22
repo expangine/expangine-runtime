@@ -51,16 +51,20 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public static describePriority: number = 5;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isObject(data) || data === null)
     {
       return null;
     }
 
-    return new ObjectType({
-      props: objectMap(data, d => describer.describe(d))
-    });
+    const type = new ObjectType({ props: {} });
+
+    cache.set(data, type);
+
+    type.options.props = objectMap(data, d => describer.describe(d));
+
+    return type;
   }
 
   public static registered: boolean = false;

@@ -48,7 +48,7 @@ export class NumberType extends Type<NumberOptions>
 
   public static describePriority: number = 4;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isNumber(data))
     {

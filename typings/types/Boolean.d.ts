@@ -14,7 +14,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     static decode(data: any[], types: TypeProvider): BooleanType;
     static encode(type: BooleanType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

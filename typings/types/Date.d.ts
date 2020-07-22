@@ -23,7 +23,7 @@ export declare class DateType extends Type<DateOptions> {
     private static decodeOptions;
     private static encodeOptions;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

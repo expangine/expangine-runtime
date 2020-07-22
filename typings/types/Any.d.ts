@@ -10,7 +10,7 @@ export declare class AnyType extends Type {
     static decode(data: any[], types: TypeProvider): AnyType;
     static encode(type: AnyType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

@@ -1,6 +1,6 @@
 
 import { isArray, objectMap, objectValues, objectEach } from './fns';
-import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
+import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions, TypeDescribeProvider } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
@@ -286,19 +286,40 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.import(options);
   }
 
-  public describe(data: any): Type
+  public describe(completeData: any): Type
   {
-    for (const describer of this.describers)
+    const described: Map<any, any> = new Map();
+
+    const provider: TypeDescribeProvider = 
     {
-      const type = describer.describe(data, this);
-
-      if (type)
+      describe: (data) => 
       {
-        return type;
-      }
-    }
+        let describedType = described.get(data);
 
-    return AnyType.baseType;
+        if (describedType !== undefined) 
+        {
+          return describedType;
+        }
+
+        for (const describer of this.describers)
+        {
+          describedType = describer.describe(data, provider, described);
+    
+          if (describedType)
+          {
+            return describedType;
+          }
+        }
+
+        return AnyType.baseType;
+      },
+      merge: (type, data) => 
+      {
+        return this.merge(type, data);
+      },
+    };
+
+    return provider.describe(completeData);
   }
 
   public merge(type: Type, data: any): Type

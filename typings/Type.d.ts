@@ -40,7 +40,7 @@ export interface TypeClass<T extends Type<O> = any, O = any> {
     decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
     encode(this: TypeClass<T>, type: T): any;
     describePriority: number;
-    describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider): Type | null;
+    describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     register(this: TypeClass<T>): void;
     registered: boolean;
     new (options: O, ...args: any[]): T;

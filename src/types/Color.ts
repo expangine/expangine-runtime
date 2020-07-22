@@ -1,5 +1,5 @@
 
-import { Type, TypeCompatibleOptions } from '../Type';
+import { Type, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Expression } from '../Expression';
 import { ColorOps, ColorOperations, ColorComputeds } from '../ops/ColorOps';
 import { ID } from './ID';
@@ -64,7 +64,7 @@ export class ColorType extends ObjectType<ColorOptions>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     const parsed = ColorType.baseType.normalize(data);
 

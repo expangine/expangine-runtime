@@ -16,7 +16,7 @@ export declare class NumberType extends Type<NumberOptions> {
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static EQUALS_EPSILON: number;
     static COMPARES_EPSILON: number;

@@ -13,7 +13,7 @@ export declare class OptionalType extends Type<Type> {
     static decode(data: any[], types: TypeProvider): OptionalType;
     static encode(type: OptionalType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     static for(type: TypeInput): OptionalType;

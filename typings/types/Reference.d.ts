@@ -13,7 +13,7 @@ export declare class ReferenceType extends Type<string> {
     static decode(data: any[], types: TypeProvider): ReferenceType;
     static encode(type: ReferenceType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     protected provider: TypeProvider;

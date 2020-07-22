@@ -1,5 +1,5 @@
 
-import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { AnyOps } from '../ops/AnyOps';
 import { Exprs } from '../Exprs';
@@ -33,7 +33,7 @@ export class NullType extends Type<null>
 
   public static describePriority: number = 6;
   
-  public static describe(data: any): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     return data === null ? this.baseType : null;
   }

@@ -33,7 +33,7 @@ export class AnyType extends Type
 
   public static describePriority: number = 8;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (isObject(data) && isString(data.$any))
     {

@@ -60,7 +60,7 @@ export class MapType extends Type<MapOptions>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isMap(data))
     {
@@ -70,13 +70,20 @@ export class MapType extends Type<MapOptions>
     let key: Type = new AnyType({});
     let value: Type = new AnyType({});
 
+    const type = new MapType({ key, value });
+
+    cache.set(data, type);
+
     for (const [entryKey, entryValue] of data.entries())
     {
       key = describer.merge(key, entryKey);
       value = describer.merge(value, entryValue);
     }
 
-    return new MapType({ key, value });
+    type.options.key = key;
+    type.options.value = value;
+
+    return type;
   }
 
   public static registered: boolean = false;

@@ -64,12 +64,20 @@ export class ListType extends Type<ListOptions>
 
   public static describePriority: number = 6;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isArray(data))
     {
       return null;
     }
+
+    const type = new ListType({
+      item: AnyType.baseType,
+      min: data.length,
+      max: data.length
+    });
+
+    cache.set(data, type);
 
     let item = describer.describe(data[0]);
 
@@ -78,11 +86,9 @@ export class ListType extends Type<ListOptions>
       item = describer.merge(item, data[i]);
     }
 
-    return new ListType({ 
-      item,
-      min: data.length,
-      max: data.length
-    });
+    type.options.item = item;
+
+    return type;
   }
 
   public static registered: boolean = false;

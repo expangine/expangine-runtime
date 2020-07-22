@@ -72,7 +72,7 @@ export class DateType extends Type<DateOptions>
 
   public static describePriority: number = 6;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isDate(data))
     {

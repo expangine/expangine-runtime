@@ -12,7 +12,7 @@ export declare class ManyType extends Type<Type[]> {
     static decode(data: any[], types: TypeProvider): ManyType;
     static encode(type: ManyType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     operations?: Record<string, OperationGeneric>;

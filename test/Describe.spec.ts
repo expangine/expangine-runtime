@@ -115,4 +115,14 @@ describe('describe', () => {
     expect(props.b.options).toBeInstanceOf(NumberType);
   });
 
+  it('object circular referencing', () => 
+  {
+    const o = { x: null as any, y: 3 };
+    o.x = o;
+    const t = defs.describe(o);
+
+    expect(t).toBeInstanceOf(ObjectType);
+    expect(t.options.props.x).toEqual(t);
+  });
+
 });

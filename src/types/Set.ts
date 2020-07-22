@@ -51,7 +51,7 @@ export class SetType extends Type<SetOptions>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isSet(data))
     {
@@ -60,12 +60,18 @@ export class SetType extends Type<SetOptions>
 
     let value: Type = new AnyType({});
 
+    const type = new SetType({ value });
+
+    cache.set(data, type);
+
     for (const [setValue] of data.entries())
     {
       value = describer.merge(value, setValue);
     }
 
-    return new SetType({ value });
+    type.options.value = value;
+
+    return type;
   }
 
   public static registered: boolean = false;

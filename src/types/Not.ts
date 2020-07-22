@@ -39,7 +39,7 @@ export class NotType extends Type<Type[]>
 
   public static describePriority: number = -1;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     return null;
   }

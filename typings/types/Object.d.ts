@@ -16,7 +16,7 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

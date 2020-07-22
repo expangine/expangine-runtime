@@ -1,6 +1,6 @@
 
 import { isString, isNumber, isEmpty, coalesce } from '../fns';
-import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { TextOps, TextOperations, TextComputeds } from '../ops/TextOps';
@@ -74,7 +74,7 @@ export class TextType extends Type<TextOptions>
 
   public static describePriority: number = 3;
   
-  public static describe(data: any): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     if (!isString(data))
     {

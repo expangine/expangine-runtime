@@ -151,7 +151,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     extend(deepCopy?: boolean, initial?: DefinitionsOptions): Definitions;
     changed(): void;
     add(options: DefinitionsOptions): void;
-    describe(data: any): Type;
+    describe(completeData: any): Type;
     merge(type: Type, data: any): Type;
     sortDescribers(): void;
     addType<T extends Type>(type: TypeClass<T>, delaySort?: boolean): void;

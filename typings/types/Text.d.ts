@@ -1,4 +1,4 @@
-import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
@@ -21,7 +21,7 @@ export declare class TextType extends Type<TextOptions> {
     private static decodeOptions;
     private static encodeOptions;
     static describePriority: number;
-    static describe(data: any): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

@@ -44,7 +44,7 @@ export class BooleanType extends Type<BooleanOptions>
 
   public static describePriority: number = 4;
   
-  public static describe(data: any, describer: TypeDescribeProvider): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
   {
     return isBoolean(data) ? this.baseType : null;
   }

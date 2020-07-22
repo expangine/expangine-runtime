@@ -1,4 +1,4 @@
-import { Type, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
@@ -12,7 +12,7 @@ export declare class NullType extends Type<null> {
     static decode(data: any[]): NullType;
     static encode(type: NullType): any;
     static describePriority: number;
-    static describe(data: any): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     getId(): string;

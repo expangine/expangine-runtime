@@ -1,4 +1,4 @@
-import { Type, TypeCompatibleOptions } from '../Type';
+import { Type, TypeCompatibleOptions, TypeDescribeProvider } from '../Type';
 import { Expression } from '../Expression';
 import { NumberType } from './Number';
 import { Color } from '../util/color/Color';
@@ -23,7 +23,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     static decode(data: any[]): ColorType;
     static encode(type: ColorType): any;
     static describePriority: number;
-    static describe(data: any): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
     static getFormat(id: string): ColorFormat<any> | undefined;
