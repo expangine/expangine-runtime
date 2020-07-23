@@ -1,4 +1,4 @@
-import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved } from './Type';
+import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved, TypeProvider } from './Type';
 import { MapInput } from './fns';
 import { NumberType } from './types/Number';
 import { AnyType } from './types/Any';
@@ -15,6 +15,7 @@ import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
 import { SetType } from './types/Set';
+import { EntityType } from './types/Entity';
 export declare class Types {
     static INDEX: NumberType;
     static LENGTH: NumberType;
@@ -24,6 +25,7 @@ export declare class Types {
     static any(): AnyType;
     static bool(trues?: Record<string, true>, falses?: Record<string, true>): BooleanType;
     static date(options?: DateOptions): DateType;
+    static entity(name: string, types: TypeProvider): EntityType;
     static enum(value: TypeInput, key?: TypeInput, constants?: MapInput): EnumType;
     static enumForText(constants: string[] | Array<[string, string]> | Map<string, string>): EnumType;
     static list(item: TypeInput, min?: number, max?: number): ListType;

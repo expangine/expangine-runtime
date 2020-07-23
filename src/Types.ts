@@ -1,5 +1,5 @@
 
-import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved } from './Type';
+import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved, TypeProvider } from './Type';
 import { isArray, isMap, MapInput, toMap, isSameClass, isObject, objectMap } from './fns';
 import { NumberType } from './types/Number'
 import { AnyType } from './types/Any';
@@ -17,6 +17,7 @@ import { TupleType } from './types/Tuple';
 import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
 import { SetType } from './types/Set';
+import { EntityType } from './types/Entity';
 
 
 export class Types
@@ -53,6 +54,11 @@ export class Types
   public static date(options: DateOptions = {})
   {
     return new DateType(options);
+  }
+
+  public static entity(name: string, types: TypeProvider)
+  {
+    return new EntityType(name, types);
   }
 
   public static enum(value: TypeInput, key: TypeInput = TextType, constants: MapInput = new Map([]))
