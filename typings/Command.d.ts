@@ -2,7 +2,7 @@ import { Expression } from './Expression';
 import { Computed } from './Computed';
 import { Func } from './Func';
 export interface Command<Context, Result> {
-    (context: Context): Result;
+    (context: Context, parent?: any): Result;
 }
 export declare type CommandParams<Context, Result, P extends string, O extends string> = CommandsFor<Context, Result, P> & Partial<CommandsFor<Context, Result, O>>;
 export declare type CommandsFor<Context, Result, T extends string | never> = [T] extends [never] ? {} : Record<T, Command<Context, Result>>;

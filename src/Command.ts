@@ -6,7 +6,7 @@ import { Func } from './Func';
 
 export interface Command<Context, Result> 
 {
-  (context: Context): Result;
+  (context: Context, parent?: any): Result;
 }
 
 

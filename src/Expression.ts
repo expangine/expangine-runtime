@@ -25,8 +25,6 @@ export type ExpressionMap = Record<string, Expression>;
 export abstract class Expression implements Traversable<Expression>
 {
 
-  public static THIS = 'this';
-
   public static INSTANCE = 'instance';
 
   public parent: Expression = null;
