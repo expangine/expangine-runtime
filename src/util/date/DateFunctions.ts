@@ -445,7 +445,7 @@ export function getDaysInYear(x: Date): number
 
 export const daysInMonth = [
   [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-  [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 ];
 
 export function getDaysInMonth(x: Date): number
@@ -608,9 +608,9 @@ export function addMonths(x: Date, amount: number): void
 {
   const month = x.getMonth() + amount;
 
-  const y = new Date(0)
-  y.setFullYear(y.getFullYear(), month, 1)
-  y.setHours(0, 0, 0, 0)
+  const y = new Date(0);
+  y.setFullYear(y.getFullYear(), month, 1);
+  y.setHours(0, 0, 0, 0);
   const dayMax = getDaysInMonth(y);
 
   x.setMonth(month, Math.min(dayMax, x.getDate()));

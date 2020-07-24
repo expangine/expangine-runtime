@@ -10,8 +10,8 @@ export interface FormatterMap<T>
 
 export interface FormatSection<T>
 {
-  size: number,
-  formats: FormatterMap<T>
+  size: number;
+  formats: FormatterMap<T>;
 }
 
 export interface FormatEscapes
@@ -21,7 +21,7 @@ export interface FormatEscapes
     startEscape: string;
     end: string;
     endEscape: string;
-  }
+  };
 }
 
 export class Format<T>
@@ -39,8 +39,8 @@ export class Format<T>
     this.escapes = escapes;
   }
 
-  public add(map: FormatterMap<T>): this
-  public add(key: string, formatter: Formatter<T>): this
+  public add(map: FormatterMap<T>): this;
+  public add(key: string, formatter: Formatter<T>): this;
   public add(keyOrMap: string | FormatterMap<T>, formatter?: Formatter<T>): this
   {
     if (isString(keyOrMap))
@@ -82,64 +82,6 @@ export class Format<T>
     this.sortBySize();
 
     return newSection;
-  }
-
-  private sortBySize()
-  {
-    this.sections.sort((a, b) => b.size - a.size);
-  }
-
-  private getEscaped (x: string, i: number): false | [string, number]
-  {
-    const c = x.charAt(i);
-    const escaped = this.escapes[c];
-
-    if (!escaped)
-    {
-      return false;
-    }
-
-    const { start, end, startEscape, endEscape } = escaped;
-
-    const possibleStart = x.substring(i, i + start.length);
-
-    if (possibleStart !== start)
-    {
-      return false;
-    }
-
-    const possibleEscapeIndex = i - startEscape.indexOf(start);
-    const possibleEscape = x.substring(possibleEscapeIndex, possibleEscapeIndex + startEscape.length);
-
-    if (possibleEscape === startEscape)
-    {
-      return false;
-    }
-
-    i += start.length;
-
-    const endOffset = endEscape.indexOf(end);
-    let last = x.indexOf(end, i);
-    let content: string = x.substring(i, last);
-
-    i = last - endOffset;
-
-    while (last !== -1 && x.substring(i, i + endEscape.length) === endEscape)
-    {
-      content = content.substring(0, content.length - endOffset);
-      content += end;
-      i += endEscape.length;
-      last = x.indexOf(end, i);
-      content += x.substring(i, last);
-      i = last - endOffset;
-    }
-
-    if (last === -1)
-    {
-      return false;
-    }
-
-    return [content, last + end.length];
   }
 
   public getFormatter (format: string, cache: boolean = false): Formatter<T>
@@ -222,7 +164,7 @@ export class Format<T>
 
     if (cache)
     {
-      this.cached[format] = finalFormatter
+      this.cached[format] = finalFormatter;
     }
 
     return finalFormatter;
@@ -231,6 +173,64 @@ export class Format<T>
   public format (format: string, item: T, cache: boolean = false): string
   {
     return this.getFormatter(format, cache)(item);
+  }
+
+  private sortBySize()
+  {
+    this.sections.sort((a, b) => b.size - a.size);
+  }
+
+  private getEscaped (x: string, i: number): false | [string, number]
+  {
+    const c = x.charAt(i);
+    const escaped = this.escapes[c];
+
+    if (!escaped)
+    {
+      return false;
+    }
+
+    const { start, end, startEscape, endEscape } = escaped;
+
+    const possibleStart = x.substring(i, i + start.length);
+
+    if (possibleStart !== start)
+    {
+      return false;
+    }
+
+    const possibleEscapeIndex = i - startEscape.indexOf(start);
+    const possibleEscape = x.substring(possibleEscapeIndex, possibleEscapeIndex + startEscape.length);
+
+    if (possibleEscape === startEscape)
+    {
+      return false;
+    }
+
+    i += start.length;
+
+    const endOffset = endEscape.indexOf(end);
+    let last = x.indexOf(end, i);
+    let content: string = x.substring(i, last);
+
+    i = last - endOffset;
+
+    while (last !== -1 && x.substring(i, i + endEscape.length) === endEscape)
+    {
+      content = content.substring(0, content.length - endOffset);
+      content += end;
+      i += endEscape.length;
+      last = x.indexOf(end, i);
+      content += x.substring(i, last);
+      i = last - endOffset;
+    }
+
+    if (last === -1)
+    {
+      return false;
+    }
+
+    return [content, last + end.length];
   }
 
 }

@@ -22,8 +22,8 @@ export declare class Format<T> {
     add(map: FormatterMap<T>): this;
     add(key: string, formatter: Formatter<T>): this;
     getSection(size: number): FormatSection<T>;
-    private sortBySize;
-    private getEscaped;
     getFormatter(format: string, cache?: boolean): Formatter<T>;
     format(format: string, item: T, cache?: boolean): string;
+    private sortBySize;
+    private getEscaped;
 }
