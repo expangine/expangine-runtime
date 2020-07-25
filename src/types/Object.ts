@@ -535,7 +535,20 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
   public create(): any
   {
-    return Object.create(null);
+    const { props } = this.options;
+    const out: any = Object.create(null);
+    
+    for (const prop in props)
+    {
+      const propType = props[prop];
+
+      if (propType && !propType.isOptional())
+      {
+        out[prop] = propType.create();
+      }
+    }
+
+    return out;
   }
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
