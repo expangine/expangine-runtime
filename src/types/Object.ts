@@ -326,7 +326,14 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
 
       if (!other.options.props[prop]) 
       {
-        return false;
+        if (props[prop].isOptional())
+        {
+          continue;
+        }
+        else
+        {
+          return false;
+        }
       }
 
       if (!props[prop].isCompatible(other.options.props[prop], options))
