@@ -2,9 +2,9 @@
 import { EntityType } from '../../types/Entity';
 import { EntityOps } from '../EntityOps';
 import { Types } from '../../Types';
-import { isArray } from '../../fns';
+import { isArray, objectMap } from '../../fns';
 import { OperationTypeInput, OperationTypeProvider } from '../../Operation';
-import { ObjectType } from '../../types/Object';
+import { ObjectType, ObjectOptions } from '../../types/Object';
 import { BooleanType } from '../../types/Boolean';
 import { NumberType } from '../../types/Number';
 import { AnyType } from '../../types/Any';
@@ -19,11 +19,6 @@ const ops = EntityType.operations;
 const GetNamedType: OperationTypeInput<'name'> = (i, defs) => 
   i.name instanceof EntityType
     ? i.name
-    : ObjectType.baseType;
-
-const GetNamedTypeProps: OperationTypeInput<'name'> = (i, defs) => 
-  i.name instanceof EntityType
-    ? i.name.getType()
     : ObjectType.baseType;
 
 const GetName: OperationTypeInput<'name'> = (i, defs) => {
@@ -114,7 +109,17 @@ export const EntityOpsTypes =
   newInstance: ops.setTypes(EntityOps.newInstance, 
     GetNamedType,
     { name: GetName },
-    { initial: GetNamedTypeProps }
+    { initial: (i, provider) => {
+      if (i.name instanceof EntityType) {
+        const type = i.name.getType();
+        if (type instanceof ObjectType) {
+          const objectType = type as ObjectType<ObjectOptions>;
+          
+          return Types.object(objectMap(objectType.options.props, (value) => Types.optional(value.clone())));
+        }
+      }
+      return ObjectType.baseType;
+    }}
   ),
 
   get: ops.setTypes(EntityOps.get, 
