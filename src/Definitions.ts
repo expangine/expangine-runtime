@@ -30,6 +30,7 @@ import { ReferenceType } from './types/Reference';
 import { NamedMap } from './maps/NamedMap';
 import { FastMap } from './maps/FastMap';
 import { EventBase } from './EventBase';
+import { DataTypes } from './DataTypes';
 
 
 
@@ -1052,8 +1053,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     refs.forEach((ref) =>
     {
-      ref.value.args[newName] = ref.value.args[oldName];
-      delete ref.value.args[oldName];
+      DataTypes.objectSet(ref.value.args, newName, ref.value.args[oldName]);
+      DataTypes.objectRemove(ref.value.args, oldName);
     });
 
     return refs;
@@ -1077,7 +1078,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     refs.forEach((ref) =>
     {
-      delete ref.value.args[name];
+      DataTypes.objectRemove(ref.value.args, name);
     });
 
     return refs;
@@ -1236,8 +1237,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     refs.forEach((ref) =>
     {
-      ref.value.args[newName] = ref.value.args[oldName];
-      delete ref.value.args[oldName];
+      DataTypes.objectSet(ref.value.args, newName, ref.value.args[oldName]);
+      DataTypes.objectRemove(ref.value.args, oldName);
     });
 
     return refs;
@@ -1268,7 +1269,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     refs.forEach((ref) =>
     {
-      delete ref.value.args[name];
+      DataTypes.objectRemove(ref.value.args, name);
     });
 
     return refs;

@@ -157,13 +157,13 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
     if (paramType)
     {
-      this.params.options.props[newName] = paramType;
-      delete this.params.options.props[name];
+      DataTypes.objectSet(this.params.options.props, newName, paramType);
+      DataTypes.objectRemove(this.params.options.props, name);
 
       if (name in this.defaults)
       {
-        this.defaults[newName] = this.defaults[name];
-        delete this.defaults[name];
+        DataTypes.objectSet(this.defaults, newName, this.defaults[name]);
+        DataTypes.objectRemove(this.defaults, name);
       }
 
       this.trigger('renameParameter', this, newName, name);
@@ -179,8 +179,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
     if (exists)
     {
-      delete this.params.options.props[name];
-      delete this.defaults[name];
+      DataTypes.objectRemove(this.params.options.props, name);
+      DataTypes.objectRemove(this.defaults, name);
 
       this.trigger('removeParameter', this, name);
       this.changed();
@@ -281,7 +281,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
       if (!propType.getRequired().isValid(target[prop]))
       {
-        target[prop] = DataTypes.copy(this.defaults[prop]);
+        DataTypes.objectSet(target, prop, DataTypes.copy(this.defaults[prop]));
       }
     }
 

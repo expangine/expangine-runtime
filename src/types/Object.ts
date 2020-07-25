@@ -281,7 +281,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   {
     return traverse.enter(this, () => 
       objectEach(this.options.props, 
-        (type, prop) => traverse.step(prop, type, (replaceWith) => this.options.props[prop] = replaceWith, () => delete this.options.props[prop])
+        (type, prop) => traverse.step(prop, type, (replaceWith) => this.options.props[prop] = replaceWith, () => DataTypes.objectRemove(this.options.props, prop))
       )
     );
   }

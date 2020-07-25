@@ -7,6 +7,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ObjectType } from '../types/Object';
 import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
+import { DataTypes } from '../DataTypes';
 
 
 const INDEX_PROPS = 1;
@@ -72,7 +73,7 @@ export class ObjectExpression extends Expression
   {
     return traverse.enter(this, () => 
       objectEach(this.props, (expr, prop) =>
-        traverse.step(prop, expr, (replaceWith) => this.props[prop] = replaceWith, () => delete this.props[prop])
+        traverse.step(prop, expr, (replaceWith) => this.props[prop] = replaceWith, () => DataTypes.objectRemove(this.props, prop))
       )
     );
   }

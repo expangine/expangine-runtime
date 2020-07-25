@@ -11,6 +11,7 @@ import { Exprs } from '../Exprs';
 import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
+import { DataTypes } from '../DataTypes';
 
 
 const INDEX_NAME = 1;
@@ -102,7 +103,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
   {
     return traverse.enter(this, () =>
       objectEach(this.params, (expr, param) =>
-        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => delete this.params[param])
+        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => DataTypes.objectRemove(this.params, param))
       )
     );
   }

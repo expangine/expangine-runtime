@@ -6,6 +6,7 @@ import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
+import { DataTypes } from '../DataTypes';
 
 
 const INDEX_NAME = 1;
@@ -87,7 +88,7 @@ export class InvokeExpression extends Expression
   {
     return traverse.enter(this, () =>
       objectEach(this.args, (expr, arg) =>
-        traverse.step(arg, expr, (replaceWith) => this.args[arg] = replaceWith, () => delete this.args[arg])
+        traverse.step(arg, expr, (replaceWith) => this.args[arg] = replaceWith, () => DataTypes.objectRemove(this.args ,arg))
       )
     );
   }

@@ -358,9 +358,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
     if (transcoder)
     {
-      delete this.transcoders[prop];
-
-      this.transcoders[newProp] = transcoder;
+      DataTypes.objectRemove(this.transcoders, prop);
+      DataTypes.objectSet(this.transcoders, newProp, transcoder);
 
       changed = true;
     }
@@ -718,7 +717,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     const previous = this.indexes[name];
     const index: EntityIndex = { ...options, name };
 
-    this.indexes[name] = index;
+    DataTypes.objectSet(this.indexes, name, index);
 
     if (previous)
     {
@@ -755,7 +754,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
   {
     const index = this.indexes[name];
 
-    delete this.indexes[name];
+    DataTypes.objectRemove(this.indexes, name);
 
     this.trigger('removeIndex', this, index);
 
@@ -777,9 +776,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
       index.name = newName;
 
-      delete this.indexes[name];
-
-      this.indexes[newName] = index;
+      DataTypes.objectRemove(this.indexes, name);
+      DataTypes.objectSet(this.indexes, newName, index);
 
       this.trigger('updateIndex', this, index, previous);
       this.changed();
@@ -793,7 +791,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     const previous = this.transcoders[prop];
     const transcoder: EntityTranscoderOptions = this.decodeTranscoder(defs, options);
 
-    this.transcoders[prop] = transcoder;
+    DataTypes.objectSet(this.transcoders, prop, transcoder);
 
     if (previous)
     {
@@ -818,7 +816,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
     if (transcoder)
     {
-      delete this.transcoders[name];
+      DataTypes.objectRemove(this.transcoders, name);
 
       this.trigger('removeTranscoder', this, name, transcoder);
 
@@ -852,7 +850,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
   {
     const existing = this.methods[method.name];
 
-    this.methods[method.name] = method;
+    DataTypes.objectSet(this.methods, method.name, method);
 
     if (existing)
     {
@@ -879,9 +877,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     {
       method.name = newName;
 
-      delete this.methods[name];
-
-      this.methods[newName] = method;
+      DataTypes.objectRemove(this.methods, name);
+      DataTypes.objectSet(this.methods, newName, method);
 
       this.trigger('updateMethod', this, method, method);
 
@@ -900,7 +897,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
 
     if (method)
     {
-      delete this.methods[name];
+      DataTypes.objectRemove(this.methods, name);
 
       this.trigger('removeMethod', this, method);
 

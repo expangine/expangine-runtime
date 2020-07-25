@@ -7,6 +7,7 @@ import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Exprs } from '../Exprs';
+import { DataTypes } from '../DataTypes';
 
 
 const INDEX_TEMPLATE = 1;
@@ -83,7 +84,7 @@ export class TemplateExpression extends Expression
   {
     return traverse.enter(this, () => 
       objectEach(this.params, (expr, param) =>
-        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => delete this.params[param])
+        traverse.step(param, expr, (replaceWith) => this.params[param] = replaceWith, () => DataTypes.objectRemove(this.params, param))
       )
     );
   }
