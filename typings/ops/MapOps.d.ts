@@ -5,12 +5,12 @@ export declare const MapComputeds: Computeds;
 export declare const MapOps: {
     create: import("../Operation").OperationResolved<never, never, never, never, never>;
     createLike: import("../Operation").OperationResolved<"map", any, any, any, "map">;
-    createFor: import("../Operation").OperationResolved<"value", "key", any, any, "key" | "value">;
+    createFor: import("../Operation").OperationResolved<"value", "key", any, any, "value" | "key">;
     maybe: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    get: import("../Operation").OperationResolved<"map" | "key", any, any, any, "map">;
-    set: import("../Operation").OperationResolved<"map" | "key" | "value", any, "existingValue", "value", "map">;
-    has: import("../Operation").OperationResolved<"map" | "key", never, never, never, never>;
-    delete: import("../Operation").OperationResolved<"map" | "key", never, never, never, never>;
+    get: import("../Operation").OperationResolved<"key" | "map", any, any, any, "map">;
+    set: import("../Operation").OperationResolved<"key" | "map" | "value", any, "existingValue", "value", "map">;
+    has: import("../Operation").OperationResolved<"key" | "map", never, never, never, never>;
+    delete: import("../Operation").OperationResolved<"key" | "map", never, never, never, never>;
     keys: import("../Operation").OperationResolved<"map", any, any, any, "map">;
     values: import("../Operation").OperationResolved<"map", any, any, any, "map">;
     entries: import("../Operation").OperationResolved<"map", any, any, any, "map">;
@@ -18,8 +18,8 @@ export declare const MapOps: {
     clear: import("../Operation").OperationResolved<"map", any, any, any, "map">;
     count: import("../Operation").OperationResolved<"map", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test" | "compare", any, "key" | "value" | "test", "compare", never>;
-    copy: import("../Operation").OperationResolved<"map", "deepCopy" | "deepCopyKey", "map" | "key" | "value", "deepCopy" | "deepCopyKey", "map">;
-    map: import("../Operation").OperationResolved<"map", "transform" | "transformKey", "map" | "key" | "value", "transform" | "transformKey", "map">;
+    copy: import("../Operation").OperationResolved<"map", "deepCopy" | "deepCopyKey", "key" | "map" | "value", "deepCopy" | "deepCopyKey", "map">;
+    map: import("../Operation").OperationResolved<"map", "transform" | "transformKey", "key" | "map" | "value", "transform" | "transformKey", "map">;
     toPlainObject: import("../Operation").OperationResolved<"map", never, never, never, never>;
     fromPlainObject: import("../Operation").OperationResolved<"object", any, any, any, "object">;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;

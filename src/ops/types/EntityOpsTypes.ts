@@ -21,6 +21,11 @@ const GetNamedType: OperationTypeInput<'name'> = (i, defs) =>
     ? i.name
     : ObjectType.baseType;
 
+const GetNamedTypeProps: OperationTypeInput<'name'> = (i, defs) => 
+  i.name instanceof EntityType
+    ? i.name.getType()
+    : ObjectType.baseType;
+
 const GetName: OperationTypeInput<'name'> = (i, defs) => {
   if (i.name instanceof EntityType) {
     return i.name;
@@ -108,7 +113,8 @@ export const EntityOpsTypes =
 
   newInstance: ops.setTypes(EntityOps.newInstance, 
     GetNamedType,
-    { name: GetName }
+    { name: GetName },
+    { initial: GetNamedTypeProps }
   ),
 
   get: ops.setTypes(EntityOps.get, 

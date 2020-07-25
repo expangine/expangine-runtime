@@ -13,7 +13,7 @@ const ops = EntityOperations;
 export const EntityOps = 
 {
 
-  newInstance: ops.set('newInstance', {}, ['name'], [], [], [], ['name']),
+  newInstance: ops.set('newInstance', {}, ['name'], ['initial'], [], [], ['name']),
 
   get: ops.set('get', {}, ['name'], ['where'], ['instance'], ['where'], ['name']),
 
