@@ -94,4 +94,9 @@ export class NotExpression extends Expression
     this.validateType(def, context, BooleanType.baseType, this.expression, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return this.expression.mutates(def, arg);
+  }
+
 }

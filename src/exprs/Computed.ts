@@ -125,6 +125,11 @@ export class ComputedExpression extends Expression
     }
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false;
+  }
+
   public isPathNode(): boolean
   {
     return true;

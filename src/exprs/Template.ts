@@ -111,6 +111,19 @@ export class TemplateExpression extends Expression
     });
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const param in this.params)
+    {
+      if (this.params[param].mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public param(name: string, value: ExpressionValue): TemplateExpression
   public param(params: Record<string, ExpressionValue>): TemplateExpression
   public param(nameOrParams: string | Record<string, ExpressionValue>, value?: Expression): TemplateExpression

@@ -12,6 +12,7 @@ import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { DataTypes } from '../DataTypes';
+import { PathExpression } from './Path';
 
 
 const INDEX_NAME = 1;
@@ -178,6 +179,29 @@ export class OperationExpression<P extends string = never, O extends string = ne
         params[paramName].validate(def, paramContext, handler);
       }
     }
+  }
+
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    const { name, params } = this;
+    const operation = def.getOperation(name);
+
+    if (!operation)
+    {
+      return false;
+    }
+
+    for (const paramName in params)
+    {
+      const paramType = params[paramName];
+
+      if (paramType.mutates(def, arg, directly) || (paramType instanceof PathExpression && paramType.isMutating(arg, true) && operation.mutates.indexOf(paramName) !== -1))
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

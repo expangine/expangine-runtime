@@ -7,6 +7,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
 import { DataTypes } from '../DataTypes';
+import { PathExpression } from './Path';
 
 
 const INDEX_NAME = 1;
@@ -138,6 +139,28 @@ export class InvokeExpression extends Expression
 
       // func.options.expression.validate(def, Types.object(params), handler);
     }
+  }
+
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    const func = def.getFunction(this.name);
+
+    if (!func)
+    {
+      return false;
+    }
+
+    for (const argName in this.args)
+    {
+      const argType = this.args[argName];
+
+      if (argType.mutates(def, arg, directly) || (argType instanceof PathExpression && argType.isMutating(arg, true) && func.mutates(def, argName)))
+      {
+        return true;
+      }
+    }
+
+    return false; 
   }
 
   public getInnerExpression(def: DefinitionProvider): Expression | string | false

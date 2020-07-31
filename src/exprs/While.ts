@@ -135,6 +135,12 @@ export class WhileExpression extends Expression
     this.body.validate(def, bodyContext, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.condition.mutates(def, arg, directly) || 
+      this.body.mutates(def, arg, directly);
+  }
+
   public while(condition: Expression)
   {
     this.condition = condition;

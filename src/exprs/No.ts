@@ -69,4 +69,9 @@ export class NoExpression extends Expression
     
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false;
+  }
+
 }

@@ -98,4 +98,9 @@ export class GetEntityExpression extends Expression
     }
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false; 
+  }
+
 }

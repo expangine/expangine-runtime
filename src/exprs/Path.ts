@@ -6,6 +6,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { isNumber } from '../fns';
 import { GetExpression } from './Get';
+import { ConstantExpression } from './Constant';
 
 
 const INDEX_PATH = 1;
@@ -179,11 +180,38 @@ export class PathExpression extends Expression
     }
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const expr of this.expressions)
+    {
+      if (expr.mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public isWritable(defs: DefinitionProvider)
   {
     return this.expressions.length > 0
       ? this.expressions[this.expressions.length - 1].isPathWritable(defs)
       : false;
+  }
+
+  public isMutating(arg: string, directly: boolean = false): boolean
+  {
+    const e0 = this.expressions[0];
+    const e1 = this.expressions[1];
+    const e2 = this.expressions[2]; // tslint:disable-line: no-magic-numbers
+
+    if (!(e0 instanceof GetExpression && e1 instanceof ConstantExpression && e1.value === arg))
+    {
+      return false;
+    }
+
+    return directly ? true : !!e2;
   }
 
 }

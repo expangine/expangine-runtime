@@ -108,4 +108,17 @@ export class OrExpression extends Expression
     });
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const expr of this.expressions)
+    {
+      if (expr.mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

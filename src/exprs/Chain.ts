@@ -97,6 +97,19 @@ export class ChainExpression extends Expression
     });
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const link of this.chain)
+    {
+      if (link.mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public add(exprs: Expression | Expression[]): ChainExpression
   {
     const append = isArray(exprs) ? exprs : [exprs];

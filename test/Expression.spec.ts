@@ -1,4 +1,4 @@
-import { Exprs, NumberOps } from '../src';
+import { Exprs, NumberOps, defs, ListOps, Types } from '../src';
 
 
 describe('Expression', () => 
@@ -122,6 +122,114 @@ describe('Expression', () =>
     expect(j.getExpressionFromPath(['cases', 1, 'then', 'h'])).toStrictEqual(h);
     expect(j.getExpressionFromPath(['cases', 1, 'then'])).toStrictEqual(i);
     expect(j.getExpressionFromPath([])).toStrictEqual(j);
+  });
+
+  it('mutates set sub', () => 
+  {
+    const e = Exprs.body(
+      Exprs.set(Exprs.get('x', 'y')).to(Exprs.const(34))
+    );
+
+    expect(e.mutates(defs, 'x')).toBeTruthy();
+    expect(e.mutates(defs, 'y')).toBeFalsy();
+  });
+
+  it('mutates set directly', () => 
+  {
+    const e = Exprs.body(
+      Exprs.set(Exprs.get('x')).to(Exprs.const(34))
+    );
+
+    expect(e.mutates(defs, 'x', true)).toBeTruthy();
+    expect(e.mutates(defs, 'x', false)).toBeFalsy();
+  });
+
+  it('mutates update sub', () => 
+  {
+    const e = Exprs.body(
+      Exprs.update(Exprs.get('x', 'y')).to(Exprs.const(34))
+    );
+
+    expect(e.mutates(defs, 'x')).toBeTruthy();
+    expect(e.mutates(defs, 'y')).toBeFalsy();
+  });
+
+  it('mutates update directly', () => 
+  {
+    const e = Exprs.body(
+      Exprs.update(Exprs.get('x')).to(Exprs.const(34))
+    );
+
+    expect(e.mutates(defs, 'x', true)).toBeTruthy();
+    expect(e.mutates(defs, 'x', false)).toBeFalsy();
+  });
+
+  it('mutates op', () => 
+  {
+    const e = Exprs.op(ListOps.add, {
+      list: Exprs.get('x'),
+      item: Exprs.const(3),
+    });
+
+    expect(e.mutates(defs, 'x', true)).toBeTruthy();
+    expect(e.mutates(defs, 'x', false)).toBeTruthy();
+    expect(e.mutates(defs, 'y', true)).toBeFalsy();
+    expect(e.mutates(defs, 'y', false)).toBeFalsy();
+  });
+
+  it('mutates op in func', () => 
+  {
+    const FUNC_NAME = 'mutateOpInFunc';
+
+    defs.addFunction({
+      name: FUNC_NAME,
+      params: Types.object({
+        x: Types.list(Types.number()),
+      }),
+      expression: Exprs.return(
+        Exprs.op(ListOps.add, {
+          list: Exprs.get('x'),
+          item: Exprs.const(3),
+        }),
+      ),
+    });
+
+    const f = defs.getFunction(FUNC_NAME);
+
+    expect(f.mutates(defs, 'x')).toBeTruthy();
+    
+    const e = Exprs.invoke(FUNC_NAME, {
+      x: Exprs.get('y')
+    });
+
+    expect(e.mutates(defs, 'y', true)).toBeTruthy();
+    expect(e.mutates(defs, 'y', false)).toBeTruthy();
+  });
+
+  it('mutate not in func', () => 
+  {
+    const FUNC_NAME = 'mutateNotInFunc';
+
+    defs.addFunction({
+      name: FUNC_NAME,
+      params: Types.object({
+        x: Types.list(Types.number()),
+      }),
+      expression: Exprs.return(
+        Exprs.set(Exprs.get('x')).to(Exprs.const(4)),
+      ),
+    });
+
+    const f = defs.getFunction(FUNC_NAME);
+
+    expect(f.mutates(defs, 'x')).toBeFalsy();
+    
+    const e = Exprs.invoke(FUNC_NAME, {
+      x: Exprs.get('y')
+    });
+
+    expect(e.mutates(defs, 'y', true)).toBeFalsy();
+    expect(e.mutates(defs, 'y', false)).toBeFalsy();
   });
 
 });

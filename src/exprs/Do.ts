@@ -135,6 +135,12 @@ export class DoExpression extends Expression
     this.body.validate(def, bodyContext, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.condition.mutates(def, arg, directly) || 
+      this.body.mutates(def, arg, directly);
+  }
+
   public do(body: Expression, condition?: Expression): DoExpression
   {
     this.body = body;

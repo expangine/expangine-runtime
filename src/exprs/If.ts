@@ -160,6 +160,19 @@ export class IfExpression extends Expression
     this.otherwise.validate(def, context, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const [condition, result] of this.cases)
+    {
+      if (condition.mutates(def, arg, directly) || result.mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return this.otherwise.mutates(def, arg, directly);
+  }
+
   public if(condition: Expression, body?: Expression)
   {
     this.cases.push([condition, body || NoExpression.instance]);

@@ -300,4 +300,14 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     this.changed();
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    if (!(arg in this.params.options.props))
+    {
+      return false;
+    }
+
+    return this.expression.mutates(def, arg, false);
+  }
+
 }

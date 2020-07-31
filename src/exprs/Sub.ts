@@ -80,4 +80,9 @@ export class SubExpression extends Expression
     throw new Error('Sub expression is no longer supported.');
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    throw new Error('Sub expression is no longer supported.');
+  }
+
 }

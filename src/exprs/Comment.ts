@@ -86,4 +86,9 @@ export class CommentExpression extends Expression
     return false;
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false;
+  }
+
 }

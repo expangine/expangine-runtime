@@ -97,6 +97,11 @@ export class ReturnExpression extends Expression
     this.value.validate(def, context, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.value.mutates(def, arg, directly);
+  }
+
   public isPathWritable(defs: DefinitionProvider): boolean
   {
     return false;

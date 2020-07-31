@@ -154,6 +154,13 @@ export class ForExpression extends Expression
     this.body.validate(def, bodyContext, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.start.mutates(def, arg, directly) || 
+      this.end.mutates(def, arg, directly) || 
+      this.body.mutates(def, arg, directly);
+  }
+
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
   {
     this.variable = variable;

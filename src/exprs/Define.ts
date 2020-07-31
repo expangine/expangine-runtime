@@ -129,6 +129,19 @@ export class DefineExpression extends Expression
     this.body.validate(def, defineContext.context, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const [, defined] of this.define)    
+    {
+      if (defined.mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return this.body.mutates(def, arg, directly);
+  }
+
   public with(name: string, value: ExpressionValue): DefineExpression
   public with(defines: Record<string, ExpressionValue>): DefineExpression
   public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression

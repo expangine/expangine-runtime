@@ -148,4 +148,11 @@ export class SetExpression extends Expression
     return this;
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.path.isMutating(arg, directly) || 
+      this.value.mutates(def, arg, directly) || 
+      this.path.mutates(def, arg, directly);
+  }
+
 }

@@ -83,6 +83,11 @@ export class GetExpression extends Expression
     
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false;
+  }
+
   public isPathStart(): boolean
   {
     return true;

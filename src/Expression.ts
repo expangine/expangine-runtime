@@ -47,6 +47,8 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
   
+  public abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
+
   public getInnerExpression(def: DefinitionProvider): Expression | string | false
   {
     return false;

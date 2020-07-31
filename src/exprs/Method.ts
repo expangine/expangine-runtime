@@ -8,6 +8,7 @@ import { ValidationHandler, ValidationType, ValidationSeverity } from '../Valida
 import { Exprs } from '../Exprs';
 import { EntityType } from '../types/Entity';
 import { DataTypes } from '../DataTypes';
+import { PathExpression } from './Path';
 
 
 const INDEX_ENTITY = 1;
@@ -187,6 +188,35 @@ export class MethodExpression extends Expression
         params[paramName] = arg.getType(def, context);
       }
     });
+  }
+
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    const entity = def.getEntity(this.entity);
+
+    if (!entity)
+    {
+      return false;
+    }
+
+    const method = entity.methods[this.name];
+
+    if (!method)
+    {
+      return false;
+    }
+
+    for (const argName in this.args)
+    {
+      const argType = this.args[argName];
+
+      if (argType.mutates(def, arg, directly) || (argType instanceof PathExpression && argType.isMutating(arg, true) && method.mutates(def, argName)))
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public getInnerExpression(def: DefinitionProvider): Expression | string | false

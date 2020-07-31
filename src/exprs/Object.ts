@@ -97,4 +97,17 @@ export class ObjectExpression extends Expression
     objectEach(this.props, e => e.validate(def, context, handler));
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    for (const prop in this.props)
+    {
+      if (this.props[prop].mutates(def, arg, directly))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

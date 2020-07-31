@@ -125,4 +125,9 @@ export class ConstantExpression extends Expression
     
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false;
+  }
+
 }

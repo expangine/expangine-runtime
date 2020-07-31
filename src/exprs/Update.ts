@@ -156,6 +156,11 @@ export class UpdateExpression extends Expression
     }
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.path.isMutating(arg, directly) || this.value.mutates(def, arg, directly) || this.path.mutates(def, arg, directly);
+  }
+
   public to(value: ExpressionValue, currentVariable?: string): UpdateExpression
   {
     this.value = Exprs.parse(value);

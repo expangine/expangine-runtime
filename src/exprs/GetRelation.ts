@@ -105,4 +105,9 @@ export class GetRelationExpression extends Expression
     }
   }
 
+  public mutates(def: DefinitionProvider, arg: string): boolean
+  {
+    return false; 
+  }
+
 }

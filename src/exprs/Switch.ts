@@ -188,6 +188,32 @@ export class SwitchExpression extends Expression
     this.defaultCase.validate(def, context, handler);
   }
 
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    if (this.value.mutates(def, arg, directly))
+    {
+      return true;
+    }
+
+    for (const [tests, result] of this.cases)
+    {
+      if (result.mutates(def, arg, directly))
+      {
+        return true;
+      }
+
+      for (const test of tests)
+      {
+        if (test.mutates(def, arg, directly))
+        {
+          return true;
+        }
+      }
+    }
+
+    return this.defaultCase.mutates(def, arg, directly);
+  }
+
   public val(value: ExpressionValue, op?: Operation): SwitchExpression
   {
     this.value = Exprs.parse(value);
