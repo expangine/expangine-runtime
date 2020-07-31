@@ -25,4 +25,5 @@ export declare class SetExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     to(value: ExpressionValue): SetExpression;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
 }

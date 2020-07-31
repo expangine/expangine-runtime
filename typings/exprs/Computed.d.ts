@@ -21,6 +21,7 @@ export declare class ComputedExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
+    mutates(def: DefinitionProvider, arg: string): boolean;
     isPathNode(): boolean;
     isPathWritable(defs: DefinitionProvider): boolean;
 }

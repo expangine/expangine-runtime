@@ -26,6 +26,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>;
     alias(scoped: S, alias: string): OperationExpression<P, O, S>;
     and(exprs: Expression | Expression[]): AndExpression;

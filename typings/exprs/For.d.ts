@@ -32,6 +32,7 @@ export declare class ForExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
     startAt(start: ExpressionValue): ForExpression;
     endAt(end: ExpressionValue): ForExpression;

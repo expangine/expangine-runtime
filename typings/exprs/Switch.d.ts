@@ -28,6 +28,7 @@ export declare class SwitchExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     val(value: ExpressionValue, op?: Operation): SwitchExpression;
     case(testValue: ExpressionValue): SwitchExpression;
     than(bodyValue: ExpressionValue): SwitchExpression;

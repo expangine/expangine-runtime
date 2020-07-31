@@ -22,6 +22,7 @@ export declare class DefineExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     with(name: string, value: ExpressionValue): DefineExpression;
     with(defines: Record<string, ExpressionValue>): DefineExpression;
     run(expr: Expression): DefineExpression;

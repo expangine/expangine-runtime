@@ -19,5 +19,6 @@ export declare class ChainExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
+    mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     add(exprs: Expression | Expression[]): ChainExpression;
 }

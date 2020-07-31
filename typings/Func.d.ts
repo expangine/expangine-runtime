@@ -58,4 +58,5 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     getParamType(param: string): import("./Type").Type<any>;
     getArguments(args: any, returnNew?: boolean): any;
     refactor(transform: Expression, runtime: Runtime): void;
+    mutates(def: DefinitionProvider, arg: string): boolean;
 }

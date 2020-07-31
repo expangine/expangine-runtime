@@ -20,4 +20,5 @@ export declare class CommentExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     isPathWritable(defs: DefinitionProvider): boolean;
+    mutates(def: DefinitionProvider, arg: string): boolean;
 }

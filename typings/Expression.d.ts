@@ -26,6 +26,7 @@ export declare abstract class Expression implements Traversable<Expression> {
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
     abstract setParent(parent?: Expression): void;
     abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
+    abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     getInnerExpression(def: DefinitionProvider): Expression | string | false;
     isPathStart(): boolean;
     isPathNode(): boolean;
