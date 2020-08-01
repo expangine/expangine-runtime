@@ -175,7 +175,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
   public removeParameter(name: string): boolean
   {
-    const exists = name in this.params.options.props[name];
+    const exists = name in this.params.options.props;
 
     if (exists)
     {
