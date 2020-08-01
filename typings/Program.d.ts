@@ -28,6 +28,7 @@ export interface ProgramEvents {
     addDataset(program: Program, dataset: ProgramDataSet): void;
     removeDataset(program: Program, dataset: ProgramDataSet): void;
     updateDataset(program: Program, dataset: ProgramDataSet): void;
+    moveDataset(program: Program, dataset: ProgramDataSet, from: number, to: number): void;
 }
 export declare class Program extends EventBase<ProgramEvents> implements ProgramOptions {
     static create(defs: Definitions, defaults?: Partial<ProgramOptions>): Program;
@@ -46,7 +47,8 @@ export declare class Program extends EventBase<ProgramEvents> implements Program
     changed(): void;
     encode(): ProgramOptions;
     addDataset(dataset: ProgramDataSet, delayChange?: boolean): void;
-    updateDataset(dataset: ProgramDataSet | number, newDataset: ProgramDataSet, delayChange?: boolean): boolean;
+    moveDataset(dataset: ProgramDataSet | number, to: number, delayChange?: boolean): boolean;
+    updateDataset(dataset: ProgramDataSet | number, newDataset: Partial<ProgramDataSet>, delayChange?: boolean): boolean;
     removeDataset(dataset: ProgramDataSet | number, delayChange?: boolean): boolean;
     refactor(transform: Expression, runtime: Runtime): void;
 }

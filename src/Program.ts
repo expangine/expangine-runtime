@@ -39,6 +39,7 @@ export interface ProgramEvents
   addDataset(program: Program, dataset: ProgramDataSet): void;
   removeDataset(program: Program, dataset: ProgramDataSet): void;
   updateDataset(program: Program, dataset: ProgramDataSet): void;
+  moveDataset(program: Program, dataset: ProgramDataSet, from: number, to: number): void;
 }
 
 export class Program extends EventBase<ProgramEvents> implements ProgramOptions
@@ -166,7 +167,34 @@ export class Program extends EventBase<ProgramEvents> implements ProgramOptions
     }
   }
 
-  public updateDataset(dataset: ProgramDataSet | number, newDataset: ProgramDataSet, delayChange: boolean = false): boolean
+  public moveDataset(dataset: ProgramDataSet | number, to: number, delayChange: boolean = false): boolean
+  {
+    const index = isNumber(dataset)
+      ? dataset
+      : this.datasets.indexOf(dataset);
+    const exists = index >= 0 && index < this.datasets.length;
+    const inside = to >= 0 && to < this.datasets.length;
+    const movable = exists && inside;
+
+    if (movable)
+    {
+      const data = this.datasets[index];
+
+      this.datasets.splice(index, 1);
+      this.datasets.splice(to, 0, data);
+
+      this.trigger('moveDataset', this, data, index, to);
+
+      if (!delayChange)
+      {
+        this.changed();
+      }
+    }
+
+    return movable;
+  }
+
+  public updateDataset(dataset: ProgramDataSet | number, newDataset: Partial<ProgramDataSet>, delayChange: boolean = false): boolean
   {
     const target = isNumber(dataset)
       ? this.datasets[dataset]
@@ -198,6 +226,8 @@ export class Program extends EventBase<ProgramEvents> implements ProgramOptions
     if (exists)
     {
       const removed = this.datasets[index];
+
+      DataTypes.arrayRemove(this.datasets, index);
       
       this.trigger('removeDataset', this, removed);
 
