@@ -472,6 +472,13 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     }
   }
 
+  public takeKey(run: Runtime, instance: any): any
+  {
+    this.setKey(instance);
+
+    return this.getKey(run, instance);
+  }
+
   public getDescribe(run: Runtime, instance: any): any
   {
     const { type, describe } = this;

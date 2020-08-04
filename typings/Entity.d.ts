@@ -111,6 +111,7 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     getEntityProps(): EntityProps;
     getKey(run: Runtime, instance: any): any;
     setKey(instance: any): void;
+    takeKey(run: Runtime, instance: any): any;
     getDescribe(run: Runtime, instance: any): any;
     getDecodedPropertyTypes(): TypeMap;
     getPropertyTypeFor(forProperty?: string): EnumType;
