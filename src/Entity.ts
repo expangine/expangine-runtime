@@ -464,10 +464,10 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     switch (this.primaryType)
     {
       case EntityPrimaryType.AUTO_INCREMENT:
-        instance[prop] = this.instances.reduce((a, b) => Math.max(a, b[prop]), 0) + 1;
+        DataTypes.objectSet(instance, prop, this.instances.reduce((a, b) => Math.max(a, b[prop]), 0) + 1);
         break;
       case EntityPrimaryType.UUID:
-        instance[prop] = Entity.uuid();
+        DataTypes.objectSet(instance, prop, Entity.uuid());
         break;
     }
   }
