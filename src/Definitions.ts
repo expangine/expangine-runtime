@@ -1834,6 +1834,11 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
   public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null
   {
+    if (path.length === 0)
+    {
+      return null;
+    }
+
     let thisType = path[0].getType(this, context);
 
     if (!thisType)
