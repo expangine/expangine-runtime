@@ -96,7 +96,9 @@ export class Runtime<Context = any, Result = any>
   {
     return isArray(value)
       ? this.getCommand(this.defs.getExpression(value), provider)
-      : () => value;
+      : value instanceof Expression
+        ? this.getCommand(value, provider)
+        : () => value;
   }
 
 }
