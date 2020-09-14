@@ -46,7 +46,7 @@ export function isFunction(value: any): value is ((...args: any[]) => any)
   return typeof value === 'function';
 }
 
-export function isObject(value: any): value is any 
+export function isObject(value: any): value is Record<string, any> 
 {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -66,7 +66,7 @@ export function isWhole(x: number, epsilon: number = 0.000001): boolean
   return Math.abs(x - Math.round(x)) <= epsilon;
 }
 
-export function isEmpty(value: any): boolean 
+export function isEmpty(value: any): value is ([] | {} | null | undefined)
 {
   if (isArray(value)) 
   {

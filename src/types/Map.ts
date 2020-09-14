@@ -423,7 +423,7 @@ export class MapType extends Type<MapOptions>
     }
     else if (isObject(map))
     {
-      for (const prop of map)
+      for (const prop in map)
       {
         const result = onItem(prop, map[prop]);
 
