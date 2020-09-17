@@ -23,8 +23,17 @@ export interface DataTypeAccessor<T = any> {
     isValid(value: any, step: any): boolean;
     set(value: T, step: any, stepValue: any): void;
     get(value: T, step: any): any;
+    remove(value: T, step: any): any;
+    has(value: T, step: any): any;
 }
-export declare class DataTypeRegistry {
+export interface DataTypeRegistryOperations {
+    objectSet<O extends object, K extends keyof O>(obj: O, prop: K, value: O[K]): void;
+    objectRemove<O extends object, K extends keyof O>(obj: O, prop: K): void;
+    arrayAdd<T>(arr: T[], item: T): void;
+    arrayRemove<T>(arr: T[], index: number): T;
+    arraySet<T>(arr: T[], index: number, item: T): T;
+}
+export declare class DataTypeRegistry implements DataTypeRegistryOperations {
     static TYPES: DataTypeRaw[];
     private compareTypes;
     private compareMap;
@@ -32,11 +41,11 @@ export declare class DataTypeRegistry {
     private copyList;
     private jsonList;
     private accessorList;
-    objectSet: <O extends object, K extends keyof O>(obj: O, prop: K, value: O[K]) => void;
-    objectRemove: <O extends object, K extends keyof O>(obj: O, prop: K) => void;
-    arrayAdd: <T>(arr: T[], item: T) => void;
-    arrayRemove: <T>(arr: T[], index: number) => T;
-    arraySet: <T>(arr: T[], index: number, item: T) => T;
+    objectSet: DataTypeRegistryOperations['objectSet'];
+    objectRemove: DataTypeRegistryOperations['objectRemove'];
+    arrayAdd: DataTypeRegistryOperations['arrayAdd'];
+    arrayRemove: DataTypeRegistryOperations['arrayRemove'];
+    arraySet: DataTypeRegistryOperations['arraySet'];
     constructor();
     compare(a: any, b: any): number;
     getCompare(less: number, more: number): number;
@@ -50,6 +59,8 @@ export declare class DataTypeRegistry {
     addJson<T>(json: DataTypeJson<T>): this;
     get(value: any, step: any): any;
     set(value: any, step: any, stepValue: any): boolean;
+    remove(value: any, step: any): boolean;
+    has<O = false>(value: any, step: any, defaultResult?: O): boolean | O;
     addAccessor<T>(accessor: DataTypeAccessor<T>): this;
     private createTypeMap;
     private addToPriorityList;

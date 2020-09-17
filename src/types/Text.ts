@@ -112,11 +112,13 @@ export class TextType extends Type<TextOptions>
       },
     });
 
-    DataTypes.addAccessor({
+    DataTypes.addAccessor<string>({
       priority,
       isValid: isString,
       get: (x, step) => x[step],
-      set: (x, step, value) => x[step] = value,
+      set: (x, step, value) => {},
+      remove: (x, step) => x.substring(0, step) + x.substring(step + 1),
+      has: (x, step) => x[step] !== undefined,
     });
   }
 

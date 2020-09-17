@@ -165,11 +165,13 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       },
     });
 
-    DataTypes.addAccessor<object>({
+    DataTypes.addAccessor<Record<string, any>>({
       priority,
       isValid: (value) => isObject(value),
       get: (value, step) => value[step],
-      set: (value, step, stepValue) => DataTypes.objectSet(value, step as keyof typeof value, stepValue as never),
+      set: (value, step, stepValue) => DataTypes.objectSet(value, step as keyof typeof value, stepValue),
+      remove: (value, step) => DataTypes.objectRemove(value, step),
+      has: (value, step) => step in value,
     });
   }
 

@@ -194,6 +194,8 @@ export class ListType extends Type<ListOptions>
       isValid: (value) => isArray(value),
       get: (value, step) => value[step],
       set: (value, step, stepValue) => DataTypes.arraySet(value, step, stepValue),
+      remove: (value, step) => DataTypes.arrayRemove(value, step),
+      has: (value, step) => value[step] !== undefined,
     });
   }
 

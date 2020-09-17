@@ -35,9 +35,20 @@ export interface DataTypeAccessor<T = any>
   isValid(value: any, step: any): boolean;
   set(value: T, step: any, stepValue: any): void;
   get(value: T, step: any): any;
+  remove(value: T, step: any): any;
+  has(value: T, step: any): any;
 }
 
-export class DataTypeRegistry
+export interface DataTypeRegistryOperations
+{
+  objectSet<O extends object, K extends keyof O>(obj: O, prop: K, value: O[K]): void;
+  objectRemove<O extends object, K extends keyof O>(obj: O, prop: K): void;
+  arrayAdd<T>(arr: T[], item: T): void;
+  arrayRemove<T>(arr: T[], index: number): T;
+  arraySet<T>(arr: T[], index: number, item: T): T;
+}
+
+export class DataTypeRegistry implements DataTypeRegistryOperations
 {
 
   public static TYPES: DataTypeRaw[] = [
@@ -51,15 +62,15 @@ export class DataTypeRegistry
   private jsonList: DataTypeJson[];
   private accessorList: DataTypeAccessor[];
 
-  public objectSet: <O extends object, K extends keyof O>(obj: O, prop: K, value: O[K]) => void 
+  public objectSet: DataTypeRegistryOperations['objectSet']
     = (obj, prop, value) => obj[prop] = value;
-  public objectRemove: <O extends object, K extends keyof O>(obj: O, prop: K) => void
+  public objectRemove: DataTypeRegistryOperations['objectRemove']
     = (obj, prop) => delete obj[prop];
-  public arrayAdd: <T>(arr: T[], item: T) => void
+  public arrayAdd: DataTypeRegistryOperations['arrayAdd']
     = (arr, item) => arr.push(item);
-  public arrayRemove: <T>(arr: T[], index: number) => T
+  public arrayRemove: DataTypeRegistryOperations['arrayRemove']
     = (arr, index) => arr.splice(index, 1)[0];
-  public arraySet: <T>(arr: T[], index: number, item: T) => T
+  public arraySet: DataTypeRegistryOperations['arraySet']
     = (arr, index, item) => arr.splice(index, 1, item)[0];
 
   public constructor()
@@ -339,6 +350,38 @@ export class DataTypeRegistry
     }
 
     return false;
+  }
+
+  public remove(value: any, step: any): boolean
+  {
+    const accessors = this.accessorList;
+
+    for (const access of accessors)
+    {
+      if (access.isValid(value, step))
+      {
+        access.remove(value, step);
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public has<O = false>(value: any, step: any, defaultResult: O = false as unknown as O): boolean | O
+  {
+    const accessors = this.accessorList;
+
+    for (const access of accessors)
+    {
+      if (access.isValid(value, step))
+      {
+        return access.has(value, step);
+      }
+    }
+
+    return defaultResult;
   }
 
   public addAccessor<T>(accessor: DataTypeAccessor<T>): this

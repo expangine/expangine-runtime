@@ -195,6 +195,8 @@ export class MapType extends Type<MapOptions>
       isValid: (value) => isMap(value),
       get: (value, step) => value.get(step),
       set: (value, step, stepValue) => value.set(step, stepValue),
+      remove: (value, step) => value.delete(step),
+      has: (value, step) => value.has(step),
     });
   }
 
