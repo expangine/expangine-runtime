@@ -1,5 +1,5 @@
 
-import { isArray, objectMap, objectValues, objectEach } from './fns';
+import { isArray, isString, objectMap, objectValues, objectEach } from './fns';
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions, TypeDescribeProvider } from './Type';
 import { Expression, ExpressionClass, ExpressionMap } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
@@ -1891,6 +1891,11 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     }
 
     return new ConstantExpression(value);
+  }
+
+  public isExpression(value: any): boolean
+  {
+    return value instanceof Expression || (isArray(value) && isString(value[0]) && value[0] in this.expressions);
   }
 
   public getEntityReferences(entity?: string | Entity): DefinitionsEntityReference[]

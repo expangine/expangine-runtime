@@ -235,6 +235,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     getPathType(path: Expression[], context: Type, stopBefore?: number): Type | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
     getExpression(value: any): Expression;
+    isExpression(value: any): boolean;
     getEntityReferences(entity?: string | Entity): DefinitionsEntityReference[];
     getDataReferences(data?: string | ReferenceData): DefinitionsDataReference[];
     getEntityDataReferences(entity?: string | Entity): DefinitionsDataTypeReference<EntityType>[];
