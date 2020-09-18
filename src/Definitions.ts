@@ -1893,7 +1893,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return new ConstantExpression(value);
   }
 
-  public isExpression(value: any): boolean
+  public isExpression(value: any): value is (Expression | [string, ...any[]])
   {
     return value instanceof Expression || (isArray(value) && isString(value[0]) && value[0] in this.expressions);
   }
