@@ -20,8 +20,8 @@ const ops = ListType.operations;
 
 const RequireList = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list : otherwise;
 const ListItem = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list.options.item : otherwise;
-const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
-const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
+const GivenList = (i: {list?: Type}) => RequireList(i.list, ListType);
+const GivenValueList = (i: {value?: Type}) => RequireList(i.value, ListType);
 const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
 const GivenListItemOptional = (i: {list?: Type}) => Types.optional(GivenListItem(i));
 const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
@@ -261,6 +261,21 @@ export const ListOpsTypes =
   random: ops.setTypes(ListOps.random,
     GivenListItemOptional,
     { list: GivenList }
+  ),
+
+  flatten: ops.setTypes(ListOps.flatten,
+    (i) => i.list instanceof ListType && i.list.options.item instanceof ObjectType
+      ? i.list.options.item
+      : i.list instanceof TupleType && i.list.options.some((e) => e instanceof ObjectType)
+        ? Types.mergeMany(i.list.options.filter((e) => e instanceof ObjectType), ObjectType.baseType)
+        : ObjectType,
+    { list: (i) => 
+      i.list instanceof ListType && i.list.options.item instanceof ObjectType
+        ? i.list 
+        : i.list instanceof TupleType && i.list.options.some((e) => e instanceof ObjectType)
+          ? i.list
+          : ListType
+    }
   ),
 
   // Iteration

@@ -3,10 +3,10 @@ export declare const MapOpsTypes: {
     createLike: import("../..").OperationTypes<"map", never, never>;
     createFor: import("../..").OperationTypes<"value", "key", never>;
     maybe: import("../..").OperationTypes<"value", never, never>;
-    get: import("../..").OperationTypes<"map" | "key", never, never>;
-    set: import("../..").OperationTypes<"map" | "key" | "value", never, "existingValue">;
-    has: import("../..").OperationTypes<"map" | "key", never, never>;
-    delete: import("../..").OperationTypes<"map" | "key", never, never>;
+    get: import("../..").OperationTypes<"key" | "map", never, never>;
+    set: import("../..").OperationTypes<"key" | "map" | "value", never, "existingValue">;
+    has: import("../..").OperationTypes<"key" | "map", never, never>;
+    delete: import("../..").OperationTypes<"key" | "map", never, never>;
     keys: import("../..").OperationTypes<"map", never, never>;
     values: import("../..").OperationTypes<"map", never, never>;
     entries: import("../..").OperationTypes<"map", never, never>;
@@ -14,8 +14,8 @@ export declare const MapOpsTypes: {
     clear: import("../..").OperationTypes<"map", never, never>;
     count: import("../..").OperationTypes<"map", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test" | "compare", never, "key" | "value" | "test">;
-    copy: import("../..").OperationTypes<"map", "deepCopy" | "deepCopyKey", "map" | "key" | "value">;
-    map: import("../..").OperationTypes<"map", "transform" | "transformKey", "map" | "key" | "value">;
+    copy: import("../..").OperationTypes<"map", "deepCopy" | "deepCopyKey", "key" | "map" | "value">;
+    map: import("../..").OperationTypes<"map", "transform" | "transformKey", "key" | "map" | "value">;
     toPlainObject: import("../..").OperationTypes<"map", never, never>;
     fromPlainObject: import("../..").OperationTypes<"object", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;
