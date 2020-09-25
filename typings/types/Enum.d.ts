@@ -30,6 +30,7 @@ export declare class EnumType extends Type<EnumOptions> {
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isWrapper(): boolean;
+    getWrappedType(): Type;
     protected isDeepCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;

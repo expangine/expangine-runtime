@@ -58,6 +58,7 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract getSimplifiedType(): Type;
     getRequired(): Type;
     isWrapper(): boolean;
+    getWrappedType(): Type;
     protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isCompatible(other: Type, options?: TypeCompatibleOptions): boolean;
     protected acceptsOtherTypes(): boolean;

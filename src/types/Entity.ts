@@ -107,6 +107,16 @@ export class EntityType extends Type<string>
     // return this.getType().getSimplifiedType();
   }
 
+  public isWrapper(): boolean
+  {
+    return true;
+  }
+
+  public getWrappedType(): Type
+  {
+    return this.getType();
+  }
+
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean 
   {
     return other instanceof EntityType

@@ -133,7 +133,7 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     getDecodeExpected(forProperty?: string): Type<any>;
     getIndexExpectedType(): import(".").SetType;
     getDynamicPrimaryKey(): string;
-    getPrimaryKeyExpression(separator?: string, name?: string): import(".").PathExpression | import(".").GetExpression | import(".").OperationExpression<"list", "delimiter" | "toText" | "prefix" | "suffix", "list" | "item" | "index">;
+    getPrimaryKeyExpression(separator?: string, name?: string): import(".").PathExpression | import(".").GetExpression | import(".").OperationExpression<"list", "delimiter" | "toText" | "prefix" | "suffix", "list" | "index" | "item">;
     getPrimary(name?: string, returnDynamic?: boolean): EntityIndex | null;
     getUniqueIndexes(): EntityIndex[];
     addPrimary(props: string | string[]): this;

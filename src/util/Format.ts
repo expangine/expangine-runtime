@@ -45,7 +45,10 @@ export class Format<T>
   {
     if (isString(keyOrMap))
     {
-      this.getSection(keyOrMap.length).formats[keyOrMap] = formatter;
+      if (formatter)
+      {
+        this.getSection(keyOrMap.length).formats[keyOrMap] = formatter;
+      }
     }
     else
     {
