@@ -123,7 +123,7 @@ export abstract class Type<O = any> implements Traversable<Type>
       return true;
     }
 
-    if (!options.exact && other.isWrapper() && this.isCompatible(other.getSimplifiedType(), options))
+    if (!options.exact && other.isWrapper() && this.isCompatible(other.getWrappedType(), options))
     {
       return true;
     }
