@@ -14,6 +14,7 @@ import { ListOps } from '../ListOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
 import { Types } from '../../Types';
+import { GivenObjectType, MergedObjectType } from './helpers';
 
 
 const ops = ListType.operations;
@@ -29,6 +30,7 @@ const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initi
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
 const GivenValueListCompareScope = { list: GivenValueList, value: GivenValueListItem, test: GivenValueListItem };
 const GivenListIterationScope = { list: GivenList, item: GivenListItem, index: NumberType };
+
 
 export const ListOpsTypes = 
 {
@@ -264,15 +266,14 @@ export const ListOpsTypes =
   ),
 
   flatten: ops.setTypes(ListOps.flatten,
-    (i) => i.list instanceof ListType && i.list.options.item instanceof ObjectType
-      ? i.list.options.item
-      : i.list instanceof TupleType && i.list.options.some((e) => e instanceof ObjectType)
-        ? Types.mergeMany(i.list.options.filter((e) => e instanceof ObjectType), ObjectType.baseType)
+    (i) => i.list instanceof ListType && GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+      ? GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+      : i.list instanceof TupleType && i.list.options.some((e) => GivenObjectType(e, undefined, MergedObjectType))
+        ? MergedObjectType(i.list.options.filter((e) => GivenObjectType(e, undefined, MergedObjectType)))
         : ObjectType,
-    { list: (i) => 
-      i.list instanceof ListType && i.list.options.item instanceof ObjectType
-        ? i.list 
-        : i.list instanceof TupleType && i.list.options.some((e) => e instanceof ObjectType)
+    { list: (i) => i.list instanceof ListType && GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+        ? i.list
+        : i.list instanceof TupleType && i.list.options.some((e) => GivenObjectType(e, undefined, MergedObjectType))
           ? i.list
           : ListType
     }
