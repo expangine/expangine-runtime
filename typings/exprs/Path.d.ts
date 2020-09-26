@@ -3,6 +3,8 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { SetExpression } from './Set';
+import { UpdateExpression } from './Update';
 export declare class PathExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): PathExpression;
@@ -24,4 +26,6 @@ export declare class PathExpression extends Expression {
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     isWritable(defs: DefinitionProvider): boolean;
     isMutating(arg: string, directly?: boolean): boolean;
+    set(value: Expression): SetExpression;
+    update(value: Expression, currentVariable?: string): UpdateExpression;
 }
