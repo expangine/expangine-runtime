@@ -1,5 +1,5 @@
 
-import { Type, TypeMap } from '../../Type';
+import { Type } from '../../Type';
 import { ObjectType } from '../../types/Object';
 import { NumberType } from '../../types/Number';
 import { BooleanType } from '../../types/Boolean';
@@ -11,11 +11,10 @@ import { DateType } from '../../types/Date';
 import { ListType } from '../../types/List';
 import { MapType } from '../../types/Map';
 import { TupleType } from '../../types/Tuple';
-import { OptionalType } from '../../types/Optional';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
-import { EntityType } from '../../types/Entity';
 import { Types } from '../../Types';
+import { MergedObjectType } from './helpers';
 
 
 const ops = ObjectType.operations;
@@ -70,41 +69,7 @@ export const ObjectOpsTypes =
   ),
 
   merge: ops.setTypes(ObjectOps.merge, 
-    (i) => {
-      const props: TypeMap = {};
-      const params: Array<keyof typeof i> = ['a', 'b', 'c', 'd', 'e'];
-
-      for (const param of params) 
-      {
-        let paramType = i[param];
-
-        if (paramType instanceof EntityType)
-        {
-          paramType = paramType.getType();
-        }
-
-        if (paramType instanceof ObjectType) 
-        {
-          const paramProps = paramType.options.props;
-
-          for (const prop in paramProps) 
-          {
-            const paramProp = paramProps[prop];
-
-            if (prop in props && paramProp instanceof OptionalType) 
-            {
-              props[prop] = Types.mergeMany([paramProp, props[prop]]);
-            } 
-            else 
-            {
-              props[prop] = paramProp;
-            }
-          }
-        }
-      }
-
-      return new ObjectType({ props });
-    },
+    (i) => MergedObjectType(['a', 'b', 'c', 'd', 'e'].map(k => i[k])),
     { a: ObjectType, b: ObjectType },
     { c: ObjectType, d: ObjectType, e: ObjectType }
   ),

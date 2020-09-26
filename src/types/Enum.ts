@@ -129,6 +129,11 @@ export class EnumType extends Type<EnumOptions>
     return true;
   }
 
+  public getWrappedType(): Type
+  {
+    return this.options.value;
+  }
+
   protected isDeepCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean 
   {
     if (!(other instanceof EnumType))

@@ -109,6 +109,11 @@ export abstract class Type<O = any> implements Traversable<Type>
     return false;
   }
 
+  public getWrappedType(): Type
+  {
+    return this;
+  }
+
   protected abstract isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
 
   public isCompatible(other: Type, options: TypeCompatibleOptions = {}): boolean
@@ -118,7 +123,7 @@ export abstract class Type<O = any> implements Traversable<Type>
       return true;
     }
 
-    if (!options.exact && other.isWrapper() && this.isCompatible(other.getSimplifiedType(), options))
+    if (!options.exact && other.isWrapper() && this.isCompatible(other.getWrappedType(), options))
     {
       return true;
     }

@@ -136,7 +136,7 @@ export const MapOpsTypes =
   ),
 
   toPlainObject: ops.setTypes(MapOps.toPlainObject,
-    AnyType,
+    ObjectType,
     { map: GivenMap }
   ),
 

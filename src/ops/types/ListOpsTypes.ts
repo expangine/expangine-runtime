@@ -14,14 +14,15 @@ import { ListOps } from '../ListOps';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
 import { Types } from '../../Types';
+import { GivenObjectType, MergedObjectType } from './helpers';
 
 
 const ops = ListType.operations;
 
 const RequireList = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list : otherwise;
 const ListItem = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list.options.item : otherwise;
-const GivenList = (i: {list?: Type}) => RequireList(i.list) || ListType;
-const GivenValueList = (i: {value?: Type}) => RequireList(i.value) || ListType;
+const GivenList = (i: {list?: Type}) => RequireList(i.list, ListType);
+const GivenValueList = (i: {value?: Type}) => RequireList(i.value, ListType);
 const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
 const GivenListItemOptional = (i: {list?: Type}) => Types.optional(GivenListItem(i));
 const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
@@ -29,6 +30,7 @@ const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initi
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
 const GivenValueListCompareScope = { list: GivenValueList, value: GivenValueListItem, test: GivenValueListItem };
 const GivenListIterationScope = { list: GivenList, item: GivenListItem, index: NumberType };
+
 
 export const ListOpsTypes = 
 {
@@ -261,6 +263,20 @@ export const ListOpsTypes =
   random: ops.setTypes(ListOps.random,
     GivenListItemOptional,
     { list: GivenList }
+  ),
+
+  flatten: ops.setTypes(ListOps.flatten,
+    (i) => i.list instanceof ListType && GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+      ? GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+      : i.list instanceof TupleType && i.list.options.some((e) => GivenObjectType(e, undefined, MergedObjectType))
+        ? MergedObjectType(i.list.options.filter((e) => GivenObjectType(e, undefined, MergedObjectType)))
+        : ObjectType,
+    { list: (i) => i.list instanceof ListType && GivenObjectType(i.list.options.item, undefined, MergedObjectType)
+        ? i.list
+        : i.list instanceof TupleType && i.list.options.some((e) => GivenObjectType(e, undefined, MergedObjectType))
+          ? i.list
+          : ListType
+    }
   ),
 
   // Iteration

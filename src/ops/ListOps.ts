@@ -97,6 +97,8 @@ export const ListOps =
 
   random: ops.set('random', {}, ['list'], [], [], [], ['list']),
 
+  flatten: ops.set('flatten', {}, ['list'], [], [], [], ['list']),
+
   // Iteration
 
   join: ops.set('join', { complexity: 1 }, ['list'], ['delimiter', 'toText', 'prefix', 'suffix'], ['list', 'item', 'index'], ['toText']),

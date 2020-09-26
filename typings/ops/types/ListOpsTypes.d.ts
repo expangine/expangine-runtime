@@ -39,6 +39,7 @@ export declare const ListOpsTypes: {
     count: import("../..").OperationTypes<"list", never, never>;
     randomList: import("../..").OperationTypes<"list" | "count", never, never>;
     random: import("../..").OperationTypes<"list", never, never>;
+    flatten: import("../..").OperationTypes<"list", never, never>;
     join: import("../..").OperationTypes<"list", "delimiter" | "toText" | "prefix" | "suffix", "list" | "index" | "item">;
     each: import("../..").OperationTypes<"list" | "each", "reverse", "list" | "index" | "item">;
     filter: import("../..").OperationTypes<"list" | "filter", never, "list" | "index" | "item">;

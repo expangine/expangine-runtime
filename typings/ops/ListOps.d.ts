@@ -43,6 +43,7 @@ export declare const ListOps: {
     count: import("../Operation").OperationResolved<"list", never, never, never, never>;
     randomList: import("../Operation").OperationResolved<"list" | "count", any, any, any, "list">;
     random: import("../Operation").OperationResolved<"list", any, any, any, "list">;
+    flatten: import("../Operation").OperationResolved<"list", any, any, any, "list">;
     join: import("../Operation").OperationResolved<"list", "delimiter" | "toText" | "prefix" | "suffix", "list" | "index" | "item", "toText", never>;
     each: import("../Operation").OperationResolved<"list" | "each", "reverse", "list" | "index" | "item", "each", "list">;
     filter: import("../Operation").OperationResolved<"list" | "filter", any, "list" | "index" | "item", "filter", "list">;
