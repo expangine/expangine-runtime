@@ -88,6 +88,11 @@ export class ForExpression extends Expression
     return Math.max(this.start.getComplexity(def, context), this.end.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
   }
 
+  public isDynamic(): boolean
+  {
+    return this.body.isDynamic();
+  }
+
   public getScope()
   {
     return {

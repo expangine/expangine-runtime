@@ -49,6 +49,11 @@ export abstract class Expression implements Traversable<Expression>
   
   public abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
 
+  public isDynamic(): boolean
+  {
+    return true;
+  }
+
   public getInnerExpression(def: DefinitionProvider): Expression | string | false
   {
     return false;

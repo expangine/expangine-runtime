@@ -56,6 +56,11 @@ export class DefineExpression extends Expression
     return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def, context)), this.body.getComplexity(def, context));
   }
 
+  public isDynamic(): boolean
+  {
+    return this.body.isDynamic();
+  }
+
   public getScope()
   {
     const scope = {};

@@ -13,6 +13,7 @@ export declare class ConstantExpression extends Expression {
     constructor(value: any);
     getId(): string;
     getComplexity(): number;
+    isDynamic(): boolean;
     getScope(): null;
     encode(): any;
     clone(): Expression;

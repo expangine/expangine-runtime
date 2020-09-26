@@ -48,6 +48,11 @@ export class TupleExpression extends Expression
     return this.expressions.reduce((max, e) => Math.max(max, e.getComplexity(def, context)), 0);
   }
 
+  public isDynamic(): boolean
+  {
+    return this.expressions.some((e) => e.isDynamic());
+  }
+
   public getScope(): null
   {
     return null;

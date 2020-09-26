@@ -48,6 +48,11 @@ export class NotExpression extends Expression
     return this.expression.getComplexity(def, context);
   }
 
+  public isDynamic(): boolean
+  {
+    return this.expression.isDynamic();
+  }
+
   public getScope(): null
   {
     return null;

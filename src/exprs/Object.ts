@@ -49,6 +49,21 @@ export class ObjectExpression extends Expression
     return objectReduce(this.props, (e, k, max) => Math.max(max, e.getComplexity(def, context)), 0);
   }
 
+  public isDynamic(): boolean
+  {
+    for (const prop in this.props)
+    {
+      const propExpr = this.props[prop];
+
+      if (propExpr && propExpr.isDynamic())
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public getScope(): null
   {
     return null;

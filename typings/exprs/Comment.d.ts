@@ -12,6 +12,7 @@ export declare class CommentExpression extends Expression {
     constructor(comment: string);
     getId(): string;
     getComplexity(def: DefinitionProvider): number;
+    isDynamic(): boolean;
     getScope(): null;
     encode(): any;
     clone(): Expression;

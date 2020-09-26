@@ -11,6 +11,7 @@ export declare class TupleExpression extends Expression {
     constructor(expressions: Expression[]);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
+    isDynamic(): boolean;
     getScope(): null;
     encode(): any;
     clone(): Expression;

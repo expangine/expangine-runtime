@@ -11,6 +11,7 @@ export declare class ChainExpression extends Expression {
     constructor(chain: Expression[]);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
+    isDynamic(): boolean;
     getScope(): null;
     encode(): any;
     clone(): Expression;

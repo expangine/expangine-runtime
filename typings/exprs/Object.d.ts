@@ -11,6 +11,7 @@ export declare class ObjectExpression extends Expression {
     constructor(props: ExpressionMap);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
+    isDynamic(): boolean;
     getScope(): null;
     encode(): any;
     clone(): Expression;

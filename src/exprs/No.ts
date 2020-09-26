@@ -34,6 +34,11 @@ export class NoExpression extends Expression
     return 0;
   }
 
+  public isDynamic(): boolean
+  {
+    return false;
+  }
+
   public getScope(): null
   {
     return null;

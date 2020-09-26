@@ -46,6 +46,13 @@ export class ChainExpression extends Expression
     return this.chain.reduce((max, e) => Math.max(max, e.getComplexity(def, context)), 0);
   }
 
+  public isDynamic(): boolean
+  {
+    return this.chain.length
+      ? this.chain[this.chain.length - 1].isDynamic()
+      : false;
+  }
+
   public getScope(): null
   {
     return null;

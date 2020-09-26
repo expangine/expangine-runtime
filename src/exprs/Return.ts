@@ -49,6 +49,11 @@ export class ReturnExpression extends Expression
     return this.value.getComplexity(def, context);
   }
 
+  public isDynamic(): boolean
+  {
+    return this.value.isDynamic();
+  }
+
   public getScope(): null
   {
     return null;

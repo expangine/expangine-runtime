@@ -75,6 +75,11 @@ export class DoExpression extends Expression
     return Math.max(this.condition.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
   }
 
+  public isDynamic(): boolean
+  {
+    return this.body.isDynamic();
+  }
+
   public getScope()
   {
     return {

@@ -14,6 +14,7 @@ export declare class DefineExpression extends Expression {
     constructor(define: [string, Expression][], body: Expression);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
+    isDynamic(): boolean;
     getScope(): {};
     encode(): any;
     clone(): Expression;
