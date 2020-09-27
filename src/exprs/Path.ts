@@ -7,6 +7,8 @@ import { ValidationHandler, ValidationType, ValidationSeverity } from '../Valida
 import { isNumber } from '../fns';
 import { GetExpression } from './Get';
 import { ConstantExpression } from './Constant';
+import { SetExpression } from './Set';
+import { UpdateExpression } from './Update';
 
 
 const INDEX_PATH = 1;
@@ -214,8 +216,6 @@ export class PathExpression extends Expression
     return directly ? true : !!e2;
   }
 
-  /*
-
   public set(value: Expression): SetExpression
   {
     return new SetExpression(this.clone(), value);
@@ -225,7 +225,5 @@ export class PathExpression extends Expression
   {
     return new UpdateExpression(this.clone(), value, currentVariable);
   }
-
-  */
 
 }
