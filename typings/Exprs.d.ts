@@ -42,7 +42,8 @@ export declare class Exprs {
     static define(vars?: Record<string, ExpressionValue>, body?: Expression): DefineExpression;
     static do(body: Expression, condition?: Expression, breakVariable?: string, maxIterations?: number): DoExpression;
     static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
-    static get(...path: ExpressionValue[]): PathExpression | GetExpression;
+    static get(): GetExpression;
+    static get(...path: ExpressionValue[]): PathExpression;
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;
     static computed(name: string): ComputedExpression;
     static if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;

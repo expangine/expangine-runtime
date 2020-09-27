@@ -105,6 +105,8 @@ export class Exprs
     return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, breakVariable, maxIterations));
   }
 
+  public static get(): GetExpression
+  public static get(...path: ExpressionValue[]): PathExpression
   public static get(...path: ExpressionValue[]): PathExpression | GetExpression
   {
     return path.length === 0
