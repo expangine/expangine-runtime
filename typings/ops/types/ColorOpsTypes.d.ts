@@ -11,8 +11,8 @@ export declare const ColorOpsTypes: {
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
     build: import("../..").OperationTypes<"b" | "r" | "g", "a", never>;
-    map: import("../..").OperationTypes<"b" | "value" | "r" | "g", "a", "value" | "component">;
-    op: import("../..").OperationTypes<"b" | "value" | "test" | "r" | "g", "a", "value" | "test" | "component">;
+    map: import("../..").OperationTypes<"value" | "b" | "r" | "g", "a", "value" | "component">;
+    op: import("../..").OperationTypes<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component">;
     clamp: import("../..").OperationTypes<"value", never, never>;
     add: import("../..").OperationTypes<"value" | "addend", "alpha", never>;
     adds: import("../..").OperationTypes<"value" | "addend" | "addendScale", "alpha", never>;
