@@ -18,6 +18,7 @@ export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider
   merge(type: Type, data: any): Type;
 
   getExpression(data: any): Expression;
+  isExpression(value: any): value is (Expression | [string, ...any[]]);
 
   getType(data: any, otherwise?: Type): Type;
   getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
