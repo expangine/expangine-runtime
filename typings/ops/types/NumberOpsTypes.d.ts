@@ -20,7 +20,7 @@ export declare const NumberOpsTypes: {
     pow: import("../..").OperationTypes<"value" | "exponent", never, never>;
     atan2: import("../..").OperationTypes<"x" | "y", never, never>;
     hypot: import("../..").OperationTypes<"a" | "b", never, never>;
-    choose: import("../..").OperationTypes<"k" | "n", never, never>;
+    choose: import("../..").OperationTypes<"n" | "k", never, never>;
     gcd: import("../..").OperationTypes<"a" | "b", never, never>;
     bitAnd: import("../..").OperationTypes<"a" | "b", never, never>;
     bitOr: import("../..").OperationTypes<"a" | "b", never, never>;
@@ -71,7 +71,7 @@ export declare const NumberOpsTypes: {
     isPositive: import("../..").OperationTypes<"value", never, never>;
     isNegative: import("../..").OperationTypes<"value", never, never>;
     isDivisible: import("../..").OperationTypes<"value" | "by", "epsilon", never>;
-    bitCompare: import("../..").OperationTypes<"method" | "value" | "test", never, never>;
+    bitCompare: import("../..").OperationTypes<"value" | "test" | "method", never, never>;
     asAny: import("../..").OperationTypes<"value", never, never>;
     asBoolean: import("../..").OperationTypes<"value", never, never>;
     asColor: import("../..").OperationTypes<"value", never, never>;
