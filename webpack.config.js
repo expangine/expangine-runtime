@@ -21,7 +21,6 @@ module.exports = {
 
     optimization: {
       usedExports: true,
-      mangleExports: false,
     },
 
     resolve: {

@@ -8,10 +8,10 @@ export declare const EntityOps: {
     getKey: import("../Operation").OperationResolved<"name" | "instance", any, any, any, "name">;
     save: import("../Operation").OperationResolved<"name" | "instance", any, any, any, "name">;
     remove: import("../Operation").OperationResolved<"name" | "instance", any, any, any, "name">;
-    setRelated: import("../Operation").OperationResolved<"name" | "related" | "instance" | "relation", any, any, any, "name" | "relation">;
-    addRelated: import("../Operation").OperationResolved<"name" | "related" | "instance" | "relation", any, any, any, "name" | "relation">;
-    removeRelated: import("../Operation").OperationResolved<"name" | "related" | "instance" | "relation", any, any, any, "name" | "relation">;
-    clearRelated: import("../Operation").OperationResolved<"name" | "instance" | "relation", any, any, any, "name" | "relation">;
-    getRelated: import("../Operation").OperationResolved<"name" | "instance" | "relation", any, any, any, "name" | "relation">;
-    isRelated: import("../Operation").OperationResolved<"name" | "related" | "instance" | "relation", any, any, any, "name" | "relation">;
+    setRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance" | "related", any, any, any, "relation" | "name">;
+    addRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance" | "related", any, any, any, "relation" | "name">;
+    removeRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance" | "related", any, any, any, "relation" | "name">;
+    clearRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance", any, any, any, "relation" | "name">;
+    getRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance", any, any, any, "relation" | "name">;
+    isRelated: import("../Operation").OperationResolved<"name" | "relation" | "instance" | "related", any, any, any, "relation" | "name">;
 };

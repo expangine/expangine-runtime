@@ -24,7 +24,7 @@ export declare const NumberOps: {
     pow: import("../Operation").OperationResolved<"value" | "exponent", never, never, never, never>;
     atan2: import("../Operation").OperationResolved<"x" | "y", never, never, never, never>;
     hypot: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
-    choose: import("../Operation").OperationResolved<"n" | "k", never, never, never, never>;
+    choose: import("../Operation").OperationResolved<"k" | "n", never, never, never, never>;
     gcd: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
     bitAnd: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
     bitOr: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
@@ -75,7 +75,7 @@ export declare const NumberOps: {
     isPositive: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isNegative: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isDivisible: import("../Operation").OperationResolved<"value" | "by", "epsilon", never, never, never>;
-    bitCompare: import("../Operation").OperationResolved<"value" | "test" | "method", never, never, never, never>;
+    bitCompare: import("../Operation").OperationResolved<"method" | "value" | "test", never, never, never, never>;
     asAny: import("../Operation").OperationResolved<"value", never, never, never, never>;
     asBoolean: import("../Operation").OperationResolved<"value", never, never, never, never>;
     asColor: import("../Operation").OperationResolved<"value", never, never, never, never>;
