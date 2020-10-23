@@ -461,7 +461,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     else if (from === to && hasFrom) // change
     { 
       return Exprs.body(
-        Exprs.update('value', from)
+        Exprs.set('value', from)
           .to(newValue, 'value'),
         Exprs.get('value'),
       );

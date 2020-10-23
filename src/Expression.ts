@@ -10,6 +10,11 @@ export interface ExpressionProvider
   setLegacy(): void;
 }
 
+export interface ExpressionParser 
+{
+  (data: any[], exprs: ExpressionProvider): Expression;
+}
+
 export interface ExpressionClass<T extends Expression = any> 
 {
   id: string;

@@ -20,11 +20,10 @@ import { OperationExpression } from './exprs/Operation';
 import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
 import { PathExpression } from './exprs/Path';
-import { ReturnExpression } from './exprs/Return';
+import { FlowExpression, FlowType } from './exprs/Flow';
 import { SetExpression } from './exprs/Set';
 import { SwitchExpression } from './exprs/Switch';
 import { TemplateExpression } from './exprs/Template';
-import { UpdateExpression } from './exprs/Update';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
@@ -174,9 +173,24 @@ export class Exprs
       : new PathExpression(this.parse(exprs)));
   }
 
-  public static return(value: ExpressionValue = NoExpression.instance): ReturnExpression
+  public static return(value: ExpressionValue = NoExpression.instance): FlowExpression
   {
-    return this.setParent(new ReturnExpression(this.parse(value)));
+    return this.setParent(new FlowExpression(FlowType.RETURN, this.parse(value)));
+  }
+
+  public static break(): FlowExpression
+  {
+    return this.setParent(new FlowExpression(FlowType.BREAK, NoExpression.instance));
+  }
+
+  public static continue(): FlowExpression
+  {
+    return this.setParent(new FlowExpression(FlowType.CONTINUE, NoExpression.instance));
+  }
+
+  public static exit(value: ExpressionValue = NoExpression.instance): FlowExpression
+  {
+    return this.setParent(new FlowExpression(FlowType.EXIT, this.parse(value)));
   }
 
   public static set(...path: ExpressionValue[]): SetExpression
@@ -197,11 +211,6 @@ export class Exprs
   public static tuple(...elements: ExpressionValue[]): TupleExpression
   {
     return this.setParent(new TupleExpression(this.parse(elements)));
-  }
-
-  public static update(...path: ExpressionValue[]): UpdateExpression
-  {
-    return this.setParent(new UpdateExpression(this.path(...path), NoExpression.instance));
   }
 
   public static while(condition: Expression, body: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): WhileExpression

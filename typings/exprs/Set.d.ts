@@ -1,5 +1,6 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
+import { AnyType } from '../types/Any';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
@@ -10,13 +11,16 @@ export declare class SetExpression extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): SetExpression;
     static encode(expr: SetExpression): any;
-    static create(path: ExpressionValue[], value: ExpressionValue): SetExpression;
+    static create(path: ExpressionValue[], value: ExpressionValue, currentVariable?: string): SetExpression;
     path: PathExpression;
     value: Expression;
-    constructor(path: PathExpression, value: Expression);
+    currentVariable: string;
+    constructor(path: PathExpression, value: Expression, currentVariable?: string);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
-    getScope(): null;
+    getScope(): {
+        [x: string]: AnyType;
+    };
     encode(): any;
     clone(): Expression;
     getType(def: DefinitionProvider, context: Type): Type | null;
@@ -24,6 +28,7 @@ export declare class SetExpression extends Expression {
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
-    to(value: ExpressionValue): SetExpression;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
+    to(value: ExpressionValue, currentVariable?: string): SetExpression;
+    withVariable(name: string): SetExpression;
 }

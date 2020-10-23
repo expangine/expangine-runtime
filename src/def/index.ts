@@ -41,13 +41,12 @@ import { ObjectExpression } from '../exprs/Object';
 import { OperationExpression } from '../exprs/Operation';
 import { OrExpression } from '../exprs/Or';
 import { PathExpression } from '../exprs/Path';
-import { ReturnExpression } from '../exprs/Return';
+import { FlowExpression } from '../exprs/Flow';
 import { SetExpression } from '../exprs/Set';
 import { SubExpression } from '../exprs/Sub';
 import { SwitchExpression } from '../exprs/Switch';
 import { TemplateExpression } from '../exprs/Template';
 import { TupleExpression } from '../exprs/Tuple';
-import { UpdateExpression } from '../exprs/Update';
 import { WhileExpression } from '../exprs/While';
 
 
@@ -95,13 +94,13 @@ export const defs = new Definitions({
     OperationExpression,
     OrExpression,
     PathExpression,
-    ReturnExpression,
+    FlowExpression,
     SetExpression,
     SubExpression,    
     SwitchExpression,
     TemplateExpression,
     TupleExpression,
-    UpdateExpression,
+    SetExpression,
     WhileExpression,
   ]
 });

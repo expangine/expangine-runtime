@@ -6,6 +6,9 @@ export interface ExpressionProvider {
     getExpression(value: any): Expression;
     setLegacy(): void;
 }
+export interface ExpressionParser {
+    (data: any[], exprs: ExpressionProvider): Expression;
+}
 export interface ExpressionClass<T extends Expression = any> {
     id: string;
     decode(this: ExpressionClass<T>, data: any[], exprs: ExpressionProvider): Expression;

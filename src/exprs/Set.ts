@@ -1,16 +1,19 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { BooleanType } from '../types/Boolean';
+import { AnyType } from '../types/Any';
 import { Type } from '../Type';
+import { BooleanType } from '../types/Boolean';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
 import { PathExpression } from './Path';
 
 
+const DEFAULT_CURRENT = 'current';
 const INDEX_PATH = 1;
 const INDEX_VALUE = 2;
+const INDEX_CURRENT = 3;
 
 export class SetExpression extends Expression 
 {
@@ -25,29 +28,36 @@ export class SetExpression extends Expression
   {
     const path = PathExpression.fromPartial(data[INDEX_PATH], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
+    const currentVariable = data[INDEX_CURRENT] || DEFAULT_CURRENT; 
 
-    return new SetExpression(path, value);
+    return new SetExpression(path, value, currentVariable);
   }
 
   public static encode(expr: SetExpression): any 
   {
-    return [this.id, expr.path.encode(), expr.value.encode()];
+    const path = expr.path.encode();
+    const value = expr.value.encode();
+
+    return expr.currentVariable === DEFAULT_CURRENT
+      ? [this.id, path, value]
+      : [this.id, path, value, expr.currentVariable]
   }
 
-  public static create(path: ExpressionValue[], value: ExpressionValue)
+  public static create(path: ExpressionValue[], value: ExpressionValue, currentVariable: string = DEFAULT_CURRENT)
   {
-    return new SetExpression(Exprs.path(path), Exprs.parse(value));
+    return new SetExpression(Exprs.path(path), Exprs.parse(value), currentVariable);
   }
 
   public path: PathExpression;
   public value: Expression;
+  public currentVariable: string;
 
-  public constructor(path: PathExpression, value: Expression) 
+  public constructor(path: PathExpression, value: Expression, currentVariable: string = DEFAULT_CURRENT) 
   {
     super();
-
     this.path = path;
     this.value = value;
+    this.currentVariable = currentVariable;
   }
 
   public getId(): string
@@ -60,9 +70,11 @@ export class SetExpression extends Expression
     return Math.max(this.path.getComplexity(def, context), this.value.getComplexity(def, context));
   }
 
-  public getScope(): null
+  public getScope()
   {
-    return null;
+    return {
+      [this.currentVariable]: AnyType.baseType
+    };
   }
 
   public encode(): any 
@@ -72,7 +84,7 @@ export class SetExpression extends Expression
 
   public clone(): Expression
   {
-    return new SetExpression(this.path.clone(), this.value.clone());
+    return new SetExpression(this.path.clone(), this.value.clone(), this.currentVariable);
   }
 
   public getType(def: DefinitionProvider, context: Type): Type | null
@@ -83,7 +95,7 @@ export class SetExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {
-      traverse.step(SetExpression.STEP_PATH, this.path, (replaceWith) => this.path = Exprs.path(replaceWith));
+      traverse.step(SetExpression.STEP_PATH, this.path, (replaceWith) => this.path = Exprs.path([replaceWith]));
       traverse.step(SetExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith);
     });
   }
@@ -126,7 +138,11 @@ export class SetExpression extends Expression
 
     if (expectedType)
     {
-      this.validateType(def, context, expectedType, this.value, handler);
+      const valueContext = def.getContext(context, {
+        [this.currentVariable]: expectedType,
+      });
+
+      this.validateType(def, valueContext, expectedType, this.value, handler);
     }
     else
     {
@@ -140,19 +156,25 @@ export class SetExpression extends Expression
     }
   }
 
-  public to(value: ExpressionValue): SetExpression
+  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  {
+    return this.path.isMutating(arg, directly) || this.value.mutates(def, arg, directly) || this.path.mutates(def, arg, directly);
+  }
+
+  public to(value: ExpressionValue, currentVariable?: string): SetExpression
   {
     this.value = Exprs.parse(value);
     this.value.setParent(this);
+    this.currentVariable = currentVariable || this.currentVariable;
 
     return this;
   }
 
-  public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean
+  public withVariable(name: string): SetExpression
   {
-    return this.path.isMutating(arg, directly) || 
-      this.value.mutates(def, arg, directly) || 
-      this.path.mutates(def, arg, directly);
+    this.currentVariable = name;
+
+    return this;
   }
 
 }

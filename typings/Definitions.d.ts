@@ -1,5 +1,5 @@
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions } from './Type';
-import { Expression, ExpressionClass, ExpressionMap } from './Expression';
+import { Expression, ExpressionClass, ExpressionMap, ExpressionParser } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
 import { Relation, RelationOptions, EntityRelation } from './Relation';
@@ -134,6 +134,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     describers: TypeClass[];
     parsers: Record<string, TypeParser>;
     expressions: Record<string, ExpressionClass>;
+    expressionParsers: Record<string, ExpressionParser>;
     operations: Operations;
     computeds: Computeds;
     relations: NamedMap<Relation>;

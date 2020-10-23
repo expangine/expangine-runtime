@@ -228,7 +228,7 @@ export class TupleType extends Type<Type[]>
     else if (from === to && hasFrom) // change
     { 
       return Exprs.body(
-        Exprs.update('value', from)
+        Exprs.set('value', from)
           .to(newValue, 'value'),
         Exprs.get('value'),
       );

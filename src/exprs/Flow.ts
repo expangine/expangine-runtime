@@ -6,42 +6,55 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 
 
-const INDEX_VALUE = 1;
+const INDEX_TYPE = 1;
+const INDEX_VALUE = 2;
 
-export class ReturnExpression extends Expression 
+
+export enum FlowType
+{
+  CONTINUE = 'continue',
+  BREAK = 'break',
+  RETURN = 'return',
+  EXIT = 'exit'
+}
+
+export class FlowExpression extends Expression 
 {
 
   public static STEP_VALUE = 'value';
 
-  public static id = 'return';
+  public static id = 'flow';
 
-  public static decode(data: any[], exprs: ExpressionProvider): ReturnExpression 
+  public static decode(data: any[], exprs: ExpressionProvider): FlowExpression 
   {
+    const type = data[INDEX_TYPE];
     const value = exprs.getExpression(data[INDEX_VALUE]);
     
-    return new ReturnExpression(value);
+    return new FlowExpression(type, value);
   }
 
-  public static encode(expr: ReturnExpression): any 
+  public static encode(expr: FlowExpression): any 
   {
     const returnValue = expr.value.encode();
 
     return returnValue !== undefined
-      ? [this.id, returnValue]
-      : [this.id];
+      ? [this.id, expr.type, returnValue]
+      : [this.id, expr.type];
   }
 
+  public type: FlowType;
   public value: Expression;
 
-  public constructor(value: Expression) 
+  public constructor(type: FlowType, value: Expression) 
   {
     super();
+    this.type = type;
     this.value = value;
   }
 
   public getId(): string
   {
-    return ReturnExpression.id;
+    return FlowExpression.id;
   }
 
   public getComplexity(def: DefinitionProvider, context: Type): number
@@ -61,12 +74,12 @@ export class ReturnExpression extends Expression
 
   public encode(): any 
   {
-    return ReturnExpression.encode(this);
+    return FlowExpression.encode(this);
   }
 
   public clone(): Expression
   {
-    return new ReturnExpression(this.value.encode());
+    return new FlowExpression(this.type, this.value.encode());
   }
 
   public getType(def: DefinitionProvider, context: Type): Type | null
@@ -79,13 +92,13 @@ export class ReturnExpression extends Expression
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => 
-      traverse.step(ReturnExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith)
+      traverse.step(FlowExpression.STEP_VALUE, this.value, (replaceWith) => this.value = replaceWith)
     );
   }
 
   public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
   {
-    return steps[0] === ReturnExpression.STEP_VALUE
+    return steps[0] === FlowExpression.STEP_VALUE
       ? [1, this.value]
       : null;
   }

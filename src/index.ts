@@ -66,13 +66,12 @@ export * from './exprs/Object';
 export * from './exprs/Operation';
 export * from './exprs/Or';
 export * from './exprs/Path';
-export * from './exprs/Return';
+export * from './exprs/Flow';
 export * from './exprs/Set';
 export * from './exprs/Sub';
 export * from './exprs/Switch';
 export * from './exprs/Template';
 export * from './exprs/Tuple';
-export * from './exprs/Update';
 export * from './exprs/While';
 
 export * from './def';
@@ -113,3 +112,5 @@ export * from './util/date/DateConstants';
 export * from './util/date/DateFormat';
 export * from './util/date/DateFunctions';
 export * from './util/Format';
+
+export * from './back';

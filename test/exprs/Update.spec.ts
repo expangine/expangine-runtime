@@ -9,7 +9,7 @@ describe('Update', () => {
 
   it('type', () =>
   {
-    const not = Exprs.update('a', 'b').to(Exprs.const(1));
+    const not = Exprs.set('a', 'b').to(Exprs.const(1));
     const notType = not.getType(defs, context);
 
     expect(notType).toBeInstanceOf(BooleanType);

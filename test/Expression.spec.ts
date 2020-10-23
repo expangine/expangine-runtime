@@ -147,7 +147,7 @@ describe('Expression', () =>
   it('mutates update sub', () => 
   {
     const e = Exprs.body(
-      Exprs.update(Exprs.get('x', 'y')).to(Exprs.const(34))
+      Exprs.set(Exprs.get('x', 'y')).to(Exprs.const(34))
     );
 
     expect(e.mutates(defs, 'x')).toBeTruthy();
@@ -157,7 +157,7 @@ describe('Expression', () =>
   it('mutates update directly', () => 
   {
     const e = Exprs.body(
-      Exprs.update(Exprs.get('x')).to(Exprs.const(34))
+      Exprs.set(Exprs.get('x')).to(Exprs.const(34))
     );
 
     expect(e.mutates(defs, 'x', true)).toBeTruthy();

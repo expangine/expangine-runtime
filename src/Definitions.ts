@@ -1,7 +1,7 @@
 
 import { isArray, isString, objectMap, objectValues, objectEach } from './fns';
 import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions, TypeDescribeProvider } from './Type';
-import { Expression, ExpressionClass, ExpressionMap } from './Expression';
+import { Expression, ExpressionClass, ExpressionMap, ExpressionParser } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
 import { Relation, RelationOptions, EntityRelation } from './Relation';
@@ -186,6 +186,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public describers: TypeClass[];
   public parsers: Record<string, TypeParser>;
   public expressions: Record<string, ExpressionClass>;
+  public expressionParsers: Record<string, ExpressionParser>;
   public operations: Operations;
   public computeds: Computeds;
 
@@ -208,6 +209,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.typeList = [];
     this.describers = [];
     this.expressions = Object.create(null);
+    this.expressionParsers = Object.create(null);
     this.operations = new Operations('');
     this.computeds = new Computeds('');
     this.parsers = Object.create(null);
@@ -1870,6 +1872,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public addExpression<T extends Expression>(expr: ExpressionClass<T>) 
   {
     this.expressions[expr.id] = expr;
+    this.expressionParsers[expr.id] = (data, exprs) => expr.decode(data, exprs);
   }
 
   public getExpression(value: any): Expression 
@@ -1880,14 +1883,14 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     }
     else if (isArray(value))
     {
-      const exprClass = this.expressions[value[0]];
-
-      if (!exprClass)
+      const parser = this.expressionParsers[value[0]];
+      
+      if (!parser)
       {
         throw new Error('An expression was not found for: ' + JSON.stringify(value));
       }
 
-      return exprClass.decode(value, this);
+      return parser(value, this);
     }
 
     return new ConstantExpression(value);

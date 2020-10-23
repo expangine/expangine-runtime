@@ -3,13 +3,20 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
-export declare class ReturnExpression extends Expression {
+export declare enum FlowType {
+    CONTINUE = "continue",
+    BREAK = "break",
+    RETURN = "return",
+    EXIT = "exit"
+}
+export declare class FlowExpression extends Expression {
     static STEP_VALUE: string;
     static id: string;
-    static decode(data: any[], exprs: ExpressionProvider): ReturnExpression;
-    static encode(expr: ReturnExpression): any;
+    static decode(data: any[], exprs: ExpressionProvider): FlowExpression;
+    static encode(expr: FlowExpression): any;
+    type: FlowType;
     value: Expression;
-    constructor(value: Expression);
+    constructor(type: FlowType, value: Expression);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
