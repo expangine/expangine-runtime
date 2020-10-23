@@ -39,8 +39,8 @@ export declare class Exprs {
     static body(...exprs: Expression[]): ChainExpression;
     static const(value: any): ConstantExpression;
     static define(vars?: Record<string, ExpressionValue>, body?: Expression): DefineExpression;
-    static do(body: Expression, condition?: Expression, breakVariable?: string, maxIterations?: number): DoExpression;
-    static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
+    static do(body: Expression, condition?: Expression, maxIterations?: number): DoExpression;
+    static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression;
     static get(): GetExpression;
     static get(...path: ExpressionValue[]): PathExpression;
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;
@@ -62,7 +62,7 @@ export declare class Exprs {
     static switch<P extends string, O extends string, S extends string>(value: Expression, op: Operation<P, O, S, any, any>): SwitchExpression;
     static template(template: string, params?: Record<string, ExpressionValue>): TemplateExpression;
     static tuple(...elements: ExpressionValue[]): TupleExpression;
-    static while(condition: Expression, body?: Expression, breakVariable?: string, maxIterations?: number): WhileExpression;
+    static while(condition: Expression, body?: Expression, maxIterations?: number): WhileExpression;
     static undefined(): ConstantExpression;
     static null(): ConstantExpression;
     static true(): ConstantExpression;

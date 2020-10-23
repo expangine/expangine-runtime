@@ -1,7 +1,6 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
-import { BooleanType } from '../types/Boolean';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -12,13 +11,11 @@ import { isNumber } from '../fns';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
-const DEFAULT_BREAK = 'break';
 const INDEX_VARIABLE = 1;
 const INDEX_START = 2;
 const INDEX_END = 3;
 const INDEX_BODY = 4;
-const INDEX_BREAK = 5;
-const INDEX_MAX = 6;
+const INDEX_MAX = 5;
 
 export class ForExpression extends Expression 
 {
@@ -39,42 +36,31 @@ export class ForExpression extends Expression
     const start = exprs.getExpression(data[INDEX_START]);
     const end = exprs.getExpression(data[INDEX_END]);
     const body = exprs.getExpression(data[INDEX_BODY]);
-    const breakVariable = data[INDEX_BREAK] || DEFAULT_BREAK;
     const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
-    return new ForExpression(variable, start, end, body, breakVariable, max);
+    return new ForExpression(variable, start, end, body, max);
   }
 
   public static encode(expr: ForExpression): any 
   {
-    const out = [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode()];
-    const hasMax = expr.maxIterations !== this.MAX_ITERATIONS;
-
-    if (expr.breakVariable !== DEFAULT_BREAK || hasMax) {
-      out.push(expr.breakVariable);
-    }
-    if (hasMax) {
-      out.push(expr.maxIterations);
-    }
-
-    return out;
+    return expr.maxIterations !== this.MAX_ITERATIONS
+      ? [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode(), expr.maxIterations]
+      : [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode()];
   }
 
   public variable: string;
   public start: Expression;
   public end: Expression;
   public body: Expression;
-  public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable: string = DEFAULT_BREAK, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
+  public constructor(variable: string, start: Expression, end: Expression, body: Expression, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.variable = variable;
     this.start = start;
     this.end = end;
     this.body = body;
-    this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
   }
 
@@ -97,7 +83,6 @@ export class ForExpression extends Expression
   {
     return {
       [this.variable]: NumberType.baseType.newInstance(),
-      [this.breakVariable]: BooleanType.baseType
     };
   }
 
@@ -108,7 +93,7 @@ export class ForExpression extends Expression
 
   public clone(): Expression
   {
-    return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
+    return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.maxIterations);
   }
 
   public getType(def: DefinitionProvider, original: Type): Type | null
@@ -166,7 +151,7 @@ export class ForExpression extends Expression
       this.body.mutates(def, arg, directly);
   }
 
-  public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression
+  public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression
   {
     this.variable = variable;
 
@@ -180,11 +165,6 @@ export class ForExpression extends Expression
     {
       this.body = body;
       this.body.setParent(this);
-    }
-
-    if (breakVariable)
-    {
-      this.breakVariable = breakVariable;
     }
 
     if (isNumber(maxIterations))
@@ -222,13 +202,6 @@ export class ForExpression extends Expression
   public withVariable(name: string)
   {
     this.variable = name;
-
-    return this;
-  }
-
-  public withBreak(name: string)
-  {
-    this.breakVariable = name;
 
     return this;
   }

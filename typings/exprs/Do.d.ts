@@ -1,5 +1,4 @@
 import { Expression, ExpressionProvider } from '../Expression';
-import { BooleanType } from '../types/Boolean';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -13,15 +12,12 @@ export declare class DoExpression extends Expression {
     static encode(expr: DoExpression): any;
     condition: Expression;
     body: Expression;
-    breakVariable: string;
     maxIterations: number;
-    constructor(condition: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
+    constructor(condition: Expression, body: Expression, maxIterations?: number);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
-    getScope(): {
-        [x: string]: BooleanType;
-    };
+    getScope(): null;
     encode(): any;
     clone(): Expression;
     getType(def: DefinitionProvider, original: Type): Type | null;
@@ -32,6 +28,5 @@ export declare class DoExpression extends Expression {
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     do(body: Expression, condition?: Expression): DoExpression;
     while(condition: Expression): DoExpression;
-    withBreak(name: string): this;
     withMax(iterations: number): this;
 }

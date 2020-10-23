@@ -28,13 +28,4 @@ describe('Do', () => {
     expect(loopType.options).toBeInstanceOf(TextType);
   });
 
-  it('type from break', () =>
-  {
-    const loop = Exprs.do(Exprs.get('break'), Exprs.const(false));
-    const loopType = loop.getType(defs, context);
-
-    expect(loopType).toBeInstanceOf(OptionalType);
-    expect(loopType.options).toBeInstanceOf(BooleanType);
-  });
-
 })

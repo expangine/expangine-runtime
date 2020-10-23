@@ -9,11 +9,9 @@ import { Types } from '../Types';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
-const DEFAULT_BREAK = 'break';
 const INDEX_CONDITION = 1;
 const INDEX_BODY = 2;
-const INDEX_BREAK = 3;
-const INDEX_MAX = 4;
+const INDEX_MAX = 3;
 
 export class WhileExpression extends Expression 
 {
@@ -30,38 +28,27 @@ export class WhileExpression extends Expression
   {
     const condition = exprs.getExpression(data[INDEX_CONDITION]);
     const body = exprs.getExpression(data[INDEX_BODY]);
-    const breakVariable = data[INDEX_BREAK] || DEFAULT_BREAK;
     const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
-    return new WhileExpression(condition, body, breakVariable, max);
+    return new WhileExpression(condition, body, max);
   }
 
   public static encode(expr: WhileExpression): any 
   {
-    const out = [this.id, expr.condition.encode(), expr.body.encode()];
-    const hasMax = expr.maxIterations !== this.MAX_ITERATIONS;
-
-    if (expr.breakVariable !== DEFAULT_BREAK || hasMax) {
-      out.push(expr.breakVariable);
-    }
-    if (hasMax) {
-      out.push(expr.maxIterations);
-    }
-    
-    return out;
+    return expr.maxIterations !== this.MAX_ITERATIONS
+      ? [this.id, expr.condition.encode(), expr.body.encode(), expr.maxIterations]
+      : [this.id, expr.condition.encode(), expr.body.encode()];
   }
   
   public condition: Expression;
   public body: Expression;
-  public breakVariable: string;
   public maxIterations: number;
 
-  public constructor(condition: Expression, body: Expression, breakVariable: string = DEFAULT_BREAK, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
+  public constructor(condition: Expression, body: Expression, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.condition = condition;
     this.body = body;
-    this.breakVariable = breakVariable;
     this.maxIterations = maxIterations;
   }
 
@@ -80,11 +67,9 @@ export class WhileExpression extends Expression
     return this.body.isDynamic();
   }
 
-  public getScope()
+  public getScope(): null
   {
-    return {
-      [this.breakVariable]: BooleanType.baseType
-    };
+    return null;
   }
 
   public encode(): any 
@@ -94,7 +79,7 @@ export class WhileExpression extends Expression
 
   public clone(): Expression
   {
-    return new WhileExpression(this.condition.clone(), this.body.clone(), this.breakVariable, this.maxIterations);
+    return new WhileExpression(this.condition.clone(), this.body.clone(), this.maxIterations);
   }
 
   public getType(def: DefinitionProvider, original: Type): Type | null
@@ -158,13 +143,6 @@ export class WhileExpression extends Expression
   {
     this.body = body;
     this.body.setParent(this);
-
-    return this;
-  }
-
-  public withBreak(name: string)
-  {
-    this.breakVariable = name;
 
     return this;
   }

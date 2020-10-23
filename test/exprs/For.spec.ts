@@ -37,13 +37,4 @@ describe('For', () => {
     expect(loopType.options).toBeInstanceOf(NumberType);
   });
 
-  it('type from break', () =>
-  {
-    const loop = Exprs.for('i', 0, 1, Exprs.get('break'));
-    const loopType = loop.getType(defs, context);
-
-    expect(loopType).toBeInstanceOf(OptionalType);
-    expect(loopType.options).toBeInstanceOf(BooleanType);
-  });
-
 })

@@ -94,14 +94,14 @@ export class Exprs
     return this.setParent(new DefineExpression([], body).with(vars));
   }
 
-  public static do(body: Expression, condition: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): DoExpression
+  public static do(body: Expression, condition: Expression = NoExpression.instance, maxIterations?: number): DoExpression
   {
-    return this.setParent(new DoExpression(condition, body, breakVariable, maxIterations));
+    return this.setParent(new DoExpression(condition, body, maxIterations));
   }
 
-  public static for(variable: string, start: ExpressionValue = new ConstantExpression(0), end: ExpressionValue = new ConstantExpression(0), body: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): ForExpression
+  public static for(variable: string, start: ExpressionValue = new ConstantExpression(0), end: ExpressionValue = new ConstantExpression(0), body: Expression = NoExpression.instance, maxIterations?: number): ForExpression
   {
-    return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, breakVariable, maxIterations));
+    return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, maxIterations));
   }
 
   public static get(): GetExpression
@@ -213,9 +213,9 @@ export class Exprs
     return this.setParent(new TupleExpression(this.parse(elements)));
   }
 
-  public static while(condition: Expression, body: Expression = NoExpression.instance, breakVariable?: string, maxIterations?: number): WhileExpression
+  public static while(condition: Expression, body: Expression = NoExpression.instance, maxIterations?: number): WhileExpression
   {
-    return this.setParent(new WhileExpression(condition, body, breakVariable, maxIterations));
+    return this.setParent(new WhileExpression(condition, body, maxIterations));
   }
 
   public static undefined()

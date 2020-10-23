@@ -1,6 +1,5 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { NumberType } from '../types/Number';
-import { BooleanType } from '../types/Boolean';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -17,14 +16,13 @@ export declare class ForExpression extends Expression {
     start: Expression;
     end: Expression;
     body: Expression;
-    breakVariable: string;
     maxIterations: number;
-    constructor(variable: string, start: Expression, end: Expression, body: Expression, breakVariable?: string, maxIterations?: number);
+    constructor(variable: string, start: Expression, end: Expression, body: Expression, maxIterations?: number);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
     getScope(): {
-        [x: string]: NumberType | BooleanType;
+        [x: string]: NumberType;
     };
     encode(): any;
     clone(): Expression;
@@ -34,11 +32,10 @@ export declare class ForExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
-    loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, breakVariable?: string, maxIterations?: number): ForExpression;
+    loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression;
     startAt(start: ExpressionValue): ForExpression;
     endAt(end: ExpressionValue): ForExpression;
     run(expr: Expression): ForExpression;
     withVariable(name: string): this;
-    withBreak(name: string): this;
     withMax(iterations: number): this;
 }

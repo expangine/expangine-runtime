@@ -28,13 +28,4 @@ describe('While', () => {
     expect(loopType.options).toBeInstanceOf(TextType);
   });
 
-  it('type from break', () =>
-  {
-    const loop = Exprs.while(Exprs.const(false), Exprs.get('break'));
-    const loopType = loop.getType(defs, context);
-
-    expect(loopType).toBeInstanceOf(OptionalType);
-    expect(loopType.options).toBeInstanceOf(BooleanType);
-  });
-
 })
