@@ -63,7 +63,6 @@ export * from './exprs/Or';
 export * from './exprs/Path';
 export * from './exprs/Flow';
 export * from './exprs/Set';
-export * from './exprs/Sub';
 export * from './exprs/Switch';
 export * from './exprs/Template';
 export * from './exprs/Tuple';

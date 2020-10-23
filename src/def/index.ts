@@ -43,7 +43,6 @@ import { OrExpression } from '../exprs/Or';
 import { PathExpression } from '../exprs/Path';
 import { FlowExpression } from '../exprs/Flow';
 import { SetExpression } from '../exprs/Set';
-import { SubExpression } from '../exprs/Sub';
 import { SwitchExpression } from '../exprs/Switch';
 import { TemplateExpression } from '../exprs/Template';
 import { TupleExpression } from '../exprs/Tuple';
@@ -95,8 +94,7 @@ export const defs = new Definitions({
     OrExpression,
     PathExpression,
     FlowExpression,
-    SetExpression,
-    SubExpression,    
+    SetExpression, 
     SwitchExpression,
     TemplateExpression,
     TupleExpression,
