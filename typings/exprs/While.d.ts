@@ -3,6 +3,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { FlowType } from "../FlowType";
 export declare class WhileExpression extends Expression {
     static STEP_CONDITION: string;
     static STEP_BODY: string;
@@ -26,6 +27,7 @@ export declare class WhileExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
+    isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean;
     while(condition: Expression): this;
     do(body: Expression): this;
     withMax(iterations: number): this;

@@ -10,7 +10,7 @@ export declare const SetOps: {
     add: import("../Operation").OperationResolved<"set" | "value", any, any, any, "set">;
     has: import("../Operation").OperationResolved<"set" | "value", never, never, never, never>;
     delete: import("../Operation").OperationResolved<"set" | "value", never, never, never, never>;
-    values: import("../Operation").OperationResolved<"set", any, any, any, "set">;
+    values: import("../Operation").OperationResolved<"set", never, never, never, "set">;
     clear: import("../Operation").OperationResolved<"set", any, any, any, "set">;
     count: import("../Operation").OperationResolved<"set", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;

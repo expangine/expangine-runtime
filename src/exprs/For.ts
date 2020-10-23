@@ -9,6 +9,7 @@ import { Types } from '../Types';
 import { Exprs } from '../Exprs';
 import { isNumber } from '../fns';
 import { ConstantExpression } from './Constant';
+import { FlowType } from "../FlowType";
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -179,6 +180,11 @@ export class ForExpression extends Expression
       this.end.mutates(def, arg, directly) || 
       this.body.mutates(def, arg, directly) || 
       this.by.mutates(def, arg, directly);
+  }
+
+  public isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean
+  {
+    return (child === this.body && (type === FlowType.BREAK || type === FlowType.CONTINUE)) || super.isValidFlow(def, type);
   }
 
   public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, by?: ExpressionValue, maxIterations?: number): ForExpression

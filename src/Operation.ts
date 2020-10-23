@@ -26,6 +26,7 @@ export interface Operation<
   scopeDefaults: Record<S, string>;
   hasScope: H[];
   resultDependency: R[];
+  loop?: boolean;
 }
 
 export type OperationResolved<
@@ -124,7 +125,8 @@ export class Operations
     optional: O[] = [], 
     scope: S[] = [],
     hasScope: H[] = [],
-    resultDependency: R[] = []
+    resultDependency: R[] = [],
+    loop?: boolean
   ) : OperationResolved<P, O, S, H, R> 
   {
     const id = this.prefix + localId;
@@ -142,7 +144,8 @@ export class Operations
       scope,
       scopeDefaults,
       hasScope,
-      resultDependency
+      resultDependency,
+      loop
     };
     
     this.map[id] = op;

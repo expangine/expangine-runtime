@@ -6,6 +6,7 @@ import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
+import { FlowType } from "../FlowType";
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -132,6 +133,11 @@ export class WhileExpression extends Expression
   {
     return this.condition.mutates(def, arg, directly) || 
       this.body.mutates(def, arg, directly);
+  }
+
+  public isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean
+  {
+    return (child === this.body && (type === FlowType.BREAK || type === FlowType.CONTINUE)) || super.isValidFlow(def, type);
   }
 
   public while(condition: Expression)

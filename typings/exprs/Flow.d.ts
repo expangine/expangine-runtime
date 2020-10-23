@@ -3,12 +3,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
-export declare enum FlowType {
-    CONTINUE = "continue",
-    BREAK = "break",
-    RETURN = "return",
-    EXIT = "exit"
-}
+import { FlowType } from '../FlowType';
 export declare class FlowExpression extends Expression {
     static STEP_VALUE: string;
     static id: string;

@@ -2,6 +2,7 @@ import { Type, TypeMap } from './Type';
 import { DefinitionProvider } from './DefinitionProvider';
 import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity, Validation } from './Validate';
+import { FlowType } from "./FlowType";
 
 
 export interface ExpressionProvider 
@@ -53,6 +54,15 @@ export abstract class Expression implements Traversable<Expression>
   public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
   
   public abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
+
+  public isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean
+  {
+    return type === FlowType.EXIT
+      ? true
+      : this.parent
+        ? this.parent.isValidFlow(def, type, this)
+        : false;
+  }
 
   public isDynamic(): boolean
   {

@@ -4,19 +4,11 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+import { FlowType } from '../FlowType';
 
 
 const INDEX_TYPE = 1;
 const INDEX_VALUE = 2;
-
-
-export enum FlowType
-{
-  CONTINUE = 'continue',
-  BREAK = 'break',
-  RETURN = 'return',
-  EXIT = 'exit'
-}
 
 export class FlowExpression extends Expression 
 {

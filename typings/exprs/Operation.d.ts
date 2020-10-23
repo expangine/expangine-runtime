@@ -7,6 +7,7 @@ import { ValidationHandler } from '../Validate';
 import { AndExpression } from './And';
 import { OrExpression } from './Or';
 import { NotExpression } from './Not';
+import { FlowType } from "../FlowType";
 export declare class OperationExpression<P extends string = never, O extends string = never, S extends string = never> extends Expression {
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): OperationExpression;
@@ -27,6 +28,7 @@ export declare class OperationExpression<P extends string = never, O extends str
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
+    isValidFlow(def: DefinitionProvider, type: FlowType): boolean;
     param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>;
     alias(scoped: S, alias: string): OperationExpression<P, O, S>;
     and(exprs: Expression | Expression[]): AndExpression;

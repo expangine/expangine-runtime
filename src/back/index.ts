@@ -1,6 +1,7 @@
 import { Definitions } from '../Definitions';
 import { Expression } from '../Expression';
-import { FlowExpression, FlowType } from '../exprs/Flow';
+import { FlowExpression } from '../exprs/Flow';
+import { FlowType } from "../FlowType";
 import { PathExpression } from '../exprs/Path';
 import { SetExpression } from '../exprs/Set';
 

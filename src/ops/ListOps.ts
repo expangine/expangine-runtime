@@ -39,7 +39,7 @@ export const ListOps =
 
   insert: ops.set('+@', { mutates: ['list'] }, ['list', 'item', 'index'], [], [], [], ['list']),
 
-  remove: ops.set('-', { mutates: ['list'], complexity: 1 },  ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  remove: ops.set('-', { mutates: ['list'], complexity: 1 },  ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
   removeFirst: ops.set('-f', { mutates: ['list'] }, ['list'], [], [], [], ['list']),
 
@@ -51,25 +51,25 @@ export const ListOps =
 
   clear: ops.set('clear', { mutates: ['list'] }, ['list'], [], [], [], ['list'] ),
 
-  contains: ops.set('contains', { complexity: 1 }, ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual']),
+  contains: ops.set('contains', { complexity: 1 }, ['list', 'item', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], [] as never, true),
 
-  find: ops.set('find', { complexity: 1 }, ['list', 'where'], ['start', 'reverse'], ['list', 'item', 'index'], ['where'], ['list']),
+  find: ops.set('find', { complexity: 1 }, ['list', 'where'], ['start', 'reverse'], ['list', 'item', 'index'], ['where'], ['list'], true),
 
-  copy: ops.set('copy', { complexity: 1 }, ['list'], ['deepCopy'], ['copy'], ['deepCopy'], ['list']),
+  copy: ops.set('copy', { complexity: 1 }, ['list'], ['deepCopy'], ['copy'], ['deepCopy'], ['list'], true),
 
   reverse: ops.set('reverse', { complexity: 0.5 }, ['list'], [], [], [], ['list']),
 
-  exclude: ops.set('exclude', { mutates: ['list'], complexity: 2 },  ['list', 'exclude', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  exclude: ops.set('exclude', { mutates: ['list'], complexity: 2 },  ['list', 'exclude', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
-  overlap: ops.set('overlap', { complexity: 2 }, ['list', 'overlap', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  overlap: ops.set('overlap', { complexity: 2 }, ['list', 'overlap', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
   sort: ops.set('sort', { mutates: ['list'], complexity: 1 },   ['list', 'compare'], [], ['list', 'value', 'test'], ['compare'], ['list']),
 
-  shuffle: ops.set('shuffle', { mutates: ['list'], complexity: 1 }, ['list'], ['times'], [], [], ['list']),
+  shuffle: ops.set('shuffle', { mutates: ['list'], complexity: 1 }, ['list'], ['times'], [], [], ['list'], true),
 
-  unique: ops.set('unique', { complexity: 2 }, ['list', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  unique: ops.set('unique', { complexity: 2 }, ['list', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
-  duplicates: ops.set('dupes', { complexity: 2 }, ['list', 'isEqual'], ['once'], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  duplicates: ops.set('dupes', { complexity: 2 }, ['list', 'isEqual'], ['once'], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
   take: ops.set('take', {}, ['list', 'count'], [], [], [], ['list']),
 
@@ -81,11 +81,11 @@ export const ListOps =
 
   prepend: ops.set('prepend', {}, ['list', 'prepend'], [], [], [], ['list']),
 
-  indexOf: ops.set('indexOf', { complexity: 1 }, ['list', 'item', 'isEqual'], ['start'], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  indexOf: ops.set('indexOf', { complexity: 1 }, ['list', 'item', 'isEqual'], ['start'], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
-  lastIndexOf: ops.set('lastIndexOf', { complexity: 1 }, ['list', 'item', 'isEqual'], ['start'], ['list', 'value', 'test'], ['isEqual'], ['list']),
+  lastIndexOf: ops.set('lastIndexOf', { complexity: 1 }, ['list', 'item', 'isEqual'], ['start'], ['list', 'value', 'test'], ['isEqual'], ['list'], true),
 
-  findIndex: ops.set('findIndex', { complexity: 1 }, ['list', 'where'], ['reverse', 'start'], ['list', 'item', 'index'], ['where']),
+  findIndex: ops.set('findIndex', { complexity: 1 }, ['list', 'where'], ['reverse', 'start'], ['list', 'item', 'index'], ['where'], [] as never, true),
 
   last: ops.set('last', {}, ['list'], [], [], [], ['list']),
 
@@ -93,69 +93,69 @@ export const ListOps =
 
   count: ops.set('count', {}, ['list']),
 
-  randomList: ops.set('randomList', {}, ['list', 'count'], [], [], [], ['list']),
+  randomList: ops.set('randomList', {}, ['list', 'count'], [], [], [], ['list'], true),
 
   random: ops.set('random', {}, ['list'], [], [], [], ['list']),
 
-  flatten: ops.set('flatten', {}, ['list'], [], [], [], ['list']),
+  flatten: ops.set('flatten', {}, ['list'], [], [], [], ['list'], true),
 
   // Iteration
 
-  join: ops.set('join', { complexity: 1 }, ['list'], ['delimiter', 'toText', 'prefix', 'suffix'], ['list', 'item', 'index'], ['toText']),
+  join: ops.set('join', { complexity: 1 }, ['list'], ['delimiter', 'toText', 'prefix', 'suffix'], ['list', 'item', 'index'], ['toText'], [] as never, true),
 
-  each: ops.set('each', { complexity: 1 }, ['list', 'each'], ['reverse'], ['list', 'item', 'index'], ['each'], ['list']),
+  each: ops.set('each', { complexity: 1 }, ['list', 'each'], ['reverse'], ['list', 'item', 'index'], ['each'], ['list'], true),
 
-  filter: ops.set('filter', { complexity: 1 }, ['list', 'filter'], [], ['list', 'item', 'index'], ['filter'], ['list']),
+  filter: ops.set('filter', { complexity: 1 }, ['list', 'filter'], [], ['list', 'item', 'index'], ['filter'], ['list'], true),
 
-  not: ops.set('not', { complexity: 1 }, ['list', 'not'], [], ['list', 'item', 'index'], ['not'], ['list']),
+  not: ops.set('not', { complexity: 1 }, ['list', 'not'], [], ['list', 'item', 'index'], ['not'], ['list'], true),
 
-  map: ops.set('map', { complexity: 1}, ['list', 'transform'], [], ['list', 'item', 'index'], ['transform'], ['list']),
+  map: ops.set('map', { complexity: 1}, ['list', 'transform'], [], ['list', 'item', 'index'], ['transform'], ['list'], true),
 
-  split: ops.set('split', { complexity: 1}, ['list', 'pass'], [], ['list', 'item', 'index'], ['pass'], ['list']),
+  split: ops.set('split', { complexity: 1}, ['list', 'pass'], [], ['list', 'item', 'index'], ['pass'], ['list'], true),
 
-  reduce: ops.set('reduce', { complexity: 1}, ['list', 'reduce', 'initial'], [], ['list', 'item', 'index', 'reduced'], ['reduce'], ['reduce']),
+  reduce: ops.set('reduce', { complexity: 1}, ['list', 'reduce', 'initial'], [], ['list', 'item', 'index', 'reduced'], ['reduce'], ['reduce'], true),
 
-  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
+  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare'], [] as never, true),
 
-  group: ops.set('group', { complexity: 1 }, ['list', 'by'], ['getValue'], ['list', 'item', 'index'], ['by', 'getValue'], ['list', 'by', 'getValue']),
+  group: ops.set('group', { complexity: 1 }, ['list', 'by'], ['getValue'], ['list', 'item', 'index'], ['by', 'getValue'], ['list', 'by', 'getValue'], true),
 
-  toListMap: ops.set('toListMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
+  toListMap: ops.set('toListMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue'], true),
 
-  toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue']),
+  toMap: ops.set('toMap', { complexity: 1 }, ['list', 'getKey'], ['getValue'], ['list', 'item', 'index'], ['getKey', 'getValue'], ['list', 'getKey', 'getValue'], true),
 
   // Joins
 
-  joinInner: ops.set('joinInner', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+  joinInner: ops.set('joinInner', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join'], true),
 
-  joinLeft: ops.set('joinLeft', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+  joinLeft: ops.set('joinLeft', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join'], true),
 
-  joinRight: ops.set('joinRight', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+  joinRight: ops.set('joinRight', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join'], true),
 
-  joinFull: ops.set('joinFull', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join']),
+  joinFull: ops.set('joinFull', { complexity: 2 }, ['a', 'b', 'on', 'join'], [], ['onA', 'onB', 'joinA', 'joinB'], ['on', 'join'], ['join'], true),
 
-  joinCross: ops.set('joinCross', { complexity: 2 }, ['a', 'b', 'join'], [], ['joinA', 'joinB'], ['join'], ['join']),
+  joinCross: ops.set('joinCross', { complexity: 2 }, ['a', 'b', 'join'], [], ['joinA', 'joinB'], ['join'], ['join'], true),
 
   // Aggregates
 
-  min: ops.set('min', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  min: ops.set('min', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  max: ops.set('max', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  max: ops.set('max', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  sum: ops.set('sum', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  sum: ops.set('sum', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  avg: ops.set('avg', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  avg: ops.set('avg', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  std: ops.set('std', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  std: ops.set('std', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  variance: ops.set('variance', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  variance: ops.set('variance', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  median: ops.set('median', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  median: ops.set('median', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  bitand: ops.set('band', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  bitand: ops.set('band', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  bitor: ops.set('bor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  bitor: ops.set('bor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
-  bitxor: ops.set('bxor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value']),
+  bitxor: ops.set('bxor', { complexity: 1 }, ['list', 'value'], [], ['list', 'item', 'index'], ['value'], [] as never, true),
 
   // Comparisons
 
@@ -165,17 +165,17 @@ export const ListOps =
 
   isNotEmpty: ops.set('!0', {}, ['list']),
 
-  isEqual: ops.set('=', { complexity: 1 }, ['list', 'test', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual']),
+  isEqual: ops.set('=', { complexity: 1 }, ['list', 'test', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], [] as never, true),
 
-  isNotEqual: ops.set('!=', { complexity: 1 }, ['list', 'test', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual']),
+  isNotEqual: ops.set('!=', { complexity: 1 }, ['list', 'test', 'isEqual'], [], ['list', 'value', 'test'], ['isEqual'], [] as never, true),
 
-  isLess: ops.set('<', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
+  isLess: ops.set('<', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare'], [] as never, true),
 
-  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
+  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare'], [] as never, true),
 
-  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
+  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare'], [] as never, true),
 
-  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare']),
+  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['list', 'value', 'test'], ['compare'], [] as never, true),
 
   // Casts
   

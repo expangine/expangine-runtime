@@ -31,33 +31,33 @@ export const SetOps =
 
   delete: ops.set('delete', { mutates: ['set'] }, ['set', 'value']),
 
-  values: ops.set('values', { complexity: 1 }, ['set'], [], [], [], ['set']),
+  values: ops.set('values', { complexity: 1 }, ['set'], [] as never, [] as never, [] as never, ['set'], true),
 
   clear: ops.set('clear', { mutates: ['set'] }, ['set'], [], [], [], ['set']),
 
   count: ops.set('count', { }, ['set']),
 
-  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test']),
+  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  copy: ops.set('copy', { complexity: 1 }, ['set'], ['deepCopy'], ['set', 'value'], ['deepCopy'], ['set']),
+  copy: ops.set('copy', { complexity: 1 }, ['set'], ['deepCopy'], ['set', 'value'], ['deepCopy'], ['set'], true),
 
-  map: ops.set('map', { complexity: 1 }, ['set'], ['transform'], ['set', 'value'], ['transform'], ['set']),
+  map: ops.set('map', { complexity: 1 }, ['set'], ['transform'], ['set', 'value'], ['transform'], ['set'], true),
 
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),
 
-  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test']),
+  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test']),
+  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  isLess: ops.set('<', { complexity: 1 }, ['value', 'test']),
+  isLess: ops.set('<', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test']),
+  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test']),
+  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
-  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test']),
+  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test'], [] as never, [] as never, [] as never, [] as never, true),
 
   // Casts
   

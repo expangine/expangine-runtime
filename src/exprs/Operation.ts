@@ -13,6 +13,7 @@ import { OrExpression } from './Or';
 import { NotExpression } from './Not';
 import { DataTypes } from '../DataTypes';
 import { PathExpression } from './Path';
+import { FlowType } from "../FlowType";
 
 
 const INDEX_NAME = 1;
@@ -202,6 +203,18 @@ export class OperationExpression<P extends string = never, O extends string = ne
     }
 
     return false;
+  }
+
+  public isValidFlow(def: DefinitionProvider, type: FlowType): boolean
+  {
+    const operation = def.getOperation(name);
+
+    if (operation && operation.loop && (type === FlowType.BREAK || type === FlowType.CONTINUE))
+    {
+      return true;
+    }
+
+    return super.isValidFlow(def, type);
   }
 
   public param(name: P | O, value: ExpressionValue): OperationExpression<P, O, S>

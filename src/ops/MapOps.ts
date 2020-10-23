@@ -45,31 +45,31 @@ export const MapOps =
 
   count: ops.set('count', { }, ['map']),
 
-  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare']),
+  cmp: ops.set('cmp', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare'], [] as never, true),
 
-  copy: ops.set('copy', { complexity: 1 }, ['map'], ['deepCopy', 'deepCopyKey'], ['map', 'key', 'value'], ['deepCopy', 'deepCopyKey'], ['map']),
+  copy: ops.set('copy', { complexity: 1 }, ['map'], ['deepCopy', 'deepCopyKey'], ['map', 'key', 'value'], ['deepCopy', 'deepCopyKey'], ['map'], true),
 
-  map: ops.set('map', { complexity: 1 }, ['map'], ['transform', 'transformKey'], ['map', 'key', 'value'], ['transform', 'transformKey'], ['map']),
+  map: ops.set('map', { complexity: 1 }, ['map'], ['transform', 'transformKey'], ['map', 'key', 'value'], ['transform', 'transformKey'], ['map'], true),
 
-  toPlainObject: ops.set('plain', { complexity: 1 }, ['map']),
+  toPlainObject: ops.set('plain', { complexity: 1 }, ['map'], [] as never, [] as never, [] as never, [] as never, true),
 
-  fromPlainObject: ops.set('fromPlain', { complexity: 1 }, ['object'], [], [], [], ['object']),
+  fromPlainObject: ops.set('fromPlain', { complexity: 1 }, ['object'], [] as never, [] as never, [] as never, ['object'], true),
 
   // Comparisons
 
   isValid: ops.set('?', {}, ['value']),
 
-  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test'], ['isEqual']),
+  isEqual: ops.set('=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test'], ['isEqual'], [] as never, true),
 
-  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test'], ['isEqual']),
+  isNotEqual: ops.set('!=', { complexity: 1 }, ['value', 'test', 'isEqual'], [], ['key', 'value', 'test'], ['isEqual'], [] as never, true),
 
-  isLess: ops.set('<', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare']),
+  isLess: ops.set('<', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare'], [] as never, true),
 
-  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare']),
+  isLessOrEqual: ops.set('<=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare'], [] as never, true),
 
-  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare']),
+  isGreater: ops.set('>', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare'], [] as never, true),
 
-  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare']),
+  isGreaterOrEqual: ops.set('>=', { complexity: 1 }, ['value', 'test', 'compare'], [], ['key', 'value', 'test'], ['compare'], [] as never, true),
 
   // Casts
   
