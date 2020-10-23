@@ -27,6 +27,7 @@ import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { Type } from './Type';
+import { AssertExpression } from './exprs/Assert';
 export declare class Exprs {
     static autoSetParent: boolean;
     static setParent<E extends Expression>(expr: E, force?: boolean): E;
@@ -63,6 +64,7 @@ export declare class Exprs {
     static template(template: string, params?: Record<string, ExpressionValue>): TemplateExpression;
     static tuple(...elements: ExpressionValue[]): TupleExpression;
     static while(condition: Expression, body?: Expression, maxIterations?: number): WhileExpression;
+    static assert(condition: Expression, message?: ExpressionValue): AssertExpression;
     static undefined(): ConstantExpression;
     static null(): ConstantExpression;
     static true(): ConstantExpression;

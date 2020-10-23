@@ -29,6 +29,7 @@ import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { isArray, isObject, objectMap } from './fns';
 import { Type } from './Type';
+import { AssertExpression } from './exprs/Assert';
 
 
 export class Exprs
@@ -216,6 +217,11 @@ export class Exprs
   public static while(condition: Expression, body: Expression = NoExpression.instance, maxIterations?: number): WhileExpression
   {
     return this.setParent(new WhileExpression(condition, body, maxIterations));
+  }
+
+  public static assert(condition: Expression, message: ExpressionValue = NoExpression.instance)
+  {
+    return this.setParent(new AssertExpression(condition, this.parse(message)));
   }
 
   public static undefined()
