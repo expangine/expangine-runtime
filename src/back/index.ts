@@ -15,6 +15,7 @@ export function addBackwardsCompatibility(def: Definitions)
   const i0 = 0;
   const i1 = 1;
   const i2 = 2;
+  const i3 = 3;
 
   def.expressionParsers[RETURN_ID] = (data, exprs) => {
     exprs.setLegacy();
@@ -25,9 +26,9 @@ export function addBackwardsCompatibility(def: Definitions)
   def.expressionParsers[UPDATE_ID] = (data, exprs) => {
     exprs.setLegacy();
 
-    return SetExpression.decode([data[i0], data[i1], data[i2] || UPDATE_CURRENT], exprs);
+    return SetExpression.decode([data[i0], data[i1], data[i2], data[i3] || UPDATE_CURRENT], exprs);
   };
-  
+
   def.expressionParsers[SUB_ID] = (data, exprs) => {
     const value: Expression = exprs.getExpression(data[i1]);
     const path: Expression[] = data[i2].map((part: any) => exprs.getExpression(part));
