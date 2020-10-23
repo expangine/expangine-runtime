@@ -9,7 +9,7 @@ export declare class Runtime<Context = any, Result = any> {
     defs: Definitions;
     ops: Record<string, OperationToCommand<Context, Result, any, any, any>>;
     exprs: Record<string, CommandBuilder<Context, Result>>;
-    returnProperty: string;
+    flowProperty: string;
     constructor(defs: Definitions);
     extend(defs?: Definitions): Runtime<Context, Result>;
     setOperation<P extends string = any, O extends string = any, S extends string = any>(operation: Operation<P, O, S, any, any>, impl: OperationToCommand<Context, Result, P, O, S>): this;

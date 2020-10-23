@@ -41,7 +41,7 @@ export type CommandBuilder<
 
 export interface CommandProvider<Context, Result>
 {
-  returnProperty: string;
+  flowProperty: string;
   getCommand(expr: Expression): Command<Context, Result>;
   getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
   getOperationScopeDefaults(id: string): Record<string, string>;

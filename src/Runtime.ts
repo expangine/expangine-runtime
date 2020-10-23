@@ -12,19 +12,19 @@ import { Func } from './Func';
 export class Runtime<Context = any, Result = any>
 {
 
-  public static DEFAULT_RETURN_PROPERTY = '$$return';
+  public static DEFAULT_RETURN_PROPERTY = '$$flow';
 
   public defs: Definitions;
   public ops: Record<string, OperationToCommand<Context, Result, any, any, any>>;
   public exprs: Record<string, CommandBuilder<Context, Result>>;
-  public returnProperty: string;
+  public flowProperty: string;
 
   public constructor (defs: Definitions) 
   {
     this.defs = defs;
     this.ops = Object.create(null);
     this.exprs = Object.create(null);
-    this.returnProperty = Runtime.DEFAULT_RETURN_PROPERTY;
+    this.flowProperty = Runtime.DEFAULT_RETURN_PROPERTY;
   }
 
   public extend(defs?: Definitions): Runtime<Context, Result>
@@ -33,7 +33,7 @@ export class Runtime<Context = any, Result = any>
 
     Object.assign(copy.ops, this.ops);
     Object.assign(copy.exprs, this.exprs);
-    copy.returnProperty = this.returnProperty;
+    copy.flowProperty = this.flowProperty;
 
     return copy;
   }
