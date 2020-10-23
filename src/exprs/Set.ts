@@ -10,10 +10,10 @@ import { Exprs } from '../Exprs';
 import { PathExpression } from './Path';
 
 
-const DEFAULT_CURRENT = 'current';
 const INDEX_PATH = 1;
 const INDEX_VALUE = 2;
 const INDEX_CURRENT = 3;
+const NO_VARIABLE = '';
 
 export class SetExpression extends Expression 
 {
@@ -28,7 +28,7 @@ export class SetExpression extends Expression
   {
     const path = PathExpression.fromPartial(data[INDEX_PATH], exprs);
     const value = exprs.getExpression(data[INDEX_VALUE]);
-    const currentVariable = data[INDEX_CURRENT] || DEFAULT_CURRENT; 
+    const currentVariable = data[INDEX_CURRENT]; 
 
     return new SetExpression(path, value, currentVariable);
   }
@@ -38,12 +38,12 @@ export class SetExpression extends Expression
     const path = expr.path.encode();
     const value = expr.value.encode();
 
-    return expr.currentVariable === DEFAULT_CURRENT
-      ? [this.id, path, value]
-      : [this.id, path, value, expr.currentVariable]
+    return expr.currentVariable
+      ? [this.id, path, value, expr.currentVariable]
+      : [this.id, path, value];
   }
 
-  public static create(path: ExpressionValue[], value: ExpressionValue, currentVariable: string = DEFAULT_CURRENT)
+  public static create(path: ExpressionValue[], value: ExpressionValue, currentVariable: string = NO_VARIABLE)
   {
     return new SetExpression(Exprs.path(path), Exprs.parse(value), currentVariable);
   }
@@ -52,7 +52,7 @@ export class SetExpression extends Expression
   public value: Expression;
   public currentVariable: string;
 
-  public constructor(path: PathExpression, value: Expression, currentVariable: string = DEFAULT_CURRENT) 
+  public constructor(path: PathExpression, value: Expression, currentVariable: string = NO_VARIABLE) 
   {
     super();
     this.path = path;
@@ -72,9 +72,9 @@ export class SetExpression extends Expression
 
   public getScope()
   {
-    return {
-      [this.currentVariable]: AnyType.baseType
-    };
+    return this.currentVariable
+      ? { [this.currentVariable]: AnyType.baseType }
+      : null;
   }
 
   public encode(): any 
@@ -138,9 +138,11 @@ export class SetExpression extends Expression
 
     if (expectedType)
     {
-      const valueContext = def.getContext(context, {
-        [this.currentVariable]: expectedType,
-      });
+      const valueContext = this.currentVariable
+        ? def.getContext(context, {
+            [this.currentVariable]: expectedType,
+          })
+        : context;
 
       this.validateType(def, valueContext, expectedType, this.value, handler);
     }
@@ -161,11 +163,11 @@ export class SetExpression extends Expression
     return this.path.isMutating(arg, directly) || this.value.mutates(def, arg, directly) || this.path.mutates(def, arg, directly);
   }
 
-  public to(value: ExpressionValue, currentVariable?: string): SetExpression
+  public to(value: ExpressionValue, currentVariable: string = NO_VARIABLE): SetExpression
   {
     this.value = Exprs.parse(value);
     this.value.setParent(this);
-    this.currentVariable = currentVariable || this.currentVariable;
+    this.currentVariable = currentVariable;
 
     return this;
   }
