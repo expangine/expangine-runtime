@@ -17,6 +17,10 @@ const INDEX_CONSTANT = 1;
 export class ConstantExpression extends Expression 
 {
 
+  public static ZERO = new ConstantExpression(0);
+
+  public static ONE = new ConstantExpression(1);
+
   public static has(e: Expression, constant: any): boolean
   {
     return e instanceof ConstantExpression && e.value === constant;

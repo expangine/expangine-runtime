@@ -4,6 +4,8 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 export declare class ConstantExpression extends Expression {
+    static ZERO: ConstantExpression;
+    static ONE: ConstantExpression;
     static has(e: Expression, constant: any): boolean;
     static is(e: Expression): e is ConstantExpression;
     static id: string;

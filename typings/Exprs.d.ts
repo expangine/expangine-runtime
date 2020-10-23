@@ -41,7 +41,7 @@ export declare class Exprs {
     static const(value: any): ConstantExpression;
     static define(vars?: Record<string, ExpressionValue>, body?: Expression): DefineExpression;
     static do(body: Expression, condition?: Expression, maxIterations?: number): DoExpression;
-    static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression;
+    static for(variable: string, start?: ExpressionValue, end?: ExpressionValue, body?: Expression, by?: ExpressionValue, maxIterations?: number): ForExpression;
     static get(): GetExpression;
     static get(...path: ExpressionValue[]): PathExpression;
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;

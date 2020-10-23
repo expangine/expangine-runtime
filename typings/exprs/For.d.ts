@@ -8,6 +8,7 @@ export declare class ForExpression extends Expression {
     static STEP_START: string;
     static STEP_END: string;
     static STEP_BODY: string;
+    static STEP_BY: string;
     static MAX_ITERATIONS: number;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): ForExpression;
@@ -16,8 +17,9 @@ export declare class ForExpression extends Expression {
     start: Expression;
     end: Expression;
     body: Expression;
+    by: Expression;
     maxIterations: number;
-    constructor(variable: string, start: Expression, end: Expression, body: Expression, maxIterations?: number);
+    constructor(variable: string, start: Expression, end: Expression, body: Expression, by: Expression, maxIterations?: number);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
@@ -32,9 +34,10 @@ export declare class ForExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
-    loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression;
+    loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, by?: ExpressionValue, maxIterations?: number): ForExpression;
     startAt(start: ExpressionValue): ForExpression;
     endAt(end: ExpressionValue): ForExpression;
+    inc(by: ExpressionValue): ForExpression;
     run(expr: Expression): ForExpression;
     withVariable(name: string): this;
     withMax(iterations: number): this;

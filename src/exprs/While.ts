@@ -59,7 +59,10 @@ export class WhileExpression extends Expression
 
   public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return Math.max(this.condition.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
+    return 1 + Math.max(
+      this.condition.getComplexity(def, context), 
+      this.body.getComplexity(def, context)
+    );
   }
 
   public isDynamic(): boolean

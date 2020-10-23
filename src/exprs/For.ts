@@ -8,6 +8,7 @@ import { ValidationHandler } from '../Validate';
 import { Types } from '../Types';
 import { Exprs } from '../Exprs';
 import { isNumber } from '../fns';
+import { ConstantExpression } from './Constant';
 
 
 const DEFAULT_MAX_ITERATIONS = 100000;
@@ -15,7 +16,8 @@ const INDEX_VARIABLE = 1;
 const INDEX_START = 2;
 const INDEX_END = 3;
 const INDEX_BODY = 4;
-const INDEX_MAX = 5;
+const INDEX_BY = 5;
+const INDEX_MAX = 6;
 
 export class ForExpression extends Expression 
 {
@@ -25,6 +27,8 @@ export class ForExpression extends Expression
   public static STEP_END = 'end';
 
   public static STEP_BODY = 'body';
+
+  public static STEP_BY = 'by';
 
   public static MAX_ITERATIONS = DEFAULT_MAX_ITERATIONS;
 
@@ -36,31 +40,46 @@ export class ForExpression extends Expression
     const start = exprs.getExpression(data[INDEX_START]);
     const end = exprs.getExpression(data[INDEX_END]);
     const body = exprs.getExpression(data[INDEX_BODY]);
+    const by = exprs.getExpression(data[INDEX_BY]) || new ConstantExpression(1);
     const max = parseInt(data[INDEX_MAX]) || this.MAX_ITERATIONS;
     
-    return new ForExpression(variable, start, end, body, max);
+    return new ForExpression(variable, start, end, body, by, max);
   }
 
   public static encode(expr: ForExpression): any 
   {
-    return expr.maxIterations !== this.MAX_ITERATIONS
-      ? [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode(), expr.maxIterations]
-      : [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode()];
+    const data = [this.id, expr.variable, expr.start.encode(), expr.end.encode(), expr.body.encode()];
+    const hasBy = !(expr.by instanceof ConstantExpression) || expr.by.value !== 1;
+    const hasMax = expr.maxIterations !== this.MAX_ITERATIONS;
+
+    if (hasBy) {
+      data.push(expr.by.encode());
+    } else if (hasMax) {
+      data.push(1);
+    }
+
+    if (hasMax) {
+      data.push(expr.maxIterations);
+    }
+
+    return data;
   }
 
   public variable: string;
   public start: Expression;
   public end: Expression;
   public body: Expression;
+  public by: Expression;
   public maxIterations: number;
 
-  public constructor(variable: string, start: Expression, end: Expression, body: Expression, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
+  public constructor(variable: string, start: Expression, end: Expression, body: Expression, by: Expression, maxIterations: number = DEFAULT_MAX_ITERATIONS) 
   {
     super();
     this.variable = variable;
     this.start = start;
     this.end = end;
     this.body = body;
+    this.by = by;
     this.maxIterations = maxIterations;
   }
 
@@ -71,7 +90,12 @@ export class ForExpression extends Expression
 
   public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return Math.max(this.start.getComplexity(def, context), this.end.getComplexity(def, context), this.body.getComplexity(def, context)) + 1;
+    return 1 + Math.max(
+      this.start.getComplexity(def, context), 
+      this.end.getComplexity(def, context), 
+      this.body.getComplexity(def, context), 
+      this.by.getComplexity(def, context)
+    );
   }
 
   public isDynamic(): boolean
@@ -93,7 +117,7 @@ export class ForExpression extends Expression
 
   public clone(): Expression
   {
-    return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.maxIterations);
+    return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.by.clone(), this.maxIterations);
   }
 
   public getType(def: DefinitionProvider, original: Type): Type | null
@@ -111,6 +135,7 @@ export class ForExpression extends Expression
       traverse.step(ForExpression.STEP_START, this.start, (replaceWith) => this.start = replaceWith);
       traverse.step(ForExpression.STEP_END, this.end, (replaceWith) => this.end = replaceWith);
       traverse.step(ForExpression.STEP_BODY, this.body, (replaceWith) => this.body = replaceWith);
+      traverse.step(ForExpression.STEP_BY, this.by, (replaceWith) => this.by = replaceWith);
     });
   }
 
@@ -122,7 +147,9 @@ export class ForExpression extends Expression
         ? [1, this.end]
         : steps[0] === ForExpression.STEP_BODY
           ? [1, this.body]
-          : null;
+          : steps[0] === ForExpression.STEP_BY
+            ? [1, this.by]
+            : null;
   }
 
   public setParent(parent: Expression = null): void
@@ -132,12 +159,14 @@ export class ForExpression extends Expression
     this.start.setParent(this);
     this.end.setParent(this);
     this.body.setParent(this);
+    this.by.setParent(this);
   }
 
   public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
   {
     this.validateType(def, context, NumberType.baseType, this.start, handler);
     this.validateType(def, context, NumberType.baseType, this.end, handler);
+    this.validateType(def, context, NumberType.baseType, this.by, handler);
 
     const bodyContext = def.getContext(context, this.getScope());
 
@@ -148,10 +177,11 @@ export class ForExpression extends Expression
   {
     return this.start.mutates(def, arg, directly) || 
       this.end.mutates(def, arg, directly) || 
-      this.body.mutates(def, arg, directly);
+      this.body.mutates(def, arg, directly) || 
+      this.by.mutates(def, arg, directly);
   }
 
-  public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, maxIterations?: number): ForExpression
+  public loop(variable: string, start: ExpressionValue, end: ExpressionValue, body?: Expression, by?: ExpressionValue, maxIterations?: number): ForExpression
   {
     this.variable = variable;
 
@@ -165,6 +195,12 @@ export class ForExpression extends Expression
     {
       this.body = body;
       this.body.setParent(this);
+    }
+
+    if (by)
+    {
+      this.by = Exprs.parse(by);
+      this.by.setParent(this);
     }
 
     if (isNumber(maxIterations))
@@ -187,6 +223,14 @@ export class ForExpression extends Expression
   {
     this.end = Exprs.parse(end);
     this.end.setParent(this);
+
+    return this;
+  }
+
+  public inc(by: ExpressionValue): ForExpression
+  {
+    this.by = Exprs.parse(by);
+    this.by.setParent(this);
 
     return this;
   }

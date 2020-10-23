@@ -100,9 +100,9 @@ export class Exprs
     return this.setParent(new DoExpression(condition, body, maxIterations));
   }
 
-  public static for(variable: string, start: ExpressionValue = new ConstantExpression(0), end: ExpressionValue = new ConstantExpression(0), body: Expression = NoExpression.instance, maxIterations?: number): ForExpression
+  public static for(variable: string, start: ExpressionValue = new ConstantExpression(0), end: ExpressionValue = new ConstantExpression(0), body: Expression = NoExpression.instance, by: ExpressionValue = new ConstantExpression(1), maxIterations?: number): ForExpression
   {
-    return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, maxIterations));
+    return this.setParent(new ForExpression(variable, this.parse(start), this.parse(end), body, this.parse(by), maxIterations));
   }
 
   public static get(): GetExpression
