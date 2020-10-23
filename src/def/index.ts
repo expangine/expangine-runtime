@@ -20,6 +20,7 @@ import { SetType } from '../types/Set';
 import { TextType } from '../types/Text';
 import { TupleType } from '../types/Tuple';
 
+import { AssertExpression } from '../exprs/Assert';
 import { AndExpression } from '../exprs/And';
 import { ChainExpression } from '../exprs/Chain';
 import { CommentExpression } from '../exprs/Comment';
@@ -73,6 +74,7 @@ export const defs = new Definitions({
   ],
   expressions: [
     AndExpression,
+    AssertExpression,
     ChainExpression,
     CommentExpression,
     ComputedExpression,

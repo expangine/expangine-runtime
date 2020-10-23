@@ -45,6 +45,7 @@ export * from './types/Set';
 export * from './types/Text';
 export * from './types/Tuple';
 
+export * from './exprs/Assert';
 export * from './exprs/And';
 export * from './exprs/Chain';
 export * from './exprs/Comment';
