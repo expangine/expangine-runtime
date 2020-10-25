@@ -89,6 +89,23 @@ export class DefineExpression extends Expression
     return this.body.getType(def, context);
   }
 
+  public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
+  {
+    const inner = def.getContextWithScope(context);
+
+    for (const [name, defined] of this.define) 
+    {
+      if (steps[0] === DefineExpression.STEP_DEFINE && steps[1] === name) 
+      {
+        break;
+      }
+      
+      inner.scope[name] = defined.getType(def, inner.context);
+    }
+
+    return inner.context;
+  }
+
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {

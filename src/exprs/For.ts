@@ -130,6 +130,18 @@ export class ForExpression extends Expression
     return body ? Types.optional(body) : null;
   }
 
+  public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
+  {
+    if (steps[0] === ForExpression.STEP_BODY)
+    {
+      return def.getContext(context, this.getScope());
+    }
+    else
+    {
+      return context;
+    }
+  }
+
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {

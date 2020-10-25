@@ -32,6 +32,7 @@ export declare abstract class Expression implements Traversable<Expression> {
     abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
     abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean;
+    getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type;
     isDynamic(): boolean;
     getInnerExpression(def: DefinitionProvider): Expression | string | false;
     isPathStart(): boolean;

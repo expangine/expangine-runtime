@@ -24,6 +24,7 @@ export declare class SetExpression extends Expression {
     encode(): any;
     clone(): Expression;
     getType(def: DefinitionProvider, context: Type): Type | null;
+    getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;

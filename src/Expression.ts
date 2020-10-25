@@ -64,6 +64,11 @@ export abstract class Expression implements Traversable<Expression>
         : false;
   }
 
+  public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
+  {
+    return context;
+  }
+
   public isDynamic(): boolean
   {
     return true;

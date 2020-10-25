@@ -92,6 +92,18 @@ export class SetExpression extends Expression
     return BooleanType.baseType;
   }
 
+  public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
+  {
+    if (steps[0] === SetExpression.STEP_VALUE && this.currentVariable)
+    {
+      return def.getContext(context, this.getScope());
+    }
+    else
+    {
+      return context;
+    }
+  }
+
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {
     return traverse.enter(this, () => {

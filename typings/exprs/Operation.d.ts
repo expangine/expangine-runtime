@@ -1,7 +1,7 @@
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
-import { Type } from '../Type';
+import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { AndExpression } from './And';
@@ -23,6 +23,9 @@ export declare class OperationExpression<P extends string = never, O extends str
     encode(): any;
     clone(): Expression;
     getType(def: DefinitionProvider, context: Type): Type | null;
+    getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type;
+    getParamTypes(def: DefinitionProvider, context: Type): TypeMap;
+    getScopedContext(def: DefinitionProvider, outerContext: Type): Type;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
     setParent(parent?: Expression): void;

@@ -3,7 +3,7 @@ import { objectMap, isEmpty, objectEach, isArray } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
-import { Type } from '../Type';
+import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Types } from '../Types';
@@ -99,6 +99,52 @@ export class OperationExpression<P extends string = never, O extends string = ne
   public getType(def: DefinitionProvider, context: Type): Type | null
   {
     return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
+  }
+
+  public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
+  {
+    const op = def.getOperation(this.name);
+    const opTypes = def.getOperationTypes(this.name)
+
+    if (op && opTypes && op.hasScope.indexOf(name) !== -1) 
+    {
+      return this.getScopedContext(def, context);
+    }
+
+    return context;
+  }
+
+  public getParamTypes(def: DefinitionProvider, context: Type): TypeMap
+  {
+    return def.getOperationExpectedTypes(this.name, this.params, this.scopeAlias, context);
+  }
+
+  public getScopedContext(def: DefinitionProvider, outerContext: Type): Type
+  {
+    const op = def.getOperation(this.name);
+    const opTypes = def.getOperationTypes(this.name)
+    
+    if (!op || !opTypes)
+    {
+      return outerContext;
+    }
+
+    const paramTypes = this.getParamTypes(def, outerContext);
+    const { context, scope } = def.getContextWithScope(outerContext);
+
+    for (const scopeParam of op.scope) 
+    {
+      const scopeType = def.getOperationInputType(opTypes.scope[scopeParam], paramTypes);
+
+      if (scopeType) 
+      {
+        const alias = this.scopeAlias[scopeParam] || scopeParam;
+
+        scope[alias] = scopeType.getSimplifiedType();
+      }
+    }
+
+    return context;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
