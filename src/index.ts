@@ -9,6 +9,7 @@ export * from './Entity';
 export * from './EventBase';
 export * from './Expression';
 export * from './Exprs';
+export * from './FlowType';
 export * from './Func';
 export * from './LinkedNode';
 export * from './Locale';
