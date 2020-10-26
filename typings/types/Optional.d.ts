@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
@@ -6,6 +6,7 @@ import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 export declare class OptionalType extends Type<Type> {
     static STEP_OPTIONAL: string;
+    static CHILD_OPTIONAL: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -22,6 +23,8 @@ export declare class OptionalType extends Type<Type> {
     merge(type: OptionalType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     getRequired(): Type;

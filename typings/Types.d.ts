@@ -16,6 +16,8 @@ import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
 import { SetType } from './types/Set';
 import { EntityType } from './types/Entity';
+import { GenericType } from './types/Generic';
+import { FunctionType } from './types/Function';
 export declare class Types {
     static INDEX: NumberType;
     static LENGTH: NumberType;
@@ -50,6 +52,8 @@ export declare class Types {
     static text(options?: TextOptions): TextType;
     static tuple(types: TypeInput[]): TupleType;
     static tuple(...types: TypeInput[]): TupleType;
+    static generic(path: string[], base?: Type): GenericType;
+    static func(params: TypeInputMap, returns?: TypeInput): FunctionType;
     static parse(input: TypeInput): Type;
     static simplify(type: Type): Type;
     static simplify(type: Type | null): Type | null;
@@ -60,4 +64,5 @@ export declare class Types {
     static mergeMany(readonlyTypes: Type[]): Type | null;
     static mergeMany(readonlyTypes: Type[], noTypes: Type): Type;
     static merge(a: Type, b: Type): Type;
+    static coalesce(input: Type[], otherwise?: Type): Type;
 }

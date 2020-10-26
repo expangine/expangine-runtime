@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
@@ -21,6 +21,8 @@ export declare class NotType extends Type<Type[]> {
     merge(type: NotType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

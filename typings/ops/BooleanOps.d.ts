@@ -5,9 +5,9 @@ export declare const BooleanComputeds: Computeds;
 export declare const BooleanOps: {
     create: import("../Operation").OperationResolved<never, never, never, never, never>;
     maybe: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    and: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
-    or: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
-    xor: import("../Operation").OperationResolved<"a" | "b", never, never, never, never>;
+    and: import("../Operation").OperationResolved<"b" | "a", never, never, never, never>;
+    or: import("../Operation").OperationResolved<"b" | "a", never, never, never, never>;
+    xor: import("../Operation").OperationResolved<"b" | "a", never, never, never, never>;
     not: import("../Operation").OperationResolved<"a", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;

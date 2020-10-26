@@ -1,36 +1,45 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
-import { Operations, OperationGeneric } from '../Operation';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider, TypeMap, TypeProvider, TypeChild } from '../Type';
+import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class ManyType extends Type<Type[]> {
+import { GenericType } from './Generic';
+export declare type FunctionTypeProvider = Type | ((params: TypeMap) => Type);
+export interface FunctionOptions {
+    params: Record<string, FunctionTypeProvider>;
+    returns?: FunctionTypeProvider;
+}
+export declare class FunctionType extends Type<FunctionOptions> {
+    static STEP_RETURNS: string;
+    static CHILD_RETURN: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
-    static baseType: ManyType;
-    static decode(data: any[], types: TypeProvider): ManyType;
-    static encode(type: ManyType): any;
+    static baseType: FunctionType;
+    static decode(data: any[], types: TypeProvider): FunctionType;
+    static encode(type: FunctionType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    operations?: Record<string, OperationGeneric>;
-    getOperations(): Record<string, OperationGeneric>;
-    private forMany;
+    getParamTypes(inputTypes?: TypeMap): TypeMap;
+    getReturnType(inputTypes?: TypeMap): Type;
+    getTypeFromPath(path: TypeChild[], inputTypes?: TypeMap): Type | null;
+    getOverloaded(inputTypes?: TypeMap): FunctionType;
+    getResolvedType(type: GenericType, inputTypes?: TypeMap): Type;
     getId(): string;
-    merge(type: ManyType): void;
+    getOperations(): {};
+    merge(type: FunctionType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getChildType(name: TypeChild): Type | null;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
-    getRequired(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
-    protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
     getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
@@ -38,14 +47,13 @@ export declare class ManyType extends Type<Type[]> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(value: any): boolean;
     normalize(value: any): any;
-    newInstance(): ManyType;
-    clone(): ManyType;
+    newInstance(): FunctionType;
+    clone(): FunctionType;
     encode(): any;
-    create(): any;
+    create(): null;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any): any;
-    toJson(value: any): any;
+    fromJson(json: null): null;
+    toJson(value: null): null;
 }

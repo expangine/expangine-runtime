@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeInput, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -19,6 +19,8 @@ export class OptionalType extends Type<Type>
 {
 
   public static STEP_OPTIONAL = 'optional';
+
+  public static CHILD_OPTIONAL = 'optional';
 
   public static id = ID.Optional;
 
@@ -82,6 +84,18 @@ export class OptionalType extends Type<Type>
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.options.getSubTypes(def);
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return name === OptionalType.CHILD_OPTIONAL
+      ? this.options
+      : null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [OptionalType.CHILD_OPTIONAL];
   }
 
   public getExactType(value: any): Type 

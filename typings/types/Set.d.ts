@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -7,6 +7,7 @@ export interface SetOptions {
 }
 export declare class SetType extends Type<SetOptions> {
     static STEP_VALUE: string;
+    static CHILD_VALUE: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -23,6 +24,8 @@ export declare class SetType extends Type<SetOptions> {
     merge(type: SetType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

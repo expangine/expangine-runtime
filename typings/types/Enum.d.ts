@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
@@ -12,6 +12,8 @@ export interface EnumOptions {
 export declare class EnumType extends Type<EnumOptions> {
     static STEP_KEY: string;
     static STEP_VALUE: string;
+    static CHILD_KEY: string;
+    static CHILD_VALUE: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -27,6 +29,8 @@ export declare class EnumType extends Type<EnumOptions> {
     merge(type: EnumType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     isWrapper(): boolean;

@@ -7,6 +7,7 @@ import { ReferenceData } from './ReferenceData';
 export declare type TypeInput = TypeClass | Type;
 export declare type TypeInputMap = Record<string, TypeInput>;
 export declare type TypeMap = Record<string, Type>;
+export declare type TypeChild = string | number;
 export interface TypeSub {
     key: string | number | Type;
     value: Type;
@@ -54,6 +55,9 @@ export declare abstract class Type<O = any> implements Traversable<Type> {
     abstract merge(type: Type<O>): void;
     abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     abstract getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
+    getParentOfType<T extends Type>(type: TypeClass<T>): T | null;
     abstract getExactType(value: any): Type<O>;
     abstract getSimplifiedType(): Type;
     getRequired(): Type;

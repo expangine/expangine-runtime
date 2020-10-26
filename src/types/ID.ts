@@ -8,6 +8,7 @@ export const ID = {
   Enum: 'enum',
   Function: 'func',
   List: 'list',
+  Generic: 'generic',
   Many: 'many',
   Not: 'not',
   Map: 'map',

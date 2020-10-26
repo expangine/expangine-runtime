@@ -7,9 +7,9 @@ export declare const ColorOps: {
     maybe: import("../Operation").OperationResolved<"value", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     copy: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    build: import("../Operation").OperationResolved<"b" | "r" | "g", "a", never, never, never>;
-    map: import("../Operation").OperationResolved<"value" | "b" | "r" | "g", "a", "value" | "component", "a" | "b" | "r" | "g", never>;
-    op: import("../Operation").OperationResolved<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
+    build: import("../Operation").OperationResolved<"r" | "g" | "b", "a", never, never, never>;
+    map: import("../Operation").OperationResolved<"value" | "r" | "g" | "b", "a", "value" | "component", "a" | "b" | "r" | "g", never>;
+    op: import("../Operation").OperationResolved<"value" | "r" | "g" | "b" | "test", "a", "value" | "test" | "component", "a" | "b" | "r" | "g", never>;
     clamp: import("../Operation").OperationResolved<"value", never, never, never, never>;
     add: import("../Operation").OperationResolved<"value" | "addend", "alpha", never, never, never>;
     adds: import("../Operation").OperationResolved<"value" | "addend" | "addendScale", "alpha", never, never, never>;
@@ -19,7 +19,7 @@ export declare const ColorOps: {
     mod: import("../Operation").OperationResolved<"value" | "divisor", "alpha", never, never, never>;
     format: import("../Operation").OperationResolved<"value" | "format", never, never, never, never>;
     parse: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    lerp: import("../Operation").OperationResolved<"start" | "end" | "delta", never, never, never, never>;
+    lerp: import("../Operation").OperationResolved<"end" | "start" | "delta", never, never, never, never>;
     lighten: import("../Operation").OperationResolved<"value" | "amount", never, never, never, never>;
     darken: import("../Operation").OperationResolved<"value" | "amount", never, never, never, never>;
     toHSL: import("../Operation").OperationResolved<"value", never, never, never, never>;

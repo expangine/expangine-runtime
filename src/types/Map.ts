@@ -1,6 +1,6 @@
 
 import { isObject, isMap, isSameClass, isString } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { AnyType } from './Any';
 import { TextType } from './Text';
 import { Exprs } from '../Exprs';
@@ -32,6 +32,10 @@ export class MapType extends Type<MapOptions>
   public static STEP_KEY = 'key';
 
   public static STEP_VALUE = 'value';
+
+  public static CHILD_KEY = 'key';
+
+  public static CHILD_VALUE = 'value';
 
   public static id = ID.Map;
 
@@ -257,6 +261,23 @@ export class MapType extends Type<MapOptions>
     return [
       { key: this.options.key, value: this.options.value },
     ];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    switch (name) {
+      case MapType.CHILD_KEY:
+        return this.options.key;
+      case MapType.CHILD_VALUE:
+        return this.options.value;
+    }
+
+    return null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [MapType.CHILD_KEY, MapType.CHILD_VALUE];
   }
 
   public getExactType(value: any): Type 

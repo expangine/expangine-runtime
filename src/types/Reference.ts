@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
@@ -15,6 +15,8 @@ export class ReferenceType extends Type<string>
 {
 
   public static STEP_REFERENCED = 'referenced';
+
+  public static CHILD_REFERENCED = 'referenced';
 
   public static id = ID.Reference;
 
@@ -94,6 +96,18 @@ export class ReferenceType extends Type<string>
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.getType().getSubTypes(def);
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return name === ReferenceType.CHILD_REFERENCED
+      ? this.getType()
+      : null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [ReferenceType.CHILD_REFERENCED];
   }
 
   public getExactType(value: any): Type 

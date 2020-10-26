@@ -1,4 +1,4 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
@@ -6,6 +6,7 @@ import { Operations } from '../Operation';
 import { Computeds } from '../Computed';
 export declare class ReferenceType extends Type<string> {
     static STEP_REFERENCED: string;
+    static CHILD_REFERENCED: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -24,6 +25,8 @@ export declare class ReferenceType extends Type<string> {
     merge(type: ReferenceType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
+    getChildType(name: TypeChild): Type | null;
+    getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;

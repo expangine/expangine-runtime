@@ -1,6 +1,6 @@
 
 import { objectMap, isObject, objectValues, isString, objectEach } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
@@ -267,6 +267,16 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
         value: Types.optional(Types.mergeMany(props, NullType.baseType)),
       }
     ];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return this.options.props[name] || null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return Object.keys(this.options.props);
   }
 
   public getExactType(value: any): Type 

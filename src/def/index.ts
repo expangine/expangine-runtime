@@ -7,6 +7,8 @@ import { BooleanType } from '../types/Boolean';
 import { ColorType } from '../types/Color';
 import { DateType } from '../types/Date';
 import { EnumType } from '../types/Enum';
+import { FunctionType } from '../types/Function';
+import { GenericType } from '../types/Generic';
 import { ListType } from '../types/List';
 import { ManyType } from '../types/Many';
 import { MapType } from '../types/Map';
@@ -59,6 +61,8 @@ export const defs = new Definitions({
     ColorType,
     DateType,
     EnumType,
+    FunctionType,
+    GenericType,
     ListType, 
     ManyType,
     MapType,

@@ -1,6 +1,6 @@
 
 import { isObject, isArray, isSet, isString } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -26,6 +26,8 @@ export class SetType extends Type<SetOptions>
 {
 
   public static STEP_VALUE = 'value';
+
+  public static CHILD_VALUE = 'value';
 
   public static id = ID.Set;
 
@@ -212,6 +214,18 @@ export class SetType extends Type<SetOptions>
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return name === SetType.CHILD_VALUE
+      ? this.options.value
+      : null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [SetType.CHILD_VALUE];
   }
 
   public getExactType(value: any): Type 

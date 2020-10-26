@@ -15,6 +15,8 @@ export type TypeInputMap = Record<string, TypeInput>;
 
 export type TypeMap = Record<string, Type>;
 
+export type TypeChild = string | number;
+
 export interface TypeSub 
 { 
   key: string | number | Type;
@@ -94,6 +96,33 @@ export abstract class Type<O = any> implements Traversable<Type>
   public abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
 
   public abstract getSubTypes(def: DefinitionProvider): TypeSub[];
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [];
+  }
+
+  public getParentOfType<T extends Type>(type: TypeClass<T>): T | null
+  {
+    let parent: Type = this.parent;
+
+    while (parent)
+    {
+      if (parent.constructor === type)
+      {
+        return parent as T;
+      }
+
+      parent = parent.parent;
+    }
+
+    return null;
+  }
 
   public abstract getExactType(value: any): Type<O>;
 

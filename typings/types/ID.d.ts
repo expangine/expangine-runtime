@@ -7,6 +7,7 @@ export declare const ID: {
     Enum: string;
     Function: string;
     List: string;
+    Generic: string;
     Many: string;
     Not: string;
     Map: string;

@@ -11,9 +11,6 @@ import { TupleType } from '../../types/Tuple';
 
 import { AnyOps } from '../AnyOps';
 import { OptionalType } from '../../types/Optional';
-import { ManyType } from '../../types/Many';
-import { NullType } from '../../types/Null';
-import { Type } from '../../Type';
 import { ColorType } from '../../types/Color';
 import { SetType } from '../../types/Set';
 import { Types } from '../../Types';
@@ -43,53 +40,7 @@ export const AnyOpsTypes =
   ),
 
   coalesce: ops.setTypes(AnyOps.coalesce, 
-    i => {
-      let optional = true;
-      const types: Type[] = [];
-      const checkType = (x?: Type) => {
-        if (!optional) return;
-        
-        if (x) {
-          let xoptional = x instanceof OptionalType;
-          const xinner = xoptional ? x.options as Type : x;
-
-          if (xinner instanceof ManyType) {
-            xinner.options.forEach((y) => {
-              const yoptional = y instanceof OptionalType;
-              const yinner = yoptional ? y.options as Type : y;
-
-              xoptional = xoptional || yoptional;
-
-              if (!types.some(t => t.exactType(yinner))) {
-                types.push(yinner);
-              }
-            });
-          }
-
-          optional = optional && xoptional;
-
-          if (!types.some(t => t.exactType(xinner))) {
-            types.push(xinner);
-          }
-        }
-      };
-
-      checkType(i.a);
-      checkType(i.b);
-      checkType(i.c);
-      checkType(i.d);
-      checkType(i.e);
-
-      return types.length > 1
-        ? optional
-          ? Types.optional(new ManyType(types))
-          : new ManyType(types)
-        : types.length === 1
-          ? optional
-            ? Types.optional(types[0])
-            : types[0]
-          : NullType;
-    },
+    i => Types.coalesce([i.a, i.b, i.c, i.d, i.e]),
     { a: AnyType, b: AnyType },
     { c: AnyType, d: AnyType, e: AnyType }
   ),

@@ -18,6 +18,8 @@ import { NotType } from './types/Not';
 import { ColorType } from './types/Color';
 import { SetType } from './types/Set';
 import { EntityType } from './types/Entity';
+import { GenericType } from './types/Generic';
+import { FunctionType } from './types/Function';
 
 
 export class Types
@@ -189,6 +191,19 @@ export class Types
     ));
   }
 
+  public static generic(path: string[], base?: Type): GenericType
+  {
+    return this.setParent(new GenericType({ path, base }));
+  }
+
+  public static func(params: TypeInputMap, returns?: TypeInput): FunctionType
+  {
+    return this.setParent(new FunctionType({
+      params: objectMap(params, (p) => this.parse(p)),
+      returns: returns ? this.parse(returns) : undefined,
+    }));
+  }
+
   public static parse(input: TypeInput): Type
   {
     return input instanceof Type
@@ -354,6 +369,55 @@ export class Types
     }
 
     return this.many(a, b);
+  }
+
+  public static coalesce(input: Type[], otherwise: Type = NullType.baseType): Type
+  {
+    let optional = true;
+    const output: Type[] = [];
+
+    for (const x of input)
+    {
+      if (!optional) break;
+      
+      if (x) 
+      {
+        let xoptional = x instanceof OptionalType;
+        const xinner = xoptional ? x.options as Type : x;
+
+        if (xinner instanceof ManyType) 
+        {
+          xinner.options.forEach((y) => 
+          {
+            const yoptional = y instanceof OptionalType;
+            const yinner = yoptional ? y.options as Type : y;
+
+            xoptional = xoptional || yoptional;
+
+            if (!output.some(t => t.exactType(yinner))) {
+              output.push(yinner);
+            }
+          });
+        }
+
+        optional = optional && xoptional;
+
+        if (!output.some(t => t.exactType(xinner))) 
+        {
+          output.push(xinner);
+        }
+      }
+    }
+
+    return output.length > 1
+      ? optional
+        ? Types.optional(new ManyType(output))
+        : new ManyType(output)
+      : output.length === 1
+        ? optional
+          ? Types.optional(output[0])
+          : output[0]
+        : otherwise;
   }
 
 }

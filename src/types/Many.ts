@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations, OperationGeneric } from '../Operation';
 import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
@@ -145,6 +145,16 @@ export class ManyType extends Type<Type[]>
     });
 
     return subs;
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return this.options[name] || null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return this.options.map((_, i) => i);
   }
 
   public getExactType(value: any): Type 

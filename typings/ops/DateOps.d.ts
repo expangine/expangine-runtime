@@ -36,7 +36,7 @@ export declare const DateOps: {
     isBeforeOrEqual: import("../Operation").OperationResolved<"value" | "test", "unit", never, never, never>;
     isAfter: import("../Operation").OperationResolved<"value" | "test", "unit", never, never, never>;
     isAfterOrEqual: import("../Operation").OperationResolved<"value" | "test", "unit", never, never, never>;
-    isBetween: import("../Operation").OperationResolved<"value" | "start" | "end", "unit" | "startInclusive" | "endInclusive", never, never, never>;
+    isBetween: import("../Operation").OperationResolved<"value" | "end" | "start", "unit" | "startInclusive" | "endInclusive", never, never, never>;
     isStartOf: import("../Operation").OperationResolved<"value" | "unit", never, never, never, never>;
     isEndOf: import("../Operation").OperationResolved<"value" | "unit", "inclusive", never, never, never>;
     isDST: import("../Operation").OperationResolved<"value", never, never, never, never>;

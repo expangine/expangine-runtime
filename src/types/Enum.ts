@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { TextType } from './Text';
 import { Expression } from '../Expression';
@@ -30,6 +30,10 @@ export class EnumType extends Type<EnumOptions>
   public static STEP_KEY = 'key';
   
   public static STEP_VALUE = 'value';
+
+  public static CHILD_KEY = 'key';
+
+  public static CHILD_VALUE = 'value';
 
   public static id = ID.Enum;
 
@@ -112,6 +116,23 @@ export class EnumType extends Type<EnumOptions>
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return this.options.value.getSubTypes(def);
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    switch (name) {
+      case EnumType.CHILD_KEY:
+        return this.options.key;
+      case EnumType.CHILD_VALUE:
+        return this.options.value;
+    }
+
+    return null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [EnumType.CHILD_KEY, EnumType.CHILD_VALUE];
   }
 
   public getExactType(value: any): Type 

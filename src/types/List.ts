@@ -1,6 +1,6 @@
 
 import { isNumber, isEmpty, isArray, coalesce } from '../fns';
-import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { NumberType } from './Number';
 import { AnyType } from './Any';
 import { Exprs } from '../Exprs';
@@ -34,6 +34,8 @@ export class ListType extends Type<ListOptions>
 {
 
   public static STEP_ITEM = 'item';
+
+  public static CHILD_ITEM = 'item';
 
   public static id = ID.List;
 
@@ -296,6 +298,21 @@ export class ListType extends Type<ListOptions>
       { key: 'length', value: Types.LENGTH },
       { key: Types.INDEX, value: Types.optional(item) },
     ];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    switch (name) {
+      case ListType.CHILD_ITEM:
+        return this.options.item;
+    }
+    
+    return null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return [ListType.CHILD_ITEM];
   }
 
   public getExactType(value: any): Type 

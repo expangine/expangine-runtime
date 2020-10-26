@@ -11,13 +11,13 @@ export declare const TextOpsTypes: {
     repeat: import("../..").OperationTypes<"value" | "times", never, never>;
     split: import("../..").OperationTypes<"value" | "by", "limit", never>;
     chars: import("../..").OperationTypes<"value", never, never>;
-    sub: import("../..").OperationTypes<"value", "start" | "end", never>;
+    sub: import("../..").OperationTypes<"value", "end" | "start", never>;
     indexOf: import("../..").OperationTypes<"search" | "value", "start", never>;
     lastIndexOf: import("../..").OperationTypes<"search" | "value", "start", never>;
-    trim: import("../..").OperationTypes<"value", "start" | "end", never>;
+    trim: import("../..").OperationTypes<"value", "end" | "start", never>;
     startsWith: import("../..").OperationTypes<"value" | "test", never, never>;
     endsWith: import("../..").OperationTypes<"value" | "test", never, never>;
-    soundex: import("../..").OperationTypes<"value", "min" | "max", never>;
+    soundex: import("../..").OperationTypes<"value", "max" | "min", never>;
     metaphone: import("../..").OperationTypes<"value", never, never>;
     distance: import("../..").OperationTypes<"value" | "test", never, never>;
     length: import("../..").OperationTypes<"value", never, never>;
@@ -44,8 +44,8 @@ export declare const TextOpsTypes: {
     isValid: import("../..").OperationTypes<"value", never, never>;
     isEmpty: import("../..").OperationTypes<"value", never, never>;
     isNotEmpty: import("../..").OperationTypes<"value", never, never>;
-    isEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
-    isNotEqual: import("../..").OperationTypes<"a" | "b", "ignoreCase", never>;
+    isEqual: import("../..").OperationTypes<"b" | "a", "ignoreCase", never>;
+    isNotEqual: import("../..").OperationTypes<"b" | "a", "ignoreCase", never>;
     isLess: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     isLessOrEqual: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;
     isGreater: import("../..").OperationTypes<"value" | "test", "ignoreCase", never>;

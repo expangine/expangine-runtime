@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { isArray, isNumber } from '../fns';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -150,6 +150,16 @@ export class TupleType extends Type<Type[]>
         ),
       },
     ];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return this.options[name] || null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return this.options.map((_, i) => i);
   }
 
   public getExactType(value: any): Type 

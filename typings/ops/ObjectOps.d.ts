@@ -11,7 +11,7 @@ export declare const ObjectOps: {
     delete: import("../Operation").OperationResolved<"object" | "key", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     copy: import("../Operation").OperationResolved<"object", any, any, any, "object">;
-    merge: import("../Operation").OperationResolved<"a" | "b", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
+    merge: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isEqual: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;

@@ -10,9 +10,9 @@ export declare const ColorOpsTypes: {
     maybe: import("../..").OperationTypes<"value", never, never>;
     cmp: import("../..").OperationTypes<"value" | "test", never, never>;
     copy: import("../..").OperationTypes<"value", never, never>;
-    build: import("../..").OperationTypes<"b" | "r" | "g", "a", never>;
-    map: import("../..").OperationTypes<"value" | "b" | "r" | "g", "a", "value" | "component">;
-    op: import("../..").OperationTypes<"value" | "test" | "b" | "r" | "g", "a", "value" | "test" | "component">;
+    build: import("../..").OperationTypes<"r" | "g" | "b", "a", never>;
+    map: import("../..").OperationTypes<"value" | "r" | "g" | "b", "a", "value" | "component">;
+    op: import("../..").OperationTypes<"value" | "r" | "g" | "b" | "test", "a", "value" | "test" | "component">;
     clamp: import("../..").OperationTypes<"value", never, never>;
     add: import("../..").OperationTypes<"value" | "addend", "alpha", never>;
     adds: import("../..").OperationTypes<"value" | "addend" | "addendScale", "alpha", never>;
@@ -22,7 +22,7 @@ export declare const ColorOpsTypes: {
     mod: import("../..").OperationTypes<"value" | "divisor", "alpha", never>;
     format: import("../..").OperationTypes<"value" | "format", never, never>;
     parse: import("../..").OperationTypes<"value", never, never>;
-    lerp: import("../..").OperationTypes<"start" | "end" | "delta", never, never>;
+    lerp: import("../..").OperationTypes<"end" | "start" | "delta", never, never>;
     lighten: import("../..").OperationTypes<"value" | "amount", never, never>;
     darken: import("../..").OperationTypes<"value" | "amount", never, never>;
     toHSL: import("../..").OperationTypes<"value", never, never>;

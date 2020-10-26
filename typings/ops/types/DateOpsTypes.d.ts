@@ -32,7 +32,7 @@ export declare const DateOpsTypes: {
     isBeforeOrEqual: import("../..").OperationTypes<"value" | "test", "unit", never>;
     isAfter: import("../..").OperationTypes<"value" | "test", "unit", never>;
     isAfterOrEqual: import("../..").OperationTypes<"value" | "test", "unit", never>;
-    isBetween: import("../..").OperationTypes<"value" | "start" | "end", "unit" | "startInclusive" | "endInclusive", never>;
+    isBetween: import("../..").OperationTypes<"value" | "end" | "start", "unit" | "startInclusive" | "endInclusive", never>;
     isStartOf: import("../..").OperationTypes<"value" | "unit", never, never>;
     isEndOf: import("../..").OperationTypes<"value" | "unit", "inclusive", never>;
     isDST: import("../..").OperationTypes<"value", never, never>;

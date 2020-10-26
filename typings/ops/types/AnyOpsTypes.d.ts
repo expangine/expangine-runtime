@@ -3,7 +3,7 @@ export declare const AnyOpsTypes: {
     copy: import("../..").OperationTypes<"value", never, never>;
     isDefined: import("../..").OperationTypes<"value", never, never>;
     getDefined: import("../..").OperationTypes<"value" | "defined", never, "defined">;
-    coalesce: import("../..").OperationTypes<"a" | "b", "c" | "d" | "e", never>;
+    coalesce: import("../..").OperationTypes<"b" | "a", "c" | "d" | "e", never>;
     require: import("../..").OperationTypes<"value", never, never>;
     ternary: import("../..").OperationTypes<"condition" | "truthy" | "falsy", never, never>;
     isValid: import("../..").OperationTypes<"value", never, never>;

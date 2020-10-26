@@ -15,13 +15,13 @@ export declare const TextOps: {
     repeat: import("../Operation").OperationResolved<"value" | "times", never, never, never, never>;
     split: import("../Operation").OperationResolved<"value" | "by", "limit", never, never, never>;
     chars: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    sub: import("../Operation").OperationResolved<"value", "start" | "end", never, never, never>;
+    sub: import("../Operation").OperationResolved<"value", "end" | "start", never, never, never>;
     indexOf: import("../Operation").OperationResolved<"search" | "value", "start", never, never, never>;
     lastIndexOf: import("../Operation").OperationResolved<"search" | "value", "start", never, never, never>;
-    trim: import("../Operation").OperationResolved<"value", "start" | "end", never, never, never>;
+    trim: import("../Operation").OperationResolved<"value", "end" | "start", never, never, never>;
     startsWith: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     endsWith: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
-    soundex: import("../Operation").OperationResolved<"value", "min" | "max", never, never, never>;
+    soundex: import("../Operation").OperationResolved<"value", "max" | "min", never, never, never>;
     metaphone: import("../Operation").OperationResolved<"value", never, never, never, never>;
     distance: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     length: import("../Operation").OperationResolved<"value", never, never, never, never>;
@@ -48,8 +48,8 @@ export declare const TextOps: {
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isEmpty: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isNotEmpty: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    isEqual: import("../Operation").OperationResolved<"a" | "b", "ignoreCase", never, never, never>;
-    isNotEqual: import("../Operation").OperationResolved<"a" | "b", "ignoreCase", never, never, never>;
+    isEqual: import("../Operation").OperationResolved<"b" | "a", "ignoreCase", never, never, never>;
+    isNotEqual: import("../Operation").OperationResolved<"b" | "a", "ignoreCase", never, never, never>;
     isLess: import("../Operation").OperationResolved<"value" | "test", "ignoreCase", never, never, never>;
     isLessOrEqual: import("../Operation").OperationResolved<"value" | "test", "ignoreCase", never, never, never>;
     isGreater: import("../Operation").OperationResolved<"value" | "test", "ignoreCase", never, never, never>;

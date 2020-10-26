@@ -29,6 +29,8 @@ export * from './types/Boolean';
 export * from './types/Color';
 export * from './types/Date';
 export * from './types/Enum';
+export * from './types/Function';
+export * from './types/Generic';
 export * from './types/List';
 export * from './types/Many';
 export * from './types/Map';

@@ -7,7 +7,7 @@ export declare const AnyOps: {
     copy: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isDefined: import("../Operation").OperationResolved<"value", never, never, never, never>;
     getDefined: import("../Operation").OperationResolved<"value" | "defined", any, "defined", "defined", "value">;
-    coalesce: import("../Operation").OperationResolved<"a" | "b", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
+    coalesce: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
     require: import("../Operation").OperationResolved<"value", any, any, any, "value">;
     ternary: import("../Operation").OperationResolved<"condition" | "truthy" | "falsy", any, any, any, "truthy" | "falsy">;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;

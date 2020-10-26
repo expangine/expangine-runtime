@@ -37,7 +37,7 @@ export class BooleanType extends Type<BooleanOptions>
 
   public static encode(type: BooleanType): any 
   {
-    return isEmpty(type.options)
+    return isEmpty(type.options.true) && isEmpty(type.options.false)
       ? this.id
       : [this.id, type.options];
   }

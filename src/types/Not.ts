@@ -1,5 +1,5 @@
 
-import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
 import { Operations } from '../Operation';
 import { AnyType } from './Any';
 import { Expression } from '../Expression';
@@ -91,6 +91,16 @@ export class NotType extends Type<Type[]>
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     return [];
+  }
+
+  public getChildType(name: TypeChild): Type | null
+  {
+    return this.options[name] || null;
+  }
+
+  public getChildTypes(): TypeChild[]
+  {
+    return this.options.map((_, i) => i);
   }
 
   public getExactType(value: any): Type 
