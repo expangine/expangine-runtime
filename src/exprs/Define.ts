@@ -1,9 +1,9 @@
 
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
-import { isString } from '../fns';
+import { isArray, isObject, isString } from '../fns';
 import { AnyType } from '../types/Any';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { Type } from '../Type';
+import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { Exprs } from '../Exprs';
@@ -11,6 +11,8 @@ import { Exprs } from '../Exprs';
 
 const INDEX_DEFINE = 1;
 const INDEX_BODY = 2;
+
+export type DefineVar = string | Record<string, string | number>;
 
 export class DefineExpression extends Expression 
 {
@@ -23,7 +25,7 @@ export class DefineExpression extends Expression
 
   public static decode(data: any[], exprs: ExpressionProvider): DefineExpression 
   {
-    const define = data[INDEX_DEFINE].map(([name, d]: [string, any]) => [name, exprs.getExpression(d)]);
+    const define = data[INDEX_DEFINE].map(([name, d]: [DefineVar, any]) => [this.cloneVar(name), exprs.getExpression(d)]);
     const body = exprs.getExpression(data[INDEX_BODY]);
     
     return new DefineExpression(define, body);
@@ -31,15 +33,25 @@ export class DefineExpression extends Expression
 
   public static encode(expr: DefineExpression): any 
   {
-    const define = expr.define.map(([name, defined]) => [name, defined.encode()]);
+    const define = expr.define.map(([name, defined]) => [this.cloneVar(name), defined.encode()]);
 
     return [this.id, define, expr.body.encode()];
   }
 
-  public define: [string, Expression][];
+  public static cloneVar(v: DefineVar): DefineVar
+  {
+    return isObject(v) ? { ...v } : v;
+  }
+
+  public static stringifyVar(v: DefineVar): string
+  {
+    return isString(v) ? v : Object.keys(v).sort().join(',');
+  }
+
+  public define: [DefineVar, Expression][];
   public body: Expression;
 
-  public constructor(define: [string, Expression][], body: Expression) 
+  public constructor(define: [DefineVar, Expression][], body: Expression) 
   {
     super();
     this.define = define;
@@ -53,7 +65,7 @@ export class DefineExpression extends Expression
 
   public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.define.reduce((max, [name, e]) => Math.max(max, e.getComplexity(def, context)), this.body.getComplexity(def, context));
+    return this.define.reduce((max, [_, e]) => Math.max(max, e.getComplexity(def, context)), this.body.getComplexity(def, context));
   }
 
   public isDynamic(): boolean
@@ -61,11 +73,29 @@ export class DefineExpression extends Expression
     return this.body.isDynamic();
   }
 
+  public applyToScope(scope: TypeMap, name: DefineVar, type: Type)
+  {
+    if (isString(name))
+    {
+      scope[name] = type;
+    }
+    else
+    {
+      for (const n in name)
+      {
+        scope[n] = type.getChildType(name[n]) || AnyType.baseType;
+      }
+    }
+  }
+
   public getScope()
   {
     const scope = {};
 
-    this.define.forEach(([name, defined]) => scope[name] = AnyType.baseType);
+    this.define.forEach(([name, defined]) => 
+    {
+      this.applyToScope(scope, name, AnyType.baseType);
+    });
 
     return scope;
   }
@@ -77,14 +107,17 @@ export class DefineExpression extends Expression
 
   public clone(): Expression
   {
-    return new DefineExpression(this.define.map(([name, variable]) => [name, variable.clone()]), this.body.clone());
+    return new DefineExpression(this.define.map(([name, variable]) => [DefineExpression.cloneVar(name), variable.clone()]), this.body.clone());
   }
 
   public getType(def: DefinitionProvider, original: Type): Type | null
   {
     const { scope, context } = def.getContextWithScope(original);
 
-    this.define.forEach(([name, defined]) => scope[name] = defined.getType(def, context));
+    this.define.forEach(([name, defined]) => 
+    {
+      this.applyToScope(scope, name, defined.getType(def, context));
+    });
 
     return this.body.getType(def, context);
   }
@@ -95,12 +128,12 @@ export class DefineExpression extends Expression
 
     for (const [name, defined] of this.define) 
     {
-      if (steps[0] === DefineExpression.STEP_DEFINE && steps[1] === name) 
+      if (steps[0] === DefineExpression.STEP_DEFINE && steps[1] === DefineExpression.stringifyVar(name)) 
       {
         break;
       }
-      
-      inner.scope[name] = defined.getType(def, inner.context);
+
+      this.applyToScope(inner.scope, name, defined.getType(def, inner.context));
     }
 
     return inner.context;
@@ -111,7 +144,7 @@ export class DefineExpression extends Expression
     return traverse.enter(this, () => {
       traverse.step(DefineExpression.STEP_DEFINE, () =>
         this.define.forEach(([name, defined], index) => 
-          traverse.step(name, defined, (replaceWith) => this.define[index].splice(1, 1, replaceWith), () => this.define.splice(index, 1))
+          traverse.step(DefineExpression.stringifyVar(name), defined, (replaceWith) => this.define[index].splice(1, 1, replaceWith), () => this.define.splice(index, 1))
         )
       );
       traverse.step(DefineExpression.STEP_BODY, this.body, (replaceWith) => this.body = replaceWith);
@@ -124,7 +157,7 @@ export class DefineExpression extends Expression
     return steps[0] === DefineExpression.STEP_BODY
       ? [1, this.body]
       : steps[0] === DefineExpression.STEP_DEFINE
-        ? [2, this.define.filter(([name]) => name === steps[1]).map(([_, expr]) => expr)[0]]
+        ? [2, this.define.filter(([name]) => DefineExpression.stringifyVar(name) === steps[1]).map(([_, expr]) => expr)[0]]
         : null;
   }
   // tslint:enable: no-magic-numbers
@@ -145,7 +178,7 @@ export class DefineExpression extends Expression
     {
       defined.validate(def, defineContext.context, handler);
 
-      defineContext.scope[name] = defined.getType(def, defineContext.context);
+      this.applyToScope(defineContext.scope, name, defined.getType(def, defineContext.context));
     });
     
     this.body.validate(def, defineContext.context, handler);
@@ -164,26 +197,44 @@ export class DefineExpression extends Expression
     return this.body.mutates(def, arg, directly);
   }
 
-  public with(name: string, value: ExpressionValue): DefineExpression
-  public with(defines: Record<string, ExpressionValue>): DefineExpression
-  public with(nameOrDefines: string | Record<string, ExpressionValue>, value?: Expression): DefineExpression
+  public with(name: DefineVar, value: ExpressionValue): DefineExpression
+  public with(defines: Record<string, ExpressionValue> | Array<[DefineVar, ExpressionValue]>): DefineExpression
+  public with(nameOrDefines: DefineVar | Record<string, ExpressionValue> | Array<[DefineVar, ExpressionValue]>, value?: ExpressionValue): DefineExpression
   {
-    const append = isString(nameOrDefines)
-      ? { [nameOrDefines]: value }
-      : nameOrDefines;
-
-    for (const name in append)
+    const add = (name: DefineVar, exprValue: ExpressionValue) =>
     {
-      const expr = Exprs.parse(append[name]);
-      const existing = this.define.find(([varName]) => varName === name);
+      const expr = Exprs.parse(exprValue);
+      const existing = this.define.find(([varName]) => DefineExpression.stringifyVar(varName) === DefineExpression.stringifyVar(name));
 
-      if (existing) {
+      if (existing)
+      {
         existing[1] = expr;
-      } else {
+      }
+      else
+      {
         this.define.push([name, expr]);
       }
 
       expr.setParent(this);
+    };
+
+    if (value !== undefined)
+    {
+      add(name, value);
+    }
+    else if (isArray(nameOrDefines))
+    {
+      for (const [name, define] of nameOrDefines)
+      {
+        add(name, define);
+      }
+    }
+    else if (isObject(nameOrDefines))
+    {
+      for (const name in nameOrDefines)
+      {
+        add(name, nameOrDefines[name]);
+      }
     }
 
     return this;

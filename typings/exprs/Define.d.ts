@@ -1,20 +1,24 @@
 import { Expression, ExpressionProvider, ExpressionValue } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { Type } from '../Type';
+import { Type, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
+export declare type DefineVar = string | Record<string, string | number>;
 export declare class DefineExpression extends Expression {
     static STEP_DEFINE: string;
     static STEP_BODY: string;
     static id: string;
     static decode(data: any[], exprs: ExpressionProvider): DefineExpression;
     static encode(expr: DefineExpression): any;
-    define: [string, Expression][];
+    static cloneVar(v: DefineVar): DefineVar;
+    static stringifyVar(v: DefineVar): string;
+    define: [DefineVar, Expression][];
     body: Expression;
-    constructor(define: [string, Expression][], body: Expression);
+    constructor(define: [DefineVar, Expression][], body: Expression);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
+    applyToScope(scope: TypeMap, name: DefineVar, type: Type): void;
     getScope(): {};
     encode(): any;
     clone(): Expression;
@@ -25,7 +29,7 @@ export declare class DefineExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
-    with(name: string, value: ExpressionValue): DefineExpression;
-    with(defines: Record<string, ExpressionValue>): DefineExpression;
+    with(name: DefineVar, value: ExpressionValue): DefineExpression;
+    with(defines: Record<string, ExpressionValue> | Array<[DefineVar, ExpressionValue]>): DefineExpression;
     run(expr: Expression): DefineExpression;
 }
