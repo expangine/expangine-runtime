@@ -2,7 +2,7 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOption
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export declare class EntityType extends Type<string> {
+export declare class EntityType extends Type<any, string> {
     static STEP_ENTITY: string;
     static id: string;
     static operations: import("..").Operations;
@@ -17,7 +17,7 @@ export declare class EntityType extends Type<string> {
     static for(name: string, provider: TypeProvider): EntityType;
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
-    getType(): Type<any>;
+    getType(): Type;
     getOperations(): Record<string, import("..").OperationGeneric>;
     getId(): string;
     merge(type: EntityType): void;
@@ -39,7 +39,7 @@ export declare class EntityType extends Type<string> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): EntityType;
     clone(): EntityType;

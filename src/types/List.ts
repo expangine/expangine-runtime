@@ -23,14 +23,14 @@ const RANDOM_MIN = 2;
 const RANDOM_MAX = 5;
 const REQUIRED_SUB_MIN = 10;
 
-export interface ListOptions 
+export interface ListOptions<I = any> 
 {
-  item: Type;
+  item: Type<I>;
   min?: number;
   max?: number;
 }
 
-export class ListType extends Type<ListOptions> 
+export class ListType<I = any> extends Type<I[], ListOptions<I>> 
 {
 
   public static STEP_ITEM = 'item';
@@ -449,7 +449,7 @@ export class ListType extends Type<ListOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is I[] 
   {
     if (!Array.isArray(value)) 
     {

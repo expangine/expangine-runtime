@@ -12,7 +12,7 @@ import { Computeds } from '../Computed';
 
 const INDEX_NOT = 1;
 
-export class NotType extends Type<Type[]>
+export class NotType extends Type<any, Type[]>
 {
 
   public static id = ID.Not;
@@ -172,7 +172,7 @@ export class NotType extends Type<Type[]>
     return NoExpression.instance;
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return this.forNot(true, many => many.isValid(value) ? false : undefined);
   }

@@ -4,10 +4,10 @@ import { NumberType } from './Number';
 import { Color } from '../util/color/Color';
 import { ColorSpace, ColorFormat } from '../util/color/ColorSpace';
 import { ObjectType, ObjectOptions } from './Object';
-export interface ColorOptions extends ObjectOptions {
+export interface ColorOptions extends ObjectOptions<Color> {
     hasAlpha?: boolean;
 }
-export declare class ColorType extends ObjectType<ColorOptions> {
+export declare class ColorType extends ObjectType<Color, ColorOptions> {
     static readonly componentType: NumberType;
     static readonly componentProps: {
         r: NumberType;
@@ -23,7 +23,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     static decode(data: any[]): ColorType;
     static encode(type: ColorType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | null;
     static registered: boolean;
     static register(): void;
     static getFormat(id: string): ColorFormat<any> | undefined;
@@ -40,7 +40,7 @@ export declare class ColorType extends ObjectType<ColorOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is Color;
     normalize(value: any): any;
     newInstance(): ColorType;
     clone(): ColorType;

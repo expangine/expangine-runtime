@@ -4,7 +4,7 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class ManyType extends Type<Type[]> {
+export declare class ManyType extends Type<any, Type[]> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -39,7 +39,7 @@ export declare class ManyType extends Type<Type[]> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): ManyType;
     clone(): ManyType;

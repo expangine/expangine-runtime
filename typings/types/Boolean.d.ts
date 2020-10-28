@@ -6,7 +6,7 @@ export interface BooleanOptions {
     true?: Record<string, true>;
     false?: Record<string, true>;
 }
-export declare class BooleanType extends Type<BooleanOptions> {
+export declare class BooleanType extends Type<boolean, BooleanOptions> {
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -22,7 +22,7 @@ export declare class BooleanType extends Type<BooleanOptions> {
     merge(type: BooleanType): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getExactType(value: any): Type;
+    getExactType(value: boolean): Type;
     getSimplifiedType(): Type;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
@@ -33,13 +33,13 @@ export declare class BooleanType extends Type<BooleanOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is boolean;
     normalize(value: any): any;
     newInstance(): BooleanType;
     clone(): BooleanType;
     encode(): any;
     create(): boolean;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): boolean;
     fromJson(json: boolean): boolean;
     toJson(value: boolean): boolean;
 }

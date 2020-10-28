@@ -113,11 +113,12 @@ export const EntityOpsTypes =
       if (i.name instanceof EntityType) {
         const type = i.name.getType();
         if (type instanceof ObjectType) {
-          const objectType = type as ObjectType<ObjectOptions>;
+          const objectType = type as ObjectType<any, ObjectOptions<any>>;
           
           return Types.object(objectMap(objectType.options.props, (value) => Types.optional(value.clone())));
         }
       }
+
       return ObjectType.baseType;
     }}
   ),

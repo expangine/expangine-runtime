@@ -10,7 +10,7 @@ import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
 
 
-export class NullType extends Type<null> 
+export class NullType extends Type<null | undefined, null> 
 {
 
   public static id = ID.Null;
@@ -131,7 +131,7 @@ export class NullType extends Type<null>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is (null | undefined)
   {
     return value === null || value === undefined;
   }

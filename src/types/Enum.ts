@@ -17,14 +17,14 @@ const INDEX_KEY = 1;
 const INDEX_VALUE = 2;
 const INDEX_CONSTANTS = 3;
 
-export interface EnumOptions 
+export interface EnumOptions<K = any, V = any> 
 {
-  key: Type;
-  value: Type;
-  constants: Map<any, any>;
+  key: Type<K, any>;
+  value: Type<V, any>;
+  constants: Map<K, V>;
 }
 
-export class EnumType extends Type<EnumOptions> 
+export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>> 
 {
 
   public static STEP_KEY = 'key';
@@ -41,7 +41,11 @@ export class EnumType extends Type<EnumOptions>
 
   public static computeds = new Computeds(ID.Enum + ID.Delimiter);
   
-  public static baseType = new EnumType({ key: TextType.baseType, value: TextType.baseType, constants: new Map() });
+  public static baseType = new EnumType<string, string>({ 
+    key: TextType.baseType,
+    value: TextType.baseType,
+    constants: new Map(),
+  });
 
   public static decode(data: any[], types: TypeProvider): EnumType 
   {
@@ -252,7 +256,7 @@ export class EnumType extends Type<EnumOptions>
     }
   }
 
-  public isValid(test: any): boolean 
+  public isValid(test: any): test is V 
   {
     const { constants, value } = this.options;
 
@@ -307,7 +311,7 @@ export class EnumType extends Type<EnumOptions>
   public create(): any
   {
     const { value, constants } = this.options;
-    const firstKey = constants.keys().next();
+    const firstKey = constants.keys().next().value;
 
     return firstKey ? constants.get(firstKey) : value.create();
   }

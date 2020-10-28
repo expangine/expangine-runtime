@@ -1,4 +1,4 @@
-import { ObjectType, ObjectOptions } from './types/Object';
+import { ObjectType, ObjectOptions, ObjectInterface } from './types/Object';
 import { TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
@@ -67,7 +67,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
   public updated: number;
   public description: string;
   public meta: any;
-  public params: ObjectType<ObjectOptions>;
+  public params: ObjectType<ObjectOptions<any>>;
   public expression: Expression;
   public defaults: any;
   public tests: FuncTest[];
@@ -157,8 +157,8 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
     if (paramType)
     {
-      DataTypes.objectSet(this.params.options.props, newName, paramType);
-      DataTypes.objectRemove(this.params.options.props, name);
+      DataTypes.objectSet(this.params.options.props as any, newName, paramType);
+      DataTypes.objectRemove(this.params.options.props as any, name);
 
       if (name in this.defaults)
       {
@@ -179,7 +179,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
     if (exists)
     {
-      DataTypes.objectRemove(this.params.options.props, name);
+      DataTypes.objectRemove(this.params.options.props as any, name);
       DataTypes.objectRemove(this.defaults, name);
 
       this.trigger('removeParameter', this, name);
@@ -259,7 +259,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
   {
     return isEmpty(this.defaults)
       ? this.params
-      : Types.object(objectMap(this.params.options.props, (_, prop) => this.getParamType(prop)));
+      : Types.object(objectMap(this.params.options.props as ObjectInterface, (_, prop) => this.getParamType(prop)));
   }
 
   public getParamType(param: string)

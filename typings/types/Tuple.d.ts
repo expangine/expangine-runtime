@@ -2,21 +2,24 @@ import { Type, TypeProvider, TypeDescribeProvider, TypeInput, TypeSub, TypeCompa
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export declare class TupleType extends Type<Type[]> {
+export declare type TupleOptions<E extends any[]> = unknown extends E ? Type[] : {
+    [K in keyof E]: Type<E[K]>;
+};
+export declare class TupleType<E extends any[] = any> extends Type<E, TupleOptions<E>> {
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: TupleType;
+    static baseType: TupleType<unknown[]>;
     static decode(data: any[], types: TypeProvider): TupleType;
     static encode(type: TupleType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    static forItem(types: TypeInput[]): TupleType;
+    static forItem(types: TypeInput[]): TupleType<any[]>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
-    merge(type: TupleType): void;
+    merge(type: Type<E, TupleOptions<E>>): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getChildType(name: TypeChild): Type | null;
@@ -34,13 +37,13 @@ export declare class TupleType extends Type<Type[]> {
     getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
-    isValid(value: any): boolean;
+    isValid(value: any): value is E;
     normalize(value: any): any;
-    newInstance(): TupleType;
-    clone(): TupleType;
+    newInstance(): TupleType<E>;
+    clone(): TupleType<E>;
     encode(): any;
-    create(): any[];
+    create(): E;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any[]): any[];
-    toJson(value: any[]): any[];
+    fromJson(json: any[]): E;
+    toJson(value: E): any[];
 }

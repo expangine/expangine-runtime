@@ -11,7 +11,7 @@ import { Computeds } from '../Computed';
 
 const INDEX_NAME = 1;
 
-export class ReferenceType extends Type<string>
+export class ReferenceType extends Type<any, string>
 {
 
   public static STEP_REFERENCED = 'referenced';
@@ -187,7 +187,7 @@ export class ReferenceType extends Type<string>
     return newValue;
   }
   
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return this.getType().isValid(value);
   }

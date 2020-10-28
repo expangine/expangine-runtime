@@ -15,7 +15,9 @@ import { AnyType } from './Any';
 const INDEX_TYPE = 1;
 const RANDOM_CHANCE = 0.3;
 
-export class OptionalType extends Type<Type>
+export type OptionalInterface<T> = T | undefined | null;
+
+export class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>>
 {
 
   public static STEP_OPTIONAL = 'optional';
@@ -209,7 +211,7 @@ export class OptionalType extends Type<Type>
     ;
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is OptionalInterface<T>
   {
     return value === null 
       || value === undefined
@@ -223,12 +225,12 @@ export class OptionalType extends Type<Type>
       : this.options.normalize(value);
   }
 
-  public newInstance(): OptionalType
+  public newInstance(): OptionalType<T>
   {
     return new OptionalType(this.options.newInstance());
   }
 
-  public clone(): OptionalType
+  public clone(): OptionalType<T>
   {
     return new OptionalType(this.options.clone());
   }
@@ -238,24 +240,24 @@ export class OptionalType extends Type<Type>
     return OptionalType.encode(this);
   }
 
-  public create(): any
+  public create(): OptionalInterface<T>
   {
     return this.options ? this.options.create() : undefined;
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): OptionalInterface<T>
   {
     return this.options && rnd(0, 1, false) > RANDOM_CHANCE
       ? this.options.random(rnd)
       : undefined;
   }
 
-  public fromJson(json: any): any
+  public fromJson(json: any): OptionalInterface<T>
   {
     return json === undefined || json === null ? undefined : this.options.fromJson(json);
   }
 
-  public toJson(value: any): any
+  public toJson(value: OptionalInterface<T>): any
   {
     return value === undefined || value === null ? undefined : this.options.toJson(value);
   }

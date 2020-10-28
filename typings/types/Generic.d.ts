@@ -9,7 +9,7 @@ export interface GenericOptions {
     path: TypeChild[];
     base?: Type;
 }
-export declare class GenericType extends Type<GenericOptions> {
+export declare class GenericType extends Type<any, GenericOptions> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -43,7 +43,7 @@ export declare class GenericType extends Type<GenericOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): GenericType;
     clone(): GenericType;

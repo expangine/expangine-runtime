@@ -13,7 +13,7 @@ export interface DateOptions {
     forceEndOf?: Unit;
     withTime?: boolean;
 }
-export declare class DateType extends Type<DateOptions> {
+export declare class DateType extends Type<Date, DateOptions> {
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -42,13 +42,13 @@ export declare class DateType extends Type<DateOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is Date;
     normalize(value: any): any;
     newInstance(): DateType;
     clone(): DateType;
-    encode(): any;
-    create(): any;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    encode(): Date;
+    create(): Date;
+    random(rnd: (a: number, b: number, whole: boolean) => number): Date;
     getMin(): Date | undefined;
     getMax(): Date | undefined;
     fromJson(json: string): Date;

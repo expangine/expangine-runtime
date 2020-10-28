@@ -58,7 +58,7 @@ export class Exprs
       : value instanceof Expression 
         ? value
         : isObject(value)
-          ? objectMap<Expression, ExpressionValue>(value, (v) => this.parse(v))
+          ? objectMap<Record<string, ExpressionValue>, ExpressionMap>(value, (v) => this.parse(v))
           : new ConstantExpression(value);
   }
 

@@ -17,12 +17,12 @@ const INDEX_VALUE = 1;
 const RANDOM_MIN = 2;
 const RANDOM_MAX = 5;
 
-export interface SetOptions 
+export interface SetOptions<V> 
 {
-  value: Type;
+  value: Type<V>;
 }
 
-export class SetType extends Type<SetOptions> 
+export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
 {
 
   public static STEP_VALUE = 'value';
@@ -321,7 +321,7 @@ export class SetType extends Type<SetOptions>
     });
   }
 
-  public isValid(test: any): boolean 
+  public isValid(test: any): test is Set<V>
   {
     if (test instanceof Set || isArray(test))
     {
@@ -384,18 +384,18 @@ export class SetType extends Type<SetOptions>
     return out;
   }
 
-  public fromJson(json: Array<any>): Set<any>
+  public fromJson(json: Array<V>): Set<V>
   {
     const { value } = this.options;
 
     return new Set(json.map((v) => value.fromJson(v)));
   }
 
-  public toJson(set: Set<any>): Array<any>
+  public toJson(set: Set<V>): Array<V>
   {
     const { value } = this.options;
 
-    return Array.from(set.entries()).map((v) => value.toJson(v));
+    return Array.from(set.values()).map((v) => value.toJson(v));
   }
 
 }

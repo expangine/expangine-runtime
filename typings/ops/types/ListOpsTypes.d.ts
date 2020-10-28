@@ -17,7 +17,7 @@ export declare const ListOpsTypes: {
     removeWhere: import("../..").OperationTypes<"list" | "where", never, "list" | "index" | "item">;
     clear: import("../..").OperationTypes<"list", never, never>;
     contains: import("../..").OperationTypes<"list" | "isEqual" | "item", never, "list" | "value" | "test">;
-    find: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "index" | "item">;
+    find: import("../..").OperationTypes<"list" | "where", "reverse" | "start", "list" | "index" | "item">;
     copy: import("../..").OperationTypes<"list", "deepCopy", "copy">;
     reverse: import("../..").OperationTypes<"list", never, never>;
     exclude: import("../..").OperationTypes<"list" | "isEqual" | "exclude", never, "list" | "value" | "test">;
@@ -33,7 +33,7 @@ export declare const ListOpsTypes: {
     prepend: import("../..").OperationTypes<"list" | "prepend", never, never>;
     indexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
     lastIndexOf: import("../..").OperationTypes<"list" | "isEqual" | "item", "start", "list" | "value" | "test">;
-    findIndex: import("../..").OperationTypes<"list" | "where", "start" | "reverse", "list" | "index" | "item">;
+    findIndex: import("../..").OperationTypes<"list" | "where", "reverse" | "start", "list" | "index" | "item">;
     last: import("../..").OperationTypes<"list", never, never>;
     first: import("../..").OperationTypes<"list", never, never>;
     count: import("../..").OperationTypes<"list", never, never>;
@@ -51,11 +51,11 @@ export declare const ListOpsTypes: {
     group: import("../..").OperationTypes<"list" | "by", "getValue", "list" | "index" | "item">;
     toListMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
     toMap: import("../..").OperationTypes<"list" | "getKey", "getValue", "list" | "index" | "item">;
-    joinInner: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinLeft: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinRight: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinFull: import("../..").OperationTypes<"b" | "a" | "join" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
-    joinCross: import("../..").OperationTypes<"b" | "a" | "join", never, "joinA" | "joinB">;
+    joinInner: import("../..").OperationTypes<"join" | "b" | "a" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinLeft: import("../..").OperationTypes<"join" | "b" | "a" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinRight: import("../..").OperationTypes<"join" | "b" | "a" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinFull: import("../..").OperationTypes<"join" | "b" | "a" | "on", never, "onA" | "onB" | "joinA" | "joinB">;
+    joinCross: import("../..").OperationTypes<"join" | "b" | "a", never, "joinA" | "joinB">;
     min: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     max: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;
     sum: import("../..").OperationTypes<"list" | "value", never, "list" | "index" | "item">;

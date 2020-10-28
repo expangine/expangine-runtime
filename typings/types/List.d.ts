@@ -2,25 +2,25 @@ import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompa
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export interface ListOptions {
-    item: Type;
+export interface ListOptions<I = any> {
+    item: Type<I>;
     min?: number;
     max?: number;
 }
-export declare class ListType extends Type<ListOptions> {
+export declare class ListType<I = any> extends Type<I[], ListOptions<I>> {
     static STEP_ITEM: string;
     static CHILD_ITEM: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: ListType;
+    static baseType: ListType<any>;
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    static forItem(itemOrClass: TypeInput): ListType;
+    static forItem(itemOrClass: TypeInput): ListType<any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: ListType): void;
@@ -41,7 +41,7 @@ export declare class ListType extends Type<ListOptions> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is I[];
     normalize(value: any): any;
     newInstance(): ListType;
     clone(): ListType;

@@ -1,5 +1,5 @@
 
-import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider, TypeMap, TypeProvider, TypeChild } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider, TypeMap, TypeProvider, TypeChild, TypeMapFor } from '../Type';
 import { Operations } from '../Operation';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
@@ -15,15 +15,19 @@ import { GenericType } from './Generic';
 const INDEX_PROPS = 1;
 const INDEX_RETURN = 2;
 
-export type FunctionTypeProvider = Type | ((params: TypeMap) => Type);
+export type FunctionTypeProvider<T, P> = Type<T> | ((params: Partial<TypeMapFor<P>>) => Type<T>);
 
-export interface FunctionOptions
+export interface FunctionOptions<P extends Record<string, any> = any, R = any>
 {
-  params: Record<string, FunctionTypeProvider>;
-  returns?: FunctionTypeProvider;
+  params: {
+    [K in keyof P]: FunctionTypeProvider<P[K], P>
+  };
+  returns?: FunctionTypeProvider<R, P>;
 }
 
-export class FunctionType extends Type<FunctionOptions> 
+export type FunctionInterface<P = any, R = any> = (params: P) => R;
+
+export class FunctionType<P extends Record<string, any> = any, R = any> extends Type<FunctionInterface<P, R>, FunctionOptions<P, R>> 
 {
 
   public static STEP_RETURNS = 'returns';
@@ -73,12 +77,12 @@ export class FunctionType extends Type<FunctionOptions>
 
   }
 
-  public getParamTypes(inputTypes: TypeMap = {}): TypeMap
+  public getParamTypes(inputTypes: Partial<TypeMapFor<P>> = {}): TypeMapFor<P>
   {
     const { params } = this.options;
-    const out: TypeMap = {
-      ...inputTypes,
-    };
+    const out: TypeMapFor<P> = Object.create(null);
+
+    Object.assign(out, inputTypes);
 
     for (const paramName in params)
     {
@@ -89,16 +93,16 @@ export class FunctionType extends Type<FunctionOptions>
       {
         out[paramName] = paramType(out);
       }
-      else if (!inputType || !paramType.acceptsType(inputType))
+      else if (!inputType || !(paramType as Type).acceptsType(inputType))
       {
-        out[paramName] = paramType;
+        out[paramName] = paramType as Type;
       }
     }
 
     return out;
   }
 
-  public getReturnType(inputTypes: TypeMap = {}): Type
+  public getReturnType(inputTypes: Partial<TypeMapFor<P>> = {}): Type<R>
   {
     const { returns } = this.options;
 
@@ -153,7 +157,7 @@ export class FunctionType extends Type<FunctionOptions>
     return overloaded;
   }
 
-  public getResolvedType(type: GenericType, inputTypes: TypeMap = {}): Type
+  public getResolvedType(type: GenericType, inputTypes: Partial<TypeMapFor<P>> = {}): Type
   {
     const { path, base } = type.options;
 
@@ -303,7 +307,7 @@ export class FunctionType extends Type<FunctionOptions>
     return false;
   }
 
-  public traverse<R>(traverse: Traverser<Type, R>): R
+  public traverse<A>(traverse: Traverser<Type, A>): A
   {
     const { params, returns } = this.options;
 
@@ -315,7 +319,7 @@ export class FunctionType extends Type<FunctionOptions>
           ? type({})
           : type;
         
-        traverse.step(paramName, paramType, (replaceWith) => DataTypes.objectSet(params, paramName, replaceWith), () => DataTypes.objectRemove(params, paramName))
+        traverse.step(paramName as string, paramType, (replaceWith) => DataTypes.objectSet(params, paramName, replaceWith), () => DataTypes.objectRemove(params, paramName))
       });
 
       const returnType = isFunction(returns)
@@ -397,7 +401,7 @@ export class FunctionType extends Type<FunctionOptions>
     return Exprs.null();
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is FunctionInterface<P, R>
   {
     return isFunction(value);
   }

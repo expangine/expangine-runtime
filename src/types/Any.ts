@@ -138,7 +138,7 @@ export class AnyType extends Type
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return true;
   }

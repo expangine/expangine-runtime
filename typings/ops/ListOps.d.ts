@@ -21,7 +21,7 @@ export declare const ListOps: {
     removeWhere: import("../Operation").OperationResolved<"list" | "where", any, "list" | "index" | "item", "where", "list">;
     clear: import("../Operation").OperationResolved<"list", any, any, any, "list">;
     contains: import("../Operation").OperationResolved<"list" | "isEqual" | "item", any, "list" | "value" | "test", "isEqual", never>;
-    find: import("../Operation").OperationResolved<"list" | "where", "start" | "reverse", "list" | "index" | "item", "where", "list">;
+    find: import("../Operation").OperationResolved<"list" | "where", "reverse" | "start", "list" | "index" | "item", "where", "list">;
     copy: import("../Operation").OperationResolved<"list", "deepCopy", "copy", "deepCopy", "list">;
     reverse: import("../Operation").OperationResolved<"list", any, any, any, "list">;
     exclude: import("../Operation").OperationResolved<"list" | "isEqual" | "exclude", any, "list" | "value" | "test", "isEqual", "list">;
@@ -37,7 +37,7 @@ export declare const ListOps: {
     prepend: import("../Operation").OperationResolved<"list" | "prepend", any, any, any, "list">;
     indexOf: import("../Operation").OperationResolved<"list" | "isEqual" | "item", "start", "list" | "value" | "test", "isEqual", "list">;
     lastIndexOf: import("../Operation").OperationResolved<"list" | "isEqual" | "item", "start", "list" | "value" | "test", "isEqual", "list">;
-    findIndex: import("../Operation").OperationResolved<"list" | "where", "start" | "reverse", "list" | "index" | "item", "where", never>;
+    findIndex: import("../Operation").OperationResolved<"list" | "where", "reverse" | "start", "list" | "index" | "item", "where", never>;
     last: import("../Operation").OperationResolved<"list", any, any, any, "list">;
     first: import("../Operation").OperationResolved<"list", any, any, any, "list">;
     count: import("../Operation").OperationResolved<"list", never, never, never, never>;
@@ -55,11 +55,11 @@ export declare const ListOps: {
     group: import("../Operation").OperationResolved<"list" | "by", "getValue", "list" | "index" | "item", "by" | "getValue", "list" | "by" | "getValue">;
     toListMap: import("../Operation").OperationResolved<"list" | "getKey", "getValue", "list" | "index" | "item", "getValue" | "getKey", "list" | "getValue" | "getKey">;
     toMap: import("../Operation").OperationResolved<"list" | "getKey", "getValue", "list" | "index" | "item", "getValue" | "getKey", "list" | "getValue" | "getKey">;
-    joinInner: import("../Operation").OperationResolved<"b" | "a" | "join" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinLeft: import("../Operation").OperationResolved<"b" | "a" | "join" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinRight: import("../Operation").OperationResolved<"b" | "a" | "join" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinFull: import("../Operation").OperationResolved<"b" | "a" | "join" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
-    joinCross: import("../Operation").OperationResolved<"b" | "a" | "join", any, "joinA" | "joinB", "join", "join">;
+    joinInner: import("../Operation").OperationResolved<"join" | "b" | "a" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinLeft: import("../Operation").OperationResolved<"join" | "b" | "a" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinRight: import("../Operation").OperationResolved<"join" | "b" | "a" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinFull: import("../Operation").OperationResolved<"join" | "b" | "a" | "on", any, "onA" | "onB" | "joinA" | "joinB", "join" | "on", "join">;
+    joinCross: import("../Operation").OperationResolved<"join" | "b" | "a", any, "joinA" | "joinB", "join", "join">;
     min: import("../Operation").OperationResolved<"list" | "value", any, "list" | "index" | "item", "value", never>;
     max: import("../Operation").OperationResolved<"list" | "value", any, "list" | "index" | "item", "value", never>;
     sum: import("../Operation").OperationResolved<"list" | "value", any, "list" | "index" | "item", "value", never>;

@@ -15,13 +15,12 @@ import { Exprs } from '../Exprs';
 const INDEX_OPTIONS = 1;
 
 
-export interface ColorOptions extends ObjectOptions
+export interface ColorOptions extends ObjectOptions<Color>
 {
   hasAlpha?: boolean;
 }
 
-
-export class ColorType extends ObjectType<ColorOptions>
+export class ColorType extends ObjectType<Color, ColorOptions>
 {
 
   public static readonly componentType = new NumberType({ 
@@ -64,7 +63,7 @@ export class ColorType extends ObjectType<ColorOptions>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | null
   {
     const parsed = ColorType.baseType.normalize(data);
 
@@ -176,7 +175,7 @@ export class ColorType extends ObjectType<ColorOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is Color 
   {
     return this.normalize(value) !== undefined;
   }

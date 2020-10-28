@@ -11,9 +11,19 @@ import { ReferenceData } from './ReferenceData';
 
 export type TypeInput = TypeClass | Type;
 
+export type TypeInputFor<T> = TypeClass<Type<T>, T> | Type<T>;
+
 export type TypeInputMap = Record<string, TypeInput>;
 
+export type TypeInputMapFor<T> = {
+  [K in keyof T]: TypeInputFor<T[K]>;
+};
+
 export type TypeMap = Record<string, Type>;
+
+export type TypeMapFor<T> = {
+  [K in keyof T]: Type<T[K]>;
+};
 
 export type TypeChild = string | number;
 
@@ -61,7 +71,7 @@ export interface TypeParser
   (data: any, types: TypeProvider): Type;
 }
 
-export interface TypeClass<T extends Type<O> = any, O = any> 
+export interface TypeClass<T extends Type<D, O> = any, D = any, O = any>
 {
   id: string;
   operations: Operations;
@@ -70,13 +80,13 @@ export interface TypeClass<T extends Type<O> = any, O = any>
   decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
   encode(this: TypeClass<T>, type: T): any;
   describePriority: number;
-  describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+  describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type<D, O> | null;
   register(this: TypeClass<T>): void;
   registered: boolean;
   new(options: O, ...args: any[]): T;
 }
 
-export abstract class Type<O = any> implements Traversable<Type>
+export abstract class Type<D = any, O = any> implements Traversable<Type>
 {
 
   public options: O;
@@ -91,7 +101,7 @@ export abstract class Type<O = any> implements Traversable<Type>
 
   public abstract getId(): string;
 
-  public abstract merge(type: Type<O>): void;
+  public abstract merge(type: Type<D, O>): void;
 
   public abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
 
@@ -107,7 +117,7 @@ export abstract class Type<O = any> implements Traversable<Type>
     return [];
   }
 
-  public getParentOfType<T extends Type>(type: TypeClass<T>): T | null
+  public getParentOfType<T extends Type, R = any>(type: TypeClass<T, R>): T | null
   {
     let parent: Type = this.parent;
 
@@ -124,7 +134,7 @@ export abstract class Type<O = any> implements Traversable<Type>
     return null;
   }
 
-  public abstract getExactType(value: any): Type<O>;
+  public abstract getExactType(value: D): Type;
 
   public abstract getSimplifiedType(): Type;
 
@@ -272,22 +282,22 @@ export abstract class Type<O = any> implements Traversable<Type>
     return node;
   }
 
-  public abstract isValid(value: any): boolean;
+  public abstract isValid(value: any): value is D;
 
   public abstract normalize(value: any): any;
 
-  public abstract newInstance(): Type<O>;
+  public abstract newInstance(): Type<D, O>;
 
-  public abstract clone(): Type<O>;
+  public abstract clone(): Type<D, O>;
 
   public abstract encode(): any;
 
-  public abstract create(): any;
+  public abstract create(): D;
 
-  public abstract random(rnd: (a: number, b: number, whole: boolean) => number): any;
+  public abstract random(rnd: (a: number, b: number, whole: boolean) => number): D;
 
-  public abstract fromJson(json: any): any;
+  public abstract fromJson(json: any): D;
 
-  public abstract toJson(value: any): any;
+  public abstract toJson(value: D): any;
   
 }

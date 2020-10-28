@@ -11,7 +11,7 @@ export interface TextOptions {
     forceLower?: boolean;
     matches?: RegExp;
 }
-export declare class TextType extends Type<TextOptions> {
+export declare class TextType extends Type<string, TextOptions> {
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
@@ -40,13 +40,13 @@ export declare class TextType extends Type<TextOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is string;
     normalize(value: any): any;
     newInstance(): TextType;
     clone(): TextType;
     encode(): any;
     create(): string;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): string;
     fromJson(json: string): string;
     toJson(value: string): string;
 }

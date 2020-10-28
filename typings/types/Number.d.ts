@@ -7,7 +7,7 @@ export interface NumberOptions {
     max?: number;
     whole?: boolean;
 }
-export declare class NumberType extends Type<NumberOptions> {
+export declare class NumberType extends Type<number, NumberOptions> {
     static WHOLE_EPSILON: number;
     static id: string;
     static operations: import("..").Operations;
@@ -37,7 +37,7 @@ export declare class NumberType extends Type<NumberOptions> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is number;
     normalize(value: any): any;
     newInstance(): NumberType;
     clone(): NumberType;

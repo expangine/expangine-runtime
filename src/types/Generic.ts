@@ -19,7 +19,7 @@ export interface GenericOptions
   base?: Type;
 }
 
-export class GenericType extends Type<GenericOptions>
+export class GenericType extends Type<any, GenericOptions>
 {
 
   public static id = ID.Generic;
@@ -192,7 +192,7 @@ export class GenericType extends Type<GenericOptions>
     return this.getResolvedType().getCompareExpression();
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return this.getResolvedType().isValid(value);
   }

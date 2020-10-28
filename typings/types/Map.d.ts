@@ -2,11 +2,11 @@ import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompa
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export interface MapOptions {
-    key: Type;
-    value: Type;
+export interface MapOptions<K = any, V = any> {
+    key: Type<K>;
+    value: Type<V>;
 }
-export declare class MapType extends Type<MapOptions> {
+export declare class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>> {
     static STEP_KEY: string;
     static STEP_VALUE: string;
     static CHILD_KEY: string;
@@ -14,14 +14,14 @@ export declare class MapType extends Type<MapOptions> {
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: MapType;
+    static baseType: MapType<string, any>;
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType;
+    static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType<any, any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: MapType): void;
@@ -42,7 +42,7 @@ export declare class MapType extends Type<MapOptions> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(test: any): boolean;
+    isValid(test: any): test is Map<K, V>;
     normalize(test: any): any;
     private iterate;
     newInstance(): MapType;

@@ -20,13 +20,13 @@ const INDEX_KEY = 2;
 const RANDOM_MIN = 2;
 const RANDOM_MAX = 5;
 
-export interface MapOptions 
+export interface MapOptions<K = any, V = any>
 {
-  key: Type;
-  value: Type;
+  key: Type<K>;
+  value: Type<V>;
 }
 
-export class MapType extends Type<MapOptions> 
+export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>> 
 {
 
   public static STEP_KEY = 'key';
@@ -43,12 +43,15 @@ export class MapType extends Type<MapOptions>
 
   public static computeds = MapComputeds;
 
-  public static baseType = new MapType({ key: TextType.baseType, value: AnyType.baseType });
+  public static baseType = new MapType<string, any>({ 
+    key: TextType.baseType,
+    value: AnyType.baseType
+  });
 
   public static decode(data: any[], types: TypeProvider): MapType 
   {
     const value = types.getType(data[INDEX_VALUE]);
-    const key = data[INDEX_KEY] ? types.getType(data[INDEX_KEY]) : TextType.baseType;
+    const key = types.getType(data[INDEX_KEY], TextType.baseType);
 
     return new MapType({ key, value });
   }
@@ -399,7 +402,7 @@ export class MapType extends Type<MapOptions>
     }
   }
 
-  public isValid(test: any): boolean 
+  public isValid(test: any): test is Map<K, V> 
   {
     if (test instanceof Map || isObject(test))
     {

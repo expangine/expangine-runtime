@@ -11,7 +11,7 @@ import { ObjectType } from './Object';
 
 const INDEX_NAME = 1;
 
-export class EntityType extends Type<string>
+export class EntityType extends Type<any, string>
 {
 
   public static STEP_ENTITY = 'entity';
@@ -64,7 +64,7 @@ export class EntityType extends Type<string>
     this.provider = provider;
   }
 
-  public getType()
+  public getType(): Type
   {
     return this.provider
       ? this.provider.getType(this.options, NullType.baseType)
@@ -184,7 +184,7 @@ export class EntityType extends Type<string>
     return newValue;
   }
   
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return this.getType().isValid(value);
   }

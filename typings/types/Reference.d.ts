@@ -4,7 +4,7 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Operations } from '../Operation';
 import { Computeds } from '../Computed';
-export declare class ReferenceType extends Type<string> {
+export declare class ReferenceType extends Type<any, string> {
     static STEP_REFERENCED: string;
     static CHILD_REFERENCED: string;
     static id: string;
@@ -19,7 +19,7 @@ export declare class ReferenceType extends Type<string> {
     static register(): void;
     protected provider: TypeProvider;
     constructor(name: string, provider: TypeProvider);
-    getType(): Type<any>;
+    getType(): Type<any, any>;
     getOperations(): Record<string, import("../Operation").OperationGeneric>;
     getId(): string;
     merge(type: ReferenceType): void;
@@ -41,7 +41,7 @@ export declare class ReferenceType extends Type<string> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): ReferenceType;
     clone(): ReferenceType;

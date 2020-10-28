@@ -1,33 +1,36 @@
-import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider, TypeMap, TypeProvider, TypeChild } from '../Type';
+import { Type, TypeSub, TypeCompatibleOptions, TypeDescribeProvider, TypeMap, TypeProvider, TypeChild, TypeMapFor } from '../Type';
 import { Operations } from '../Operation';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 import { GenericType } from './Generic';
-export declare type FunctionTypeProvider = Type | ((params: TypeMap) => Type);
-export interface FunctionOptions {
-    params: Record<string, FunctionTypeProvider>;
-    returns?: FunctionTypeProvider;
+export declare type FunctionTypeProvider<T, P> = Type<T> | ((params: Partial<TypeMapFor<P>>) => Type<T>);
+export interface FunctionOptions<P extends Record<string, any> = any, R = any> {
+    params: {
+        [K in keyof P]: FunctionTypeProvider<P[K], P>;
+    };
+    returns?: FunctionTypeProvider<R, P>;
 }
-export declare class FunctionType extends Type<FunctionOptions> {
+export declare type FunctionInterface<P = any, R = any> = (params: P) => R;
+export declare class FunctionType<P extends Record<string, any> = any, R = any> extends Type<FunctionInterface<P, R>, FunctionOptions<P, R>> {
     static STEP_RETURNS: string;
     static CHILD_RETURN: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
-    static baseType: FunctionType;
+    static baseType: FunctionType<any, any>;
     static decode(data: any[], types: TypeProvider): FunctionType;
     static encode(type: FunctionType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    getParamTypes(inputTypes?: TypeMap): TypeMap;
-    getReturnType(inputTypes?: TypeMap): Type;
+    getParamTypes(inputTypes?: Partial<TypeMapFor<P>>): TypeMapFor<P>;
+    getReturnType(inputTypes?: Partial<TypeMapFor<P>>): Type<R>;
     getTypeFromPath(path: TypeChild[], inputTypes?: TypeMap): Type | null;
     getOverloaded(inputTypes?: TypeMap): FunctionType;
-    getResolvedType(type: GenericType, inputTypes?: TypeMap): Type;
+    getResolvedType(type: GenericType, inputTypes?: Partial<TypeMapFor<P>>): Type;
     getId(): string;
     getOperations(): {};
     merge(type: FunctionType): void;
@@ -40,14 +43,14 @@ export declare class FunctionType extends Type<FunctionOptions> {
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
     isOptional(): boolean;
     isSimple(): boolean;
-    traverse<R>(traverse: Traverser<Type, R>): R;
+    traverse<A>(traverse: Traverser<Type, A>): A;
     getTypeFromStep(step: TraverseStep): Type | null;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is FunctionInterface<P, R>;
     normalize(value: any): any;
     newInstance(): FunctionType;
     clone(): FunctionType;

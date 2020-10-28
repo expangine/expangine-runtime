@@ -25,7 +25,7 @@ export interface DateOptions
   withTime?: boolean;
 }
 
-export class DateType extends Type<DateOptions> 
+export class DateType extends Type<Date, DateOptions> 
 {
 
   public static id = ID.Date;
@@ -291,7 +291,7 @@ export class DateType extends Type<DateOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is Date 
   {
     const { parseAsUTC, validateMin, validateMax } = this.options;
     const parsed = parse(value, parseAsUTC);
@@ -357,17 +357,17 @@ export class DateType extends Type<DateOptions>
     return new DateType(DataTypes.copy(this.options));
   }
 
-  public encode(): any 
+  public encode(): Date 
   {
     return DateType.encode(this);
   }
 
-  public create(): any
+  public create(): Date
   {
     return new Date();
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): Date
   {
     const value = new Date();
 

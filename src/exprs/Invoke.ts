@@ -8,6 +8,7 @@ import { ValidationHandler, ValidationType, ValidationSeverity } from '../Valida
 import { Exprs } from '../Exprs';
 import { DataTypes } from '../DataTypes';
 import { PathExpression } from './Path';
+import { ObjectInterface } from '../types/Object';
 
 
 const INDEX_NAME = 1;
@@ -125,7 +126,7 @@ export class InvokeExpression extends Expression
     {
       const params: TypeMap = {};
 
-      objectEach(func.params.options.props, (param, paramName) =>
+      objectEach<ObjectInterface>(func.params.options.props, (param, paramName) =>
       {
         const arg = this.args[paramName];
 

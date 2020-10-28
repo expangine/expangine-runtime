@@ -4,7 +4,7 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class NullType extends Type<null> {
+export declare class NullType extends Type<null | undefined, null> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -31,7 +31,7 @@ export declare class NullType extends Type<null> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is (null | undefined);
     normalize(value: any): any;
     newInstance(): NullType;
     clone(): NullType;

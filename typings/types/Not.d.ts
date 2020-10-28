@@ -4,7 +4,7 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class NotType extends Type<Type[]> {
+export declare class NotType extends Type<any, Type[]> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
@@ -36,7 +36,7 @@ export declare class NotType extends Type<Type[]> {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): NotType;
     clone(): NotType;

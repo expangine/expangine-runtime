@@ -1,10 +1,10 @@
 import { EnumType } from '../../types/Enum';
 import { ManyType } from '../../types/Many';
-export declare const ColorComponentEnum: EnumType;
+export declare const ColorComponentEnum: EnumType<any, any>;
 export declare const ColorOrNumber: ManyType;
-export declare const ColorFormats: EnumType;
-export declare const ColorNames: EnumType;
-export declare const ColorBlendModes: EnumType;
+export declare const ColorFormats: EnumType<any, any>;
+export declare const ColorNames: EnumType<any, any>;
+export declare const ColorBlendModes: EnumType<any, any>;
 export declare const ColorOpsTypes: {
     create: import("../..").OperationTypes<never, never, never>;
     maybe: import("../..").OperationTypes<"value", never, never>;

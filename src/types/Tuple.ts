@@ -20,7 +20,12 @@ import { NullType } from './Null';
 
 const INDEX_ELEMENTS = 1;
 
-export class TupleType extends Type<Type[]>
+export type TupleOptions<E extends any[]> = 
+  unknown extends E
+  ? Type[]
+  : { [K in keyof E]: Type<E[K]> };
+
+export class TupleType<E extends any[] = any> extends Type<E, TupleOptions<E>>
 {
 
   public static id = ID.Tuple;
@@ -74,7 +79,7 @@ export class TupleType extends Type<Type[]>
     return TupleType.operations.map;
   }
 
-  public merge(type: TupleType): void
+  public merge(type: Type<E, TupleOptions<E>>): void
   {
     
   }
@@ -317,7 +322,7 @@ export class TupleType extends Type<Type[]>
     this.options.forEach(t => t.removeDescribedRestrictions());
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is E
   {
     if (!isArray(value))
     {
@@ -354,14 +359,14 @@ export class TupleType extends Type<Type[]>
     return value;
   }
 
-  public newInstance(): TupleType
+  public newInstance(): TupleType<E>
   {
-    return new TupleType([]);
+    return new TupleType([]) as any as TupleType<E>;
   }
 
-  public clone(): TupleType
+  public clone(): TupleType<E>
   {
-    return new TupleType(this.options.map(e => e.clone()));
+    return new TupleType(this.options.map(e => e.clone())) as any as TupleType<E>;
   }
 
   public encode(): any 
@@ -369,9 +374,9 @@ export class TupleType extends Type<Type[]>
     return TupleType.encode(this);
   }
 
-  public create(): any[]
+  public create(): E
   {
-    return this.options.map(e => e.create());
+    return this.options.map(e => e.create()) as E;
   }
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any
@@ -379,12 +384,12 @@ export class TupleType extends Type<Type[]>
     return this.options.map(e => e.random(rnd));
   }
 
-  public fromJson(json: any[]): any[]
+  public fromJson(json: any[]): E
   {
-    return this.options.map((e, i) => e.fromJson(json[i]));
+    return this.options.map((e, i) => e.fromJson(json[i])) as E;
   }
 
-  public toJson(value: any[]): any[]
+  public toJson(value: E): any[]
   {
     return this.options.map((e, i) => e.toJson(value[i]));
   }

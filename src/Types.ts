@@ -1,5 +1,5 @@
 
-import { Type, TypeInput, TypeInputMap, TypeClass, TypeResolved, TypeProvider } from './Type';
+import { Type, TypeInput, TypeClass, TypeResolved, TypeProvider, TypeInputFor, TypeInputMapFor } from './Type';
 import { isArray, isMap, MapInput, toMap, isSameClass, isObject, objectMap } from './fns';
 import { NumberType } from './types/Number'
 import { AnyType } from './types/Any';
@@ -63,9 +63,9 @@ export class Types
     return new EntityType(name, types);
   }
 
-  public static enum(value: TypeInput, key: TypeInput = TextType, constants: MapInput = new Map([]))
+  public static enum<K = any, V = any>(value: TypeInputFor<V>, key: TypeInputFor<K> = TextType as any, constants: MapInput = new Map<K, V>([]))
   {
-    return this.setParent(new EnumType({
+    return this.setParent(new EnumType<K, V>({
       value: this.parse(value),
       key: this.parse(key),
       constants: toMap(constants),
@@ -74,7 +74,7 @@ export class Types
 
   public static enumForText(constants: string[] | Array<[string, string]> | Map<string, string>)
   {
-    return this.setParent(new EnumType({
+    return this.setParent(new EnumType<string, string>({
       value: this.text(),
       key: this.text(),
       constants: isMap(constants)
@@ -85,9 +85,9 @@ export class Types
     }));
   }
 
-  public static list(item: TypeInput, min?: number, max?: number)
+  public static list<I = any>(item: TypeInputFor<I>, min?: number, max?: number)
   {
-    return this.setParent(new ListType({
+    return this.setParent(new ListType<I>({
       item: this.parse(item),
       min, 
       max,
@@ -116,9 +116,9 @@ export class Types
     ));
   }
 
-  public static map(value: TypeInput, key: TypeInput = TextType)
+  public static map<K = string, V = any>(value: TypeInputFor<V>, key: TypeInputFor<K> = TextType as any)
   {
-    return this.setParent(new MapType({ 
+    return this.setParent(new MapType<K, V>({ 
       key: this.parse(key),
       value: this.parse(value)
     }));
@@ -149,14 +149,14 @@ export class Types
     return new TextType({ min: 1, max: 1 });
   }
 
-  public static object(props: TypeInputMap = {})
+  public static object<O = any>(props: TypeInputMapFor<O> = Object.create(null))
   {
-    return this.setParent(new ObjectType({ 
-      props: this.resolve(props),
+    return this.setParent(new ObjectType<O>({ 
+      props: objectMap(props, (v) => this.parse(v)),
     }));
   }
 
-  public static optional(type: TypeInput): Type
+  public static optional<T = any>(type: TypeInputFor<T>): Type<T | undefined | null>
   {
     const innerType = this.parse(type);
 
@@ -168,7 +168,7 @@ export class Types
     return this.setParent(new ColorType(options));
   }
 
-  public static set(value: TypeInput)
+  public static set<V = any>(value: TypeInputFor<V>)
   {
     return this.setParent(new SetType({
       value: this.parse(value),
@@ -180,14 +180,14 @@ export class Types
     return new TextType(options);
   }
 
-  public static tuple(types: TypeInput[]): TupleType
-  public static tuple(...types: TypeInput[]): TupleType
-  public static tuple(...types: TypeInput[] | [TypeInput[]]): TupleType
+  public static tuple<E extends any[]>(types: TypeInputMapFor<E>): TupleType
+  public static tuple<E extends any[]>(...types: TypeInputMapFor<E>): TupleType
+  public static tuple<E extends any[]>(...types: TypeInputMapFor<E> | [TypeInputMapFor<E>]): TupleType<E>
   {
-    return this.setParent(new TupleType(
-      isArray(types[0])
+    return this.setParent(new TupleType<E>(
+      (isArray(types[0])
         ? types[0].map((t) => this.parse(t))
-        : (types as TypeInput[]).map((t) => this.parse(t))
+        : (types as TypeInput[]).map((t) => this.parse(t))) as any
     ));
   }
 
@@ -196,15 +196,15 @@ export class Types
     return this.setParent(new GenericType({ path, base }));
   }
 
-  public static func(params: TypeInputMap, returns?: TypeInput): FunctionType
+  public static func<P = any, R = any>(params: TypeInputMapFor<P>, returns?: TypeInputFor<R>): FunctionType<P, R>
   {
-    return this.setParent(new FunctionType({
+    return this.setParent(new FunctionType<P, R>({
       params: objectMap(params, (p) => this.parse(p)),
       returns: returns ? this.parse(returns) : undefined,
     }));
   }
 
-  public static parse(input: TypeInput): Type
+  public static parse<V = any>(input: TypeInputFor<V>): Type<V>
   {
     return input instanceof Type
       ? input

@@ -30,7 +30,7 @@ export interface TextOptions
   matches?: RegExp;
 }
 
-export class TextType extends Type<TextOptions> 
+export class TextType extends Type<string, TextOptions> 
 {
 
   public static id = ID.Text;
@@ -306,7 +306,7 @@ export class TextType extends Type<TextOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is string 
   {
     if (!isString(value))
     {
@@ -381,7 +381,7 @@ export class TextType extends Type<TextOptions>
     return '';
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): string
   {
     const { min, max, requireLower, forceLower, requireUpper, forceUpper } = this.options;
     const lower = requireLower || forceLower;

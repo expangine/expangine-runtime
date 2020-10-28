@@ -1,6 +1,6 @@
 
 import { objectMap, isObject, objectValues, isString, objectEach } from '../fns';
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild, TypeMapFor } from '../Type';
 import { Exprs } from '../Exprs';
 import { Expression } from '../Expression';
 import { ObjectOps, ObjectOperations, ObjectComputeds } from '../ops/ObjectOps';
@@ -17,12 +17,14 @@ import { DataTypeRaw, DataTypes } from '../DataTypes';
 
 const INDEX_PROPS = 1;
 
-export interface ObjectOptions 
+export type ObjectInterface = Record<string, any>;
+
+export interface ObjectOptions<O extends ObjectInterface> 
 {
-  props: TypeMap;
+  props: TypeMapFor<O>;
 }
 
-export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> 
+export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends ObjectOptions<D> = ObjectOptions<D>> extends Type<D, O> 
 {
 
   public static wilcardProperty = '*';
@@ -58,7 +60,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
       return null;
     }
 
-    const type = new ObjectType({ props: {} });
+    const type = new ObjectType<any>({ props: {} });
 
     cache.set(data, type);
 
@@ -185,7 +187,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return ObjectType.operations.map;
   }
 
-  public merge(type: Type<O>): void
+  public merge(type: Type<D>): void
   {
     const p1 = this.options.props;
     const p2 = type.options.props;
@@ -206,7 +208,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     {
       if (!(prop in p1) && p2[prop])
       {
-        p1[prop] = Types.optional(p2[prop]);
+        (p1 as any)[prop] = Types.optional(p2[prop]);
       }
     }
   }
@@ -251,13 +253,13 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     const props = objectValues(this.options.props);
 
     return [
-      ...objectValues(this.options.props, (value, key) => ({ key, value })),
+      ...objectValues(this.options.props, (value, key) => ({ key: key as string, value })),
       {
-        key: new EnumType({
+        key: new EnumType<string, string>({
           key: TextType.baseType,
           value: TextType.baseType,
-          constants: new Map(
-            objectValues(this.options.props, (prop, key) => [key, key]),
+          constants: new Map<string, string>(
+            objectValues(this.options.props, (prop, key) => [key as string, key as string]),
           ),
         }),
         value: Types.mergeMany(props, NullType.baseType),
@@ -293,7 +295,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
   {
     return traverse.enter(this, () => 
       objectEach(this.options.props, 
-        (type, prop) => traverse.step(prop, type, (replaceWith) => this.options.props[prop] = replaceWith, () => DataTypes.objectRemove(this.options.props, prop))
+        (type, prop) => traverse.step(prop as string, type, (replaceWith) => this.options.props[prop] = replaceWith, () => DataTypes.objectRemove(this.options.props, prop))
       )
     );
   }
@@ -480,7 +482,7 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return newValue;
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is D 
   {
     if (!isObject(value)) 
     {
@@ -528,14 +530,14 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return value;
   }
 
-  public newInstance(): ObjectType<O>
+  public newInstance(): ObjectType<D, O>
   {
     return new ObjectType({ props: {} } as O);
   }
 
-  public clone(): ObjectType<O>
+  public clone(): ObjectType<D, O>
   {
-    return new ObjectType<O>({
+    return new ObjectType<D, O>({
       props: objectMap(this.options.props, p => p ? p.clone() : p),
     } as O);
   }
@@ -579,16 +581,16 @@ export class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O>
     return out;
   }
 
-  public fromJson(json: any): any
+  public fromJson(json: any): D
   {
     return objectMap(json, (value, key) => {
-      const propType = this.options.props[key];
+      const propType = this.options.props[key as any];
 
       return propType ? propType.fromJson(value) : value;
     });
   }
 
-  public toJson(value: any): any
+  public toJson(value: D): any
   {
     return objectMap(value, (subvalue, key) => {
       const propType = this.options.props[key];

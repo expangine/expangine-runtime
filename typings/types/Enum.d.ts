@@ -4,12 +4,12 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export interface EnumOptions {
-    key: Type;
-    value: Type;
-    constants: Map<any, any>;
+export interface EnumOptions<K = any, V = any> {
+    key: Type<K, any>;
+    value: Type<V, any>;
+    constants: Map<K, V>;
 }
-export declare class EnumType extends Type<EnumOptions> {
+export declare class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>> {
     static STEP_KEY: string;
     static STEP_VALUE: string;
     static CHILD_KEY: string;
@@ -17,7 +17,7 @@ export declare class EnumType extends Type<EnumOptions> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
-    static baseType: EnumType;
+    static baseType: EnumType<string, string>;
     static decode(data: any[], types: TypeProvider): EnumType;
     static encode(type: EnumType): any;
     static describePriority: number;
@@ -46,7 +46,7 @@ export declare class EnumType extends Type<EnumOptions> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(test: any): boolean;
+    isValid(test: any): test is V;
     normalize(value: any): any;
     newInstance(): EnumType;
     clone(): EnumType;

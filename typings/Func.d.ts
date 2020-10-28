@@ -39,7 +39,7 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     updated: number;
     description: string;
     meta: any;
-    params: ObjectType<ObjectOptions>;
+    params: ObjectType<ObjectOptions<any>>;
     expression: Expression;
     defaults: any;
     tests: FuncTest[];
@@ -53,9 +53,9 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     addTest(test: FuncTest, delayChange?: boolean): void;
     updateTest(test: FuncTest | number, newTest: FuncTest, delayChange?: boolean): boolean;
     removeTest(test: FuncTest | number, delayChange?: boolean): boolean;
-    getReturnType(defs: DefinitionProvider, paramsTypes?: TypeMap): import("./Type").Type<any>;
+    getReturnType(defs: DefinitionProvider, paramsTypes?: TypeMap): import("./Type").Type<any, any>;
     getParamTypes(): ObjectType;
-    getParamType(param: string): import("./Type").Type<any>;
+    getParamType(param: string): any;
     getArguments(args: any, returnNew?: boolean): any;
     refactor(transform: Expression, runtime: Runtime): void;
     mutates(def: DefinitionProvider, arg: string): boolean;

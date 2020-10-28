@@ -188,28 +188,31 @@ export function objectSync<V, K extends RecordKey = string>(
   return target;
 }
 
-export function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(
-  map: Record<K, V>, 
-  getValue: (value: V, key: K) => R, 
-  getKey: (key: K, value: V) => J = ((key) => key as unknown as J) ): Record<J, R> 
+export function objectMap<O extends Record<string, any>, M extends Record<keyof O, any>>(
+  map: O, 
+  getValue: <K extends keyof O>(value: O[K], key: K) => M[K]): M;
+export function objectMap<O extends Record<string, any>, M extends Record<string, any>>(
+  map: O, 
+  getValue: <K extends keyof O>(value: O[K], key: K) => K extends keyof M ? M[K] : never,
+  getKey?: <K extends keyof O, J extends string>(key: K, value: O[K]) => J): M
 {
   return objectReduce(map, (value, key, out) => 
-    (out[getKey(key, value)] = getValue(value, key), out)
+    (out[getKey ? getKey(key, value) : key] = getValue(value, key), out)
   , Object.create(null));
 }
 
-export function objectEach<V, K extends RecordKey = string>(
-  map: Record<K, V>, 
-  onEach: (value: V, key: K, map: Record<K, V>) => any): void
+export function objectEach<O extends Record<string, any>>(
+  map: O, 
+  onEach: <K extends keyof O>(value: O[K], key: K, map: O) => any): void
 {
   return objectReduce(map, (value, key) => 
     onEach(value, key, map)
   , undefined);
 }
 
-export function objectValues<V, M = V, K extends RecordKey = string>(
-  map: Record<K, V>, 
-  transform: (value: V, key: K) => M = ((v) => v as unknown as M)): M[]
+export function objectValues<O extends Record<string, any> = any, M = O[keyof O]>(
+  map: O, 
+  transform: <K extends keyof O>(value: O[K], key: K) => M = ((v) => v as unknown as M)): M[]
 {
   return objectReduce(map, (value, key, out) => 
     (out.push(transform(value, key)), out)

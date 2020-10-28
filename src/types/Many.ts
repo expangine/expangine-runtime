@@ -14,7 +14,7 @@ import { Computeds } from '../Computed';
 
 const INDEX_MANY = 1;
 
-export class ManyType extends Type<Type[]>
+export class ManyType extends Type<any, Type[]>
 {
 
   public static id = ID.Many;
@@ -274,7 +274,7 @@ export class ManyType extends Type<Type[]>
     return newValue;
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is any 
   {
     return this.forMany(false, many => many.isValid(value) ? true : undefined);
   }

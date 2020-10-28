@@ -4,13 +4,14 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class OptionalType extends Type<Type> {
+export declare type OptionalInterface<T> = T | undefined | null;
+export declare class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>> {
     static STEP_OPTIONAL: string;
     static CHILD_OPTIONAL: string;
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
-    static baseType: OptionalType;
+    static baseType: OptionalType<any>;
     static decode(data: any[], types: TypeProvider): OptionalType;
     static encode(type: OptionalType): any;
     static describePriority: number;
@@ -40,13 +41,13 @@ export declare class OptionalType extends Type<Type> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is OptionalInterface<T>;
     normalize(value: any): any;
-    newInstance(): OptionalType;
-    clone(): OptionalType;
+    newInstance(): OptionalType<T>;
+    clone(): OptionalType<T>;
     encode(): any;
-    create(): any;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any): any;
-    toJson(value: any): any;
+    create(): OptionalInterface<T>;
+    random(rnd: (a: number, b: number, whole: boolean) => number): OptionalInterface<T>;
+    fromJson(json: any): OptionalInterface<T>;
+    toJson(value: OptionalInterface<T>): any;
 }

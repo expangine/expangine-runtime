@@ -1,16 +1,17 @@
-import { Type, TypeProvider, TypeDescribeProvider, TypeMap, TypeSub, TypeCompatibleOptions, TypeChild } from '../Type';
+import { Type, TypeProvider, TypeDescribeProvider, TypeSub, TypeCompatibleOptions, TypeChild, TypeMapFor } from '../Type';
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export interface ObjectOptions {
-    props: TypeMap;
+export declare type ObjectInterface = Record<string, any>;
+export interface ObjectOptions<O extends ObjectInterface> {
+    props: TypeMapFor<O>;
 }
-export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends Type<O> {
+export declare class ObjectType<D extends ObjectInterface = ObjectInterface, O extends ObjectOptions<D> = ObjectOptions<D>> extends Type<D, O> {
     static wilcardProperty: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: ObjectType<{
+    static baseType: ObjectType<Record<string, any>, {
         props: {};
     }>;
     static decode(data: any[], types: TypeProvider): ObjectType;
@@ -21,7 +22,7 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
-    merge(type: Type<O>): void;
+    merge(type: Type<D>): void;
     getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getChildType(name: TypeChild): Type | null;
@@ -39,14 +40,14 @@ export declare class ObjectType<O extends ObjectOptions = ObjectOptions> extends
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is D;
     normalize(value: any): any;
-    newInstance(): ObjectType<O>;
-    clone(): ObjectType<O>;
+    newInstance(): ObjectType<D, O>;
+    clone(): ObjectType<D, O>;
     encode(): any;
     create(): any;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any): any;
-    toJson(value: any): any;
+    fromJson(json: any): D;
+    toJson(value: D): any;
     getWildcardType(): Type | null;
 }

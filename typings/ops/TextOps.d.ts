@@ -11,7 +11,7 @@ export declare const TextOps: {
     lower: import("../Operation").OperationResolved<"value", never, never, never, never>;
     upper: import("../Operation").OperationResolved<"value", never, never, never, never>;
     char: import("../Operation").OperationResolved<"value" | "index", "outside", never, never, never>;
-    replace: import("../Operation").OperationResolved<"replace" | "value" | "find", never, never, never, never>;
+    replace: import("../Operation").OperationResolved<"replace" | "find" | "value", never, never, never, never>;
     repeat: import("../Operation").OperationResolved<"value" | "times", never, never, never, never>;
     split: import("../Operation").OperationResolved<"value" | "by", "limit", never, never, never>;
     chars: import("../Operation").OperationResolved<"value", never, never, never, never>;

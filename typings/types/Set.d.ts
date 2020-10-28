@@ -2,23 +2,23 @@ import { Type, TypeProvider, TypeInput, TypeDescribeProvider, TypeSub, TypeCompa
 import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
-export interface SetOptions {
-    value: Type;
+export interface SetOptions<V> {
+    value: Type<V>;
 }
-export declare class SetType extends Type<SetOptions> {
+export declare class SetType<V = any> extends Type<Set<V>, SetOptions<V>> {
     static STEP_VALUE: string;
     static CHILD_VALUE: string;
     static id: string;
     static operations: import("..").Operations;
     static computeds: import("..").Computeds;
-    static baseType: SetType;
+    static baseType: SetType<any>;
     static decode(data: any[], types: TypeProvider): SetType;
     static encode(type: SetType): any;
     static describePriority: number;
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
-    static forItem(valueOrClass: TypeInput): SetType;
+    static forItem(valueOrClass: TypeInput): SetType<any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: SetType): void;
@@ -39,13 +39,13 @@ export declare class SetType extends Type<SetOptions> {
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(test: any): boolean;
+    isValid(test: any): test is Set<V>;
     normalize(test: any): any;
     newInstance(): SetType;
     clone(): SetType;
     encode(): any;
     create(): Set<any>;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: Array<any>): Set<any>;
-    toJson(set: Set<any>): Array<any>;
+    fromJson(json: Array<V>): Set<V>;
+    toJson(set: Set<V>): Array<V>;
 }

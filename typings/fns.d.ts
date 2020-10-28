@@ -19,9 +19,9 @@ export declare function toMap<K = any, V = any>(input?: MapInput<K, V>): Map<K, 
 export declare function reverseMap<K, V>(map: Map<K, V>): Map<V, K>;
 export declare function arraySync<V, W = V>(target: V[], source: W[], matches: (target: V, source: W) => boolean, add: (target: V[], value: W) => void, remove: (target: V[], index: number, value: V) => void, update: (target: V[], index: number, value: V, newValue: W) => void): V[];
 export declare function objectSync<V, K extends RecordKey = string>(target: Record<K, V>, source: Record<K, V>, add: (target: Record<K, V>, key: K, value: V) => void, remove: (target: Record<K, V>, key: K, value: V) => void, update: (target: Record<K, V>, key: K, value: V, withValue: V) => void): Record<K, V>;
-export declare function objectMap<R, V, K extends RecordKey = string, J extends RecordKey = K>(map: Record<K, V>, getValue: (value: V, key: K) => R, getKey?: (key: K, value: V) => J): Record<J, R>;
-export declare function objectEach<V, K extends RecordKey = string>(map: Record<K, V>, onEach: (value: V, key: K, map: Record<K, V>) => any): void;
-export declare function objectValues<V, M = V, K extends RecordKey = string>(map: Record<K, V>, transform?: (value: V, key: K) => M): M[];
+export declare function objectMap<O extends Record<string, any>, M extends Record<keyof O, any>>(map: O, getValue: <K extends keyof O>(value: O[K], key: K) => M[K]): M;
+export declare function objectEach<O extends Record<string, any>>(map: O, onEach: <K extends keyof O>(value: O[K], key: K, map: O) => any): void;
+export declare function objectValues<O extends Record<string, any> = any, M = O[keyof O]>(map: O, transform?: <K extends keyof O>(value: O[K], key: K) => M): M[];
 export declare function objectReduce<R, V, K extends RecordKey = string>(map: Record<K, V>, reduce: (value: V, key: K, reduced: R) => R, initial: R): R;
 export declare function objectFromProps<P extends string, V>(props: P[], getValue: (prop: P, index: number) => V): Record<P, V>;
 export declare function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getItem: (value: V, key: K) => T): T[];

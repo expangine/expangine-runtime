@@ -9,6 +9,7 @@ import { Exprs } from '../Exprs';
 import { EntityType } from '../types/Entity';
 import { DataTypes } from '../DataTypes';
 import { PathExpression } from './Path';
+import { ObjectInterface } from '../types/Object';
 
 
 const INDEX_ENTITY = 1;
@@ -177,7 +178,7 @@ export class MethodExpression extends Expression
 
     params[Expression.INSTANCE] = entity.type;
 
-    objectEach(method.params.options.props, (param, paramName) =>
+    objectEach<ObjectInterface>(method.params.options.props, (param, paramName) =>
     {
       const arg = this.args[paramName];
 

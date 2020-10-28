@@ -30,7 +30,7 @@ export declare class AnyType extends Type {
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): boolean;
+    isValid(value: any): value is any;
     normalize(value: any): any;
     newInstance(): AnyType;
     clone(): AnyType;

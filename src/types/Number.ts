@@ -21,7 +21,7 @@ export interface NumberOptions
   whole?: boolean;
 }
 
-export class NumberType extends Type<NumberOptions> 
+export class NumberType extends Type<number, NumberOptions> 
 {
 
   public static WHOLE_EPSILON = 0.000001;
@@ -226,7 +226,7 @@ export class NumberType extends Type<NumberOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is number 
   {
     if (!isNumber(value))
     {

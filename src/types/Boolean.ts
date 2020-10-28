@@ -19,7 +19,7 @@ export interface BooleanOptions
   false?: Record<string, true>;
 }
 
-export class BooleanType extends Type<BooleanOptions> 
+export class BooleanType extends Type<boolean, BooleanOptions> 
 {
 
   public static id = ID.Boolean;
@@ -96,7 +96,7 @@ export class BooleanType extends Type<BooleanOptions>
     return [];
   }
 
-  public getExactType(value: any): Type 
+  public getExactType(value: boolean): Type
   {
     return this;
   }
@@ -161,7 +161,7 @@ export class BooleanType extends Type<BooleanOptions>
     });
   }
 
-  public isValid(value: any): boolean 
+  public isValid(value: any): value is boolean 
   {
     if (isBoolean(value))
     {
@@ -223,7 +223,7 @@ export class BooleanType extends Type<BooleanOptions>
     return false;
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): boolean
   {
     return rnd(0, 1, false) < RANDOM_TRUE_PROBABILITY;
   }
