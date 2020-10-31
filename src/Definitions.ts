@@ -57,10 +57,10 @@ export type DefinitionsReferenceSource =
   [Entity, string, EntityTranscoder] |
   [Entity, string, EntityTranscoder, 'encode' | 'decode'] |
   [Entity, Func] |
-  [Entity, Func, 'params' | 'returnType'] |
+  [Entity, Func] |
   [Entity, Func, FuncTest, 'args' | 'expected'] |
   Func | 
-  [Func, 'params' | 'returnType'] |
+  [Func] |
   [Func, FuncTest, 'args' | 'expected'] |
   Relation |
   ReferenceData;
@@ -1173,7 +1173,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return true;
   }
 
-  public renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsFunctionReference[]
+  public renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsExpressionReference<MethodExpression>[]
   {
     const entity = this.entities.valueOf(entityInput);
 
@@ -1214,7 +1214,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return refs;
   }
 
-  public renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[]
+  public renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsExpressionReference<MethodExpression>[]
   {
     const entity = this.entities.valueOf(entityInput);
 
@@ -1246,7 +1246,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return refs;
   }
 
-  public removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsFunctionReference[]
+  public removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsExpressionReference<MethodExpression>[]
   {
     const entity = this.entities.valueOf(entityInput);
 
@@ -1312,8 +1312,8 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return true;
   }
 
-
-  
+  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>): T | null 
+  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T): T 
   public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T | null = null): T | null 
   {
     const parsed = this.getType(value);
@@ -1875,6 +1875,15 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.expressionParsers[expr.id] = (data, exprs) => expr.decode(data, exprs);
   }
 
+  public getExpressionKind<E extends Expression>(value: any, kind: ExpressionClass<E>): E | null 
+  public getExpressionKind<E extends Expression>(value: any, kind: ExpressionClass<E>, otherwise: E): E
+  public getExpressionKind<E extends Expression>(value: any, kind: ExpressionClass<E>, otherwise: E | null = null): E | null 
+  {
+    const parsed = this.getExpression(value);
+
+    return parsed instanceof kind ? parsed : otherwise;
+  }
+
   public getExpression(value: any): Expression 
   {
     if (value instanceof Expression)
@@ -1958,7 +1967,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     });
   }
 
-  public getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsFunctionReference[]
+  public getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsExpressionReference<MethodExpression>[]
   {
     const entityName = entity ? this.entities.nameOf(entity) : undefined;
     const methodName = func ? this.functions.nameOf(func) : undefined;
@@ -2030,7 +2039,6 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   {
     const instances: DefinitionsDataInstance[] = [];
 
-
     this.programs.forEach((program) => {
       program.datasets.forEach((dataset) => {
         instances.push({
@@ -2042,12 +2050,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     });
 
     this.functions.forEach((func) => {
-      const returnType = func.getReturnType(this);
+      const returnType = func.type.getReturnType();
 
       func.tests.forEach((test) => {
         instances.push({
           data: test.args,
-          type: func.params,
+          type: func.type.getParamTypesType(),
           source: [func, test, 'args'],
         });
 
@@ -2077,12 +2085,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       }
 
       objectEach(entity.methods, (method) => {
-        const returnType = method.getReturnType(this);
+        const returnType = method.type.getReturnType();
 
         method.tests.forEach((test) => {
           instances.push({
             data: test.args,
-            type: method.params,
+            type: method.type.getParamTypesType(),
             source: [entity, method, test, 'args'],
           });
 
@@ -2111,16 +2119,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     this.functions.forEach((func) => {
       instances.push({
-        type: func.params,
-        source: [func, 'params'],
+        type: func.type,
+        source: [func],
       });
-
-      if (dynamic) {
-        instances.push({
-          type: func.getReturnType(this),
-          source: [func, 'returnType'],
-        });
-      }
     });
 
     this.data.forEach((data) => {
@@ -2138,16 +2139,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       objectEach(entity.methods, (method) => {
         instances.push({
-          type: method.params,
-          source: [entity, method, 'params'],
+          type: method.type,
+          source: [entity, method],
         });
-
-        if (dynamic) {
-          instances.push({
-            type: method.getReturnType(this),
-            source: [entity, method, 'returnType'],
-          });
-        }
       });
 
       if (dynamic) {
@@ -2201,8 +2195,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     });
 
     this.functions.forEach((func) => {
+      // TODO context should include closured variables
       instances.push({
-        context: func.params,
+        context: func.type.getParamTypesType(),
         expr: func.expression,
         source: func,
       });
@@ -2211,7 +2206,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     this.entities.forEach((entity) => {
       objectEach(entity.methods, (method) => {
         instances.push({
-          context: method.getParamTypes(),
+          context: method.type.getParamTypesType(),
           expr: method.expression,
           source: [entity, method],
         });

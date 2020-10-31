@@ -3,11 +3,13 @@ import { DefinitionProvider } from './DefinitionProvider';
 import { Traversable, Traverser, TraverseStep } from './Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity, Validation } from './Validate';
 import { FlowType } from "./FlowType";
+import { isFunction } from './fns';
 
 
 export interface ExpressionProvider 
 { 
   getExpression(value: any): Expression;
+  getType(data: any, otherwise?: Type): Type;
   setLegacy(): void;
 }
 
@@ -39,7 +41,7 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract getScope(): TypeMap | null;
 
-  public abstract getComplexity(def: DefinitionProvider, context: Type): number;
+  public abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
 
   public abstract encode(): any;
 
@@ -50,6 +52,14 @@ export abstract class Expression implements Traversable<Expression>
   public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
 
   public abstract setParent(parent?: Expression): void;
+
+  public hasExpression(condition: ExpressionClass | ((e: Expression) => boolean)): boolean {
+    return this.traverse(new Traverser<Expression>((e, path, step, traverser) => {
+      if (isFunction(condition) ? condition(e) : condition.id === e.getId()) {
+        traverser.stop(true);
+      }
+    }, false));
+  }
 
   public abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
   
@@ -74,7 +84,7 @@ export abstract class Expression implements Traversable<Expression>
     return true;
   }
 
-  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  public getInnerExpression(def: DefinitionProvider, context: any, parent?: any): Expression | string | false
   {
     return false;
   }

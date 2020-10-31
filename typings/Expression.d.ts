@@ -5,6 +5,7 @@ import { ValidationHandler, Validation } from './Validate';
 import { FlowType } from "./FlowType";
 export interface ExpressionProvider {
     getExpression(value: any): Expression;
+    getType(data: any, otherwise?: Type): Type;
     setLegacy(): void;
 }
 export interface ExpressionParser {
@@ -23,18 +24,19 @@ export declare abstract class Expression implements Traversable<Expression> {
     parent: Expression;
     abstract getId(): string;
     abstract getScope(): TypeMap | null;
-    abstract getComplexity(def: DefinitionProvider, context: Type): number;
+    abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
     abstract encode(): any;
     abstract clone(): Expression;
     abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
     abstract setParent(parent?: Expression): void;
+    hasExpression(condition: ExpressionClass | ((e: Expression) => boolean)): boolean;
     abstract validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
     abstract mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
     isValidFlow(def: DefinitionProvider, type: FlowType, child?: Expression): boolean;
     getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type;
     isDynamic(): boolean;
-    getInnerExpression(def: DefinitionProvider): Expression | string | false;
+    getInnerExpression(def: DefinitionProvider, context: any, parent?: any): Expression | string | false;
     isPathStart(): boolean;
     isPathNode(): boolean;
     isPathWritable(defs: DefinitionProvider): boolean;

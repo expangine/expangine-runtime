@@ -2,13 +2,14 @@
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { objectMap, isString, objectEach } from '../fns';
-import { Type, TypeMap } from '../Type';
+import { Type } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Exprs } from '../Exprs';
 import { DataTypes } from '../DataTypes';
 import { PathExpression } from './Path';
-import { ObjectInterface } from '../types/Object';
+import { ObjectInterface, ObjectType } from '../types/Object';
+import { FunctionType } from '../types/Function';
 
 
 const INDEX_NAME = 1;
@@ -49,16 +50,34 @@ export class InvokeExpression extends Expression
     return InvokeExpression.id;
   }
 
-  public getComplexity(def: DefinitionProvider, context: Type): number
+  public getFunction(def: DefinitionProvider, context: Type, thisType?: Type): { type: FunctionType, expression?: Expression } | null
   {
-    const func = def.getFunction(this.name);
-
-    if (!func)
+    if (this.name)
     {
-      return 0;
-    }
+      const contextFunc = context.getChildType(this.name);
 
-    return func.expression.getComplexity(def, context);
+      if (contextFunc instanceof FunctionType)
+      {
+        return { type: contextFunc };
+      }
+      else
+      {
+        return def.getFunction(this.name);
+      }
+    }
+    else if (thisType instanceof FunctionType)
+    {
+      return { type: thisType };
+    }
+  }
+
+  public getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number
+  {
+    const func = this.getFunction(def, context, thisType);
+
+    return func?.expression
+      ? func.expression.getComplexity(def, context, thisType)
+      : 0;
   }
 
   public getScope(): null
@@ -76,14 +95,36 @@ export class InvokeExpression extends Expression
     return new InvokeExpression(this.name, objectMap(this.args, (a) => a.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
   {
-    const func = def.getFunction(this.name);
-    const argTypes = objectMap(this.args, (a) => a.getType(def, context));
+    const func = this.getFunction(def, context, thisType);
 
-    return func
-      ? func.getReturnType(def, argTypes)
-      : null;
+    if (!func)
+    {
+      return null;
+    }
+
+    const args = objectMap(this.args, (a) => a.getType(def, context));
+
+    if (!func.type)
+    {
+      return func.expression?.getType(def, new ObjectType({ props: args }));
+    }
+    
+    const overloaded = func.type.getOverloaded(args);
+    const returns = overloaded.getReturnType();
+
+    if (returns)
+    {
+      return returns;
+    }
+
+    if (func.expression)
+    {
+      return func.expression.getType(def, overloaded.getParamTypesType());
+    }
+
+    return null;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -109,9 +150,9 @@ export class InvokeExpression extends Expression
     objectEach(this.args, e => e.setParent(this));
   }
 
-  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void
+  public validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void
   {
-    const func = def.getFunction(this.name);
+    const func = this.getFunction(def, context, thisType);
     
     if (!func) 
     {
@@ -124,21 +165,16 @@ export class InvokeExpression extends Expression
     }
     else
     {
-      const params: TypeMap = {};
+      const argTypes = objectMap(this.args, (a) => a.getType(def, context));
+      const resolved = func.type.getOverloaded(argTypes);
+      const paramTypes = resolved.getParamTypes();
 
-      objectEach<ObjectInterface>(func.params.options.props, (param, paramName) =>
+      objectEach<ObjectInterface>(paramTypes, (param, paramName) =>
       {
         const arg = this.args[paramName];
 
         this.validateType(def, context, param, arg, handler);
-
-        if (arg)
-        {
-          params[paramName] = arg.getType(def, context);
-        }
       });
-
-      // func.options.expression.validate(def, Types.object(params), handler);
     }
   }
 
@@ -164,16 +200,21 @@ export class InvokeExpression extends Expression
     return false; 
   }
 
-  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  public getInnerExpression(def: DefinitionProvider, context: any, parent?: any): Expression | string | false
   {
-    const func = def.getFunction(this.name);
+    const contextExpression = context[this.name];
+    const expression = parent instanceof Expression
+      ? parent
+      : contextExpression instanceof Expression
+        ? contextExpression
+        : def.getFunction(this.name)?.expression;
 
-    if (!func)
+    if (!expression)
     {
-      return `Function "${this.name}" does not exist`;
+      return 'Function does not exist';
     }
 
-    return func.expression;
+    return expression;
   }
 
   public named(name: string): InvokeExpression

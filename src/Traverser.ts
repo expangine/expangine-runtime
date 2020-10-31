@@ -184,4 +184,31 @@ export class Traverser<T, R = any>
     return new Traverser((value, stack, path, traverser) => traverser.result++, 0);
   }
 
+  public static some<T>(condition: (value: T) => boolean): Traverser<T, boolean>
+  {
+    return new Traverser<T, boolean>((value, stack, path, traverser) => {
+      if (condition(value)) {
+        traverser.stop(true);
+      }
+    }, false);
+  }
+
+  public static someInstance<T>(construct: { new(): T }): Traverser<T, boolean>
+  {
+    return new Traverser<T, boolean>((value, stack, path, traverser) => {
+      if (value.constructor === construct) {
+        traverser.stop(true);
+      }
+    }, false);
+  }
+
+  public static find<T>(condition: (value: T) => boolean): Traverser<T, T | null>
+  {
+    return new Traverser<T, T | null>((value, stack, path, traverser) => {
+      if (condition(value)) {
+        traverser.stop(value);
+      }
+    }, null);
+  }
+
 }

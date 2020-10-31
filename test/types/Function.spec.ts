@@ -1,11 +1,11 @@
-import { Type, Types } from '../../src';
+import { defs, Type, Types } from '../../src';
 
 describe('types / Function', () => {
 
   
   it('returns based on template', () =>
   {
-    const func = Types.func({
+    const func = Types.func(defs, {
       value: Types.any(),
     }, Types.list(Types.generic(['value'])));
 
@@ -20,7 +20,7 @@ describe('types / Function', () => {
 
   it('param based on self with default', () =>
   {
-    const func = Types.func({
+    const func = Types.func(defs, {
       a: Types.generic(['a'], Types.any()),
       b: Types.generic(['a']),
     }, Types.bool());
@@ -41,7 +41,7 @@ describe('types / Function', () => {
 
   it('param based on self', () =>
   {
-    const func = Types.func({
+    const func = Types.func(defs, {
       a: Types.generic(['a'], Types.any()),
       b: Types.generic(['a']),
     }, Types.bool());
@@ -63,9 +63,9 @@ describe('types / Function', () => {
   it('param outer types default', () =>
   {
     // <V = any, R = any> (list: V[], each: (item: V, index: number) => R) => R[]
-    const func = Types.func({
+    const func = Types.func(defs, {
       list: Types.list(Types.generic(['list', 'item'], Types.any())),
-      each: Types.func({
+      each: Types.func(defs, {
         item: Types.generic(['list', 'item']),
         index: Types.number(),
       }, Types.generic(['each', 'returns'], Types.any()))
@@ -80,7 +80,7 @@ describe('types / Function', () => {
     expect(expected1.encode()).toStrictEqual(actual1.encode());
 
     const actual2 = resolved.options.params.each as Type;
-    const expected2 = Types.func({
+    const expected2 = Types.func(defs, {
       item: Types.any(),
       index: Types.number(),
     }, Types.any());
@@ -96,9 +96,9 @@ describe('types / Function', () => {
   it('param outer types', () =>
   {
     // <V = any, R = any> (list: V[], each: (item: V, index: number) => R) => R[]
-    const func = Types.func({
+    const func = Types.func(defs, {
       list: Types.list(Types.generic(['list', 'item'], Types.any())),
-      each: Types.func({
+      each: Types.func(defs, {
         item: Types.generic(['list', 'item']),
         index: Types.number(),
       }, Types.generic(['each'], Types.any()))
@@ -113,7 +113,7 @@ describe('types / Function', () => {
     expect(expected1.encode()).toStrictEqual(actual1.encode());
 
     const actual2 = resolved.options.params.each as Type;
-    const expected2 = Types.func({
+    const expected2 = Types.func(defs, {
       item: Types.text(),
       index: Types.number(),
     }, Types.bool());

@@ -25,6 +25,7 @@ export declare type TypeResolved<T> = T extends (null | undefined) ? undefined :
 export interface TypeProvider {
     getType(data: any, otherwise?: Type): Type;
     getExpression(data: any): Expression;
+    isExpression(value: any): value is (Expression | [string, ...any[]]);
     getData(name: string): ReferenceData | null;
     setLegacy(): void;
 }

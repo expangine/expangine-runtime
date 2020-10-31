@@ -11,6 +11,7 @@ import { ManyType } from './types/Many';
 import { ObjectType } from './types/Object';
 import { GetEntityExpression } from './exprs/GetEntity';
 import { InvokeExpression } from './exprs/Invoke';
+import { MethodExpression } from './exprs/Method';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
@@ -30,7 +31,7 @@ export interface DefinitionsOptions extends DefinitionsImportOptions {
     types?: TypeClass[];
     expressions?: ExpressionClass[];
 }
-export declare type DefinitionsReferenceSource = Program | [Program, ProgramDataSet] | Entity | [Entity, 'key' | 'describe'] | [Entity, string, EntityTranscoder] | [Entity, string, EntityTranscoder, 'encode' | 'decode'] | [Entity, Func] | [Entity, Func, 'params' | 'returnType'] | [Entity, Func, FuncTest, 'args' | 'expected'] | Func | [Func, 'params' | 'returnType'] | [Func, FuncTest, 'args' | 'expected'] | Relation | ReferenceData;
+export declare type DefinitionsReferenceSource = Program | [Program, ProgramDataSet] | Entity | [Entity, 'key' | 'describe'] | [Entity, string, EntityTranscoder] | [Entity, string, EntityTranscoder, 'encode' | 'decode'] | [Entity, Func] | [Entity, Func] | [Entity, Func, FuncTest, 'args' | 'expected'] | Func | [Func] | [Func, FuncTest, 'args' | 'expected'] | Relation | ReferenceData;
 export declare type DefinitionsEntityReference = ({
     value: EntityType;
     root: Type;
@@ -194,11 +195,12 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     removeFunction(funcInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
     clearFunctions(delayChange?: boolean): void;
     addMethod(entityInput: string | Entity, methodOptions: Func | Partial<FuncOptions>, sync?: boolean, delayChange?: boolean): boolean;
-    renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange?: boolean): false | DefinitionsFunctionReference[];
-    renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsFunctionReference[];
-    removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsFunctionReference[];
+    renameMethod(entityInput: string | Entity, methodInput: string | Func, newName: string, delayChange?: boolean): false | DefinitionsExpressionReference<MethodExpression>[];
+    renameMethodParameter(entityInput: string | Entity, methodInput: string | Func, oldName: string, newName: string): false | DefinitionsExpressionReference<MethodExpression>[];
+    removeMethodParameter(entityInput: string | Entity, methodInput: string | Func, name: string): false | DefinitionsExpressionReference<MethodExpression>[];
     removeMethod(entityInput: string | Entity, methodInput: string | Func, stopWithReferences?: boolean, respectOrder?: boolean, delayChange?: boolean): boolean;
-    getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T | null): T | null;
+    getTypeKind<T extends Type>(value: any, kind: TypeClass<T>): T | null;
+    getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T): T;
     getType(value: any, otherwise?: Type): Type;
     getBaseTypes(): Type[];
     getSimpleTypes(): Type[];
@@ -235,6 +237,8 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     getOperations(onOperation?: <P extends string, O extends string, S extends string>(pair: OperationPair<P, O, S>) => boolean): OperationPair[];
     getPathType(path: Expression[], context: Type, stopBefore?: number): Type | null;
     addExpression<T extends Expression>(expr: ExpressionClass<T>): void;
+    getExpressionKind<E extends Expression>(value: any, kind: ExpressionClass<E>): E | null;
+    getExpressionKind<E extends Expression>(value: any, kind: ExpressionClass<E>, otherwise: E): E;
     getExpression(value: any): Expression;
     isExpression(value: any): value is (Expression | [string, ...any[]]);
     getEntityReferences(entity?: string | Entity): DefinitionsEntityReference[];
@@ -242,7 +246,7 @@ export declare class Definitions extends EventBase<DefinitionsEvents> implements
     getEntityDataReferences(entity?: string | Entity): DefinitionsDataTypeReference<EntityType>[];
     getRelationReferences(relation?: string | Relation): DefinitionsRelationReference[];
     getFunctionReferences(func?: string | Func, param?: string): DefinitionsFunctionReference[];
-    getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsFunctionReference[];
+    getMethodReferences(entity?: string | Entity, func?: string | Func, param?: string): DefinitionsExpressionReference<MethodExpression>[];
     getTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsTypeReference<T>[];
     getDataTypeClassReferences<T extends Type>(typeClass: TypeClass<T>): DefinitionsDataTypeReference<T>[];
     getExpressionClassReferences<E extends Expression>(exprClass: ExpressionClass<E>): DefinitionsExpressionReference<E>[];

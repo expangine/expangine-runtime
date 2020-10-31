@@ -36,4 +36,9 @@ export declare class Traverser<T, R = any> {
     filter(pass: (value: T, stack: T[], path: TraverseStep[]) => any, initialResult?: R): Traverser<T, R>;
     static list<T>(): Traverser<T, TraverseResult<T>[]>;
     static count<T>(): Traverser<T, number>;
+    static some<T>(condition: (value: T) => boolean): Traverser<T, boolean>;
+    static someInstance<T>(construct: {
+        new (): T;
+    }): Traverser<T, boolean>;
+    static find<T>(condition: (value: T) => boolean): Traverser<T, T | null>;
 }

@@ -51,7 +51,7 @@ export declare class Types {
     static tuple<E extends any[]>(types: TypeInputMapFor<E>): TupleType;
     static tuple<E extends any[]>(...types: TypeInputMapFor<E>): TupleType;
     static generic(path: string[], base?: Type): GenericType;
-    static func<P = any, R = any>(params: TypeInputMapFor<P>, returns?: TypeInputFor<R>): FunctionType<P, R>;
+    static func<P = any, R = any>(types: TypeProvider, params: TypeInputMapFor<P>, returns?: TypeInputFor<R>): FunctionType<P, R>;
     static parse<V = any>(input: TypeInputFor<V>): Type<V>;
     static simplify(type: Type): Type;
     static simplify(type: Type | null): Type | null;

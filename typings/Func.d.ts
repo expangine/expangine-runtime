@@ -1,17 +1,18 @@
-import { ObjectType, ObjectOptions } from './types/Object';
-import { TypeMap } from './Type';
+import { Type, TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { EventBase } from './EventBase';
+import { FunctionType } from './types/Function';
+import { FunctionExpression } from './exprs/Function';
 export interface FuncOptions {
     name: string;
     created: number;
     updated: number;
     description: string;
     meta: any;
-    params: any;
+    type: any;
     expression: any;
     defaults: any;
     tests: FuncTest[];
@@ -39,11 +40,12 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     updated: number;
     description: string;
     meta: any;
-    params: ObjectType<ObjectOptions<any>>;
+    type: FunctionType;
     expression: Expression;
     defaults: any;
     tests: FuncTest[];
     constructor(options: FuncOptions, defs: Definitions);
+    protected parseExpression(defs: Definitions, expr: any): FunctionExpression;
     sync(options: FuncOptions, defs: Definitions): void;
     hasChanges(options: FuncOptions): boolean;
     changed(): void;
@@ -53,9 +55,9 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     addTest(test: FuncTest, delayChange?: boolean): void;
     updateTest(test: FuncTest | number, newTest: FuncTest, delayChange?: boolean): boolean;
     removeTest(test: FuncTest | number, delayChange?: boolean): boolean;
-    getReturnType(defs: DefinitionProvider, paramsTypes?: TypeMap): import("./Type").Type<any, any>;
-    getParamTypes(): ObjectType;
-    getParamType(param: string): any;
+    getReturnType(defs: DefinitionProvider, context: Type, paramsTypes?: TypeMap): Type<any, any>;
+    getParamTypes(): TypeMap;
+    getParamType(param: string): Type | null;
     getArguments(args: any, returnNew?: boolean): any;
     refactor(transform: Expression, runtime: Runtime): void;
     mutates(def: DefinitionProvider, arg: string): boolean;

@@ -16,7 +16,7 @@ describe('Invoke', () => {
 
     defs.addFunction({
       name: FUNC_NAME, 
-      params: Types.object({
+      type: Types.func(defs, {
         value: Types.text(),
       }),
       expression: Exprs.get('value', 'length'),

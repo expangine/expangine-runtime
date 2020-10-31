@@ -1,14 +1,18 @@
-import { ObjectType, ObjectOptions, ObjectInterface } from './types/Object';
-import { TypeMap } from './Type';
+import { Type, TypeMap } from './Type';
 import { Expression } from './Expression';
 import { Definitions } from './Definitions';
 import { Types } from './Types';
 import { Exprs } from './Exprs';
-import { isEmpty, objectMap, arraySync, isNumber, now } from './fns';
+import { arraySync, isNumber, now } from './fns';
 import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { DataTypes } from './DataTypes';
 import { EventBase } from './EventBase';
+import { FunctionType } from './types/Function';
+import { FunctionExpression } from './exprs/Function';
+import { FlowExpression } from './exprs/Flow';
+import { Traverser } from './Traverser';
+import { FlowType } from './FlowType';
 
 
 export interface FuncOptions
@@ -18,7 +22,7 @@ export interface FuncOptions
   updated: number;
   description: string;
   meta: any;
-  params: any;
+  type: any;
   expression: any;
   defaults: any;
   tests: FuncTest[];
@@ -54,7 +58,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
       updated: now(),
       description: '',
       meta: null,
-      params: Types.object(),
+      type: Types.func(defs, {}, Types.null()),
       expression: Exprs.noop(),
       defaults: {},
       tests: [],
@@ -67,7 +71,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
   public updated: number;
   public description: string;
   public meta: any;
-  public params: ObjectType<ObjectOptions<any>>;
+  public type: FunctionType;
   public expression: Expression;
   public defaults: any;
   public tests: FuncTest[];
@@ -81,10 +85,24 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     this.updated = options.updated || now();
     this.description = options.description;
     this.meta = options.meta;
-    this.params = defs.getTypeKind(options.params, ObjectType, Types.object());
-    this.expression = defs.getExpression(options.expression);
-    this.defaults = this.params.fromJson(options.defaults);
-    this.tests = options.tests.map((t) => ({ ...t, args: this.params.fromJson(t.args) }));
+    this.type = defs.getTypeKind(options.type, FunctionType);
+    this.expression = this.parseExpression(defs, options.expression);
+    this.defaults = this.type.fromJsonArguments(options.defaults);
+    this.tests = options.tests.map((t) => ({ ...t, args: this.type.fromJsonArguments(t.args) }));
+  }
+
+  protected parseExpression(defs: Definitions, expr: any): FunctionExpression
+  {
+    let e = defs.getExpression(expr);
+
+    if (!e.traverse(Traverser.some((c) => c instanceof FlowExpression && c.type === FlowType.RETURN))) 
+    {
+      e = new FlowExpression(FlowType.RETURN, e);
+    }
+
+    return e instanceof FunctionExpression
+      ? e
+      : new FunctionExpression(this.type, e);
   }
 
   public sync(options: FuncOptions, defs: Definitions)
@@ -96,21 +114,21 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
       this.updated = options.updated || now();
       this.description = options.description;
       this.meta = options.meta;
-      this.params = options instanceof Func
-        ? options.params
-        : defs.getTypeKind(options.params, ObjectType, Types.object());
+      this.type = options instanceof Func
+        ? options.type
+        : defs.getTypeKind(options.type, FunctionType);
       this.expression = options instanceof Func
         ? options.expression
-        : defs.getExpression(options.expression);
+        : this.parseExpression(defs, options.expression);
       this.defaults = options instanceof Func
         ? options.defaults
-        : this.params.fromJson(options.defaults);
+        : this.type.fromJsonArguments(options.defaults);
 
       arraySync(
         this.tests, 
         options instanceof Func
           ? options.tests
-          : options.tests.map((t) => ({ ...t, args: this.params.fromJson(t.args) })),
+          : options.tests.map((t) => ({ ...t, args: this.type.fromJsonArguments(t.args) })),
         (a, b) => a.name === b.name || DataTypes.equals(a.args, b.args), 
         (target, value) => this.addTest(value, true),
         (target, index) => this.removeTest(index, true),
@@ -136,7 +154,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
   public encode(): FuncOptions 
   {
-    const { name, created, updated, description, meta, params, expression, defaults, tests } = this;
+    const { name, created, updated, description, meta, type, expression, defaults, tests } = this;
 
     return {
       name,
@@ -144,21 +162,22 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
       updated,
       description, 
       meta,
-      params: params.encode(),
+      type: type.encode(),
       expression: expression.encode(),
-      defaults: params.toJson(defaults),
-      tests: tests.map((t) => ({ ...t, args: params.toJson(t.args) })),
+      defaults: type.toJsonArguments(defaults),
+      tests: tests.map((t) => ({ ...t, args: type.toJsonArguments(t.args) })),
     };
   }
 
   public renameParameter(name: string, newName: string): boolean
   {
-    const paramType = this.params.options.props[name];
+    const params = this.type.options.params;
+    const paramType = params[name];
 
     if (paramType)
     {
-      DataTypes.objectSet(this.params.options.props as any, newName, paramType);
-      DataTypes.objectRemove(this.params.options.props as any, name);
+      DataTypes.objectSet(params, newName, paramType);
+      DataTypes.objectRemove(params, name);
 
       if (name in this.defaults)
       {
@@ -175,11 +194,12 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
   public removeParameter(name: string): boolean
   {
-    const exists = name in this.params.options.props;
+    const params = this.type.options.params;
+    const exists = name in params;
 
     if (exists)
     {
-      DataTypes.objectRemove(this.params.options.props as any, name);
+      DataTypes.objectRemove(params, name);
       DataTypes.objectRemove(this.defaults, name);
 
       this.trigger('removeParameter', this, name);
@@ -245,30 +265,27 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     return exists;
   }
 
-  public getReturnType(defs: DefinitionProvider, paramsTypes: TypeMap = {}) 
+  public getReturnType(defs: DefinitionProvider, context: Type, paramsTypes: TypeMap = {}) 
   {
-    const context = Types.object({
-      ...this.params.options.props,
-      ...paramsTypes,
-    });
-
-    return this.expression.getType(defs, context);
+    return this.type.getOverloaded(paramsTypes).getReturnType() || this.expression.getType(defs, context);
   }
 
-  public getParamTypes(): ObjectType
+  public getParamTypes(): TypeMap
   {
-    return isEmpty(this.defaults)
-      ? this.params
-      : Types.object(objectMap(this.params.options.props as ObjectInterface, (_, prop) => this.getParamType(prop)));
+    return this.type.getParamTypes();
   }
 
-  public getParamType(param: string)
+  public getParamType(param: string): Type | null
   {
-    const propType = this.params.options.props[param];
+    const paramType = this.type.getParamType(param);
 
-    return propType.isOptional() && param in this.defaults && propType.isValid(this.defaults[param])
-      ? propType.getRequired()
-      : propType;
+    return paramType
+      ? paramType.isOptional() && 
+        param in this.defaults && 
+        paramType.isValid(this.defaults[param])
+        ? paramType.getRequired()
+        : paramType
+      : null;
   }
 
   public getArguments(args: any, returnNew: boolean = true)
@@ -277,9 +294,9 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
     for (const prop in this.defaults)
     {
-      const propType = this.params.options.props[prop];
+      const propType = this.type.getParamType(prop);
 
-      if (!propType.getRequired().isValid(target[prop]))
+      if (propType && !propType.getRequired().isValid(target[prop]))
       {
         DataTypes.objectSet(target, prop, DataTypes.copy(this.defaults[prop]));
       }
@@ -302,7 +319,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
 
   public mutates(def: DefinitionProvider, arg: string): boolean
   {
-    if (!(arg in this.params.options.props))
+    if (!(arg in this.type.options.params))
     {
       return false;
     }

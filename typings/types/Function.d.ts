@@ -5,15 +5,19 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
 import { GenericType } from './Generic';
-export declare type FunctionTypeProvider<T, P> = Type<T> | ((params: Partial<TypeMapFor<P>>) => Type<T>);
-export interface FunctionOptions<P extends Record<string, any> = any, R = any> {
+import { FunctionExpression } from '../exprs/Function';
+import { ObjectType } from './Object';
+export declare type FunctionParams = Record<string, any>;
+export declare type FunctionTypeProvider<T, P extends FunctionParams> = Type<T> | ((params: Partial<TypeMapFor<P>>, types: TypeProvider) => Type<T>);
+export interface FunctionOptions<P extends FunctionParams = any, R = any> {
     params: {
         [K in keyof P]: FunctionTypeProvider<P[K], P>;
     };
     returns?: FunctionTypeProvider<R, P>;
 }
-export declare type FunctionInterface<P = any, R = any> = (params: P) => R;
-export declare class FunctionType<P extends Record<string, any> = any, R = any> extends Type<FunctionInterface<P, R>, FunctionOptions<P, R>> {
+export declare type FunctionInterface<P extends FunctionParams = any, R = any> = (params: P) => R;
+export declare type FunctionValue<P extends FunctionParams = any, R = any> = FunctionExpression | FunctionInterface<P, R> | string;
+export declare class FunctionType<P extends FunctionParams = any, R = any> extends Type<FunctionValue<P, R>, FunctionOptions<P, R>> {
     static STEP_RETURNS: string;
     static CHILD_RETURN: string;
     static id: string;
@@ -26,8 +30,14 @@ export declare class FunctionType<P extends Record<string, any> = any, R = any> 
     static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
     static registered: boolean;
     static register(): void;
+    provider: TypeProvider;
+    constructor(options: FunctionOptions<P, R>, provider: TypeProvider);
+    getParamTypesType(inputTypes?: Partial<TypeMapFor<P>>): ObjectType<P>;
     getParamTypes(inputTypes?: Partial<TypeMapFor<P>>): TypeMapFor<P>;
-    getReturnType(inputTypes?: Partial<TypeMapFor<P>>): Type<R>;
+    getParamType<K extends keyof P>(param: K, inputTypes?: Partial<TypeMapFor<P>>): Type<P[K]> | null;
+    getReturnType(inputTypes?: Partial<TypeMapFor<P>>): Type<R> | null;
+    getProvided<T>(provider: FunctionTypeProvider<T, P>, inputTypes?: Partial<TypeMapFor<P>>): Type<T>;
+    getProvided<T>(provider: FunctionTypeProvider<T, P> | undefined, inputTypes?: Partial<TypeMapFor<P>>): Type<T> | null;
     getTypeFromPath(path: TypeChild[], inputTypes?: TypeMap): Type | null;
     getOverloaded(inputTypes?: TypeMap): FunctionType;
     getResolvedType(type: GenericType, inputTypes?: Partial<TypeMapFor<P>>): Type;
@@ -50,13 +60,15 @@ export declare class FunctionType<P extends Record<string, any> = any, R = any> 
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
-    isValid(value: any): value is FunctionInterface<P, R>;
+    isValid(value: any): value is FunctionValue<P, R>;
     normalize(value: any): any;
     newInstance(): FunctionType;
     clone(): FunctionType;
     encode(): any;
     create(): null;
     random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: null): null;
-    toJson(value: null): null;
+    fromJsonArguments(json: any): any;
+    toJsonArguments(args: any): any;
+    fromJson(json: any): FunctionValue<P, R>;
+    toJson(value: FunctionValue<P, R>): any;
 }

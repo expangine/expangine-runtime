@@ -196,12 +196,12 @@ export class Types
     return this.setParent(new GenericType({ path, base }));
   }
 
-  public static func<P = any, R = any>(params: TypeInputMapFor<P>, returns?: TypeInputFor<R>): FunctionType<P, R>
+  public static func<P = any, R = any>(types: TypeProvider, params: TypeInputMapFor<P>, returns?: TypeInputFor<R>): FunctionType<P, R>
   {
     return this.setParent(new FunctionType<P, R>({
       params: objectMap(params, (p) => this.parse(p)),
       returns: returns ? this.parse(returns) : undefined,
-    }));
+    }, types));
   }
 
   public static parse<V = any>(input: TypeInputFor<V>): Type<V>

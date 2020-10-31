@@ -181,11 +181,13 @@ describe('Expression', () =>
   {
     const FUNC_NAME = 'mutateOpInFunc';
 
+    const type = Types.func(defs, {
+      x: Types.list(Types.number()),
+    });
+
     defs.addFunction({
       name: FUNC_NAME,
-      params: Types.object({
-        x: Types.list(Types.number()),
-      }),
+      type,
       expression: Exprs.return(
         Exprs.op(ListOps.add, {
           list: Exprs.get('x'),
@@ -210,11 +212,13 @@ describe('Expression', () =>
   {
     const FUNC_NAME = 'mutateNotInFunc';
 
+    const type = Types.func(defs, {
+      x: Types.list(Types.number()),
+    });
+
     defs.addFunction({
       name: FUNC_NAME,
-      params: Types.object({
-        x: Types.list(Types.number()),
-      }),
+      type,
       expression: Exprs.return(
         Exprs.set(Exprs.get('x')).to(Exprs.const(4)),
       ),

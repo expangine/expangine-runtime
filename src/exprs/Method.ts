@@ -106,7 +106,7 @@ export class MethodExpression extends Expression
 
     argTypes[Expression.INSTANCE] = entity.type;
     
-    return method.getReturnType(def, argTypes);
+    return method.getReturnType(def, context, argTypes);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -178,7 +178,7 @@ export class MethodExpression extends Expression
 
     params[Expression.INSTANCE] = entity.type;
 
-    objectEach<ObjectInterface>(method.params.options.props, (param, paramName) =>
+    objectEach<ObjectInterface>(method.type.options.params, (param, paramName) =>
     {
       const arg = this.args[paramName];
 
@@ -220,7 +220,7 @@ export class MethodExpression extends Expression
     return false;
   }
 
-  public getInnerExpression(def: DefinitionProvider): Expression | string | false
+  public getInnerExpression(def: DefinitionProvider, context: any, parent?: any): Expression | string | false
   {
     const entity = def.getEntity(this.entity);
 

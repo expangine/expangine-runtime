@@ -77,7 +77,22 @@ export class PathExpression extends Expression
 
   public getComplexity(def: DefinitionProvider, context: Type): number
   {
-    return this.expressions.reduce((max, node) => Math.max(max, node.getComplexity(def, context)), 0);
+    let max = 0;
+    let thisType = context;
+
+    for (const expr of this.expressions)
+    {
+      const complexity = expr.getComplexity(def, context, thisType);
+
+      if (complexity > max)
+      {
+        max = complexity;
+      }
+
+      thisType = expr.getType(def, context, thisType);
+    }
+
+    return max;
   }
 
   public getScope(): null

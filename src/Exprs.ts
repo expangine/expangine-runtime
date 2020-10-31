@@ -31,6 +31,8 @@ import { ObjectExpression } from './exprs/Object';
 import { isArray, isObject, objectMap } from './fns';
 import { Type } from './Type';
 import { AssertExpression } from './exprs/Assert';
+import { FunctionExpression } from './exprs/Function';
+import { FunctionType } from './types/Function';
 
 
 export class Exprs
@@ -130,12 +132,17 @@ export class Exprs
     return this.setParent(new IfExpression([[condition, body]], otherwise));
   }
 
+  public static func(type: FunctionType, body: Expression, aliases?: Record<string, string>): FunctionExpression
+  {
+    return this.setParent(new FunctionExpression(type, body, aliases));
+  }
+
   public static invoke(name: string, args: Record<string, ExpressionValue> = {}): InvokeExpression
   {
     return this.setParent(new InvokeExpression(name, this.parse(args)));
   }
 
-  public static method(entity: string, name: string, args: Record<string, ExpressionValue> = {}): InvokeExpression
+  public static method(entity: string, name: string, args: Record<string, ExpressionValue> = {}): MethodExpression
   {
     return this.setParent(new MethodExpression(entity, name, this.parse(args)));
   }

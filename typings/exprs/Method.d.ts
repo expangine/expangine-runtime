@@ -22,7 +22,7 @@ export declare class MethodExpression extends Expression {
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;
-    getInnerExpression(def: DefinitionProvider): Expression | string | false;
+    getInnerExpression(def: DefinitionProvider, context: any, parent?: any): Expression | string | false;
     isPathNode(): boolean;
     named(name: string): MethodExpression;
     arg(name: string, value: ExpressionValue): MethodExpression;

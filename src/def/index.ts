@@ -31,6 +31,7 @@ import { ConstantExpression } from '../exprs/Constant';
 import { DefineExpression } from '../exprs/Define';
 import { DoExpression } from '../exprs/Do';
 import { ForExpression } from '../exprs/For';
+import { FunctionExpression } from '../exprs/Function';
 import { GetExpression } from '../exprs/Get';
 import { GetDataExpression } from '../exprs/GetData';
 import { GetEntityExpression } from '../exprs/GetEntity';
@@ -86,6 +87,7 @@ export const defs = new Definitions({
     DefineExpression,
     DoExpression,
     ForExpression,
+    FunctionExpression,
     GetExpression,
     GetDataExpression,
     GetEntityExpression,

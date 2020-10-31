@@ -15,6 +15,7 @@ import { GetEntityExpression } from './exprs/GetEntity';
 import { GetRelationExpression } from './exprs/GetRelation';
 import { IfExpression } from './exprs/If';
 import { InvokeExpression } from './exprs/Invoke';
+import { MethodExpression } from './exprs/Method';
 import { OperationExpression } from './exprs/Operation';
 import { Operation } from './Operation';
 import { OrExpression } from './exprs/Or';
@@ -28,6 +29,8 @@ import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { Type } from './Type';
 import { AssertExpression } from './exprs/Assert';
+import { FunctionExpression } from './exprs/Function';
+import { FunctionType } from './types/Function';
 export declare class Exprs {
     static autoSetParent: boolean;
     static setParent<E extends Expression>(expr: E, force?: boolean): E;
@@ -47,8 +50,9 @@ export declare class Exprs {
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;
     static computed(name: string): ComputedExpression;
     static if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;
+    static func(type: FunctionType, body: Expression, aliases?: Record<string, string>): FunctionExpression;
     static invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
-    static method(entity: string, name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
+    static method(entity: string, name: string, args?: Record<string, ExpressionValue>): MethodExpression;
     static noop(): NoExpression;
     static not(expr: Expression): NotExpression;
     static object(props: Record<string, ExpressionValue>): ObjectExpression;

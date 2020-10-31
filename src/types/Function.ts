@@ -7,17 +7,21 @@ import { DefinitionProvider } from '../DefinitionProvider';
 import { ID } from './ID';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-import { isFunction, objectMap, objectEach } from '../fns';
+import { isFunction, objectMap, objectEach, isString } from '../fns';
 import { DataTypes } from '../DataTypes';
 import { GenericType } from './Generic';
+import { FunctionExpression } from '../exprs/Function';
+import { ObjectType } from './Object';
 
 
 const INDEX_PROPS = 1;
 const INDEX_RETURN = 2;
 
-export type FunctionTypeProvider<T, P> = Type<T> | ((params: Partial<TypeMapFor<P>>) => Type<T>);
+export type FunctionParams = Record<string, any>;
 
-export interface FunctionOptions<P extends Record<string, any> = any, R = any>
+export type FunctionTypeProvider<T, P extends FunctionParams> = Type<T> | ((params: Partial<TypeMapFor<P>>, types: TypeProvider) => Type<T>);
+
+export interface FunctionOptions<P extends FunctionParams = any, R = any>
 {
   params: {
     [K in keyof P]: FunctionTypeProvider<P[K], P>
@@ -25,9 +29,14 @@ export interface FunctionOptions<P extends Record<string, any> = any, R = any>
   returns?: FunctionTypeProvider<R, P>;
 }
 
-export type FunctionInterface<P = any, R = any> = (params: P) => R;
+export type FunctionInterface<P extends FunctionParams = any, R = any> = (params: P) => R;
 
-export class FunctionType<P extends Record<string, any> = any, R = any> extends Type<FunctionInterface<P, R>, FunctionOptions<P, R>> 
+export type FunctionValue<P extends FunctionParams = any, R = any> = 
+  FunctionExpression |
+  FunctionInterface<P, R> |
+  string;
+
+export class FunctionType<P extends FunctionParams = any, R = any> extends Type<FunctionValue<P, R>, FunctionOptions<P, R>> 
 {
 
   public static STEP_RETURNS = 'returns';
@@ -40,7 +49,7 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
 
   public static computeds = new Computeds(ID.Function + ID.Delimiter);
 
-  public static baseType = new FunctionType({ params: {} });
+  public static baseType = new FunctionType({ params: {} }, null);
 
   public static decode(data: any[], types: TypeProvider): FunctionType 
   {
@@ -49,7 +58,7 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
       ? types.getType(data[INDEX_RETURN])
       : undefined;
     
-    return new FunctionType({ params, returns });
+    return new FunctionType({ params, returns }, types);
   }
 
   public static encode(type: FunctionType): any 
@@ -77,6 +86,20 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
 
   }
 
+  public provider: TypeProvider;
+
+  public constructor(options: FunctionOptions<P, R>, provider: TypeProvider)
+  {
+    super(options);
+
+    this.provider = provider;
+  }
+
+  public getParamTypesType(inputTypes: Partial<TypeMapFor<P>> = {}): ObjectType<P>
+  {
+    return new ObjectType({ props: this.getParamTypes(inputTypes) });
+  }
+
   public getParamTypes(inputTypes: Partial<TypeMapFor<P>> = {}): TypeMapFor<P>
   {
     const { params } = this.options;
@@ -86,29 +109,37 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
 
     for (const paramName in params)
     {
-      const paramType = params[paramName];
       const inputType = inputTypes[paramName];
+      const paramType = this.getProvided(params[paramName], out);
 
-      if (isFunction(paramType))
+      if (!inputType || !paramType.acceptsType(inputType))
       {
-        out[paramName] = paramType(out);
-      }
-      else if (!inputType || !(paramType as Type).acceptsType(inputType))
-      {
-        out[paramName] = paramType as Type;
+        out[paramName] = paramType;
       }
     }
 
     return out;
   }
 
-  public getReturnType(inputTypes: Partial<TypeMapFor<P>> = {}): Type<R>
+  public getParamType<K extends keyof P>(param: K, inputTypes: Partial<TypeMapFor<P>> = {}): Type<P[K]> | null
   {
-    const { returns } = this.options;
+    return this.getProvided(this.options.params[param], inputTypes);
+  }
 
-    return returns instanceof Type
-      ? returns
-      : returns(inputTypes);
+  public getReturnType(inputTypes: Partial<TypeMapFor<P>> = {}): Type<R> | null
+  {
+    return this.getProvided(this.options.returns, inputTypes);
+  }
+
+  public getProvided<T>(provider: FunctionTypeProvider<T, P>, inputTypes?: Partial<TypeMapFor<P>>): Type<T>
+  public getProvided<T>(provider: FunctionTypeProvider<T, P> | undefined, inputTypes?: Partial<TypeMapFor<P>>): Type<T> | null
+  public getProvided<T>(provider: FunctionTypeProvider<T, P>, inputTypes: Partial<TypeMapFor<P>> = {}): Type<T> | null
+  {
+    return provider instanceof Type
+      ? provider
+      : typeof provider === 'function' 
+        ? provider(inputTypes, this.provider)
+        : null;
   }
 
   public getTypeFromPath(path: TypeChild[], inputTypes: TypeMap = {}): Type | null
@@ -212,14 +243,11 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
 
   public getChildType(name: TypeChild): Type | null
   {
-    const { returns } = this.options;
     const params = this.getParamTypes();
 
     if (name === FunctionType.CHILD_RETURN)
     {
-      return isFunction(returns)
-        ? returns(params)
-        : returns;
+      return this.getReturnType(params);
     }
 
     return params[name] || null;
@@ -254,6 +282,11 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
     const resolvedOther = other.getOverloaded();
     const { params, returns } = resolved.options;
     const { params: paramsOther, returns: returnsOther } = resolvedOther.options;
+
+    if (Boolean(returns) !== Boolean(returnsOther))
+    {
+      return false;
+    }
 
     if (!(returns as Type).isCompatible(returnsOther as Type, options))
     {
@@ -309,24 +342,26 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
 
   public traverse<A>(traverse: Traverser<Type, A>): A
   {
-    const { params, returns } = this.options;
+    const { params } = this.options;
 
     return traverse.enter(this, () => 
     {
       objectEach(params, (type, paramName) => 
       {
-        const paramType = isFunction(type)
-          ? type({})
-          : type;
+        const paramType = this.getProvided(type);
         
-        traverse.step(paramName as string, paramType, (replaceWith) => DataTypes.objectSet(params, paramName, replaceWith), () => DataTypes.objectRemove(params, paramName))
+        if (paramType)
+        {
+          traverse.step(paramName as string, paramType, (replaceWith) => DataTypes.objectSet(params, paramName, replaceWith), () => DataTypes.objectRemove(params, paramName))
+        }
       });
 
-      const returnType = isFunction(returns)
-        ? returns({})
-        : returns;
-      
-      traverse.step(FunctionType.STEP_RETURNS, returnType, (replaceWith) => DataTypes.objectSet(this.options, 'returns', replaceWith), () => DataTypes.objectRemove(this.options, 'returns'));
+      const returnType = this.getReturnType();
+
+      if (returnType)
+      {
+        traverse.step(FunctionType.STEP_RETURNS, returnType, (replaceWith) => DataTypes.objectSet(this.options, 'returns', replaceWith), () => DataTypes.objectRemove(this.options, 'returns'));
+      }
     });
   }
 
@@ -401,25 +436,35 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
     return Exprs.null();
   }
 
-  public isValid(value: any): value is FunctionInterface<P, R>
+  public isValid(value: any): value is FunctionValue<P, R>
   {
-    return isFunction(value);
+    return isFunction(value) || 
+      isString(value) || 
+      this.provider.isExpression(value);
   }
 
   public normalize(value: any): any
   {
-    return value;
+    return this.provider.isExpression(value)
+      ? this.provider.getExpression(value)
+      : value;
   }
 
   public newInstance(): FunctionType
   {
-    return new FunctionType({ params: {} });
+    return new FunctionType({ params: {} }, this.provider);
   }
 
   public clone(): FunctionType
   {
-    // TODO
-    return this;
+    return new FunctionType({
+      params: objectMap(this.options.params, 
+        (p) => p instanceof Type ? p.clone(): p
+      ),
+      returns: this.options.returns instanceof Type 
+        ? this.options.returns.clone() 
+        : this.options.returns,
+    }, this.provider);
   }
 
   public encode(): any 
@@ -437,14 +482,50 @@ export class FunctionType<P extends Record<string, any> = any, R = any> extends 
     return null;
   }
 
-  public fromJson(json: null): null
+  public fromJsonArguments(json: any): any
   {
-    return null;
+    const { params } = this.options;
+    const args: any = {};
+
+    for (const paramName in params) {
+      const paramType = params[paramName];
+
+      if (paramType instanceof Type && paramName in json) {
+        args[paramName] = paramType.fromJson(json[paramName]);
+      }
+    }
+
+    return args;
   }
 
-  public toJson(value: null): null
+  public toJsonArguments(args: any): any
   {
-    return null;
+    const { params } = this.options;
+    const json: any = {};
+
+    for (const paramName in params) {
+      const paramType = params[paramName];
+
+      if (paramType instanceof Type && paramName in args) {
+        json[paramName] = paramType.fromJson(args[paramName]);
+      }
+    }
+
+    return json;
+  }
+
+  public fromJson(json: any): FunctionValue<P, R>
+  {
+    return this.provider.isExpression(json)
+      ? this.provider.getExpression(json)
+      : json;
+  }
+
+  public toJson(value: FunctionValue<P, R>): any
+  {
+    return value instanceof Expression
+      ? value.encode()
+      : value;
   }
 
 }
