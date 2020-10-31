@@ -57,6 +57,7 @@ export * from './exprs/Constant';
 export * from './exprs/Define';
 export * from './exprs/Do';
 export * from './exprs/For';
+export * from './exprs/Function';
 export * from './exprs/Get';
 export * from './exprs/GetData';
 export * from './exprs/GetEntity';
