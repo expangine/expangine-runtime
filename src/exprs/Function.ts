@@ -103,7 +103,7 @@ export class FunctionExpression extends Expression
     return def.getContext(context, this.getArgumentsAliased());
   }
 
-  public getCaptured(context: Type): TypeMap
+  public getCapturedTypes(context: Type): TypeMap
   {
     const local = this.getArgumentsAliased();
     const captured: TypeMap = {};
@@ -124,6 +124,29 @@ export class FunctionExpression extends Expression
     }));
 
     return captured;
+  }
+
+  public getCaptured(context: Type): string[]
+  {
+    const local = this.getArgumentsAliased();
+    const captured: Record<string, boolean> = {};
+
+    this.body.traverse(new Traverser((expr) => 
+    {
+      if (expr instanceof PathExpression)
+      {
+        const path = expr.expressions;
+        const p0 = path[0];
+        const p1 = path[1];
+        
+        if (p0 instanceof GetExpression && p1 instanceof ConstantExpression && !(p1.value in local) && context.getChildType(p1.value))
+        {
+          captured[p1.value] = true;
+        }
+      }
+    }));
+
+    return Object.keys(captured);
   }
 
   public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null

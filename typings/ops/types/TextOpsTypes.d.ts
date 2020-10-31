@@ -7,7 +7,7 @@ export declare const TextOpsTypes: {
     lower: import("../..").OperationTypes<"value", never, never>;
     upper: import("../..").OperationTypes<"value", never, never>;
     char: import("../..").OperationTypes<"value" | "index", "outside", never>;
-    replace: import("../..").OperationTypes<"find" | "replace" | "value", never, never>;
+    replace: import("../..").OperationTypes<"replace" | "find" | "value", never, never>;
     repeat: import("../..").OperationTypes<"value" | "times", never, never>;
     split: import("../..").OperationTypes<"value" | "by", "limit", never>;
     chars: import("../..").OperationTypes<"value", never, never>;

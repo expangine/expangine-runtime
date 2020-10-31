@@ -20,7 +20,8 @@ export declare class FunctionExpression extends Expression {
     clone(): Expression;
     getArgumentsAliased(): TypeMap;
     getBodyContext(def: DefinitionProvider, context: Type): Type;
-    getCaptured(context: Type): TypeMap;
+    getCapturedTypes(context: Type): TypeMap;
+    getCaptured(context: Type): string[];
     getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
