@@ -19,6 +19,7 @@ export declare class FunctionExpression extends Expression {
     getScope(): null;
     encode(): any;
     clone(): Expression;
+    getAliased<T>(args: Record<string, T>): Record<string, T>;
     getArgumentsAliased(): TypeMap;
     getBodyContext(def: DefinitionProvider, context: Type): Type;
     setCapturedFromContext(context: Type): void;

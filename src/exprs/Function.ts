@@ -94,22 +94,29 @@ export class FunctionExpression extends Expression
     return new FunctionExpression(this.type.clone(), this.body.clone(), this.captured.slice(), DataTypes.copy(this.aliases));
   }
 
-  public getArgumentsAliased(): TypeMap
+  public getAliased<T>(args: Record<string, T>): Record<string, T>
   {
-    const args = this.type.getParamTypes();
-    
+    const out: Record<string, T> = {
+      ...args,
+    };
+
     if (this.aliases)
     {
       for (const argName in this.aliases)
       {
         const aliasName = this.aliases[argName];
 
-        args[aliasName] = args[argName];
-        delete args[argName];
+        out[aliasName] = out[argName];
+        delete out[argName];
       }
     }
 
-    return args;
+    return out;
+  }
+
+  public getArgumentsAliased(): TypeMap
+  {
+    return this.getAliased( this.type.getParamTypes() );
   }
 
   public getBodyContext(def: DefinitionProvider, context: Type): Type
