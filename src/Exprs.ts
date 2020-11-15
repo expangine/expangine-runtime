@@ -29,7 +29,7 @@ import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
 import { isArray, isObject, objectMap } from './fns';
-import { Type } from './Type';
+import { Type, TypeChild } from './Type';
 import { AssertExpression } from './exprs/Assert';
 import { FunctionExpression } from './exprs/Function';
 import { FunctionType } from './types/Function';
@@ -132,9 +132,9 @@ export class Exprs
     return this.setParent(new IfExpression([[condition, body]], otherwise));
   }
 
-  public static func(type: FunctionType, body: Expression, aliases?: Record<string, string>): FunctionExpression
+  public static func(type: FunctionType, body: Expression, captured: TypeChild[] = [], aliases?: Record<string, string>): FunctionExpression
   {
-    return this.setParent(new FunctionExpression(type, body, aliases));
+    return this.setParent(new FunctionExpression(type, body, captured, aliases));
   }
 
   public static invoke(name: string, args: Record<string, ExpressionValue> = {}): InvokeExpression

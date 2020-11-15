@@ -1,6 +1,6 @@
 import { Expression, ExpressionProvider } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { Type, TypeMap } from '../Type';
+import { Type, TypeChild, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { FunctionType } from '../types/Function';
@@ -11,8 +11,9 @@ export declare class FunctionExpression extends Expression {
     static encode(expr: FunctionExpression): any;
     type: FunctionType;
     body: Expression;
+    captured: TypeChild[];
     aliases?: Record<string, string>;
-    constructor(type: FunctionType, body: Expression, aliases?: Record<string, string>);
+    constructor(type: FunctionType, body: Expression, captured?: TypeChild[], aliases?: Record<string, string>);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     getScope(): null;
@@ -20,8 +21,10 @@ export declare class FunctionExpression extends Expression {
     clone(): Expression;
     getArgumentsAliased(): TypeMap;
     getBodyContext(def: DefinitionProvider, context: Type): Type;
+    setCapturedFromContext(context: Type): void;
+    setCaptured(inContext: (child: TypeChild) => boolean): void;
     getCapturedTypes(context: Type): TypeMap;
-    getCaptured(context: Type): string[];
+    findCaptured(inContext: (child: TypeChild) => boolean): TypeChild[];
     getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;

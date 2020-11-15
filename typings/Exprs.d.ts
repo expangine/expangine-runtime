@@ -27,7 +27,7 @@ import { TemplateExpression } from './exprs/Template';
 import { WhileExpression } from './exprs/While';
 import { TupleExpression } from './exprs/Tuple';
 import { ObjectExpression } from './exprs/Object';
-import { Type } from './Type';
+import { Type, TypeChild } from './Type';
 import { AssertExpression } from './exprs/Assert';
 import { FunctionExpression } from './exprs/Function';
 import { FunctionType } from './types/Function';
@@ -50,7 +50,7 @@ export declare class Exprs {
     static sub(value: ExpressionValue, ...path: ExpressionValue[]): PathExpression;
     static computed(name: string): ComputedExpression;
     static if(condition: Expression, body?: Expression, otherwise?: Expression): IfExpression;
-    static func(type: FunctionType, body: Expression, aliases?: Record<string, string>): FunctionExpression;
+    static func(type: FunctionType, body: Expression, captured?: TypeChild[], aliases?: Record<string, string>): FunctionExpression;
     static invoke(name: string, args?: Record<string, ExpressionValue>): InvokeExpression;
     static method(entity: string, name: string, args?: Record<string, ExpressionValue>): MethodExpression;
     static noop(): NoExpression;

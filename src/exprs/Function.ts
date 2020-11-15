@@ -1,8 +1,8 @@
 
 import { Expression, ExpressionProvider } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
-import { isEmpty } from '../fns';
-import { Type, TypeMap } from '../Type';
+import { isArray, isEmpty, isNumber, isObject, isString } from '../fns';
+import { Type, TypeChild, TypeMap } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler } from '../Validate';
 import { DataTypes } from '../DataTypes';
@@ -10,11 +10,13 @@ import { PathExpression } from './Path';
 import { FunctionType } from '../types/Function';
 import { GetExpression } from './Get';
 import { ConstantExpression } from './Constant';
+import { ObjectType } from '../types/Object';
 
 
 const INDEX_TYPE = 1;
 const INDEX_BODY = 2;
-const INDEX_ALIASES = 3;
+const INDEX_CAPTURED = 3;
+const INDEX_ALIASES = 4;
 
 export class FunctionExpression extends Expression 
 {
@@ -27,31 +29,43 @@ export class FunctionExpression extends Expression
   {
     const type = exprs.getType(data[INDEX_TYPE]) as FunctionType;
     const body = exprs.getExpression(data[INDEX_BODY]);
-    const aliases = data[INDEX_ALIASES];
+    const captured = isArray(data[INDEX_CAPTURED]) ? data[INDEX_CAPTURED].slice() : [];
+    const aliases = isObject(data[INDEX_ALIASES]) ? data[INDEX_ALIASES] : undefined;
     
-    return new FunctionExpression(type, body, aliases);
+    return new FunctionExpression(type, body, captured, aliases);
   }
 
   public static encode(expr: FunctionExpression): any 
   {
-    const type = expr.type.encode();
-    const body = expr.body.encode();
+    const hasAliases = !isEmpty(expr.aliases);
+    const out = [
+      this.id, 
+      expr.type.encode(), 
+      expr.body.encode()
+    ];
 
-    return isEmpty(expr.aliases)
-      ? [this.id, type, body]
-      : [this.id, type, body, DataTypes.copy(expr.aliases)];
+    if (expr.captured.length > 0 || hasAliases) {
+      out.push(expr.captured.slice());
+    }
+    if (hasAliases) {
+      out.push({ ...expr.aliases });
+    }
+
+    return out;
   }
 
   public type: FunctionType;
   public body: Expression;
+  public captured: TypeChild[];
   public aliases?: Record<string, string>;
 
-  public constructor(type: FunctionType, body: Expression, aliases?: Record<string, string>) 
+  public constructor(type: FunctionType, body: Expression, captured: TypeChild[] = [], aliases?: Record<string, string>) 
   {
     super();
 
     this.type = type;
     this.body = body;
+    this.captured = captured;
     this.aliases = aliases;
   }
 
@@ -77,7 +91,7 @@ export class FunctionExpression extends Expression
 
   public clone(): Expression
   {
-    return new FunctionExpression(this.type.clone(), this.body.clone(), DataTypes.copy(this.aliases));
+    return new FunctionExpression(this.type.clone(), this.body.clone(), this.captured.slice(), DataTypes.copy(this.aliases));
   }
 
   public getArgumentsAliased(): TypeMap
@@ -100,36 +114,40 @@ export class FunctionExpression extends Expression
 
   public getBodyContext(def: DefinitionProvider, context: Type): Type
   {
-    return def.getContext(context, this.getArgumentsAliased());
+    const props: TypeMap = {
+      ...this.getArgumentsAliased(),
+      ...this.getCapturedTypes(context),
+    };
+
+    return new ObjectType({ props });
+  }
+
+  public setCapturedFromContext(context: Type): void
+  {
+    this.captured = this.findCaptured( (child) => Boolean(context.getChildType(child)) );
+  }
+
+  public setCaptured(inContext: (child: TypeChild) => boolean): void
+  {
+    this.captured = this.findCaptured(inContext);
   }
 
   public getCapturedTypes(context: Type): TypeMap
   {
-    const local = this.getArgumentsAliased();
-    const captured: TypeMap = {};
+    return this.captured.reduce(
+      (out, name) => {
+        out[name] = context.getChildType(name);
 
-    this.body.traverse(new Traverser((expr) => 
-    {
-      if (expr instanceof PathExpression)
-      {
-        const path = expr.expressions;
-        const p0 = path[0];
-        const p1 = path[1];
-        
-        if (p0 instanceof GetExpression && p1 instanceof ConstantExpression && !(p1.value in local) && context.getChildType(p1.value))
-        {
-          captured[p1.value] = context.getChildType(p1.value);
-        }
-      }
-    }));
-
-    return captured;
+        return out;
+      },
+      Object.create(null) as TypeMap,
+    );
   }
 
-  public getCaptured(context: Type): string[]
+  public findCaptured(inContext: (child: TypeChild) => boolean): TypeChild[]
   {
     const local = this.getArgumentsAliased();
-    const captured: Record<string, boolean> = {};
+    const captured: Record<TypeChild, true> = {};
 
     this.body.traverse(new Traverser((expr) => 
     {
@@ -139,7 +157,11 @@ export class FunctionExpression extends Expression
         const p0 = path[0];
         const p1 = path[1];
         
-        if (p0 instanceof GetExpression && p1 instanceof ConstantExpression && !(p1.value in local) && context.getChildType(p1.value))
+        if (p0 instanceof GetExpression && 
+           p1 instanceof ConstantExpression && 
+           !(p1.value in local) && 
+           (isString(p1.value) || isNumber(p1.value)) &&
+           inContext(p1.value))
         {
           captured[p1.value] = true;
         }
