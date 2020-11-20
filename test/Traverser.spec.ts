@@ -30,7 +30,7 @@ describe('Traverser', () => {
       expect(value).toBeInstanceOf(expectedClass);
       expect(path).toEqual(expectedPath);
       index++;
-    });
+    }, undefined);
 
     node.traverse(traverser);
 
@@ -89,7 +89,7 @@ describe('Traverser', () => {
       expect(value).toBeInstanceOf(expectedClass);
       expect(path).toEqual(expectedPath);
       index++;
-    });
+    }, undefined);
 
     node.traverse(traverser.filter((v, s, p) => p.length === 1));
 
@@ -115,7 +115,7 @@ describe('Traverser', () => {
       expect(value).toBeInstanceOf(expectedClass);
       expect(path).toEqual(expectedPath);
       index++;
-    });
+    }, undefined);
 
     const filtered = traverser.filterClass(MapType);
 

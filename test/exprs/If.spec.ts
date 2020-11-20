@@ -21,8 +21,8 @@ describe('If', () => {
     const iffType = iif.getType(defs, context);
 
     expect(iffType).toBeInstanceOf(ManyType);
-    expect(iffType.options[0]).toBeInstanceOf(TextType);
-    expect(iffType.options[1]).toBeInstanceOf(NumberType);
+    expect(iffType?.options[0]).toBeInstanceOf(TextType);
+    expect(iffType?.options[1]).toBeInstanceOf(NumberType);
   });
 
   it('type simplify', () =>
@@ -32,7 +32,7 @@ describe('If', () => {
       .than(Exprs.const(0))
       .else(Exprs.const(1))
     ;
-    const iffType = iif.getType(defs, context).getSimplifiedType();
+    const iffType = iif.getType(defs, context)?.getSimplifiedType();
 
     expect(iffType).toBeInstanceOf(NumberType);
   });

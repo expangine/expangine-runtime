@@ -76,9 +76,9 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
 
   public static describePriority: number = -1;
   
-  public static describe(): Type | null
+  public static describe(): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -112,7 +112,7 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     }
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.options.value.getSubType(expr, def, context);
   }
@@ -122,7 +122,7 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     return this.options.value.getSubTypes(def);
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     switch (name) {
       case EnumType.CHILD_KEY:
@@ -131,7 +131,7 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
         return this.options.value;
     }
 
-    return null;
+    return undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -197,16 +197,16 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     });
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === EnumType.STEP_KEY
       ? this.options.key
       : step === EnumType.STEP_VALUE
         ? this.options.value
-        : null;
+        : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -281,7 +281,7 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     return this.options.value.normalize(value);
   }
 
-  public newInstance(): EnumType
+  public newInstance(): EnumType<K, V>
   {
     const { key, value } = this.options;
 
@@ -292,7 +292,7 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     });
   }
 
-  public clone(): EnumType
+  public clone(): EnumType<K, V>
   {
     const { key, value, constants } = this.options;
 
@@ -308,27 +308,27 @@ export class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V>>
     return EnumType.encode(this);
   }
 
-  public create(): any
+  public create(): V
   {
     const { value, constants } = this.options;
     const firstKey = constants.keys().next().value;
 
-    return firstKey ? constants.get(firstKey) : value.create();
+    return firstKey ? constants.get(firstKey) as V : value.create();
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): V
   {
     const values = Array.from(this.options.constants.values());
 
     return values[rnd(0, values.length, true)];
   }
 
-  public fromJson(json: any): any
+  public fromJson(json: any): V
   {
     return this.options.value.fromJson(json);
   }
 
-  public toJson(value: any): any
+  public toJson(value: V): any
   {
     return this.options.value.toJson(value);
   }

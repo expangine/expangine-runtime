@@ -17,20 +17,20 @@ export declare class ObjectType<D extends ObjectInterface = ObjectInterface, O e
     static decode(data: any[], types: TypeProvider): ObjectType;
     static encode(type: ObjectType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
-    merge(type: Type<D>): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    merge(type: ObjectType<D, O>): void;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     protected isDeepCompatible(other: Type, options: TypeCompatibleOptions): boolean;
@@ -45,9 +45,9 @@ export declare class ObjectType<D extends ObjectInterface = ObjectInterface, O e
     newInstance(): ObjectType<D, O>;
     clone(): ObjectType<D, O>;
     encode(): any;
-    create(): any;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    create(): D;
+    random(rnd: (a: number, b: number, whole: boolean) => number): D;
     fromJson(json: any): D;
     toJson(value: D): any;
-    getWildcardType(): Type | null;
+    getWildcardType(): Type | undefined;
 }

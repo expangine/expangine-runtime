@@ -72,11 +72,11 @@ export class DateType extends Type<Date, DateOptions>
 
   public static describePriority: number = 6;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isDate(data))
     {
-      return null;
+      return undefined;
     }
 
     return new DateType({
@@ -178,9 +178,9 @@ export class DateType extends Type<Date, DateOptions>
     }
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -259,7 +259,7 @@ export class DateType extends Type<Date, DateOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }
@@ -395,7 +395,7 @@ export class DateType extends Type<Date, DateOptions>
     return new Date(json);
   }
 
-  public toJson(value: Date): string
+  public toJson(value: Date): string | null
   {
     return value ? value.toISOString() : null;
   }

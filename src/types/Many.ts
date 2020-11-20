@@ -14,7 +14,7 @@ import { Computeds } from '../Computed';
 
 const INDEX_MANY = 1;
 
-export class ManyType extends Type<any, Type[]>
+export class ManyType<M = any> extends Type<M, Type[]>
 {
 
   public static id = ID.Many;
@@ -41,9 +41,9 @@ export class ManyType extends Type<any, Type[]>
 
   public static describePriority: number = -1;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -59,7 +59,7 @@ export class ManyType extends Type<any, Type[]>
   {
     if (!this.operations)
     {
-      this.operations = {};
+      const manyOps: Record<string, OperationGeneric> = {};
 
       this.options.forEach(many => 
       {
@@ -67,9 +67,11 @@ export class ManyType extends Type<any, Type[]>
         
         for (const prop in ops) 
         {
-          this.operations[prop] = ops[prop];
+          manyOps[prop] = ops[prop];
         }
       });
+
+      this.operations = manyOps;
     }
 
     return this.operations;
@@ -102,7 +104,7 @@ export class ManyType extends Type<any, Type[]>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     for (const sub of this.options)
     {
@@ -114,7 +116,7 @@ export class ManyType extends Type<any, Type[]>
       }
     }
 
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -147,9 +149,9 @@ export class ManyType extends Type<any, Type[]>
     return subs;
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
-    return this.options[name] || null;
+    return this.options[name];
   }
 
   public getChildTypes(): TypeChild[]
@@ -203,12 +205,12 @@ export class ManyType extends Type<any, Type[]>
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
-    return this.options[step] || null;
+    return this.options[step];
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -243,10 +245,7 @@ export class ManyType extends Type<any, Type[]>
   public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
   {
     // from & to = sub type index
-    const hasFrom = isNumber(from);
-    const hasTo = isNumber(to);
-
-    if (hasFrom && !hasTo) // removed
+    if (isNumber(from) && !isNumber(to)) // removed
     {
       const targetType = from === 0 ? this.options[1] : this.options[0];
       const valueType = this.options[from];
@@ -258,11 +257,11 @@ export class ManyType extends Type<any, Type[]>
         .else(casting)
       ;
     }
-    else if (!hasFrom && hasTo) // added
+    else if (!isNumber(from) && isNumber(to)) // added
     {
       return newValue;
     }
-    else if (to === from && hasFrom) // change
+    else if (to === from && isNumber(from)) // change
     {
       return Exprs
         .if(Exprs.not(this.getValidateExpression()))
@@ -274,7 +273,7 @@ export class ManyType extends Type<any, Type[]>
     return newValue;
   }
 
-  public isValid(value: any): value is any 
+  public isValid(value: any): value is M 
   {
     return this.forMany(false, many => many.isValid(value) ? true : undefined);
   }
@@ -299,14 +298,14 @@ export class ManyType extends Type<any, Type[]>
     return ManyType.encode(this);
   }
 
-  public create(): any
+  public create(): M
   {
     return this.options.length > 0
       ? this.options[0].create()
-      : null;
+      : undefined;
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): M
   {
     const options = this.options;
     const chosen = rnd(0, options.length, true);

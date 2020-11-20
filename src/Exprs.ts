@@ -162,10 +162,10 @@ export class Exprs
     return this.setParent(new ObjectExpression(this.parse(props)));
   }
 
-  public static op<P extends string, O extends string, S extends string>(
+  public static op<P extends string, O extends string, S extends string, A extends S>(
     op: Operation<P, O, S, any, any>, 
     params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>,
-    scopeAlias: Partial<Record<S, string>> = Object.create(null)
+    scopeAlias: Record<A, string> = Object.create(null)
   ): OperationExpression<P, O, S> {
     return this.setParent(new OperationExpression<P, O, S>(op.id, this.parse(params), scopeAlias));
   }

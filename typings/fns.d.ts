@@ -25,7 +25,9 @@ export declare function objectValues<O extends Record<string, any> = any, M = O[
 export declare function objectReduce<R, V, K extends RecordKey = string>(map: Record<K, V>, reduce: (value: V, key: K, reduced: R) => R, initial: R): R;
 export declare function objectFromProps<P extends string, V>(props: P[], getValue: (prop: P, index: number) => V): Record<P, V>;
 export declare function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getItem: (value: V, key: K) => T): T[];
-export declare function coalesce<T>(x?: T, y?: T): T;
+export declare function coalesce<T>(x: T | undefined, y: T): T;
+export declare function coalesce<T>(x: T, y?: T | undefined): T;
+export declare function coalesce<T>(x?: T, y?: T): T | undefined;
 export declare function padNumber(x: number, length: number, first?: number): string;
 export declare function pad(x: string, length: number, padding: string, before: boolean): string;
 export declare function toString(x: any): string;

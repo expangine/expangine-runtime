@@ -16,6 +16,7 @@ import { ColorSpaceHSL } from '../../util/color/ColorSpaceHSL';
 import { Color } from '../../util/color/Color';
 import { SetType } from '../../types/Set';
 import { Types } from '../../Types';
+import { Type } from '../../Type';
 
 
 const ops = ColorType.operations;
@@ -334,13 +335,13 @@ export const ColorOpsTypes =
   ),
 
   toHSL: ops.setTypes(ColorOps.toHSL,
-    ColorSpaceHSL.type,
+    ColorSpaceHSL.type as Type,
     { value: ColorType }
   ),
 
   fromHSL: ops.setTypes(ColorOps.fromHSL,
     ColorType,
-    { value: ColorSpaceHSL.type }
+    { value: ColorSpaceHSL.type as Type }
   ),
 
   luminance: ops.setTypes(ColorOps.luminance,

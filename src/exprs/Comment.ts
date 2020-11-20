@@ -51,9 +51,9 @@ export class CommentExpression extends Expression
     return false;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -66,7 +66,7 @@ export class CommentExpression extends Expression
     return new CommentExpression(this.comment);
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return NullType.baseType;
   }
@@ -76,7 +76,7 @@ export class CommentExpression extends Expression
     return traverse.enter(this);
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
   }

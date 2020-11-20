@@ -54,9 +54,9 @@ export class OrExpression extends Expression
     return this.expressions.some((e) => e.isDynamic());
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -69,15 +69,15 @@ export class OrExpression extends Expression
     return new OrExpression(this.expressions.map((e) => e.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
-    const types: Type[] = this.expressions
+    const types = this.expressions
       .map(e => e.getType(def, context))
       .concat(BooleanType.baseType)
       .filter(t => !!t)
     ;
     
-    return Types.mergeMany(types, NullType.baseType);
+    return Types.mergeMany(types as Type[], NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -89,14 +89,14 @@ export class OrExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return isNumber(steps[0]) && steps[0] < this.expressions.length
       ? [1, this.expressions[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

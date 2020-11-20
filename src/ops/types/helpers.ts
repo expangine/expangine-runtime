@@ -26,7 +26,7 @@ export function MergedObjectType(types: Type[]): ObjectType
 
                 if (prop in props && paramProp instanceof OptionalType) 
                 {
-                    props[prop] = Types.mergeMany([paramProp, props[prop]]);
+                    props[prop] = Types.mergeMany([paramProp, props[prop]]) as Type;
                 } 
                 else 
                 {
@@ -39,7 +39,7 @@ export function MergedObjectType(types: Type[]): ObjectType
     return new ObjectType({ props });
 }
 
-export function GivenObjectType(type?: Type, otherwise?: TypeInput, merger?: (multiple: Type[]) => Type): TypeInput
+export function GivenObjectType(type?: Type, otherwise?: TypeInput, merger?: (multiple: Type[]) => Type): TypeInput | undefined
 {
     return type instanceof ObjectType 
         ? type 

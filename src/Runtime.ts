@@ -55,7 +55,7 @@ export class Runtime<Context = any, Result = any>
     return this;
   }
 
-  public getFunction (name: string): Func
+  public getFunction (name: string): Func | undefined
   {
     return this.defs.getFunction(name);
   }
@@ -65,7 +65,7 @@ export class Runtime<Context = any, Result = any>
     return this.ops[id];
   }
 
-  public getComputed (id: string): Computed | null 
+  public getComputed (id: string): Computed | undefined 
   {
     return this.defs.getComputed(id);
   }

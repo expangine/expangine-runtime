@@ -24,12 +24,12 @@ describe('If', () => {
       .default(Exprs.const('c'))
     ;
     const switchsType = switchs.getType(defs, context);
-    const switchsSimplified = switchsType.getSimplifiedType();
+    const switchsSimplified = switchsType?.getSimplifiedType();
 
     expect(switchsSimplified).toBeInstanceOf(TextType);
     expect(switchsType).toBeInstanceOf(EnumType);
-    expect(switchsType.options.value).toBeInstanceOf(TextType);
-    expect(switchsType.options.constants).toEqual(new Map([
+    expect(switchsType?.options.value).toBeInstanceOf(TextType);
+    expect(switchsType?.options.constants).toEqual(new Map([
       ['a', 'a'],
       ['b', 'b'],
       ['c', 'c']
@@ -51,13 +51,13 @@ describe('If', () => {
     const switchsType = switchs.getType(defs, context);
 
     expect(switchsType).toBeInstanceOf(EnumType);
-    expect(switchsType.options.value).toBeInstanceOf(ManyType);
-    expect(switchsType.options.value.options[0]).toBeInstanceOf(TextType);
-    expect(switchsType.options.value.options[1]).toBeInstanceOf(NumberType);
-    expect(switchsType.options.key).toBeInstanceOf(ManyType);
-    expect(switchsType.options.key.options[0]).toBeInstanceOf(TextType);
-    expect(switchsType.options.key.options[1]).toBeInstanceOf(NumberType);
-    expect(switchsType.options.constants).toEqual(new Map<any, any>([
+    expect(switchsType?.options.value).toBeInstanceOf(ManyType);
+    expect(switchsType?.options.value.options[0]).toBeInstanceOf(TextType);
+    expect(switchsType?.options.value.options[1]).toBeInstanceOf(NumberType);
+    expect(switchsType?.options.key).toBeInstanceOf(ManyType);
+    expect(switchsType?.options.key.options[0]).toBeInstanceOf(TextType);
+    expect(switchsType?.options.key.options[1]).toBeInstanceOf(NumberType);
+    expect(switchsType?.options.constants).toEqual(new Map<any, any>([
       ['a', 'a'],
       ['b', 'b'],
       [0, 0]

@@ -21,14 +21,14 @@ const ops = MapType.operations;
 
 const RequireMap = (map?: Type) => map instanceof MapType ? map : undefined;
 const GivenMap = (i: {map?: Type}) => RequireMap(i.map) || MapType;
-const GivenMapValue = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.value : AnyType;
+const GivenMapValue = (i: {map?: Type}) => RequireMap(i.map) ? i.map?.options.value : AnyType;
 const GivenMapValueOptional = (i: {map?: Type}) => Types.optional(GivenMapValue(i));
-const GivenMapKey = (i: {map?: Type}) => RequireMap(i.map) ? i.map.options.key : TextType;
+const GivenMapKey = (i: {map?: Type}) => RequireMap(i.map) ? i.map?.options.key : TextType;
 const GivenMapIterationScope = { map: GivenMap, key: GivenMapKey, value: GivenMapValue };
 
 const GivenValueMap = (i: {value?: Type}) => RequireMap(i.value) || MapType;
-const GivenValueMapValue = (i: {value?: Type}) => RequireMap(i.value) ? i.value.options.value : AnyType;
-const GivenValueMapKey = (i: {value?: Type}) => RequireMap(i.value) ? i.value.options.key : TextType;
+const GivenValueMapValue = (i: {value?: Type}) => RequireMap(i.value) ? i.value?.options.value : AnyType;
+const GivenValueMapKey = (i: {value?: Type}) => RequireMap(i.value) ? i.value?.options.key : TextType;
 const GivenValueCompareScope = { key: GivenValueMapKey, value: GivenValueMapValue, test: GivenValueMapValue };
 
 export const MapOpsTypes = 

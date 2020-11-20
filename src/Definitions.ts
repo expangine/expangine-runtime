@@ -1,6 +1,6 @@
 
 import { isArray, isString, objectMap, objectValues, objectEach } from './fns';
-import { Type, TypeClass, TypeParser, TypeMap, TypeCompatibleOptions, TypeDescribeProvider } from './Type';
+import { Type, TypeClass, TypeParser, TypeMap, TypeMapInput, TypeCompatibleOptions, TypeDescribeProvider } from './Type';
 import { Expression, ExpressionClass, ExpressionMap, ExpressionParser } from './Expression';
 import { Operations, OperationTypes, OperationTypeInput, OperationGeneric, OperationPair, OperationMapping, isOperationTypeFunction, OperationTypeProvider } from './Operation';
 import { Computeds, Computed } from './Computed';
@@ -399,9 +399,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this;
   }
 
-  public getData(name: string): ReferenceData | null
+  public getData(name: string): ReferenceData | undefined
   {
-    return this.data.get(name, null);
+    return this.data.get(name);
   }
 
   public getDatas(): NamedMap<ReferenceData>
@@ -454,6 +454,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public renameData(dataInput: string | ReferenceData, newName: string, delayChange: boolean = false): false | DefinitionsDataReference[]
   {
     const data = this.data.valueOf(dataInput);
+
+    if (!data)
+    {
+      return false;
+    }
+
     const oldName = data.name;
     
     if (!this.data.rename(data, newName))
@@ -527,9 +533,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this;
   }
 
-  public getFunction(name: string): Func | null
+  public getFunction(name: string): Func | undefined
   {
-    return this.functions.get(name, null);
+    return this.functions.get(name);
   }  
 
   public getFunctions(): NamedMap<Func>
@@ -575,9 +581,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this;
   }
 
-  public getProgram(name: string): Program | null
+  public getProgram(name: string): Program | undefined
   {
-    return this.programs.get(name, null);
+    return this.programs.get(name);
   }
 
   public getPrograms(): NamedMap<Program>
@@ -660,9 +666,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this;
   }
 
-  public getEntity(name: string): Entity | null
+  public getEntity(name: string): Entity | undefined
   {
-    return this.entities.get(name, null);
+    return this.entities.get(name);
   }
 
   public getEntities(): NamedMap<Entity>
@@ -708,9 +714,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this;
   }
 
-  public getRelation(name: string): Relation | null
+  public getRelation(name: string): Relation | undefined
   {
-    return this.relations.get(name, null);
+    return this.relations.get(name);
   }
 
   public getRelations(entityName: string): EntityRelation[]
@@ -800,6 +806,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public renameProgram(programInput: string | Program, newName: string, delayChange: boolean = false): boolean
   {
     const program = this.programs.valueOf(programInput);
+
+    if (!program)
+    {
+      return false;
+    }
+
     const oldName = program.name;
 
     if (!this.programs.rename(program, newName))
@@ -824,6 +836,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public renameEntity(entityInput: string | Entity, newName: string, delayChange: boolean = false): false | DefinitionsEntityReference[]
   {
     const entity = this.entities.valueOf(entityInput);
+
+    if (!entity)
+    {
+      return false;
+    }
+
     const oldName = entity.name;
 
     if (!this.entities.rename(entity, newName))
@@ -978,6 +996,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public renameRelation(relationInput: string | Relation, newName: string, delayChange: boolean = false): false | DefinitionsRelationReference[]
   {
     const relation = this.relations.valueOf(relationInput);
+
+    if (!relation)
+    {
+      return false;
+    }
+
     const oldName = relation.name;
 
     if (!this.relations.rename(relation, newName))
@@ -1009,6 +1033,12 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   public renameFunction(funcInput: string | Func, newName: string, delayChange: boolean = false): false | DefinitionsFunctionReference[]
   {
     const func = this.functions.valueOf(funcInput);
+
+    if (!func)
+    {
+      return false;
+    }
+
     const oldName = func.name;
 
     if (!this.functions.rename(func, newName))
@@ -1312,9 +1342,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return true;
   }
 
-  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>): T | null 
+  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>): T | undefined 
   public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T): T 
-  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise: T | null = null): T | null 
+  public getTypeKind<T extends Type>(value: any, kind: TypeClass<T>, otherwise?: T): T | undefined
   {
     const parsed = this.getType(value);
 
@@ -1334,9 +1364,11 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     if (!parser)
     {
-      if (this.entities.has(id))
+      const entity = this.entities.get(id);
+
+      if (entity)
       {
-        return this.entities.get(id).type;
+        return entity.type;
       }
 
       if (otherwise)
@@ -1375,7 +1407,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this.typeList.filter((t) => !t.baseType.isSimple());
   }
 
-  public getComputed(id: string): Computed | null
+  public getComputed(id: string): Computed | undefined
   {
     const comp = this.computeds.get(id);
 
@@ -1387,16 +1419,16 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     const [typeName] = id.split(ID.Delimiter);
     const type = this.types[typeName];
 
-    return type ? type.computeds.get(id) : null;
+    return type ? type.computeds.get(id) : undefined;
   }
 
-  public getComputedReturnType(id: string, valueType: Type | null = null): Type | null
+  public getComputedReturnType(id: string, valueType?: Type): Type | undefined
   {
     const comp = this.getComputed(id);
 
     if (!comp)
     {
-      return null;
+      return undefined;
     }
 
     const op = this.getOperation(comp.op);
@@ -1404,7 +1436,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
     if (!op || !types)
     {
-      return null;
+      return undefined;
     }
 
     return this.getOperationInputType(types.returnType, { [comp.value]: valueType });
@@ -1424,7 +1456,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return typeClass ? !!typeClass.computeds.get(id) : false;
   }
 
-  public getOperation(id: string): OperationGeneric | null
+  public getOperation(id: string): OperationGeneric | undefined
   {
     const op = this.operations.get(id);
 
@@ -1436,10 +1468,10 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     const [typeName] = id.split(ID.Delimiter);
     const type = this.types[typeName];
 
-    return type ? type.operations.get(id) : null;
+    return type ? type.operations.get(id) : undefined;
   }
 
-  public getOperationTypes(id: string): OperationTypes<any, any, any> | null
+  public getOperationTypes(id: string): OperationTypes<any, any, any> | undefined
   {
     const op = this.operations.getTypes(id);
 
@@ -1451,17 +1483,17 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     const [typeName] = id.split(ID.Delimiter);
     const type = this.types[typeName];
 
-    return type ? type.operations.getTypes(id) : null;
+    return type ? type.operations.getTypes(id) : undefined;
   }
 
-  public getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | null
+  public getOperationReturnType(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type): Type | undefined
   {
     const op = this.getOperation(id);
     const types = this.getOperationTypes(id);
 
     if (!op || !types)
     {
-      return null;
+      return undefined;
     }
 
     const returnType = types.returnType;
@@ -1483,7 +1515,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this.getOperationInputType(types.returnType, paramTypes);
   }
 
-  public getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMap
+  public getOperationExpectedTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMapInput
   {
     const opTypes = this.getOperationTypes(id);
 
@@ -1497,9 +1529,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return objectMap(paramTypes, (paramType, name) => this.getOperationInputType(opTypes.params[name] || opTypes.optional[name] || paramType, paramTypes));
   }
 
-  public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMap
+  public getOperationParamTypes(id: string, params: ExpressionMap, scopeAlias: Record<string, string>, context: Type, rawTypes: boolean = false): TypeMapInput
   {
-    const types: TypeMap = {};
+    const types: TypeMapInput = {};
     const op = this.getOperation(id);
     const opTypes = this.getOperationTypes(id);
 
@@ -1567,10 +1599,16 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return types;
   }
 
-  public getOperationScopeContext(id: string, types: TypeMap, scopeAlias: Record<string, string>, context: Type): Type
+  public getOperationScopeContext(id: string, types: TypeMapInput, scopeAlias: Record<string, string>, context: Type): Type
   {
     const op = this.getOperation(id);
     const opTypes = this.getOperationTypes(id);
+
+    if (!op || !opTypes)
+    {
+      throw new Error(`Operation ${id} does not exist.`);
+    }
+
     const { context: scopedContext, scope: scopeTarget } = this.getContextWithScope(context);
     
     for (const scopeParam of op.scope)
@@ -1602,41 +1640,53 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return this.getContextWithScope(original, scope).context;
   }
 
-  public getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | null
+  public getOperationMapping(fromId: string, fromParamTypes: TypeMap, toId: string): OperationMapping | undefined
   {
-    type ParamTuple = [string, Type, number];
+    type ParamTuple<T> = [string, T, number];
 
     const from = this.getOperation(fromId);
-    const fromTypes = this.getOperationTypes(toId);
-    const fromVars = from.params.concat(from.optional);
+    const fromTypes = this.getOperationTypes(fromId);
     const to = this.getOperation(toId);
     const toTypes = this.getOperationTypes(toId);
+
+    if (!from || !fromTypes || !to || !toTypes)
+    {
+      throw new Error(`Operation ${fromId} or ${toId} does not exist.`);
+    }
+
+    const fromVars = from.params.concat(from.optional);
     const mapping: Record<string, string> = Object.create(null);
     const mapped: TypeMap = Object.create(null);
-    const getParamTypeTuple = (value: Type, key: string): ParamTuple => 
+    const getParamTypeTuple = (value: Type | undefined, key: string): ParamTuple<Type | undefined> => 
       [key, value, fromVars.indexOf(key)];
     const paramTypes = objectValues(fromParamTypes, getParamTypeTuple)
-      .filter(([,, index]) => index >= 0)
-      .sort(([,, a], [,, b]) => a - b);
+      .filter(([,value, index]) => index >= 0 && value)
+      .sort(([,, a], [,, b]) => a - b) as ParamTuple<Type>[];
 
-    const getParamTuple = (param: string, typeInput: OperationTypeInput<any>): ParamTuple | null => 
+    const getParamTuple = (param: string, typeInput: OperationTypeInput<any>): ParamTuple<Type> | undefined => 
     {
       if (paramTypes.length === 0)
       {
-        return null;
+        return undefined;
       }
 
       let chosenIndex = -1;
 
       if (isOperationTypeFunction(typeInput))
       {
-        chosenIndex = paramTypes.findIndex(([, type]) => 
-          type.acceptsType(Types.parse(typeInput({ ...mapped, [param]: type }, this))));
+        chosenIndex = paramTypes.findIndex(([, type]) => {
+          const paramType = Types.parse(typeInput({ ...mapped, [param]: type }, this));
+
+          return paramType && type.acceptsType(paramType);
+        });
         
         if (chosenIndex === -1)
         {
-          chosenIndex = paramTypes.findIndex(([, type]) =>
-            Types.parse(typeInput({ ...mapped, [param]: type}, this)).acceptsType(type));
+          chosenIndex = paramTypes.findIndex(([, type]) => {
+            const paramType = Types.parse(typeInput({ ...mapped, [param]: type}, this));
+
+            return paramType && paramType.acceptsType(type);
+          });
         }
       }
       else
@@ -1648,7 +1698,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       if (chosenIndex === -1)
       {
-        return null;
+        return undefined;
       }
 
       const chosen = paramTypes[chosenIndex];
@@ -1661,9 +1711,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     {
       const tuple = getParamTuple(param, toTypes.params[param]);
 
-      if (tuple === null)
+      if (!tuple)
       {
-        return null;
+        return undefined;
       }
     }
 
@@ -1677,9 +1727,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return { from, fromTypes, to, toTypes, mapping, unmapped };
   }
 
-  public getOperationInputType(input: OperationTypeInput<any>): Type | null
-  public getOperationInputType(input: OperationTypeInput<any>, params: TypeMap): Type
-  public getOperationInputType(input: OperationTypeInput<any>, params?: TypeMap): Type
+  public getOperationInputType(input: OperationTypeInput<any>, params?: TypeMapInput): Type | undefined
   {
     return input instanceof Type
       ? input
@@ -1687,7 +1735,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
         ? input.baseType.clone()
         : params
           ? Types.parse(input(params, this))
-          : null;
+          : undefined;
   }
 
   public getOperationsForExpression(expr: Expression, context: Type): OperationPair[]
@@ -1701,7 +1749,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   {
     return this.getOperations()
       .map(({ op }) => this.getOperationMapping(fromId, fromParamTypes, op.id))
-      .filter((mapping) => !!mapping);
+      .filter((mapping) => !!mapping) as OperationMapping[];
   }
 
   public getOperationsForType(type: Type, acceptsDynamic: boolean = false): OperationPair[]
@@ -1743,7 +1791,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return type ? this.getOperationsWithReturnType(type.getSimplifiedType(), paramTypes, acceptsDynamic) : [];
   }
 
-  public getOperationsWithReturnType(type: Type, paramTypes: TypeMap = {}, acceptsDynamic: boolean = false): OperationPair[]
+  public getOperationsWithReturnType(type: Type, paramTypes: TypeMapInput = {}, acceptsDynamic: boolean = false): OperationPair[]
   {
     return this.getOperations(({ op, types }) =>
     {
@@ -1779,7 +1827,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     }));
   }
 
-  public getOperationsForParamTypes(paramTypes: TypeMap): OperationPair[]
+  public getOperationsForParamTypes(paramTypes: TypeMapInput): OperationPair[]
   {
     const paramNames = Object.keys(paramTypes);
 
@@ -1795,8 +1843,9 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
         }
 
         const opType = this.getOperationInputType(opTypeInput, paramTypes);
+        const paramType = paramTypes[param];
 
-        if (!opType || !paramTypes[param].acceptsType(opType))
+        if (!opType || !paramType || !paramType.acceptsType(opType))
         {
           return false;
         }
@@ -1834,18 +1883,18 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
     return ops;
   }
 
-  public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | null
+  public getPathType(path: Expression[], context: Type, stopBefore: number = path.length): Type | undefined
   {
     if (path.length === 0)
     {
-      return null;
+      return undefined;
     }
 
     let thisType = path[0].getType(this, context);
 
     if (!thisType)
     {
-      return null;
+      return undefined;
     }
 
     let optional = thisType.isOptional();
@@ -1860,7 +1909,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
 
       if (!thisType)
       {
-        return null;
+        return undefined;
       }
 
       optional = optional || thisType.isOptional();
@@ -1990,7 +2039,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
             source: instance.source,
           });
         }
-      }));
+      }, undefined));
     });
 
     return refs;
@@ -2010,7 +2059,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
             source: instance.source,
           });
         }
-      }));
+      }, undefined));
     });
 
     return refs;
@@ -2029,7 +2078,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
             source: instance.source,
           });
         }
-      }));
+      }, undefined));
     });
 
     return refs;
@@ -2059,11 +2108,13 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
           source: [func, test, 'args'],
         });
 
-        instances.push({
-          data: test.expected,
-          type: returnType,
-          source: [func, test, 'expected'],
-        });
+        if (returnType) {
+          instances.push({
+            data: test.expected,
+            type: returnType,
+            source: [func, test, 'expected'],
+          });
+        }
       });
     });
 
@@ -2094,11 +2145,13 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
             source: [entity, method, test, 'args'],
           });
 
-          instances.push({
-            data: test.expected,
-            type: returnType,
-            source: [entity, method, test, 'expected'],
-          });
+          if (returnType) {
+            instances.push({
+              data: test.expected,
+              type: returnType,
+              source: [entity, method, test, 'expected'],
+            });
+          }
         });
       });
     });

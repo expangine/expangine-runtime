@@ -63,13 +63,13 @@ export class ColorType extends ObjectType<Color, ColorOptions>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | undefined
   {
     const parsed = ColorType.baseType.normalize(data);
 
     if (!parsed)
     {
-      return null;
+      return undefined;
     }
 
     return new ColorType({
@@ -130,7 +130,7 @@ export class ColorType extends ObjectType<Color, ColorOptions>
     if (!options.strict && 
         !options.exact &&
         other instanceof ObjectType &&
-        other.isCompatible(this)) 
+        other.isCompatible(this as Type)) 
     {
       return true;
     }
@@ -184,6 +184,11 @@ export class ColorType extends ObjectType<Color, ColorOptions>
   {
     for (const space of ColorType.spaces)
     {
+      if (!space.toColor)
+      {
+        continue;
+      }
+
       for (const formats of space.formats)
       {
         const parsed = formats.parser(value);
@@ -240,12 +245,12 @@ export class ColorType extends ObjectType<Color, ColorOptions>
 
   public toJson(value: Color): Color
   {
-    return value ? {
+    return {
       r: value.r,
       g: value.g,
       b: value.b,
       a: value.a,
-    } : null;
+    };
   }
 
 }

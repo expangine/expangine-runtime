@@ -49,8 +49,8 @@ describe('AnyOps', () => {
     }, defs));
 
     expect(r5).toBeInstanceOf(ManyType);
-    expect(r5.options[0]).toBeInstanceOf(NumberType);
-    expect(r5.options[1]).toBeInstanceOf(TextType);
+    expect(r5?.options[0]).toBeInstanceOf(NumberType);
+    expect(r5?.options[1]).toBeInstanceOf(TextType);
   });
 
 })

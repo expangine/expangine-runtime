@@ -13,12 +13,12 @@ export declare class NotExpression extends Expression {
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string): boolean;

@@ -14,13 +14,13 @@ export declare class BooleanType extends Type<boolean, BooleanOptions> {
     static decode(data: any[], types: TypeProvider): BooleanType;
     static encode(type: BooleanType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: BooleanType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: boolean): Type;
     getSimplifiedType(): Type;

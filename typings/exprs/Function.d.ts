@@ -16,7 +16,7 @@ export declare class FunctionExpression extends Expression {
     constructor(type: FunctionType, body: Expression, captured?: TypeChild[], aliases?: Record<string, string>);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
     getAliased<T>(args: Record<string, T>): Record<string, T>;
@@ -26,9 +26,9 @@ export declare class FunctionExpression extends Expression {
     setCaptured(inContext: (child: TypeChild) => boolean): void;
     getCapturedTypes(context: Type): TypeMap;
     findCaptured(inContext: (child: TypeChild) => boolean): TypeChild[];
-    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;

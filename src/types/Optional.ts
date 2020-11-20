@@ -46,9 +46,9 @@ export class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>>
 
   public static describePriority: number = -1;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -78,7 +78,7 @@ export class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.options.getSubType(expr, def, context);
   }
@@ -88,11 +88,11 @@ export class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>>
     return this.options.getSubTypes(def);
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     return name === OptionalType.CHILD_OPTIONAL
       ? this.options
-      : null;
+      : undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -144,14 +144,14 @@ export class OptionalType<T = any> extends Type<OptionalInterface<T>, Type<T>>
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === OptionalType.STEP_OPTIONAL
       ? this.options
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 

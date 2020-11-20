@@ -53,9 +53,9 @@ export class NotExpression extends Expression
     return this.expression.isDynamic();
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -68,7 +68,7 @@ export class NotExpression extends Expression
     return new NotExpression(this.expression.clone());
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return BooleanType.baseType;
   }
@@ -80,14 +80,14 @@ export class NotExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === NotExpression.STEP_NOT
       ? [1, this.expression]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

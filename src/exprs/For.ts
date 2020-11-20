@@ -121,13 +121,13 @@ export class ForExpression extends Expression
     return new ForExpression(this.variable, this.start.clone(), this.end.clone(), this.body.clone(), this.by.clone(), this.maxIterations);
   }
 
-  public getType(def: DefinitionProvider, original: Type): Type | null
+  public getType(def: DefinitionProvider, original: Type): Type | undefined
   {
     const { context } = def.getContextWithScope(original, this.getScope());
 
     const body = this.body.getType(def, context);
 
-    return body ? Types.optional(body) : null;
+    return body ? Types.optional(body) : undefined;
   }
 
   public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
@@ -152,7 +152,7 @@ export class ForExpression extends Expression
     });
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === ForExpression.STEP_START
       ? [1, this.start]
@@ -162,10 +162,10 @@ export class ForExpression extends Expression
           ? [1, this.body]
           : steps[0] === ForExpression.STEP_BY
             ? [1, this.by]
-            : null;
+            : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

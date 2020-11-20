@@ -35,11 +35,11 @@ export abstract class Expression implements Traversable<Expression>
 
   public static INSTANCE = 'instance';
 
-  public parent: Expression = null;
+  public parent?: Expression = undefined;
   
   public abstract getId(): string;
 
-  public abstract getScope(): TypeMap | null;
+  public abstract getScope(): TypeMap | undefined;
 
   public abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
 
@@ -47,7 +47,7 @@ export abstract class Expression implements Traversable<Expression>
 
   public abstract clone(): Expression;
 
-  public abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
+  public abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined;
 
   public abstract traverse<R>(traverse: Traverser<Expression, R>): R;
 
@@ -112,10 +112,10 @@ export abstract class Expression implements Traversable<Expression>
       {
         traverser.stop(path.slice());
       }
-    }));
+    }, [] as TraverseStep[]));
   }
 
-  public getExpressionFromPath(path: TraverseStep[]): Expression | null
+  public getExpressionFromPath(path: TraverseStep[]): Expression | undefined
   {
     if (path.length === 0)
     {
@@ -126,7 +126,7 @@ export abstract class Expression implements Traversable<Expression>
 
     if (!step || !step[1])
     {
-      return null;
+      return undefined;
     }
 
     const [steps, expr] = step;
@@ -134,9 +134,9 @@ export abstract class Expression implements Traversable<Expression>
     return expr.getExpressionFromPath(path.slice(steps));
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getRootExpression(): Expression
@@ -160,11 +160,11 @@ export abstract class Expression implements Traversable<Expression>
     return validations;
   }
 
-  protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent: Expression = this): void
+  protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type | undefined, subject: Expression | undefined, handler: ValidationHandler, parent: Expression = this): void
   {
-    const expected = expectedComplex ? expectedComplex.getSimplifiedType() : null;
-    const actualComplete = subject ? subject.getType(def, context) : null;
-    const actual = actualComplete ? actualComplete.getSimplifiedType() : null;
+    const expected = expectedComplex ? expectedComplex.getSimplifiedType() : undefined;
+    const actualComplete = subject ? subject.getType(def, context) : undefined;
+    const actual = actualComplete ? actualComplete.getSimplifiedType() : undefined;
     let test = actual;
 
     if (!actual)
@@ -181,7 +181,7 @@ export abstract class Expression implements Traversable<Expression>
         });
       }
     }
-    else
+    else if ( test && expected )
     {
       if (actual.isOptional() && !expected.isOptional())
       {

@@ -216,7 +216,7 @@ export function objectValues<O extends Record<string, any> = any, M = O[keyof O]
 {
   return objectReduce(map, (value, key, out) => 
     (out.push(transform(value, key)), out)
-  , []);
+  , [] as M[]);
 }
 
 export function objectReduce<R, V, K extends RecordKey = string>(
@@ -259,7 +259,10 @@ export function objectToArray<K extends RecordKey, V, T>(map: Record<K, V>, getI
 }
 
 
-export function coalesce<T>(x?: T, y?: T): T
+export function coalesce<T>(x: T | undefined, y: T): T
+export function coalesce<T>(x: T, y?: T | undefined): T
+export function coalesce<T>(x?: T, y?: T): T | undefined
+export function coalesce<T>(x?: T, y?: T): T | undefined
 {
   return x === undefined ? y : x;
 }

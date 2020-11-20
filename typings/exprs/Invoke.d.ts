@@ -15,14 +15,14 @@ export declare class InvokeExpression extends Expression {
     getFunction(def: DefinitionProvider, context: Type, thisType?: Type): {
         type: FunctionType;
         expression?: Expression;
-    } | null;
+    } | undefined;
     getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;

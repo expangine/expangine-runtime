@@ -74,7 +74,7 @@ export class SetExpression extends Expression
   {
     return this.currentVariable
       ? { [this.currentVariable]: AnyType.baseType }
-      : null;
+      : undefined;
   }
 
   public encode(): any 
@@ -87,16 +87,18 @@ export class SetExpression extends Expression
     return new SetExpression(this.path.clone(), this.value.clone(), this.currentVariable);
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return BooleanType.baseType;
   }
 
   public getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type
   {
-    if (steps[0] === SetExpression.STEP_VALUE && this.currentVariable)
+    const scope = this.getScope();
+
+    if (steps[0] === SetExpression.STEP_VALUE && scope)
     {
-      return def.getContext(context, this.getScope());
+      return def.getContext(context, scope);
     }
     else
     {
@@ -113,17 +115,17 @@ export class SetExpression extends Expression
   }
 
   // tslint:disable: no-magic-numbers
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === SetExpression.STEP_PATH
       ? [1, this.path]
       : steps[0] === SetExpression.STEP_VALUE
         ? [1, this.value]
-        : null;
+        : undefined;
   }
   // tslint:enable: no-magic-numbers
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

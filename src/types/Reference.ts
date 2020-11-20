@@ -24,7 +24,7 @@ export class ReferenceType extends Type<any, string>
 
   public static computeds = new Computeds(ID.Reference + ID.Delimiter);
 
-  public static baseType = new ReferenceType('', null);
+  public static baseType = new ReferenceType('', null as any);
 
   public static decode(data: any[], types: TypeProvider): ReferenceType 
   {
@@ -40,9 +40,9 @@ export class ReferenceType extends Type<any, string>
 
   public static describePriority: number = -1;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -88,7 +88,7 @@ export class ReferenceType extends Type<any, string>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.getType().getSubType(expr, def, context);
   }
@@ -98,11 +98,11 @@ export class ReferenceType extends Type<any, string>
     return this.getType().getSubTypes(def);
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     return name === ReferenceType.CHILD_REFERENCED
       ? this.getType()
-      : null;
+      : undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -149,14 +149,14 @@ export class ReferenceType extends Type<any, string>
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === ReferenceType.STEP_REFERENCED
       ? this.getType() 
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }

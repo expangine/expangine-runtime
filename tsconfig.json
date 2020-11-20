@@ -10,7 +10,7 @@
       "es2017"
     ],
     "strict": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,

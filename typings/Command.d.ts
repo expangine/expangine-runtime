@@ -13,6 +13,6 @@ export interface CommandProvider<Context, Result> {
     getCommand(expr: Expression): Command<Context, Result>;
     getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
     getOperationScopeDefaults(id: string): Record<string, string>;
-    getFunction(name: string): Func;
-    getComputed(id: string): Computed | null;
+    getFunction(name: string): Func | undefined;
+    getComputed(id: string): Computed | undefined;
 }

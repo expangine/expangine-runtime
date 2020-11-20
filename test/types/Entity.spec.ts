@@ -29,7 +29,7 @@ describe('types / Entity', () => {
     }, {}, Types.object());
 
     expect(name).toBeInstanceOf(EntityType);
-    expect(name.options).toEqual('Person');
+    expect(name?.options).toEqual('Person');
   });
 
   it('entity return type', () =>
@@ -38,7 +38,7 @@ describe('types / Entity', () => {
       name: Exprs.entity('Person'),
     }, {}, Types.object());
 
-    expect(returnType.encode()).toEqual(
+    expect(returnType?.encode()).toEqual(
       Types.list(
         Types.object({
           first: Types.text(),
@@ -55,7 +55,7 @@ describe('types / Entity', () => {
       relation: Exprs.relation('parent'),
     }, {}, Types.object());
 
-    expect(returnType.encode()).toEqual(
+    expect(returnType?.encode()).toEqual(
       Types.object({
         first: Types.text(),
         last: Types.text(),
@@ -70,7 +70,7 @@ describe('types / Entity', () => {
       relation: Exprs.relation('children'),
     }, {}, Types.object());
 
-    expect(returnType.encode()).toEqual(
+    expect(returnType?.encode()).toEqual(
       Types.list(
         Types.object({
           first: Types.text(),

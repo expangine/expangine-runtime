@@ -21,13 +21,13 @@ export declare type ExpressionValue = any | Expression;
 export declare type ExpressionMap = Record<string, Expression>;
 export declare abstract class Expression implements Traversable<Expression> {
     static INSTANCE: string;
-    parent: Expression;
+    parent?: Expression;
     abstract getId(): string;
-    abstract getScope(): TypeMap | null;
+    abstract getScope(): TypeMap | undefined;
     abstract getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number;
     abstract encode(): any;
     abstract clone(): Expression;
-    abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
+    abstract getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined;
     abstract traverse<R>(traverse: Traverser<Expression, R>): R;
     abstract setParent(parent?: Expression): void;
     hasExpression(condition: ExpressionClass | ((e: Expression) => boolean)): boolean;
@@ -41,9 +41,9 @@ export declare abstract class Expression implements Traversable<Expression> {
     isPathNode(): boolean;
     isPathWritable(defs: DefinitionProvider): boolean;
     getPath(): TraverseStep[];
-    getExpressionFromPath(path: TraverseStep[]): Expression | null;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromPath(path: TraverseStep[]): Expression | undefined;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     getRootExpression(): Expression;
     validations(def: DefinitionProvider, context: Type): Validation[];
-    protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type, subject: Expression | null, handler: ValidationHandler, parent?: Expression): void;
+    protected validateType(def: DefinitionProvider, context: Type, expectedComplex: Type | undefined, subject: Expression | undefined, handler: ValidationHandler, parent?: Expression): void;
 }

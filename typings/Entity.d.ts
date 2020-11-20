@@ -79,7 +79,7 @@ export interface EntityEvents {
 export declare class Entity extends EventBase<EntityEvents> implements EntityOptions {
     static create(defs: Definitions, defaults?: Partial<EntityOptions>): Entity;
     static uuid(): string;
-    static PRIMARY_TYPES: Record<EntityPrimaryType, Type>;
+    static PRIMARY_TYPES: Record<EntityPrimaryType, Type | undefined>;
     name: string;
     created: number;
     updated: number;
@@ -89,7 +89,7 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     instances: any[];
     methods: Record<string, Func>;
     key: Expression;
-    keyType: Type;
+    keyType?: Type;
     describe: Expression;
     transcoders: Record<string, EntityTranscoder>;
     indexes: Record<string, EntityIndex>;
@@ -120,7 +120,7 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     getDecodedType(): ObjectType;
     getProperties(): string[];
     getPropertyType(): EnumType;
-    getKeyReturnType(): Type<any, any>;
+    getKeyReturnType(): Type<any, any> | undefined;
     getKeyContext(): Type;
     getDescribeContext(): Type;
     getEncoded(run: Runtime, instance: any): any;
@@ -134,7 +134,8 @@ export declare class Entity extends EventBase<EntityEvents> implements EntityOpt
     getIndexExpectedType(): import(".").SetType<any>;
     getDynamicPrimaryKey(): string;
     getPrimaryKeyExpression(separator?: string, name?: string): import(".").PathExpression | import(".").OperationExpression<"list", "toText" | "prefix" | "suffix" | "delimiter", "list" | "index" | "item">;
-    getPrimary(name?: string, returnDynamic?: boolean): EntityIndex | null;
+    getPrimary(name?: string, returnDynamic?: true): EntityIndex;
+    getPrimary(name: string, returnDynamic: boolean): EntityIndex | undefined;
     getUniqueIndexes(): EntityIndex[];
     addPrimary(props: string | string[]): this;
     addIndex(name: string, options: EntityIndexOptions, delayChange?: boolean): this;

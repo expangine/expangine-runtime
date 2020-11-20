@@ -21,7 +21,7 @@ export declare class Traverser<T, R = any> {
     stopped: boolean;
     remove: TraverseRemove;
     replace: TraverseReplace<T>;
-    constructor(callback: TraverseCallback<T, R>, initialResult?: R);
+    constructor(callback: TraverseCallback<T, R>, initialResult: R);
     enter(value: T, getInner?: () => any): R;
     step(step: TraverseStep, getStep: Traversable<T> | (() => any), replace?: TraverseReplace<T>, remove?: TraverseRemove): this;
     modify(getResult: (result: R) => R | undefined): this;

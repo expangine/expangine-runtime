@@ -55,9 +55,9 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     addTest(test: FuncTest, delayChange?: boolean): void;
     updateTest(test: FuncTest | number, newTest: FuncTest, delayChange?: boolean): boolean;
     removeTest(test: FuncTest | number, delayChange?: boolean): boolean;
-    getReturnType(defs: DefinitionProvider, context: Type, paramsTypes?: TypeMap): Type<any, any>;
+    getReturnType(defs: DefinitionProvider, context: Type, paramsTypes?: TypeMap): Type<any, any> | undefined;
     getParamTypes(): TypeMap;
-    getParamType(param: string): Type | null;
+    getParamType(param: string): Type | undefined;
     getArguments(args: any, returnNew?: boolean): any;
     refactor(transform: Expression, runtime: Runtime): void;
     mutates(def: DefinitionProvider, arg: string): boolean;

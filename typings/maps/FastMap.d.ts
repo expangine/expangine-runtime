@@ -19,7 +19,8 @@ export declare class FastMap<T> {
     sortByKey(cmp?: (a: string, b: string) => number): void;
     reindex(): void;
     swap(i: number, k: number): boolean;
-    get<O = undefined>(key: string | T, otherwise?: O): T | O;
+    get(key: string | T): T | undefined;
+    get<O>(key: string | T, otherwise: O): T | O;
     remove(key: string | T, respectOrder?: boolean): T | undefined;
     removeAt(i: number): boolean;
     move(from: number, to: number): boolean;

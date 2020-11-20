@@ -10,17 +10,17 @@ describe('Constant', () => {
   {
     const a = Exprs.const(0).getType(defs, context);
     expect(a).toBeInstanceOf(EnumType);
-    expect(a.options.key).toBeInstanceOf(NumberType);
-    expect(a.options.value).toBeInstanceOf(NumberType);
+    expect(a?.options.key).toBeInstanceOf(NumberType);
+    expect(a?.options.value).toBeInstanceOf(NumberType);
 
     const b = Exprs.const('a').getType(defs, context);
     expect(b).toBeInstanceOf(EnumType);
-    expect(b.options.key).toBeInstanceOf(TextType);
-    expect(b.options.value).toBeInstanceOf(TextType);
+    expect(b?.options.key).toBeInstanceOf(TextType);
+    expect(b?.options.value).toBeInstanceOf(TextType);
 
     const c = Exprs.const(['a']).getType(defs, context);
     expect(c).toBeInstanceOf(ListType);
-    expect(c.options.item).toBeInstanceOf(TextType);
+    expect(c?.options.item).toBeInstanceOf(TextType);
 
     const d = Exprs.const(new Date()).getType(defs, context);
     expect(d).toBeInstanceOf(DateType);
@@ -30,7 +30,7 @@ describe('Constant', () => {
 
     const f = Exprs.const({ x: 1 }).getType(defs, context);
     expect(f).toBeInstanceOf(ObjectType);
-    expect(f.options.props.x).toBeInstanceOf(NumberType);
+    expect(f?.options.props.x).toBeInstanceOf(NumberType);
 
     const g = Exprs.const(true).getType(defs, context);
     expect(g).toBeInstanceOf(BooleanType);

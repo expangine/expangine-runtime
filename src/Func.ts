@@ -85,7 +85,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     this.updated = options.updated || now();
     this.description = options.description;
     this.meta = options.meta;
-    this.type = defs.getTypeKind(options.type, FunctionType);
+    this.type = defs.getTypeKind(options.type, FunctionType, FunctionType.baseType);
     this.expression = this.parseExpression(defs, options.expression);
     this.defaults = this.type.fromJsonArguments(options.defaults);
     this.tests = options.tests.map((t) => ({ ...t, args: this.type.fromJsonArguments(t.args) }));
@@ -116,7 +116,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
       this.meta = options.meta;
       this.type = options instanceof Func
         ? options.type
-        : defs.getTypeKind(options.type, FunctionType);
+        : defs.getTypeKind(options.type, FunctionType, FunctionType.baseType);
       this.expression = options instanceof Func
         ? options.expression
         : this.parseExpression(defs, options.expression);
@@ -275,7 +275,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     return this.type.getParamTypes();
   }
 
-  public getParamType(param: string): Type | null
+  public getParamType(param: string): Type | undefined
   {
     const paramType = this.type.getParamType(param);
 
@@ -285,7 +285,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
         paramType.isValid(this.defaults[param])
         ? paramType.getRequired()
         : paramType
-      : null;
+      : undefined;
   }
 
   public getArguments(args: any, returnNew: boolean = true)

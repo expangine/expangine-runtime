@@ -93,9 +93,9 @@ export class SwitchExpression extends Expression
     );
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -108,7 +108,7 @@ export class SwitchExpression extends Expression
     return new SwitchExpression(this.value.clone(), this.op, this.cases.map(([tests, then]) => [tests.map((t) => t.clone()), then.clone()]), this.defaultCase.clone());
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     const types = this.cases
       .map(([tests, value]) => value)
@@ -118,7 +118,7 @@ export class SwitchExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return Types.mergeMany(types, NullType.baseType);
+    return Types.mergeMany(types as Type[], NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -142,7 +142,7 @@ export class SwitchExpression extends Expression
   }
 
   // tslint:disable: no-magic-numbers
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === SwitchExpression.STEP_VALUE
       ? [1, this.value]
@@ -151,18 +151,18 @@ export class SwitchExpression extends Expression
           ? steps[2] === SwitchExpression.STEP_CASE
             ? isNumber(steps[3]) && steps[3] < this.cases[steps[1]][0].length
               ? [4, this.cases[steps[1]][0][steps[3]]]
-              : null
+              : undefined
             : steps[2] === SwitchExpression.STEP_RESULT
               ? [3, this.cases[steps[1]][1]]
-              : null
-            : null
+              : undefined
+            : undefined
         : steps[0] === SwitchExpression.STEP_DEFAULT
           ? [1, this.defaultCase]
-          : null;
+          : undefined;
   }
   // tslint:enable: no-magic-numbers
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

@@ -74,11 +74,11 @@ export class TextType extends Type<string, TextOptions>
 
   public static describePriority: number = 3;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isString(data))
     {
-      return null;
+      return undefined;
     }
 
     return new TextType({
@@ -118,7 +118,7 @@ export class TextType extends Type<string, TextOptions>
       get: (x, step) => x[step],
       set: (x, step, value) => {},
       remove: (x, step) => x.substring(0, step) + x.substring(step + 1),
-      has: (x, step) => x[step] !== undefined,
+      has: (x, step) => x.charAt(step) !== '',
     });
   }
 
@@ -137,13 +137,13 @@ export class TextType extends Type<string, TextOptions>
     const o1 = this.options;
     const o2 = type.options;
 
-    o1.max = Math.max(o1.max, o2.max);
-    o1.min = Math.min(o1.min, o2.min);
+    o1.max = Math.max(o1.max || 0, o2.max || 0);
+    o1.min = Math.min(o1.min || 0, o2.min || 0);
     o1.requireLower = o1.requireLower && o2.requireLower;
     o1.requireUpper = o1.requireUpper && o2.requireUpper;
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     if (ConstantExpression.is(expr))
     {
@@ -275,7 +275,7 @@ export class TextType extends Type<string, TextOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }

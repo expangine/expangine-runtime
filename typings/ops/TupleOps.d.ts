@@ -7,7 +7,7 @@ export declare const TupleOps: {
     maybe: import("../Operation").OperationResolved<"value", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     copy: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    build: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
+    build: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
     get: import("../Operation").OperationResolved<"value" | "index", never, never, never, never>;
     set: import("../Operation").OperationResolved<"value" | "index" | "element", never, never, never, never>;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;

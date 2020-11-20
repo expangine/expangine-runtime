@@ -56,7 +56,7 @@ export declare const NumberOps: {
     clamp: import("../Operation").OperationResolved<"value" | "max" | "min", never, never, never, never>;
     triangleHeight: import("../Operation").OperationResolved<"base" | "side1" | "side2", never, never, never, never>;
     lerp: import("../Operation").OperationResolved<"end" | "start" | "delta", never, never, never, never>;
-    rnd: import("../Operation").OperationResolved<any, "max" | "min" | "whole" | "includeMax", never, never, never>;
+    rnd: import("../Operation").OperationResolved<never, "max" | "min" | "whole" | "includeMax", never, never, never>;
     toBaseText: import("../Operation").OperationResolved<"value", "base" | "minDigits", never, never, never>;
     toText: import("../Operation").OperationResolved<"value", "prefix" | "suffix" | "minPlaces" | "maxPlaces" | "useExponent" | "thousandSeparator", never, never, never>;
     toPercent: import("../Operation").OperationResolved<"value", "minPlaces" | "maxPlaces" | "thousandSeparator", never, never, never>;

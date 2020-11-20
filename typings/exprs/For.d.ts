@@ -29,10 +29,10 @@ export declare class ForExpression extends Expression {
     };
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, original: Type): Type | null;
+    getType(def: DefinitionProvider, original: Type): Type | undefined;
     getContextFor(steps: TraverseStep[], def: DefinitionProvider, context: Type, thisType?: Type): Type;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;

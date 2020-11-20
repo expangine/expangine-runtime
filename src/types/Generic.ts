@@ -51,9 +51,9 @@ export class GenericType extends Type<any, GenericOptions>
 
   public static describePriority: number = 8;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -63,7 +63,7 @@ export class GenericType extends Type<any, GenericOptions>
 
   }
 
-  public getFunction(): FunctionType | null
+  public getFunction(): FunctionType | undefined
   {
     let parent = this.parent;
 
@@ -77,7 +77,7 @@ export class GenericType extends Type<any, GenericOptions>
       parent = parent.parent;
     }
 
-    return null;
+    return undefined;
   }
 
   public getResolvedType(): Type
@@ -102,7 +102,7 @@ export class GenericType extends Type<any, GenericOptions>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.getResolvedType().getSubType(expr, def, context);
   }
@@ -112,7 +112,7 @@ export class GenericType extends Type<any, GenericOptions>
     return this.getResolvedType().getSubTypes(def);
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     return this.getResolvedType().getChildType(name);
   }
@@ -167,7 +167,7 @@ export class GenericType extends Type<any, GenericOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }

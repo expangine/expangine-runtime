@@ -66,11 +66,11 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
   public static describePriority: number = 6;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isArray(data))
     {
-      return null;
+      return undefined;
     }
 
     const type = new ListType({
@@ -224,12 +224,14 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
     const o2 = type.options;
 
     o1.item = Types.merge(o1.item, o2.item);
-    o1.min = Math.min(o1.min, o2.min);
-    o1.max = Math.max(o1.max, o2.max);
+    o1.min = Math.min(o1.min || 0, o2.min || 0);
+    o1.max = Math.max(o1.max || 0, o2.max || 0);
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
+    const { min, item } = this.options;
+
     if (ConstantExpression.is(expr))
     {
       if (expr.value === 'length')
@@ -239,9 +241,9 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
       if (isNumber(expr.value))
       {
-        return isNumber(this.options.min) && expr.value < this.options.min
-          ? this.options.item
-          : Types.optional(this.options.item);
+        return isNumber(min) && expr.value < min
+          ? item
+          : Types.optional(item);
       }
     }
 
@@ -253,7 +255,7 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
       if (exprType instanceof NumberType)
       {
-        return Types.optional(this.options.item);
+        return Types.optional(item);
       }
 
       if (exprType instanceof EnumType)
@@ -262,12 +264,12 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
         if (exprType.options.value instanceof NumberType)
         {
-          if (isNumber(this.options.min) && !values.some((x) => x >= this.options.min))
+          if (isNumber(min) && !values.some((x) => x >= min))
           {
-            return this.options.item;
+            return item;
           }
 
-          return Types.optional(this.options.item);
+          return Types.optional(item);
         }
 
         if (exprType.options.value instanceof TextType)
@@ -280,7 +282,7 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
       }
     }
 
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -300,14 +302,14 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
     ];
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     switch (name) {
       case ListType.CHILD_ITEM:
         return this.options.item;
     }
     
-    return null;
+    return undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -384,14 +386,14 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === ListType.STEP_ITEM 
       ? this.options.item 
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -519,12 +521,12 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
     return ListType.encode(this);
   }
 
-  public create(): any[]
+  public create(): I[]
   {
     return [];
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): I[]
   {
     const { min, max } = this.options;
     const chosenMin = coalesce(min, RANDOM_MIN);
@@ -542,12 +544,12 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
     return out;
   }
 
-  public fromJson(json: any[]): any[]
+  public fromJson(json: any[] | null): any
   {
     return json ? json.map((e: any) => this.options.item.fromJson(e)) : null;
   }
 
-  public toJson(value: any[]): any[]
+  public toJson(value: I[] | null): any
   {
     return value ? value.map((e: any) => this.options.item.toJson(e)) : null;
   }

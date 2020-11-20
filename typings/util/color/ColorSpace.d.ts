@@ -13,9 +13,9 @@ export interface ColorFormat<T> {
 export declare class ColorSpace<T> {
     code: string;
     name: string;
-    type: Type;
-    toColor: ColorSpaceToColor<T>;
-    fromColor: ColorSpaceFromColor<T>;
+    type?: Type;
+    toColor?: ColorSpaceToColor<T>;
+    fromColor?: ColorSpaceFromColor<T>;
     formatMap: Record<string, ColorFormat<T>>;
     formats: ColorFormat<T>[];
     constructor(code: string, name: string);

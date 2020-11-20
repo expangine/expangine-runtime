@@ -11,10 +11,10 @@ export declare class NoExpression extends Expression {
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
     isDynamic(): boolean;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;

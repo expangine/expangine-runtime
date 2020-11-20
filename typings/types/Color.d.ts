@@ -23,7 +23,7 @@ export declare class ColorType extends ObjectType<Color, ColorOptions> {
     static decode(data: any[]): ColorType;
     static encode(type: ColorType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): ColorType | undefined;
     static registered: boolean;
     static register(): void;
     static getFormat(id: string): ColorFormat<any> | undefined;

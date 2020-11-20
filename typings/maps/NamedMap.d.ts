@@ -14,7 +14,8 @@ export declare class NamedMap<N extends Named> extends FastMap<N> {
     has(named: string | N): boolean;
     add(named: N): void;
     nameOf(named: string | N): string;
-    valueOf(named: string | N): N;
+    valueOf(named: N): N;
+    valueOf(named: string | N): N | undefined;
     indexOf(named: string | N): number;
     keyOf(named: N): string | undefined;
     clone(): NamedMap<N>;

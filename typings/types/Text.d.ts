@@ -21,13 +21,13 @@ export declare class TextType extends Type<string, TextOptions> {
     private static decodeOptions;
     private static encodeOptions;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: TextType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;

@@ -13,12 +13,12 @@ export declare class ComputedExpression extends Expression {
     constructor(name: string);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler, thisType?: Type): void;
     mutates(def: DefinitionProvider, arg: string): boolean;

@@ -16,7 +16,7 @@ export declare class NumberType extends Type<number, NumberOptions> {
     static decode(data: any[]): NumberType;
     static encode(type: NumberType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static EQUALS_EPSILON: number;
     static COMPARES_EPSILON: number;
@@ -24,7 +24,7 @@ export declare class NumberType extends Type<number, NumberOptions> {
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: NumberType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -43,7 +43,7 @@ export declare class NumberType extends Type<number, NumberOptions> {
     clone(): NumberType;
     encode(): any;
     create(): number;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    random(rnd: (a: number, b: number, whole: boolean) => number): number;
     fromJson(json: number): number;
     toJson(value: number): number;
 }

@@ -76,8 +76,8 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ManyType);
-    expect(getType.options[0]).toBeInstanceOf(NumberType);
-    expect(getType.options[1]).toBeInstanceOf(ObjectType);
+    expect(getType?.options[0]).toBeInstanceOf(NumberType);
+    expect(getType?.options[1]).toBeInstanceOf(ObjectType);
   });
 
   it('object prop merge all same', () =>
@@ -98,8 +98,8 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ManyType);
-    expect(getType.options[0]).toBeInstanceOf(TextType);
-    expect(getType.options[1]).toBeInstanceOf(NumberType);
+    expect(getType?.options[0]).toBeInstanceOf(TextType);
+    expect(getType?.options[1]).toBeInstanceOf(NumberType);
   });
 
   it('enum sub', () =>
@@ -124,7 +124,7 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
-    expect(getType.options).toBeInstanceOf(DateType);
+    expect(getType?.options).toBeInstanceOf(DateType);
   });
 
   it('list item at constant with min', () =>
@@ -141,7 +141,7 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
-    expect(getType.options).toBeInstanceOf(DateType);
+    expect(getType?.options).toBeInstanceOf(DateType);
   });
 
   it('list item at dynamic with min', () =>
@@ -150,7 +150,7 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
-    expect(getType.options).toBeInstanceOf(TextType);
+    expect(getType?.options).toBeInstanceOf(TextType);
   });
 
   it('list item at one of', () =>
@@ -163,7 +163,7 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(OptionalType);
-    expect(getType.options).toBeInstanceOf(DateType);
+    expect(getType?.options).toBeInstanceOf(DateType);
   });
 
   it('list item at one of with min', () =>
@@ -204,7 +204,7 @@ describe('Get', () => {
     const getType1 = get1.getType(defs, context2);
 
     expect(getType1).toBeInstanceOf(OptionalType);
-    expect(getType1.options).toBeInstanceOf(TextType);
+    expect(getType1?.options).toBeInstanceOf(TextType);
 
     const get2 = Exprs.get('length');
     const getType2 = get2.getType(defs, context2);
@@ -214,12 +214,13 @@ describe('Get', () => {
     const get3 = Exprs.get('item');
     const getType3 = get3.getType(defs, context2);
 
+    expect(getType3).toBeDefined();
     expect(getType3).toBeInstanceOf(DateType);
 
     const get4 = Exprs.get('missing');
     const getType4 = get4.getType(defs, context2);
 
-    expect(getType4).toBeNull();
+    expect(getType4).toBeUndefined();
   });
 
   it('map', () => 
@@ -237,7 +238,7 @@ describe('Get', () => {
     const get3 = Exprs.get('map', 'invalidKey');
     const getType3 = get3.getType(defs, context0);
 
-    expect(getType3).toBeNull();
+    expect(getType3).toBeUndefined();
 
     const get4 = Exprs.get('map', 0, 1);
     const getType4 = get4.getType(defs, context0);
@@ -303,8 +304,8 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ManyType);
-    expect(getType.options[0]).toBeInstanceOf(NumberType);
-    expect(getType.options[1]).toBeInstanceOf(TextType);
+    expect(getType?.options[0]).toBeInstanceOf(NumberType);
+    expect(getType?.options[1]).toBeInstanceOf(TextType);
   });
 
   it('tuple element at one of same', () =>
@@ -329,8 +330,8 @@ describe('Get', () => {
     const getType = get.getType(defs, context0);
 
     expect(getType).toBeInstanceOf(ManyType);
-    expect(getType.options[0]).toBeInstanceOf(NumberType);
-    expect(getType.options[1]).toBeInstanceOf(TextType);
+    expect(getType?.options[0]).toBeInstanceOf(NumberType);
+    expect(getType?.options[1]).toBeInstanceOf(TextType);
   });
 
 })

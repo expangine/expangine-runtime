@@ -71,9 +71,9 @@ export class WhileExpression extends Expression
     return this.body.isDynamic();
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -86,13 +86,11 @@ export class WhileExpression extends Expression
     return new WhileExpression(this.condition.clone(), this.body.clone(), this.maxIterations);
   }
 
-  public getType(def: DefinitionProvider, original: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
-    const { context } = def.getContextWithScope(original, this.getScope());
-
     const body = this.body.getType(def, context);
 
-    return body ? Types.optional(body) : null;
+    return body ? Types.optional(body) : undefined;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -103,16 +101,16 @@ export class WhileExpression extends Expression
     });
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === WhileExpression.STEP_CONDITION
       ? [1, this.condition]
       : steps[0] === WhileExpression.STEP_BODY
         ? [1, this.body]
-        : null;
+        : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 
@@ -124,9 +122,7 @@ export class WhileExpression extends Expression
   {
     this.validateType(def, context, BooleanType.baseType, this.condition, handler);
 
-    const bodyContext = def.getContext(context, this.getScope());
-
-    this.body.validate(def, bodyContext, handler);
+    this.body.validate(def, context, handler);
   }
 
   public mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean

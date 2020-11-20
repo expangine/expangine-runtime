@@ -45,13 +45,13 @@ export type OperationResolved<
 
 export interface OperationTypeProvider extends TypeProvider
 {
-  getEntity(name: string): Entity | null;
+  getEntity(name: string): Entity | undefined;
   getEntities(): NamedMap<Entity>;
-  getRelation(name: string): Relation | null;
+  getRelation(name: string): Relation | undefined;
   getRelations(entityName: string): EntityRelation[];
 }
 
-export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, provider: OperationTypeProvider) => TypeInput;
+export type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, provider: OperationTypeProvider) => TypeInput | undefined;
 
 export type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 

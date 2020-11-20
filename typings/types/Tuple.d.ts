@@ -13,16 +13,16 @@ export declare class TupleType<E extends any[] = any> extends Type<E, TupleOptio
     static decode(data: any[], types: TypeProvider): TupleType;
     static encode(type: TupleType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     static forItem(types: TypeInput[]): TupleType<any[]>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: Type<E, TupleOptions<E>>): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -34,7 +34,7 @@ export declare class TupleType<E extends any[] = any> extends Type<E, TupleOptio
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     isValid(value: any): value is E;

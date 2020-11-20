@@ -79,9 +79,9 @@ export class FunctionExpression extends Expression
     return this.body.getComplexity(def, context);
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -143,7 +143,11 @@ export class FunctionExpression extends Expression
   {
     return this.captured.reduce(
       (out, name) => {
-        out[name] = context.getChildType(name);
+        const childType = context.getChildType(name);
+
+        if (childType) {
+          out[name] = childType;
+        }
 
         return out;
       },
@@ -173,12 +177,12 @@ export class FunctionExpression extends Expression
           captured[p1.value] = true;
         }
       }
-    }));
+    }, undefined));
 
     return Object.keys(captured);
   }
 
-  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined
   {
     return thisType ? this.type : this.body.getType(def, context);
   }
@@ -191,15 +195,15 @@ export class FunctionExpression extends Expression
   }
 
   // tslint:disable: no-magic-numbers
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === FunctionExpression.STEP_BODY
       ? [1, this.body]
-      : null;
+      : undefined;
   }
   // tslint:enable: no-magic-numbers
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

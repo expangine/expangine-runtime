@@ -53,9 +53,9 @@ export class ChainExpression extends Expression
       : false;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -68,7 +68,7 @@ export class ChainExpression extends Expression
     return new ChainExpression(this.chain.map(c => c.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.chain[this.chain.length - 1].getType(def, context);
   }
@@ -82,14 +82,14 @@ export class ChainExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return isNumber(steps[0]) && steps[0] < this.chain.length
       ? [1, this.chain[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

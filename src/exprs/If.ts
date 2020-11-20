@@ -72,9 +72,9 @@ export class IfExpression extends Expression
     );
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -87,7 +87,7 @@ export class IfExpression extends Expression
     return new IfExpression(this.cases.map(([condition, then]) => [condition.clone(), then.clone()]), this.otherwise.clone());
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     const types = this.cases
       .map(([test, value]) => value)
@@ -97,7 +97,7 @@ export class IfExpression extends Expression
       .filter(t => !!t)
     ;
 
-    return Types.mergeMany(types, NullType.baseType);
+    return Types.mergeMany(types as Type[], NullType.baseType);
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -118,7 +118,7 @@ export class IfExpression extends Expression
   }
 
   // tslint:disable: no-magic-numbers
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === IfExpression.STEP_CASES
       ? isNumber(steps[1]) && steps[1] < this.cases.length
@@ -126,15 +126,15 @@ export class IfExpression extends Expression
           ? [3, this.cases[steps[1]][0]]
           : steps[2] === IfExpression.STEP_THEN
             ? [3, this.cases[steps[1]][1]]
-            : null
-        : null
+            : undefined
+        : undefined
       : steps[0] === IfExpression.STEP_ELSE
         ? [1, this.otherwise]
-        : null;
+        : undefined;
   }
   // tslint:enable: no-magic-numbers
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

@@ -4,15 +4,15 @@ import { Expression } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Traverser, TraverseStep } from '../Traverser';
 import { Computeds } from '../Computed';
-export declare class ManyType extends Type<any, Type[]> {
+export declare class ManyType<M = any> extends Type<M, Type[]> {
     static id: string;
     static operations: Operations;
     static computeds: Computeds;
-    static baseType: ManyType;
+    static baseType: ManyType<any>;
     static decode(data: any[], types: TypeProvider): ManyType;
     static encode(type: ManyType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     operations?: Record<string, OperationGeneric>;
@@ -20,9 +20,9 @@ export declare class ManyType extends Type<any, Type[]> {
     private forMany;
     getId(): string;
     merge(type: ManyType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -32,20 +32,20 @@ export declare class ManyType extends Type<any, Type[]> {
     isSimple(): boolean;
     protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
     getValidateExpression(): Expression;
     getCompareExpression(): Expression;
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
-    isValid(value: any): value is any;
+    isValid(value: any): value is M;
     normalize(value: any): any;
     newInstance(): ManyType;
     clone(): ManyType;
     encode(): any;
-    create(): any;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    create(): M;
+    random(rnd: (a: number, b: number, whole: boolean) => number): M;
     fromJson(json: any): any;
     toJson(value: any): any;
 }

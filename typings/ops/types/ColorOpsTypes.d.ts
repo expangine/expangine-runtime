@@ -1,7 +1,7 @@
 import { EnumType } from '../../types/Enum';
 import { ManyType } from '../../types/Many';
 export declare const ColorComponentEnum: EnumType<any, any>;
-export declare const ColorOrNumber: ManyType;
+export declare const ColorOrNumber: ManyType<any>;
 export declare const ColorFormats: EnumType<any, any>;
 export declare const ColorNames: EnumType<any, any>;
 export declare const ColorBlendModes: EnumType<any, any>;

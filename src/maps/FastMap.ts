@@ -13,7 +13,9 @@ export class FastMap<T>
 
   public constructor(options?: FastMapOptions<T>)
   {
-    this.clear();
+    this.indexes = Object.create(null);
+    this.keys = [];
+    this.values = [];
 
     if (options)
     {
@@ -40,7 +42,13 @@ export class FastMap<T>
     {
       for (let i = 0; i < options.length(); i++)
       {
-        this.set(options.keyAt(i), options.valueAt(i));
+        const key = options.keyAt(i);
+        const value = options.valueAt(i);
+
+        if (key !== undefined && value !== undefined)
+        {
+          this.set(key, value);
+        }
       }
     }
     else if (isArray(options))
@@ -67,7 +75,7 @@ export class FastMap<T>
     
     all.forEach((value, key) => {
       if (this.has(key) && combine) {
-        combine(this.get(key), value);
+        combine(this.get(key) as T, value);
       } else {
         this.set(key, value);
       }
@@ -184,9 +192,13 @@ export class FastMap<T>
     return true;
   }
 
-  public get<O = undefined>(key: string | T, otherwise?: O): T | O
+  public get(key: string | T): T | undefined
+  public get<O>(key: string | T, otherwise: O): T | O
+  public get<O>(key: string | T, otherwise?: O): T | O | undefined
   {
-    return isString(key) ? this.values[this.indexes[key]] || otherwise : key;
+    return isString(key) 
+      ? this.values[this.indexes[key]] || otherwise 
+      : key;
   }
 
   public remove(key: string | T, respectOrder: boolean = false): T | undefined
@@ -208,7 +220,7 @@ export class FastMap<T>
         const lastKey = keys.pop();
         const lastValue = values.pop();
 
-        if (i !== keys.length)
+        if (i !== keys.length && lastKey !== undefined && lastValue !== undefined)
         {
           keys.splice(i, 1, lastKey);
           values.splice(i, 1, lastValue);

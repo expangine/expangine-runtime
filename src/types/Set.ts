@@ -53,11 +53,11 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isSet(data))
     {
-      return null;
+      return undefined;
     }
 
     let value: Type = new AnyType({});
@@ -206,9 +206,9 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     o1.value = Types.merge(o1.value, o2.value);
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -216,11 +216,11 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     return [];
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     return name === SetType.CHILD_VALUE
       ? this.options.value
-      : null;
+      : undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -261,14 +261,14 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     });
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === SetType.STEP_VALUE 
       ? this.options.value
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -340,7 +340,7 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     return new Set(Array.from(test).map((v) => value.normalize(v)));
   }
 
-  public newInstance(): SetType
+  public newInstance(): SetType<V>
   {
     const { value } = this.options;
 
@@ -349,7 +349,7 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     });
   }
 
-  public clone(): SetType
+  public clone(): SetType<V>
   {
     const { value } = this.options;
 
@@ -363,12 +363,12 @@ export class SetType<V = any> extends Type<Set<V>, SetOptions<V>>
     return SetType.encode(this);
   }
 
-  public create(): Set<any>
+  public create(): Set<V>
   {
     return new Set();
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): Set<V>
   {
     const { value } = this.options;
     const n = rnd(RANDOM_MIN, RANDOM_MAX + 1, true);

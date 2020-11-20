@@ -56,9 +56,9 @@ export class AssertExpression extends Expression
     return this.condition.getComplexity(def, context);
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -71,7 +71,7 @@ export class AssertExpression extends Expression
     return new AssertExpression(this.condition.clone(), this.message.clone());
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return NullType.baseType;
   }
@@ -84,16 +84,16 @@ export class AssertExpression extends Expression
     });
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === AssertExpression.STEP_CONDITION
       ? [1, this.condition]
       : steps[0] === AssertExpression.STEP_MESSAGE
         ? [1, this.message]
-        : null;
+        : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

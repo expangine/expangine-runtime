@@ -56,7 +56,7 @@ export declare class Exprs {
     static noop(): NoExpression;
     static not(expr: Expression): NotExpression;
     static object(props: Record<string, ExpressionValue>): ObjectExpression;
-    static op<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>, scopeAlias?: Partial<Record<S, string>>): OperationExpression<P, O, S>;
+    static op<P extends string, O extends string, S extends string, A extends S>(op: Operation<P, O, S, any, any>, params: Record<P, ExpressionValue> & Partial<Record<O, ExpressionValue>>, scopeAlias?: Record<A, string>): OperationExpression<P, O, S>;
     static or(...exprs: Expression[]): OrExpression;
     static path(...exprs: ExpressionValue[]): PathExpression;
     static return(value?: ExpressionValue): FlowExpression;

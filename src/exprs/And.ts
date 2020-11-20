@@ -52,9 +52,9 @@ export class AndExpression extends Expression
     return this.expressions.some((e) => e.isDynamic());
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -67,7 +67,7 @@ export class AndExpression extends Expression
     return new AndExpression(this.expressions.map(e => e.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return BooleanType.baseType;
   }
@@ -81,14 +81,14 @@ export class AndExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return isNumber(steps[0]) && steps[0] < this.expressions.length
       ? [1, this.expressions[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

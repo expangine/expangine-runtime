@@ -12,16 +12,16 @@ export declare class NotType extends Type<any, Type[]> {
     static decode(data: any[], types: TypeProvider): NotType;
     static encode(type: NotType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     getOperations(): {};
     private forNot;
     getId(): string;
     merge(type: NotType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -30,7 +30,7 @@ export declare class NotType extends Type<any, Type[]> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;

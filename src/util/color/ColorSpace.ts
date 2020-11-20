@@ -26,9 +26,9 @@ export class ColorSpace<T>
 {
   public code: string;
   public name: string;
-  public type: Type;
-  public toColor: ColorSpaceToColor<T>;
-  public fromColor: ColorSpaceFromColor<T>;
+  public type?: Type;
+  public toColor?: ColorSpaceToColor<T>;
+  public fromColor?: ColorSpaceFromColor<T>;
   public formatMap: Record<string, ColorFormat<T>>;
   public formats: ColorFormat<T>[];
 
@@ -38,6 +38,9 @@ export class ColorSpace<T>
     this.name = name;
     this.formatMap = {};
     this.formats = [];
+    this.type = undefined;
+    this.toColor = undefined;
+    this.fromColor = undefined;
   }
 
   public setType(type: Type): this

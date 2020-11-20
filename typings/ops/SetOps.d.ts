@@ -4,14 +4,14 @@ export declare const SetOperations: Operations;
 export declare const SetComputeds: Computeds;
 export declare const SetOps: {
     create: import("../Operation").OperationResolved<never, never, never, never, never>;
-    createLike: import("../Operation").OperationResolved<"set", any, any, any, "set">;
-    createFor: import("../Operation").OperationResolved<"value", any, any, any, "value">;
+    createLike: import("../Operation").OperationResolved<"set", never, never, never, "set">;
+    createFor: import("../Operation").OperationResolved<"value", never, never, never, "value">;
     maybe: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    add: import("../Operation").OperationResolved<"set" | "value", any, any, any, "set">;
+    add: import("../Operation").OperationResolved<"set" | "value", never, never, never, "set">;
     has: import("../Operation").OperationResolved<"set" | "value", never, never, never, never>;
     delete: import("../Operation").OperationResolved<"set" | "value", never, never, never, never>;
     values: import("../Operation").OperationResolved<"set", never, never, never, "set">;
-    clear: import("../Operation").OperationResolved<"set", any, any, any, "set">;
+    clear: import("../Operation").OperationResolved<"set", never, never, never, "set">;
     count: import("../Operation").OperationResolved<"set", never, never, never, never>;
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     copy: import("../Operation").OperationResolved<"set", "deepCopy", "set" | "value", "deepCopy", "set">;

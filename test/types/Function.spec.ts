@@ -15,7 +15,7 @@ describe('types / Function', () => {
     const actual1 = resolved.getReturnType();
     const expected1 = Types.list(Types.text());
 
-    expect(expected1.encode()).toStrictEqual(actual1.encode());
+    expect(expected1.encode()).toStrictEqual(actual1?.encode());
   });
 
   it('param based on self with default', () =>

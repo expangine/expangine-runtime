@@ -20,7 +20,7 @@ describe('Define', () => {
     const defType = def.getType(defs, context);
 
     expect(defType).toBeInstanceOf(EnumType);
-    expect(defType.options.value).toBeInstanceOf(TextType);
+    expect(defType?.options.value).toBeInstanceOf(TextType);
   });
 
   it('type dynamic', () =>
@@ -33,7 +33,7 @@ describe('Define', () => {
     const defType = def.getType(defs, context);
 
     expect(defType).toBeInstanceOf(EnumType);
-    expect(defType.options.value).toBeInstanceOf(NumberType);
+    expect(defType?.options.value).toBeInstanceOf(NumberType);
   });
 
 })

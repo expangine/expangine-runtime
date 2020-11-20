@@ -21,15 +21,15 @@ export declare class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V
     static decode(data: any[], types: TypeProvider): EnumType;
     static encode(type: EnumType): any;
     static describePriority: number;
-    static describe(): Type | null;
+    static describe(): Type | undefined;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("../Operation").OperationGeneric>;
     merge(type: EnumType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -39,7 +39,7 @@ export declare class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
@@ -48,11 +48,11 @@ export declare class EnumType<K = any, V = any> extends Type<V, EnumOptions<K, V
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(test: any): test is V;
     normalize(value: any): any;
-    newInstance(): EnumType;
-    clone(): EnumType;
+    newInstance(): EnumType<K, V>;
+    clone(): EnumType<K, V>;
     encode(): any;
-    create(): any;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any): any;
-    toJson(value: any): any;
+    create(): V;
+    random(rnd: (a: number, b: number, whole: boolean) => number): V;
+    fromJson(json: any): V;
+    toJson(value: V): any;
 }

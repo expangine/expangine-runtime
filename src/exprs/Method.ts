@@ -66,9 +66,9 @@ export class MethodExpression extends Expression
     return entity.methods[this.name].expression.getComplexity(def, context);
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -81,25 +81,25 @@ export class MethodExpression extends Expression
     return new MethodExpression(this.entity, this.name, objectMap(this.args, (a) => a.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined
   {
     if (!thisType || !(thisType instanceof EntityType) || thisType.options !== this.entity)
     {
-      return null;
+      return undefined;
     }
 
     const entity = def.getEntity(this.entity);
 
     if (!entity)
     {
-      return null;
+      return undefined;
     }
 
     const method = entity.methods[this.name];
 
     if (!method)
     {
-      return null;
+      return undefined;
     }
     
     const argTypes = objectMap(this.args, (a) => a.getType(def, context));
@@ -118,14 +118,14 @@ export class MethodExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] in this.args
       ? [1, this.args[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 
@@ -186,7 +186,12 @@ export class MethodExpression extends Expression
 
       if (arg)
       {
-        params[paramName] = arg.getType(def, context);
+        const argType = arg.getType(def, context);
+
+        if (argType)
+        {
+          params[paramName] = argType;
+        }
       }
     });
   }

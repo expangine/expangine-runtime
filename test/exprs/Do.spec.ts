@@ -16,7 +16,7 @@ describe('Do', () => {
     const loopType = loop.getType(defs, context);
 
     expect(loopType).toBeInstanceOf(OptionalType);
-    expect(loopType.options).toBeInstanceOf(BooleanType);
+    expect(loopType?.options).toBeInstanceOf(BooleanType);
   });
 
   it('type dynamic', () =>
@@ -25,7 +25,7 @@ describe('Do', () => {
     const loopType = loop.getType(defs, context);
 
     expect(loopType).toBeInstanceOf(OptionalType);
-    expect(loopType.options).toBeInstanceOf(TextType);
+    expect(loopType?.options).toBeInstanceOf(TextType);
   });
 
 })

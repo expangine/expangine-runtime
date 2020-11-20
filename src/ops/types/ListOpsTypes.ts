@@ -19,13 +19,23 @@ import { GivenObjectType, MergedObjectType } from './helpers';
 
 const ops = ListType.operations;
 
-const RequireList = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list : otherwise;
-const ListItem = (list?: Type, otherwise?: TypeInput) => list instanceof ListType ? list.options.item : otherwise;
+function RequireList(list: Type | undefined, otherwise: TypeInput): TypeInput
+function RequireList(list?: Type, otherwise?: TypeInput): TypeInput | undefined 
+function RequireList(list?: Type, otherwise?: TypeInput): TypeInput | undefined {
+  return list instanceof ListType ? list : otherwise;
+}
+
+function ListItem(list: Type | undefined, otherwise: TypeInput): TypeInput
+function ListItem(list?: Type, otherwise?: TypeInput): TypeInput | undefined
+function ListItem(list?: Type, otherwise?: TypeInput): TypeInput | undefined {
+  return list instanceof ListType ? list.options.item : otherwise;
+}
+
 const GivenList = (i: {list?: Type}) => RequireList(i.list, ListType);
 const GivenValueList = (i: {value?: Type}) => RequireList(i.value, ListType);
-const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list.options.item : AnyType;
+const GivenListItem = (i: {list?: Type}) => RequireList(i.list) ? i.list?.options.item : AnyType;
 const GivenListItemOptional = (i: {list?: Type}) => Types.optional(GivenListItem(i));
-const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value.options.item : AnyType;
+const GivenValueListItem = (i: {value?: Type}) => RequireList(i.value) ? i.value?.options.item : AnyType;
 const GivenReducer = (i: {reduce?: Type, initial?: Type}) => i.reduce || i.initial || AnyType;
 const GivenListCompareScope = { list: GivenList, value: GivenListItem, test: GivenListItem };
 const GivenValueListCompareScope = { list: GivenValueList, value: GivenValueListItem, test: GivenValueListItem };

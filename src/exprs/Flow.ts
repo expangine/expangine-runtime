@@ -59,9 +59,9 @@ export class FlowExpression extends Expression
     return this.value.isDynamic();
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -74,11 +74,11 @@ export class FlowExpression extends Expression
     return new FlowExpression(this.type, this.value.encode());
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.value 
       ? this.value.getType(def, context)
-      : null;
+      : undefined;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -88,14 +88,14 @@ export class FlowExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === FlowExpression.STEP_VALUE
       ? [1, this.value]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

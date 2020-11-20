@@ -67,11 +67,11 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
 
   public static describePriority: number = 7;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isMap(data))
     {
-      return null;
+      return undefined;
     }
 
     let key: Type = new AnyType({});
@@ -234,7 +234,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     o1.value = Types.merge(o1.value, o2.value);
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     if (ConstantExpression.is(expr))
     {
@@ -256,7 +256,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
       }
     }
 
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -266,7 +266,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     ];
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     switch (name) {
       case MapType.CHILD_KEY:
@@ -275,7 +275,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
         return this.options.value;
     }
 
-    return null;
+    return undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -318,16 +318,16 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     });
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === MapType.STEP_KEY
       ? this.options.key
       : step === MapType.STEP_VALUE
         ? this.options.value
-        : null;
+        : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -408,7 +408,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     {
       const { key, value } = this.options;
 
-      return this.iterate(test, true, (k, v) => {
+      return this.iterate<boolean>(test, true, (k, v) => {
         if (!key.isValid(k) || !value.isValid(v)) {
           return false;
         }
@@ -433,7 +433,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     return new Map(entries);
   }
 
-  private iterate<R>(map: any, otherwise: R, onItem: (key: any, value: any) => R): R
+  private iterate<R>(map: any, otherwise: R, onItem: (key: K, value: V) => R | undefined): R
   {
     if (map instanceof Map)
     {
@@ -451,7 +451,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     {
       for (const prop in map)
       {
-        const result = onItem(prop, map[prop]);
+        const result = onItem(prop as unknown as K, map[prop]);
 
         if (result !== undefined)
         {
@@ -488,16 +488,16 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     return MapType.encode(this);
   }
 
-  public create(): Map<any, any>
+  public create(): Map<K, V>
   {
     return new Map();
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): Map<K, V>
   {
     const { key, value } = this.options;
     const n = rnd(RANDOM_MIN, RANDOM_MAX + 1, true);
-    const out = new Map<any, any>();
+    const out = new Map<K, V>();
 
     for (let i = 0; i < n; i++)
     {
@@ -510,7 +510,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     return out;
   }
 
-  public fromJson(json: Array<[any, any]>): Map<any, any>
+  public fromJson(json: Array<[any, any]>): Map<K, V>
   {
     const { key, value } = this.options;
 
@@ -520,7 +520,7 @@ export class MapType<K = any, V = any> extends Type<Map<K, V>, MapOptions<K, V>>
     ]));
   }
 
-  public toJson(map: Map<any, any>): Array<[any, any]>
+  public toJson(map: Map<K, V>): Array<[any, any]>
   {
     const { key, value } = this.options;
 

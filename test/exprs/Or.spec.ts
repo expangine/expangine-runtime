@@ -18,9 +18,9 @@ describe('Or', () => {
     const orType = or.getType(defs, context);
 
     expect(orType).toBeInstanceOf(ManyType);
-    expect(orType.options[0]).toBeInstanceOf(TextType);
-    expect(orType.options[1]).toBeInstanceOf(NumberType);
-    expect(orType.options[2]).toBeInstanceOf(BooleanType);
+    expect(orType?.options[0]).toBeInstanceOf(TextType);
+    expect(orType?.options[1]).toBeInstanceOf(NumberType);
+    expect(orType?.options[2]).toBeInstanceOf(BooleanType);
   });
 
   it('type one of partially same', () =>
@@ -29,8 +29,8 @@ describe('Or', () => {
     const orType = or.getType(defs, context);
 
     expect(orType).toBeInstanceOf(ManyType);
-    expect(orType.options[0]).toBeInstanceOf(NumberType);
-    expect(orType.options[1]).toBeInstanceOf(BooleanType);
+    expect(orType?.options[0]).toBeInstanceOf(NumberType);
+    expect(orType?.options[1]).toBeInstanceOf(BooleanType);
   });
 
   it('type one of fully same', () =>

@@ -60,9 +60,9 @@ export class TemplateExpression extends Expression
     return complexity;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -75,7 +75,7 @@ export class TemplateExpression extends Expression
     return new TemplateExpression(this.template, objectMap(this.params, (p) => p.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return TextType.baseType.newInstance();
   }
@@ -89,14 +89,14 @@ export class TemplateExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] in this.params
       ? [1, this.params[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

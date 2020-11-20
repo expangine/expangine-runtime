@@ -43,9 +43,9 @@ export class GetExpression extends Expression
     return 0;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -58,7 +58,7 @@ export class GetExpression extends Expression
     return new GetExpression();
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return context;
   }
@@ -68,12 +68,12 @@ export class GetExpression extends Expression
     return traverse.enter(this);
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
-    return null;
+    return undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
   }

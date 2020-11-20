@@ -15,16 +15,16 @@ export declare class OptionalType<T = any> extends Type<OptionalInterface<T>, Ty
     static decode(data: any[], types: TypeProvider): OptionalType;
     static encode(type: OptionalType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     static for(type: TypeInput): OptionalType;
     getOperations(): Record<string, import("../Operation").OperationGeneric>;
     getId(): string;
     merge(type: OptionalType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -34,7 +34,7 @@ export declare class OptionalType<T = any> extends Type<OptionalInterface<T>, Ty
     isSimple(): boolean;
     protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;

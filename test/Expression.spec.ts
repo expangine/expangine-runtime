@@ -198,7 +198,7 @@ describe('Expression', () =>
 
     const f = defs.getFunction(FUNC_NAME);
 
-    expect(f.mutates(defs, 'x')).toBeTruthy();
+    expect(f?.mutates(defs, 'x')).toBeTruthy();
     
     const e = Exprs.invoke(FUNC_NAME, {
       x: Exprs.get('y')
@@ -226,7 +226,7 @@ describe('Expression', () =>
 
     const f = defs.getFunction(FUNC_NAME);
 
-    expect(f.mutates(defs, 'x')).toBeFalsy();
+    expect(f?.mutates(defs, 'x')).toBeFalsy();
     
     const e = Exprs.invoke(FUNC_NAME, {
       x: Exprs.get('y')

@@ -83,7 +83,7 @@ export declare class Relation extends EventBase<RelationEvents> {
      * A name-type pair for a property that exists on the subject type that is
      * used to determine which related type.
      */
-    morphs: EntityPropPair | null;
+    morphs?: EntityPropPair;
     /**
      * A map of values from the morphs property to the related type names.
      */
@@ -146,8 +146,8 @@ export declare class Relation extends EventBase<RelationEvents> {
     getPropTypes(related: RelationTypeKey[]): Type[];
     isEmpty(): boolean;
     private getItemType;
-    getSubjectRelation(subjectName: string): EntityRelation | null;
-    getRelatedRelation(relatedName: string): EntityRelation | null;
+    getSubjectRelation(subjectName: string): EntityRelation | undefined;
+    getRelatedRelation(relatedName: string): EntityRelation | undefined;
     getTypeProps(name: string): EntityProps[];
     static hasMany(defs: Definitions, options: {
         name?: string;

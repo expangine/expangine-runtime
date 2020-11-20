@@ -23,13 +23,13 @@ export declare class DateType extends Type<Date, DateOptions> {
     private static decodeOptions;
     private static encodeOptions;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: DateType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -52,5 +52,5 @@ export declare class DateType extends Type<Date, DateOptions> {
     getMin(): Date | undefined;
     getMax(): Date | undefined;
     fromJson(json: string): Date;
-    toJson(value: Date): string;
+    toJson(value: Date): string | null;
 }

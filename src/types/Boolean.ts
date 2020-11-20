@@ -44,9 +44,9 @@ export class BooleanType extends Type<boolean, BooleanOptions>
 
   public static describePriority: number = 4;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return isBoolean(data) ? this.baseType : null;
+    return isBoolean(data) ? this.baseType : undefined;
   }
 
   public static registered: boolean = false;
@@ -86,9 +86,9 @@ export class BooleanType extends Type<boolean, BooleanOptions>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -131,7 +131,7 @@ export class BooleanType extends Type<boolean, BooleanOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }

@@ -18,16 +18,16 @@ export declare class MapType<K = any, V = any> extends Type<Map<K, V>, MapOption
     static decode(data: any[], types: TypeProvider): MapType;
     static encode(type: MapType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     static forItem(valueOrClass: TypeInput, keyOrClass?: TypeInput): MapType<any, any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: MapType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -35,7 +35,7 @@ export declare class MapType<K = any, V = any> extends Type<Map<K, V>, MapOption
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
@@ -48,8 +48,8 @@ export declare class MapType<K = any, V = any> extends Type<Map<K, V>, MapOption
     newInstance(): MapType;
     clone(): MapType;
     encode(): any;
-    create(): Map<any, any>;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: Array<[any, any]>): Map<any, any>;
-    toJson(map: Map<any, any>): Array<[any, any]>;
+    create(): Map<K, V>;
+    random(rnd: (a: number, b: number, whole: boolean) => number): Map<K, V>;
+    fromJson(json: Array<[any, any]>): Map<K, V>;
+    toJson(map: Map<K, V>): Array<[any, any]>;
 }

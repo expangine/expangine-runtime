@@ -15,16 +15,16 @@ export declare class SetType<V = any> extends Type<Set<V>, SetOptions<V>> {
     static decode(data: any[], types: TypeProvider): SetType;
     static encode(type: SetType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     static forItem(valueOrClass: TypeInput): SetType<any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: SetType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -32,7 +32,7 @@ export declare class SetType<V = any> extends Type<Set<V>, SetOptions<V>> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
@@ -41,11 +41,11 @@ export declare class SetType<V = any> extends Type<Set<V>, SetOptions<V>> {
     getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression;
     isValid(test: any): test is Set<V>;
     normalize(test: any): any;
-    newInstance(): SetType;
-    clone(): SetType;
+    newInstance(): SetType<V>;
+    clone(): SetType<V>;
     encode(): any;
-    create(): Set<any>;
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
+    create(): Set<V>;
+    random(rnd: (a: number, b: number, whole: boolean) => number): Set<V>;
     fromJson(json: Array<V>): Set<V>;
     toJson(set: Set<V>): Array<V>;
 }

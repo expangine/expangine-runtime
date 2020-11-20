@@ -14,9 +14,9 @@ export declare class Runtime<Context = any, Result = any> {
     extend(defs?: Definitions): Runtime<Context, Result>;
     setOperation<P extends string = any, O extends string = any, S extends string = any>(operation: Operation<P, O, S, any, any>, impl: OperationToCommand<Context, Result, P, O, S>): this;
     setExpression<T extends Expression>(type: ExpressionClass<T>, getter: CommandBuilder<Context, Result, T>): this;
-    getFunction(name: string): Func;
+    getFunction(name: string): Func | undefined;
     getOperation(id: string): OperationToCommand<Context, Result, any, any, any>;
-    getComputed(id: string): Computed | null;
+    getComputed(id: string): Computed | undefined;
     getOperationScopeDefaults(id: string): Record<string, string>;
     getExpression(id: string): CommandBuilder<Context, Result>;
     getCommand(expr: Expression, provider?: CommandProvider<Context, Result>): Command<Context, Result>;

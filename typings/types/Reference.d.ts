@@ -14,7 +14,7 @@ export declare class ReferenceType extends Type<any, string> {
     static decode(data: any[], types: TypeProvider): ReferenceType;
     static encode(type: ReferenceType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     protected provider: TypeProvider;
@@ -23,9 +23,9 @@ export declare class ReferenceType extends Type<any, string> {
     getOperations(): Record<string, import("../Operation").OperationGeneric>;
     getId(): string;
     merge(type: ReferenceType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -34,7 +34,7 @@ export declare class ReferenceType extends Type<any, string> {
     isSimple(): boolean;
     protected acceptsOtherTypes(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;

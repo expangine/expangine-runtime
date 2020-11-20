@@ -47,9 +47,9 @@ export class GetRelationExpression extends Expression
     return 0;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -62,7 +62,7 @@ export class GetRelationExpression extends Expression
     return new GetRelationExpression(this.name);
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return new EnumType({
       key: TextType.baseType,
@@ -78,7 +78,7 @@ export class GetRelationExpression extends Expression
     return traverse.enter(this);
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
   }

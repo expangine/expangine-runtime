@@ -53,11 +53,11 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
 
   public static describePriority: number = 5;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    if (!isObject(data) || data === null)
+    if (!isObject(data))
     {
-      return null;
+      return undefined;
     }
 
     const type = new ObjectType<any>({ props: {} });
@@ -187,9 +187,9 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     return ObjectType.operations.map;
   }
 
-  public merge(type: Type<D>): void
+  public merge(type: ObjectType<D, O>): void
   {
-    const p1 = this.options.props;
+    const p1 = this.options.props as TypeMapFor<any>;
     const p2 = type.options.props;
 
     for (const prop in p1)
@@ -213,7 +213,7 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     }
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     if (ConstantExpression.is(expr))
     {
@@ -271,9 +271,9 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     ];
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
-    return this.options.props[name] || null;
+    return this.options.props[name];
   }
 
   public getChildTypes(): TypeChild[]
@@ -300,12 +300,12 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
-    return this.options.props[step] || null;
+    return this.options.props[step];
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -432,8 +432,8 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
   public getValueChangeExpression(newValue: Expression, from?: TraverseStep, to?: TraverseStep): Expression
   {
     // from & to = property
-    const hasFrom = from !== null && from !== undefined;
-    const hasTo = to !== null && to !== undefined;
+    const hasFrom = from !== undefined;
+    const hasTo = to !== undefined;
 
     if (!hasFrom && hasTo) // add
     {
@@ -532,7 +532,7 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
 
   public newInstance(): ObjectType<D, O>
   {
-    return new ObjectType({ props: {} } as O);
+    return new ObjectType<D, O>({ props: {} } as O);
   }
 
   public clone(): ObjectType<D, O>
@@ -547,7 +547,7 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     return ObjectType.encode(this);
   }
 
-  public create(): any
+  public create(): D
   {
     const { props } = this.options;
     const out: any = Object.create(null);
@@ -565,7 +565,7 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     return out;
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): D
   {
     const { props } = this.options;
     const out: any = Object.create(null);
@@ -599,9 +599,9 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
     });
   }
 
-  public getWildcardType(): Type | null
+  public getWildcardType(): Type | undefined
   {
-    return this.options.props[ObjectType.wilcardProperty] || null;
+    return this.options.props[ObjectType.wilcardProperty];
   }
 
 }

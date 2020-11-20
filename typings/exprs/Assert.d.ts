@@ -14,12 +14,12 @@ export declare class AssertExpression extends Expression {
     constructor(condition: Expression, message?: Expression);
     getId(): string;
     getComplexity(def: DefinitionProvider, context: Type): number;
-    getScope(): null;
+    getScope(): undefined;
     encode(): any;
     clone(): Expression;
-    getType(def: DefinitionProvider, context: Type): Type | null;
+    getType(def: DefinitionProvider, context: Type): Type | undefined;
     traverse<R>(traverse: Traverser<Expression, R>): R;
-    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null;
+    getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined;
     setParent(parent?: Expression): void;
     validate(def: DefinitionProvider, context: Type, handler: ValidationHandler): void;
     mutates(def: DefinitionProvider, arg: string, directly?: boolean): boolean;

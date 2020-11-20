@@ -106,7 +106,7 @@ export class Relation extends EventBase<RelationEvents>
    * A name-type pair for a property that exists on the subject type that is 
    * used to determine which related type.
    */
-  public morphs: EntityPropPair | null;
+  public morphs?: EntityPropPair;
 
   /**
    * A map of values from the morphs property to the related type names.
@@ -175,7 +175,7 @@ export class Relation extends EventBase<RelationEvents>
     this.subjectRelationName = options.subjectRelationName || options.related[0].name;
     this.morphs = options.morphs
       ? this.decodeTypePair(options.morphs)
-      : null;
+      : undefined;
     this.morphsToRelated = toMap(options.morphsToRelated);
     this.related = options.related;
     this.relatedRelationName = options.relatedRelationName || options.subject.name;
@@ -198,7 +198,7 @@ export class Relation extends EventBase<RelationEvents>
       this.subjectRelationName = options.subjectRelationName || options.related[0].name;
       this.morphs = options.morphs
         ? this.decodeTypePair(options.morphs)
-        : null;
+        : undefined;
       this.morphsToRelated = toMap(options.morphsToRelated);
       this.related = options.related;
       this.relatedRelationName = options.relatedRelationName || options.subject.name;
@@ -230,11 +230,11 @@ export class Relation extends EventBase<RelationEvents>
     return [prop, this.defs.getType(propType)];
   }
 
-  private encodeTypePair(pair: [string, Type] | null): [string, any] | null
+  private encodeTypePair(pair?: [string, Type]): [string, any] | undefined
   {
     return pair
       ? [pair[0], pair[1].encode()]
-      : null;
+      : undefined;
   }
 
   public encode(): RelationOptions
@@ -367,6 +367,12 @@ export class Relation extends EventBase<RelationEvents>
     related.forEach(({ name, props }) => 
     {
       const entity = this.defs.getEntity(name);
+
+      if (!entity)
+      {
+        return;
+      }
+
       const primary = entity.getEntityProps();
 
       props.forEach((_, i) =>
@@ -398,11 +404,11 @@ export class Relation extends EventBase<RelationEvents>
     return itemType;
   }
 
-  public getSubjectRelation(subjectName: string): EntityRelation | null
+  public getSubjectRelation(subjectName: string): EntityRelation | undefined
   {
     if (this.subject.name !== subjectName)
     {
-      return null;
+      return undefined;
     }
 
     const name = this.subjectRelationName;
@@ -441,13 +447,13 @@ export class Relation extends EventBase<RelationEvents>
     return relation;
   }
 
-  public getRelatedRelation(relatedName: string): EntityRelation | null
+  public getRelatedRelation(relatedName: string): EntityRelation | undefined
   {
     const withName = this.getRelatedWithName(relatedName, this.related);
 
     if (!withName)
     {
-      return null;
+      return undefined;
     }
 
     const name = this.relatedRelationName;
@@ -528,11 +534,17 @@ export class Relation extends EventBase<RelationEvents>
     updated?: number,
   }): Relation
   {
+    const one = defs.getEntity(options.one);
+
+    if (!one) {
+      throw new Error(`Entity ${options.one} does not exist.`);
+    }
+
     const relatedRelationName = options.oneRelationName || options.many;
     const subjectRelationName = options.manyRelationName || options.one;
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const name = options.name || (subjectRelationName + '_hasMany_' + relatedRelationName);
-    const relatedProps = defs.getEntity(options.one).getPrimary().props;
+    const relatedProps = one.getPrimary().props;
     const subjectProps = relatedProps.map((p) => foreignKeyPrefix + p);
 
     return new Relation(defs, {
@@ -594,11 +606,17 @@ export class Relation extends EventBase<RelationEvents>
     updated?: number,
   }): Relation
   {
+    const one = defs.getEntity(options.one);
+
+    if (!one) {
+      throw new Error(`Entity ${options.one} does not exist.`);
+    }
+
     const relatedRelationName = options.oneRelationName || options.hasOne;
     const subjectRelationName = options.hasOneRelationName || options.one;
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
     const name = options.name || (subjectRelationName + '_hasOne_' + relatedRelationName);
-    const relatedProps = defs.getEntity(options.one).getPrimary().props;
+    const relatedProps = one.getPrimary().props;
     const subjectProps = relatedProps.map((p) => foreignKeyPrefix + p);
 
     return new Relation(defs, {
@@ -667,10 +685,18 @@ export class Relation extends EventBase<RelationEvents>
     const relatedRelationName = options.polyRelationName || options.hasOne;
     const name = options.name || (subjectRelationName + '_hasOnePolymorphic_' + relatedRelationName);
     const foreignKeyPrefix = options.foreignKeyPrefix || (subjectRelationName + '_');
-    const related = options.poly.map((polyName) => ({
-      name: polyName, 
-      props: defs.getEntity(polyName).getPrimary().props
-    }));
+    const related = options.poly.map((polyName) => {
+      const poly = defs.getEntity(polyName);
+
+      if (!poly) {
+        throw new Error(`Entity ${polyName} does not exist.`);
+      }
+
+      return {
+        name: polyName, 
+        props: poly.getPrimary().props
+      };
+    });
     const subjectProps = related[0].props.map((p) => foreignKeyPrefix + p);
 
     return new Relation(defs, {

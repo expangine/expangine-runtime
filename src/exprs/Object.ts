@@ -64,9 +64,9 @@ export class ObjectExpression extends Expression
     return false;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -79,7 +79,7 @@ export class ObjectExpression extends Expression
     return new ObjectExpression(objectMap(this.props, (p) => p.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return new ObjectType({ props: objectMap(this.props, e => Types.simplify(e.getType(def, context))) });
   }
@@ -93,14 +93,14 @@ export class ObjectExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] in this.props
       ? [1, this.props[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

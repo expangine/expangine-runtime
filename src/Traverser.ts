@@ -41,7 +41,7 @@ export class Traverser<T, R = any>
   public remove: TraverseRemove = TraverseRemoveNoop;
   public replace: TraverseReplace<T> = TraverseReplaceNoop;
 
-  public constructor(callback: TraverseCallback<T, R>, initialResult?: R)
+  public constructor(callback: TraverseCallback<T, R>, initialResult: R)
   {
     this.callback = callback;
     this.stack = [];
@@ -114,7 +114,10 @@ export class Traverser<T, R = any>
 
   public stop(result?: R): this
   {
-    this.result = result;
+    if (result !== undefined)
+    {
+      this.result = result;
+    }
 
     return this;
   }
@@ -152,7 +155,7 @@ export class Traverser<T, R = any>
 
   public filterClass(construct: { new (...args: any[]): T }, initialResult: R = this.result): Traverser<T, R>
   {
-    return this.filter((value: T) => value.constructor === construct, initialResult);
+    return this.filter((value: T) => (value as any).constructor === construct, initialResult);
   }
 
   public filter(pass: (value: T, stack: T[], path: TraverseStep[]) => any, initialResult: R = this.result)
@@ -196,7 +199,7 @@ export class Traverser<T, R = any>
   public static someInstance<T>(construct: { new(): T }): Traverser<T, boolean>
   {
     return new Traverser<T, boolean>((value, stack, path, traverser) => {
-      if (value.constructor === construct) {
+      if ((value as any).constructor === construct) {
         traverser.stop(true);
       }
     }, false);

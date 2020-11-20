@@ -96,7 +96,7 @@ export class NamedMap<N extends Named> extends FastMap<N>
     const named = this.get(namedInput);
     const valid = !!named && named.name !== newName;
     
-    if (valid)
+    if (valid && named)
     {
       this.rekey(named, newName);
       
@@ -121,7 +121,9 @@ export class NamedMap<N extends Named> extends FastMap<N>
     return isString(named) ? named : named.name;
   }
 
-  public valueOf(named: string | N): N
+  public valueOf(named: N): N
+  public valueOf(named: string | N): N | undefined
+  public valueOf(named: string | N): N | undefined
   {
     return isString(named) ? this.get(named) : named;
   }

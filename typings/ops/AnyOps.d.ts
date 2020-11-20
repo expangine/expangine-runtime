@@ -6,10 +6,10 @@ export declare const AnyOps: {
     cmp: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     copy: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isDefined: import("../Operation").OperationResolved<"value", never, never, never, never>;
-    getDefined: import("../Operation").OperationResolved<"value" | "defined", any, "defined", "defined", "value">;
-    coalesce: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", any, any, "a" | "b" | "c" | "d" | "e">;
-    require: import("../Operation").OperationResolved<"value", any, any, any, "value">;
-    ternary: import("../Operation").OperationResolved<"condition" | "truthy" | "falsy", any, any, any, "truthy" | "falsy">;
+    getDefined: import("../Operation").OperationResolved<"value" | "defined", never, "defined", "defined", "value">;
+    coalesce: import("../Operation").OperationResolved<"b" | "a", "c" | "d" | "e", never, never, "a" | "b" | "c" | "d" | "e">;
+    require: import("../Operation").OperationResolved<"value", never, never, never, "value">;
+    ternary: import("../Operation").OperationResolved<"condition" | "truthy" | "falsy", never, never, never, "truthy" | "falsy">;
     isValid: import("../Operation").OperationResolved<"value", never, never, never, never>;
     isEqual: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;
     isNotEqual: import("../Operation").OperationResolved<"value" | "test", never, never, never, never>;

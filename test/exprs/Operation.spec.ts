@@ -54,7 +54,7 @@ describe('Operation', () => {
     const opType = op.getType(defs, context);
 
     expect(opType).toBeInstanceOf(ListType);
-    expect(opType.options.item).toBeInstanceOf(NumberType);
+    expect(opType?.options.item).toBeInstanceOf(NumberType);
   });
 
   it('type inferred', () =>
@@ -66,7 +66,7 @@ describe('Operation', () => {
     const opType = op.getType(defs, context);
 
     expect(opType).toBeInstanceOf(ListType);
-    expect(opType.options.item).toBeInstanceOf(TextType);
+    expect(opType?.options.item).toBeInstanceOf(TextType);
   });
 
   it('type inferred 2', () =>
@@ -93,8 +93,8 @@ describe('Operation', () => {
     const opType = op.getType(defs, context);
 
     expect(opType).toBeInstanceOf(MapType);
-    expect(opType.options.key).toBeInstanceOf(TextType);
-    expect(opType.options.value).toBeInstanceOf(ObjectType);
+    expect(opType?.options.key).toBeInstanceOf(TextType);
+    expect(opType?.options.value).toBeInstanceOf(ObjectType);
   });
 
   it('type inferred 4', () =>
@@ -107,8 +107,8 @@ describe('Operation', () => {
     const opType = op.getType(defs, context);
 
     expect(opType).toBeInstanceOf(MapType);
-    expect(opType.options.key).toBeInstanceOf(TextType);
-    expect(opType.options.value).toBeInstanceOf(NumberType);
+    expect(opType?.options.key).toBeInstanceOf(TextType);
+    expect(opType?.options.value).toBeInstanceOf(NumberType);
   });
 
 })

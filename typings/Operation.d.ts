@@ -18,12 +18,12 @@ export interface Operation<P extends string = never, O extends string = never, S
 }
 export declare type OperationResolved<P extends string, O extends string, S extends string, H extends (P | O), R extends (P | O)> = Operation<string extends P ? never : P, string extends O ? never : O, string extends S ? never : S, string extends H ? never : H extends ((string extends P ? never : P) | (string extends O ? never : O)) ? H : never, string extends R ? never : R extends ((string extends P ? never : P) | (string extends O ? never : O)) ? R : never>;
 export interface OperationTypeProvider extends TypeProvider {
-    getEntity(name: string): Entity | null;
+    getEntity(name: string): Entity | undefined;
     getEntities(): NamedMap<Entity>;
-    getRelation(name: string): Relation | null;
+    getRelation(name: string): Relation | undefined;
     getRelations(entityName: string): EntityRelation[];
 }
-export declare type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, provider: OperationTypeProvider) => TypeInput;
+export declare type OperationTypeDynamic<I extends string> = (inputs: Partial<Record<I, Type>>, provider: OperationTypeProvider) => TypeInput | undefined;
 export declare type OperationTypeInput<I extends string> = TypeInput | OperationTypeDynamic<I>;
 export interface OperationTypes<P extends string = never, O extends string = never, S extends string = never> {
     returnType: OperationTypeInput<P | O>;

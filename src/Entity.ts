@@ -131,8 +131,8 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
     // tslint:enable: no-magic-numbers no-bitwise
   }
 
-  public static PRIMARY_TYPES: Record<EntityPrimaryType, Type> = {
-    [EntityPrimaryType.GIVEN]: null,
+  public static PRIMARY_TYPES: Record<EntityPrimaryType, Type | undefined> = {
+    [EntityPrimaryType.GIVEN]: undefined,
     [EntityPrimaryType.AUTO_INCREMENT]: Types.int(1),
     [EntityPrimaryType.UUID]: Types.text({ min: 36, max: 36, forceLower: true, matches: /^[\da-f]{8}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{4}\-[\da-f]{12}$/i }),
   };
@@ -146,7 +146,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
   public instances: any[];
   public methods: Record<string, Func>;
   public key: Expression;
-  public keyType: Type;
+  public keyType?: Type;
   public describe: Expression;
   public transcoders: Record<string, EntityTranscoder>;
   public indexes: Record<string, EntityIndex>;
@@ -665,13 +665,15 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
       : Exprs.get('instance', primary.props[0]);
   }
 
-  public getPrimary(name: string = 'primary', returnDynamic: boolean = true): EntityIndex | null
+  public getPrimary(name?: string, returnDynamic?: true): EntityIndex
+  public getPrimary(name: string, returnDynamic: boolean): EntityIndex | undefined
+  public getPrimary(name: string = 'primary', returnDynamic: boolean = true): EntityIndex | undefined
   {
     const defined = name in this.indexes
       ? this.indexes[name]
       : objectReduce(this.indexes, 
           (index, indexName, first) => first ? first : index.primary ? index : first, 
-        null);
+        undefined as EntityIndex | undefined);
 
     if (defined)
     {
@@ -683,16 +685,19 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
       const id = this.getDynamicPrimaryKey();
       const type = Entity.PRIMARY_TYPES[this.primaryType];
 
-      return {
-        name,
-        props: [id],
-        types: [type],
-        unique: true,
-        primary: true,
-      };
+      if (type)
+      {
+        return {
+          name,
+          props: [id],
+          types: [type],
+          unique: true,
+          primary: true,
+        }; 
+      }
     }
 
-    return null;
+    return undefined;
   }
 
   public getUniqueIndexes(): EntityIndex[]
@@ -703,7 +708,7 @@ export class Entity extends EventBase<EntityEvents> implements EntityOptions
       }
 
       return unique;
-    }, []);
+    }, [] as EntityIndex[]);
   }
 
   public addPrimary(props: string | string[]): this

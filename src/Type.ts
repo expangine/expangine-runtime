@@ -13,13 +13,44 @@ export type TypeInput = TypeClass | Type;
 
 export type TypeInputFor<T> = TypeClass<Type<T>, T> | Type<T>;
 
+export type TypeInputType<I> = I extends TypeClass & { baseType: { create(): infer D1 } }
+  ? D1
+  : I extends Type & { create(): infer D2 }
+    ? D2
+    : unknown;
+
+export type TypeInputTypeArray<T extends TypeInput[]> = 
+  { [K in keyof T]: TypeInputType<T[K]> }[keyof T];
+
+export type TypeInputTypeElements<T extends any[]> = {
+    [K in keyof T]: TypeInputType<T[K]>;
+  };
+
+export type TypeInputTypeObject<T extends TypeInputMap> = 
+  UndefinedToOptional<{
+    [K in keyof T]: TypeInputType<T[K]>;
+  }>;
+
 export type TypeInputMap = Record<string, TypeInput>;
 
-export type TypeInputMapFor<T> = {
-  [K in keyof T]: TypeInputFor<T[K]>;
-};
+export type UndefinedToOptional<T> = 
+  [OptionalPropertyNames<T>] extends [never]
+    ? T
+    : [RequiredPropertyNames<T>] extends [never]
+      ? Partial<T>
+      : (Partial<Pick<T, OptionalPropertyNames<T>>> & Pick<T, RequiredPropertyNames<T>>);
+
+export type OptionalPropertyNames<T> = {
+  [K in keyof T]-?: undefined extends T[K] ? K : never
+}[keyof T];
+
+export type RequiredPropertyNames<T> = {
+  [K in keyof T]-?: undefined extends T[K] ? never : K
+}[keyof T];
 
 export type TypeMap = Record<string, Type>;
+
+export type TypeMapInput = Record<string, Type | undefined>;
 
 export type TypeMapFor<T> = {
   [K in keyof T]: Type<T[K]>;
@@ -50,7 +81,7 @@ export interface TypeProvider
   getType(data: any, otherwise?: Type): Type;
   getExpression(data: any): Expression;
   isExpression(value: any): value is (Expression | [string, ...any[]]);
-  getData(name: string): ReferenceData | null;
+  getData(name: string): ReferenceData | undefined;
   setLegacy(): void;
 }
 
@@ -81,7 +112,7 @@ export interface TypeClass<T extends Type<D, O> = any, D = any, O = any>
   decode(this: TypeClass<T>, data: any[], types: TypeProvider): T;
   encode(this: TypeClass<T>, type: T): any;
   describePriority: number;
-  describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type<D, O> | null;
+  describe(this: TypeClass<T>, data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type<D, O> | undefined;
   register(this: TypeClass<T>): void;
   registered: boolean;
   new(options: O, ...args: any[]): T;
@@ -91,7 +122,7 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
 {
 
   public options: O;
-  public parent: Type = null;
+  public parent?: Type = undefined;
 
   public constructor(options: O) 
   {
@@ -102,15 +133,15 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
 
   public abstract getId(): string;
 
-  public abstract merge(type: Type<D, O>): void;
+  public abstract merge(type: this): void;
 
-  public abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+  public abstract getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
 
   public abstract getSubTypes(def: DefinitionProvider): TypeSub[];
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getChildTypes(): TypeChild[]
@@ -118,9 +149,9 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
     return [];
   }
 
-  public getParentOfType<T extends Type, R = any>(type: TypeClass<T, R>): T | null
+  public getParentOfType<T extends Type, R = any>(type: TypeClass<T, R>): T | undefined
   {
-    let parent: Type = this.parent;
+    let parent: Type | undefined = this.parent;
 
     while (parent)
     {
@@ -132,7 +163,7 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
       parent = parent.parent;
     }
 
-    return null;
+    return undefined;
   }
 
   public abstract getExactType(value: D): Type;
@@ -224,7 +255,7 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
 
   public getValueChangeAt(newValue: Expression): Expression
   {
-    let node: Type = this.parent;
+    let node: Type | undefined = this.parent;
     const path = this.getPath();
 
     while(node)
@@ -246,10 +277,10 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
       {
         traverser.stop(path.slice());
       }
-    }));
+    }, [] as TraverseStep[]));
   }
 
-  public getTypeFromPath(path: TraverseStep[]): Type | null
+  public getTypeFromPath(path: TraverseStep[]): Type | undefined
   {
     if (path.length === 0)
     {
@@ -260,15 +291,15 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
 
     if (!type)
     {
-      return null;
+      return undefined;
     }
 
     return type.getTypeFromPath(path.slice(1));
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getRootType(): Type
@@ -287,9 +318,9 @@ export abstract class Type<D = any, O = any> implements Traversable<Type>
 
   public abstract normalize(value: any): any;
 
-  public abstract newInstance(): Type<D, O>;
+  public abstract newInstance(): Type<D>;
 
-  public abstract clone(): Type<D, O>;
+  public abstract clone(): Type<D>;
 
   public abstract encode(): any;
 

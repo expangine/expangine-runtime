@@ -37,8 +37,8 @@ export interface Validation
   type: ValidationType;
   severity: ValidationSeverity;
   context: Type;
-  subject?: Expression;
-  parent?: Expression;
+  subject?: Expression | null;
+  parent?: Expression | null;
   expected?: Type;
   actual?: Type;
 }

@@ -48,11 +48,11 @@ export class NumberType extends Type<number, NumberOptions>
 
   public static describePriority: number = 4;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
     if (!isNumber(data))
     {
-      return null;
+      return undefined;
     }
 
     return new NumberType({
@@ -127,14 +127,14 @@ export class NumberType extends Type<number, NumberOptions>
     const o1 = this.options;
     const o2 = type.options;
 
-    o1.max = Math.max(o1.max, o2.max);
-    o1.min = Math.min(o1.min, o2.min);
+    o1.max = Math.max(o1.max || 0, o2.max || 0);
+    o1.min = Math.min(o1.min || 0, o2.min || 0);
     o1.whole = o1.whole && o2.whole;
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -196,7 +196,7 @@ export class NumberType extends Type<number, NumberOptions>
     return traverse.enter(this);
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }
@@ -278,13 +278,13 @@ export class NumberType extends Type<number, NumberOptions>
     return 0;
   }
 
-  public random(rnd: (a: number, b: number, whole: boolean) => number): any
+  public random(rnd: (a: number, b: number, whole: boolean) => number): number
   {
     const { min, max, whole } = this.options;
     const chosenMin = coalesce(min, RANDOM_MIN);
     const chosenMax = coalesce(max, RANDOM_MAX);
 
-    return rnd(chosenMin, chosenMax, whole);
+    return rnd(chosenMin, chosenMax, !!whole);
   }
 
   public fromJson(json: number): number

@@ -17,16 +17,16 @@ export declare class ListType<I = any> extends Type<I[], ListOptions<I>> {
     static decode(data: any[], types: TypeProvider): ListType;
     static encode(type: ListType): any;
     static describePriority: number;
-    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null;
+    static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined;
     static registered: boolean;
     static register(): void;
     static forItem(itemOrClass: TypeInput): ListType<any>;
     getId(): string;
     getOperations(): Record<string, import("..").OperationGeneric>;
     merge(type: ListType): void;
-    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null;
+    getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined;
     getSubTypes(def: DefinitionProvider): TypeSub[];
-    getChildType(name: TypeChild): Type | null;
+    getChildType(name: TypeChild): Type | undefined;
     getChildTypes(): TypeChild[];
     getExactType(value: any): Type;
     getSimplifiedType(): Type;
@@ -34,7 +34,7 @@ export declare class ListType<I = any> extends Type<I[], ListOptions<I>> {
     isOptional(): boolean;
     isSimple(): boolean;
     traverse<R>(traverse: Traverser<Type, R>): R;
-    getTypeFromStep(step: TraverseStep): Type | null;
+    getTypeFromStep(step: TraverseStep): Type | undefined;
     setParent(parent?: Type): void;
     removeDescribedRestrictions(): void;
     getCreateExpression(): Expression;
@@ -46,8 +46,8 @@ export declare class ListType<I = any> extends Type<I[], ListOptions<I>> {
     newInstance(): ListType;
     clone(): ListType;
     encode(): any;
-    create(): any[];
-    random(rnd: (a: number, b: number, whole: boolean) => number): any;
-    fromJson(json: any[]): any[];
-    toJson(value: any[]): any[];
+    create(): I[];
+    random(rnd: (a: number, b: number, whole: boolean) => number): I[];
+    fromJson(json: any[] | null): any;
+    toJson(value: I[] | null): any;
 }

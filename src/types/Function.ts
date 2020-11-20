@@ -49,7 +49,7 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
 
   public static computeds = new Computeds(ID.Function + ID.Delimiter);
 
-  public static baseType = new FunctionType({ params: {} }, null);
+  public static baseType = new FunctionType({ params: {} }, null as any);
 
   public static decode(data: any[], types: TypeProvider): FunctionType 
   {
@@ -74,9 +74,9 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
 
   public static describePriority: number = 6;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -110,9 +110,9 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     for (const paramName in params)
     {
       const inputType = inputTypes[paramName];
-      const paramType = this.getProvided(params[paramName], out);
+      const paramType = this.getProvided(params[paramName], out as Partial<TypeMapFor<P>>);
 
-      if (!inputType || !paramType.acceptsType(inputType))
+      if (!inputType || !paramType.acceptsType(inputType as Type))
       {
         out[paramName] = paramType;
       }
@@ -121,30 +121,30 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     return out;
   }
 
-  public getParamType<K extends keyof P>(param: K, inputTypes: Partial<TypeMapFor<P>> = {}): Type<P[K]> | null
+  public getParamType<K extends keyof P>(param: K, inputTypes: Partial<TypeMapFor<P>> = {}): Type<P[K]> | undefined
   {
     return this.getProvided(this.options.params[param], inputTypes);
   }
 
-  public getReturnType(inputTypes: Partial<TypeMapFor<P>> = {}): Type<R> | null
+  public getReturnType(inputTypes: Partial<TypeMapFor<P>> = {}): Type<R> | undefined
   {
     return this.getProvided(this.options.returns, inputTypes);
   }
 
   public getProvided<T>(provider: FunctionTypeProvider<T, P>, inputTypes?: Partial<TypeMapFor<P>>): Type<T>
-  public getProvided<T>(provider: FunctionTypeProvider<T, P> | undefined, inputTypes?: Partial<TypeMapFor<P>>): Type<T> | null
-  public getProvided<T>(provider: FunctionTypeProvider<T, P>, inputTypes: Partial<TypeMapFor<P>> = {}): Type<T> | null
+  public getProvided<T>(provider: FunctionTypeProvider<T, P> | undefined, inputTypes?: Partial<TypeMapFor<P>>): Type<T> | undefined
+  public getProvided<T>(provider: FunctionTypeProvider<T, P> | undefined, inputTypes: Partial<TypeMapFor<P>> = {}): Type<T> | undefined
   {
     return provider instanceof Type
       ? provider
       : typeof provider === 'function' 
         ? provider(inputTypes, this.provider)
-        : null;
+        : undefined;
   }
 
-  public getTypeFromPath(path: TypeChild[], inputTypes: TypeMap = {}): Type | null
+  public getTypeFromPath(path: TypeChild[], inputTypes: TypeMap = {}): Type | undefined
   {
-    let last: Type = inputTypes[path[0]] instanceof Type
+    let last: Type | undefined = inputTypes[path[0]] instanceof Type
       ? inputTypes[path[0]]
       : this.getChildType(path[0]);
 
@@ -153,7 +153,7 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
       last = last?.getChildType(path[i]);
     }
 
-    return last || null;
+    return last;
   }
 
   public getOverloaded(inputTypes: TypeMap = {}): FunctionType
@@ -162,44 +162,46 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
 
     overloaded.traverse(new Traverser((type, typePath, typeParent, traverser) => 
     {
-      if (type instanceof GenericType)
-      {
-        while (type && type instanceof GenericType)
-        {
-          const resolved = overloaded.getResolvedType(type, inputTypes);
+      let currentType: Type | undefined = type;
 
-          if (resolved === type)
+      if (currentType instanceof GenericType)
+      {
+        while (currentType && currentType instanceof GenericType)
+        {
+          const resolved = overloaded.getResolvedType(currentType, inputTypes);
+
+          if (resolved === currentType)
           {
             break;
           }
           else
           {
-            type = resolved;
+            currentType = resolved;
           }
         }
 
-        if (type)
+        if (currentType)
         {
-          traverser.replace(type);
+          traverser.replace(currentType);
         }
       }
-    }));
+    }, undefined));
 
     return overloaded;
   }
 
-  public getResolvedType(type: GenericType, inputTypes: Partial<TypeMapFor<P>> = {}): Type
+  public getResolvedType(type: GenericType, inputTypes: Partial<TypeMapFor<P>> = {}): Type | undefined
   {
     const { path, base } = type.options;
 
-    let resolved = this.getTypeFromPath(path, inputTypes);
+    let resolved = this.getTypeFromPath(path, inputTypes as TypeMap);
 
     if (resolved === type)
     {
       return base;
     }
 
-    let func: FunctionType = this;
+    let func: FunctionType | undefined = this;
 
     while (!resolved)
     {
@@ -210,7 +212,7 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
         break;
       }
 
-      resolved = func.getTypeFromPath(path, inputTypes);
+      resolved = func.getTypeFromPath(path, inputTypes as TypeMap);
     }
 
     return resolved || base;
@@ -231,9 +233,9 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
@@ -241,16 +243,16 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     return [];
   }
 
-  public getChildType(name: TypeChild): Type | null
+  public getChildType(name: TypeChild): Type | undefined
   {
     const params = this.getParamTypes();
 
     if (name === FunctionType.CHILD_RETURN)
     {
-      return this.getReturnType(params);
+      return this.getReturnType(params as Partial<TypeMapFor<P>>);
     }
 
-    return params[name] || null;
+    return params[name];
   }
 
   public getChildTypes(): TypeChild[]
@@ -365,7 +367,7 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     });
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     const { params, returns } = this.options;
     const param = params[step];
@@ -373,13 +375,13 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     return step === FunctionType.STEP_RETURNS
       ? returns instanceof Type
         ? returns
-        : null
+        : undefined
       : param instanceof Type
         ? param
-        : null;
+        : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
 
@@ -472,9 +474,9 @@ export class FunctionType<P extends FunctionParams = any, R = any> extends Type<
     return FunctionType.encode(this);
   }
 
-  public create(): null
+  public create(): FunctionValue
   {
-    return null;
+    return '';
   }
 
   public random(rnd: (a: number, b: number, whole: boolean) => number): any

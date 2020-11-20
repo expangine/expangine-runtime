@@ -110,13 +110,18 @@ export class DefineExpression extends Expression
     return new DefineExpression(this.define.map(([name, variable]) => [DefineExpression.cloneVar(name), variable.clone()]), this.body.clone());
   }
 
-  public getType(def: DefinitionProvider, original: Type): Type | null
+  public getType(def: DefinitionProvider, original: Type): Type | undefined
   {
     const { scope, context } = def.getContextWithScope(original);
 
     this.define.forEach(([name, defined]) => 
     {
-      this.applyToScope(scope, name, defined.getType(def, context));
+      const definedType = defined.getType(def, context);
+
+      if (definedType)
+      {
+        this.applyToScope(scope, name, definedType);
+      }
     });
 
     return this.body.getType(def, context);
@@ -133,7 +138,12 @@ export class DefineExpression extends Expression
         break;
       }
 
-      this.applyToScope(inner.scope, name, defined.getType(def, inner.context));
+      const definedType = defined.getType(def, inner.context);
+
+      if (definedType)
+      {
+        this.applyToScope(inner.scope, name, definedType);
+      }
     }
 
     return inner.context;
@@ -152,17 +162,17 @@ export class DefineExpression extends Expression
   }
 
   // tslint:disable: no-magic-numbers
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] === DefineExpression.STEP_BODY
       ? [1, this.body]
       : steps[0] === DefineExpression.STEP_DEFINE
         ? [2, this.define.filter(([name]) => DefineExpression.stringifyVar(name) === steps[1]).map(([_, expr]) => expr)[0]]
-        : null;
+        : undefined;
   }
   // tslint:enable: no-magic-numbers
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 
@@ -178,7 +188,12 @@ export class DefineExpression extends Expression
     {
       defined.validate(def, defineContext.context, handler);
 
-      this.applyToScope(defineContext.scope, name, defined.getType(def, defineContext.context));
+      const definedType = defined.getType(def, defineContext.context);
+
+      if (definedType)
+      {
+        this.applyToScope(defineContext.scope, name, definedType);
+      }
     });
     
     this.body.validate(def, defineContext.context, handler);

@@ -21,9 +21,9 @@ describe('TupleExpression', () => {
     const tupleType = tuple.getType(defs, context);
 
     expect(tupleType).toBeInstanceOf(TupleType);
-    expect(tupleType.options[0]).toBeInstanceOf(NumberType);
-    expect(tupleType.options[1]).toBeInstanceOf(NumberType);
-    expect(tupleType.options[2]).toBeInstanceOf(DateType);
+    expect(tupleType?.options[0]).toBeInstanceOf(NumberType);
+    expect(tupleType?.options[1]).toBeInstanceOf(NumberType);
+    expect(tupleType?.options[2]).toBeInstanceOf(DateType);
   });
 
 })

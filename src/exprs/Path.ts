@@ -78,7 +78,7 @@ export class PathExpression extends Expression
   public getComplexity(def: DefinitionProvider, context: Type): number
   {
     let max = 0;
-    let thisType = context;
+    let thisType: Type = context;
 
     for (const expr of this.expressions)
     {
@@ -89,15 +89,24 @@ export class PathExpression extends Expression
         max = complexity;
       }
 
-      thisType = expr.getType(def, context, thisType);
+      const exprType = expr.getType(def, context, thisType);
+
+      if (exprType)
+      {
+        thisType = exprType;
+      }
+      else
+      {
+        break
+      }
     }
 
     return max;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -110,7 +119,7 @@ export class PathExpression extends Expression
     return new PathExpression(this.expressions.map((e) => e.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return def.getPathType(this.expressions, context);
   }
@@ -124,14 +133,14 @@ export class PathExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return isNumber(steps[0]) && steps[0] < this.expressions.length
       ? [1, this.expressions[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
     

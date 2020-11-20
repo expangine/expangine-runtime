@@ -3,7 +3,7 @@ import { objectMap, isEmpty, objectEach, isArray } from '../fns';
 import { Expression, ExpressionProvider, ExpressionValue, ExpressionMap } from '../Expression';
 import { DefinitionProvider } from '../DefinitionProvider';
 import { Operation } from '../Operation';
-import { Type, TypeMap } from '../Type';
+import { Type, TypeMapInput } from '../Type';
 import { Traverser, TraverseStep } from '../Traverser';
 import { ValidationHandler, ValidationType, ValidationSeverity } from '../Validate';
 import { Types } from '../Types';
@@ -43,10 +43,10 @@ export class OperationExpression<P extends string = never, O extends string = ne
       : [this.id, expr.name, params, expr.scopeAlias]
   }
 
-  public static create<P extends string, O extends string, S extends string>(
+  public static create<P extends string, O extends string, S extends string, A extends S>(
     op: Operation<P, O, S, any, any>, 
     params: Record<P, Expression> & Partial<Record<O, Expression>>,
-    scopeAlias: Partial<Record<S, string>> = Object.create(null)
+    scopeAlias: Record<A, string> = Object.create(null)
   ): OperationExpression<P, O, S> {
     return new OperationExpression<P, O, S>(op.id, params, scopeAlias);
   }
@@ -81,9 +81,9 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return complexity;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -96,7 +96,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return new OperationExpression(this.name, objectMap(this.params, (p) => p.clone()), { ...this.scopeAlias });
   }
 
-  public getType(def: DefinitionProvider, context: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type): Type | undefined
   {
     return def.getOperationReturnType(this.name, this.params, this.scopeAlias, context);
   }
@@ -114,7 +114,7 @@ export class OperationExpression<P extends string = never, O extends string = ne
     return context;
   }
 
-  public getParamTypes(def: DefinitionProvider, context: Type): TypeMap
+  public getParamTypes(def: DefinitionProvider, context: Type): TypeMapInput
   {
     return def.getOperationExpectedTypes(this.name, this.params, this.scopeAlias, context);
   }
@@ -156,14 +156,14 @@ export class OperationExpression<P extends string = never, O extends string = ne
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] in this.params
       ? [1, this.params[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 
@@ -197,12 +197,23 @@ export class OperationExpression<P extends string = never, O extends string = ne
     {
       const optional = operation.optional.indexOf(paramName) !== -1;
       const expectedRequired = expectedTypes[paramName];
+
+      if (!expectedRequired)
+      {
+        continue;
+      }
+
       const expected = optional ? Types.optional(expectedRequired) : expectedRequired;
       const subject = params[paramName];
       const hasScope = operation.hasScope.indexOf(paramName) !== -1;
       const paramContext = hasScope ? scopeContext : context;
       
       this.validateType(def, paramContext, expected, subject, handler);
+    }
+
+    if (!operationTypes)
+    {
+      return;
     }
 
     for (const paramName in params)

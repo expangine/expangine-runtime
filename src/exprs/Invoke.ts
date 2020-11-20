@@ -50,7 +50,7 @@ export class InvokeExpression extends Expression
     return InvokeExpression.id;
   }
 
-  public getFunction(def: DefinitionProvider, context: Type, thisType?: Type): { type: FunctionType, expression?: Expression } | null
+  public getFunction(def: DefinitionProvider, context: Type, thisType?: Type): { type: FunctionType, expression?: Expression } | undefined
   {
     if (this.name)
     {
@@ -69,6 +69,8 @@ export class InvokeExpression extends Expression
     {
       return { type: thisType };
     }
+
+    return undefined;
   }
 
   public getComplexity(def: DefinitionProvider, context: Type, thisType?: Type): number
@@ -80,9 +82,9 @@ export class InvokeExpression extends Expression
       : 0;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -95,20 +97,20 @@ export class InvokeExpression extends Expression
     return new InvokeExpression(this.name, objectMap(this.args, (a) => a.clone()));
   }
 
-  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined
   {
     const func = this.getFunction(def, context, thisType);
 
     if (!func)
     {
-      return null;
+      return undefined;
     }
 
     const args = objectMap(this.args, (a) => a.getType(def, context));
 
-    if (!func.type)
+    if (!func.type && func.expression)
     {
-      return func.expression?.getType(def, new ObjectType({ props: args }));
+      return func.expression.getType(def, new ObjectType({ props: args }));
     }
     
     const overloaded = func.type.getOverloaded(args);
@@ -124,7 +126,7 @@ export class InvokeExpression extends Expression
       return func.expression.getType(def, overloaded.getParamTypesType());
     }
 
-    return null;
+    return undefined;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -136,14 +138,14 @@ export class InvokeExpression extends Expression
     );
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
     return steps[0] in this.args
       ? [1, this.args[steps[0]]]
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
 

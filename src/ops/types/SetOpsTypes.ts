@@ -20,11 +20,11 @@ const ops = SetType.operations;
 
 const RequireSet = (set?: Type) => set instanceof SetType ? set : undefined;
 const GivenSet = (i: {set?: Type}) => RequireSet(i.set) || SetType;
-const GivenSetValue = (i: {set?: Type}) => RequireSet(i.set) ? i.set.options.value : AnyType;
+const GivenSetValue = (i: {set?: Type}) => RequireSet(i.set) ? i.set?.options.value : AnyType;
 const GivenSetIterationScope = { set: GivenSet, value: GivenSetValue };
 
 const GivenValueSet = (i: {value?: Type}) => RequireSet(i.value) || SetType;
-const GivenValueSetValue = (i: {value?: Type}) => RequireSet(i.value) ? i.value.options.value : AnyType;
+const GivenValueSetValue = (i: {value?: Type}) => RequireSet(i.value) ? i.value?.options.value : AnyType;
 
 export const SetOpsTypes = 
 {

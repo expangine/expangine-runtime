@@ -18,7 +18,7 @@ describe('Return', () => {
   it('type value', () =>
   {
     const ret = Exprs.return(Exprs.const(1));
-    const retType = ret.getType(defs, context).getSimplifiedType();
+    const retType = ret.getType(defs, context)?.getSimplifiedType();
 
     expect(retType).toBeInstanceOf(NumberType);
   });

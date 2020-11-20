@@ -65,9 +65,9 @@ export class ComputedExpression extends Expression
     return op ? op.complexity : 0;
   }
 
-  public getScope(): null
+  public getScope(): undefined
   {
-    return null;
+    return undefined;
   }
 
   public encode(): any 
@@ -80,9 +80,9 @@ export class ComputedExpression extends Expression
     return new ComputedExpression(this.name);
   }
 
-  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | null
+  public getType(def: DefinitionProvider, context: Type, thisType?: Type): Type | undefined
   {
-    return thisType ? def.getComputedReturnType(this.name, thisType) : null;
+    return thisType ? def.getComputedReturnType(this.name, thisType) : undefined;
   }
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
@@ -90,12 +90,12 @@ export class ComputedExpression extends Expression
     return traverse.enter(this);
   }
 
-  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | null
+  public getExpressionFromStep(steps: TraverseStep[]): [number, Expression] | undefined
   {
-    return null;
+    return undefined;
   }
 
-  public setParent(parent: Expression = null): void
+  public setParent(parent?: Expression): void
   {
     this.parent = parent;
   }

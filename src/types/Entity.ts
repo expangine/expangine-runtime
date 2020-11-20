@@ -22,7 +22,7 @@ export class EntityType extends Type<any, string>
 
   public static computeds = EntityComputeds;
 
-  public static baseType = new EntityType('', null);
+  public static baseType = new EntityType('', null as any);
 
   public static decode(data: any[], types: TypeProvider): EntityType 
   {
@@ -38,9 +38,9 @@ export class EntityType extends Type<any, string>
 
   public static describePriority: number = -1;
   
-  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | null
+  public static describe(data: any, describer: TypeDescribeProvider, cache: Map<any, Type>): Type | undefined
   {
-    return null;
+    return undefined;
   }
 
   public static registered: boolean = false;
@@ -86,7 +86,7 @@ export class EntityType extends Type<any, string>
     
   }
 
-  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | null
+  public getSubType(expr: Expression, def: DefinitionProvider, context: Type): Type | undefined
   {
     return this.getType().getSubType(expr, def, context);
   }
@@ -146,14 +146,14 @@ export class EntityType extends Type<any, string>
     );
   }
 
-  public getTypeFromStep(step: TraverseStep): Type | null
+  public getTypeFromStep(step: TraverseStep): Type | undefined
   {
     return step === EntityType.STEP_ENTITY
       ? this.getType() 
-      : null;
+      : undefined;
   }
 
-  public setParent(parent: Type = null): void
+  public setParent(parent?: Type): void
   {
     this.parent = parent;
   }
