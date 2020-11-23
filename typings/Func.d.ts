@@ -5,7 +5,6 @@ import { Runtime } from './Runtime';
 import { DefinitionProvider } from './DefinitionProvider';
 import { EventBase } from './EventBase';
 import { FunctionType } from './types/Function';
-import { FunctionExpression } from './exprs/Function';
 export interface FuncOptions {
     name: string;
     created: number;
@@ -45,7 +44,7 @@ export declare class Func extends EventBase<FuncEvents> implements FuncOptions {
     defaults: any;
     tests: FuncTest[];
     constructor(options: FuncOptions, defs: Definitions);
-    protected parseExpression(defs: Definitions, expr: any): FunctionExpression;
+    protected parseExpression(defs: Definitions, expr: any): Expression;
     sync(options: FuncOptions, defs: Definitions): void;
     hasChanges(options: FuncOptions): boolean;
     changed(): void;

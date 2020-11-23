@@ -9,7 +9,6 @@ import { DefinitionProvider } from './DefinitionProvider';
 import { DataTypes } from './DataTypes';
 import { EventBase } from './EventBase';
 import { FunctionType } from './types/Function';
-import { FunctionExpression } from './exprs/Function';
 import { FlowExpression } from './exprs/Flow';
 import { Traverser } from './Traverser';
 import { FlowType } from './FlowType';
@@ -91,7 +90,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
     this.tests = options.tests.map((t) => ({ ...t, args: this.type.fromJsonArguments(t.args) }));
   }
 
-  protected parseExpression(defs: Definitions, expr: any): FunctionExpression
+  protected parseExpression(defs: Definitions, expr: any): Expression
   {
     let e = defs.getExpression(expr);
 
@@ -100,9 +99,7 @@ export class Func extends EventBase<FuncEvents> implements FuncOptions
       e = new FlowExpression(FlowType.RETURN, e);
     }
 
-    return e instanceof FunctionExpression
-      ? e
-      : new FunctionExpression(this.type, e);
+    return e;
   }
 
   public sync(options: FuncOptions, defs: Definitions)
