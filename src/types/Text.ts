@@ -193,7 +193,9 @@ export class TextType extends Type<string, TextOptions>
   {
     return [
       { key: 'length', value: Types.LENGTH },
-      { key: Types.INDEX, value: Types.optional(Types.CHAR) },
+      { key: Types.INDEX, value: def.options.stringCharacterOptional
+          ? Types.optional(Types.CHAR) 
+          : Types.CHAR },
     ];
   }
 

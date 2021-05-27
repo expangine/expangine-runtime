@@ -90,8 +90,8 @@ export class DoExpression extends Expression
   {
     const body = this.body.getType(def, context);
 
-    return body ? Types.optional(body) : undefined;
-  }
+    return body;
+  } 
 
   public traverse<R>(traverse: Traverser<Expression, R>): R
   {

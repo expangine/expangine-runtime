@@ -241,7 +241,7 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
       if (isNumber(expr.value))
       {
-        return isNumber(min) && expr.value < min
+        return (isNumber(min) && expr.value < min) || !def.options.listItemOptional
           ? item
           : Types.optional(item);
       }
@@ -255,7 +255,9 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
       if (exprType instanceof NumberType)
       {
-        return Types.optional(item);
+        return def.options.listItemOptional
+          ? Types.optional(item)
+          : item;
       }
 
       if (exprType instanceof EnumType)
@@ -264,7 +266,7 @@ export class ListType<I = any> extends Type<I[], ListOptions<I>>
 
         if (exprType.options.value instanceof NumberType)
         {
-          if (isNumber(min) && !values.some((x) => x >= min))
+          if ((isNumber(min) && !values.some((x) => x >= min)) || !def.options.listItemOptional)
           {
             return item;
           }

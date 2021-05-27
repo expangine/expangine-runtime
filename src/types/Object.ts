@@ -251,6 +251,7 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
     const props = objectValues(this.options.props);
+    const valueType = Types.mergeMany(props, NullType.baseType);
 
     return [
       ...objectValues(this.options.props, (value, key) => ({ key: key as string, value })),
@@ -262,12 +263,14 @@ export class ObjectType<D extends ObjectInterface = ObjectInterface, O extends O
             objectValues(this.options.props, (prop, key) => [key as string, key as string]),
           ),
         }),
-        value: Types.mergeMany(props, NullType.baseType),
+        value: valueType,
       },
       { 
         key: TextType.baseType, 
-        value: Types.optional(Types.mergeMany(props, NullType.baseType)),
-      }
+        value: def.options.objectPropertyOptional
+          ? Types.optional(valueType)
+          : valueType,
+      },
     ];
   }
 

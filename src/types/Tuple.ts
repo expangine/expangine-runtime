@@ -135,6 +135,8 @@ export class TupleType<E extends any[] = any> extends Type<E, TupleOptions<E>>
 
   public getSubTypes(def: DefinitionProvider): TypeSub[]
   {
+    const elementType = Types.mergeMany(this.options, NullType.baseType);
+
     return [
       ...this.options.map((value, key) => ({ key, value })),
       { key: 'length', value: Types.LENGTH },
@@ -146,13 +148,13 @@ export class TupleType<E extends any[] = any> extends Type<E, TupleOptions<E>>
             this.options.map((prop, key) => [key, key]),
           ),
         }),
-        value: Types.mergeMany(this.options, NullType.baseType),
+        value: elementType,
       },
       { 
         key: Types.INDEX, 
-        value: Types.optional(
-          Types.mergeMany(this.options, NullType.baseType)
-        ),
+        value: def.options.tupleElementOptional
+          ? Types.optional(elementType)
+          : elementType,
       },
     ];
   }

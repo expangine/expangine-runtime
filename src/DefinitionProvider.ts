@@ -7,10 +7,13 @@ import { Entity } from './Entity';
 import { Relation } from './Relation';
 import { ReferenceData } from './ReferenceData';
 import { Program } from './Program';
+import { RuntimeOptions } from './RuntimeOptions';
 
 
 export interface DefinitionProvider extends TypeProvider, TypeDescribeProvider
 {
+  options: RuntimeOptions;
+
   setLegacy(): void;
   isLegacy(): boolean;
 

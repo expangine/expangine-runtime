@@ -31,11 +31,13 @@ import { NamedMap } from './maps/NamedMap';
 import { FastMap } from './maps/FastMap';
 import { EventBase } from './EventBase';
 import { DataTypes } from './DataTypes';
+import { RuntimeOptions } from './RuntimeOptions';
 
 
 
 export interface DefinitionsImportOptions
 {
+  options?: RuntimeOptions;
   entities?: Record<string, Entity | EntityOptions>;
   functions?: Record<string, Func | FuncOptions>;
   relations?: Record<string, RelationOptions>;
@@ -181,6 +183,7 @@ export interface DefinitionsEvents
 export class Definitions extends EventBase<DefinitionsEvents> implements OperationTypeProvider, DefinitionProvider
 {
 
+  public options: RuntimeOptions;
   public types: Record<string, TypeClass>;
   public typeList: TypeClass[];
   public describers: TypeClass[];
@@ -205,6 +208,7 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
   { 
     super();
 
+    this.options = {};
     this.types = Object.create(null);
     this.typeList = [];
     this.describers = [];
@@ -2396,6 +2400,11 @@ export class Definitions extends EventBase<DefinitionsEvents> implements Operati
       objectEach(exported.programs, (options) => 
         this.addProgram(options)
       );
+    }
+
+    if (exported.options)
+    {
+      this.options = exported.options;
     }
   }
 
